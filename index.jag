@@ -1,0 +1,70 @@
+<%
+var PAGE = "dashboard";
+include('conf/conf.jag');
+include('include/main/header.jag');
+%>
+<div class="container-fluid">
+	<div class="dashboard functionlayer container">
+		<div class="page-header">
+		  <h1>Devices by OS</h1>
+		</div>
+		<div id="device-widget" class="span12 row">
+			<div id="main-widget" class="span5">
+				<!--<h4>Devices by OS</h4>-->
+				<div class="row widget">
+					<div><canvas id="chartOS" width="300" height="300"></canvas></div>
+					<ul>
+						<li data-os='Windows'><a href="#"><span class="icn window"><img src="img/windows.png"/><span class="valWindows label">%</span></span></a></li>
+						<li data-os='iOS' ><a href="#"><span class="icn apple"><img src="img/apple.png"/><span class="valApple label">%</span></span></a></li>
+						<li data-os='Android' class='active'><a href="#"><span class="icn android"><img src="img/android.png"/><span class="valAndroid label">%</span></span></a></li>
+					</ul>
+				</div>
+			</div>
+			<div id="superdiv" class="span5">
+				<div class="tabbable span6">
+					<ul class="nav nav-tabs targets">
+						<li class="active">
+							<a href="#chartVersion" data-toggle="tab">Version</a>
+						</li>
+						<li>
+							<a href="#chartVendor" data-toggle="tab">Vendor</a>
+						</li>
+						<li>
+							<a href="#chartBYOD" data-toggle="tab">BYOD</a>
+						</li>
+						<li>
+							<a href="#chartConnectivity" data-toggle="tab"  style="display:none;">Connectivity</a>
+						</li>
+					</ul>
+					<p class="totalcount"></p>
+					<div id="sub-widget" class="tab-content">
+						<div id="chartVersion" class="tab-pane active widget">
+							<div><canvas width="200" height="200"></canvas></div>
+							<ul>
+							</ul>
+						</div>	
+						<div id="chartVendor" class="tab-pane widget">
+							<div><canvas width="100" height="100"></canvas></div>
+							<ul>
+							</ul>
+						</div>
+						<div id="chartBYOD" class="tab-pane widget" >
+							<div><canvas  width="100" height="100"></canvas></div>
+							<ul>
+							</ul>
+						</div>
+						<div id="chartConnectivity" class="tab-pane widget" style="display:none;">
+							<div><canvas  width="100" height="100"></canvas></div>
+							<ul>
+							</ul>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <hr>
+</div>
+
+<% include('include/main/footer.jag'); %>

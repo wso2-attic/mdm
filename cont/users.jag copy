@@ -1,0 +1,129 @@
+<%
+    include_once("../model/usersQuery.jag");
+    var verb = request.getMethod();
+    var log = new Log();
+    
+    var jsonString = request.getContent();
+
+    log.info(jsonString);
+    log.info(request.getRequestURI());
+    log.info(request.getMethod());
+	if(jsonString!=undefined && jsonString !=''){
+		var result = parse(jsonString);
+	}
+/*
+    var username = result.username;
+    var password  = result.password;*/
+    
+    var username = request.getParameter("username");
+    var password = request.getParameter("password");
+
+    var userId = null;
+    var operation = null;
+    var uriMatcher = new URIMatcher(request.getRequestURI());
+    log.info(uriMatcher.match('/mdm/users/{userid}'));
+
+    if(uriMatcher.match('/mdm/users/{userid}')) {
+        userId = uriMatcher.elements().userid;
+        log.info(userId);
+        //If pattern matches, elements can be accessed from their keys
+        userId = uriMatcher.elements().userid;
+    }else if(uriMatcher.match('/mdm/users/{userid}/groups')){
+        userId = uriMatcher.elements().userid;
+		if(result!=undefined && result !=''){
+			var groups  =  result.groups; 
+		}
+    }else if(uriMatcher.match('/users/{userid}/devices/{operationv}')){
+        userId = uriMatcher.elements().userid;
+        operation = uriMatcher.elements().operationv;
+    }else if(uriMatcher.match('/users/{userid}/devices')){
+        userId = uriMatcher.elements().userid;
+    }
+    if(verb=="POST"&&username!=null&&password!=null&&userId==null&&operation==null){ //http method has been changed POST--->GET
+        var state = isAuthenticated(username,password);
+        log.info(state);
+        if(state){
+            response.status=200;
+            print("Authentication Successful");
+        }else{
+            response.status=401;
+            print("Authentication Failed");
+        }
+     }else if(verb=="POST"&&username==null&&password==null&&userId!=null&&operation!=null){
+            var state =sendMessageToUser(userId,operation,data);
+            if(state){
+                response.status=200;
+                print("Successful");
+            }else{
+                response.status=400;
+                print("Sending Fail");
+            }
+
+        }else if(verb=="POST"&&username==null&&password==null&&userId==null&&operation==null){
+            var state = addUser(result);
+            if(state){
+                response.status = 201;
+				sendEmail(result.username);
+                print("User added Successful");
+            }else{
+                response.status = 400;
+                print("Fail to Add User");
+            }
+        }else if(verb=="PUT"&&userId!=null&&groups!=null){
+			log.info('User id '+userId+" and Groups "+groups);
+            var state = assignUsersToMultipleGroups(userId,groups);
+            if(state){
+                response.status = 200;
+                print("User assigned Successfully");
+            }else{
+                response.status = 304;
+                print("Assignment Failed");
+            }
+        }else if(verb=="GET"&&userId!=null&&uriMatcher.match('/mdm/users/{userId}/groups')){
+	            var grouplist = getUserGroup(userId,groups);
+				log.info(grouplist);
+				response.content = grouplist;
+                response.status = 200;
+	    }else if(verb=="DELETE"&&userId!=null){
+            removeUser(userId);
+        }else if(verb=="GET"&&userId!=null&&uriMatcher.match('users/{userid}/devices')){
+            var deviceList = getAllDevicesOfUser(userId);
+            if(deviceList[0]!=null){
+                response.content = deviceList;
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
+        }else if(verb=="GET"&&userId!=null&&uriMatcher.match('/mdm/users/{userId}')){
+            var user = getUser(userId);
+            if(user!=null){
+                response.content = user;
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
+        }
+		else if(verb=="GET"&&userId==null){
+            var userList = getAllUsers();
+            if(userList[0]!=null){
+                response.content = userList;
+                response.status = 200;
+            }else{
+                response.status = 404;
+         }
+        }
+function sendEmail(username){
+	 content = "You have been successfully added to the MDM Server";
+     subject = "MDM Enrollment";
+
+    var email = require('email');
+    var sender = new email.Sender("smtp.gmail.com", "25", "dulitha@wso2mobile.com", "brainsteamer", "tls");
+    sender.from = "mdm@wso2mobile.com";
+	
+    log.info(username);
+    sender.to = username;
+    sender.subject = subject;
+    sender.text = content;
+    sender.send();
+}
+%>

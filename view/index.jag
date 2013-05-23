@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+</script>
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    $.ajax({
+          type: 'POST',
+           contentType: "application/json",
+           url: '/mdm/users',
+           data: JSON.stringify({ username: 'gayan', password: '123' }),
+           dataType: 'json'
+    });
+});
+});
+</script>
+</head>
+<body>
+
+<div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
+<button>Get External Content</button>
+
+</body>
+</html>

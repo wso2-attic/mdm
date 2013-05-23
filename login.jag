@@ -1,0 +1,71 @@
+<%
+// var log = new Log();
+// log.info(request.getMethod());
+// if(request.getMethod()=='POST'){
+// 	var xhr = new XMLHttpRequest();
+//  	xhr.open("POST", "http://localhost:9763/mdm/users/authenticate?"+"username="+request.getParameter('txtUsername')+"&password="+request.getParameter('txtPassword'),false);
+// 	log.info("username="+request.getParameter('txtUsername')+"&password="+request.getParameter('txtPassword'));
+// 	xhr.send();
+// 	if(xhr.status==200){
+// 		response.sendRedirect("index.jag");
+// 		log.info('Dashboard');
+// 	}else{
+// 		response.sendRedirect("login.jag?login_failed=true");
+// 	}
+// }else{
+ include('include/login/header.jag'); 
+%>
+		<div class="container-fluid">
+
+			<div class="row-fluid">
+				<div class="span7">
+					<div class="row-fluid">
+						<img src="img/front-image.png">
+					</div>
+					<div class="row-fluid">
+						<img src="themes/orange/img/os-icons.png">
+					</div>
+				</div>
+				
+				<div class="span5">
+
+
+					<form id="form-signin" action="login.jag" class="form-signin" method="POST">
+						
+						<h2 class="form-signin-heading">Please sign in</h2>
+						<input type="text" name="txtUsername" id="txtUsername" class="input-block-level" placeholder="Username">
+						<input type="password" name="txtPassword" id="txtPassword"   class="input-block-level" placeholder="Password">
+			
+			
+			<%
+							var login_failed = request.getParameter("login_failed");
+							if(login_failed){
+								print('<div id="login_error" class="alert alert-error">');
+								print('Invalid username or password');
+								print('</div>');
+							}
+							var logout_successful = request.getParameter('logout_successful');
+							if(logout_successful){
+								//print('<div id="logout_successful" class="alert alert-success">');
+								//print('Logout was successful!');
+								//print('</div>');
+							}
+						%>
+			
+						<div class="raw">
+						<input value="Sign in"  class="btn btn-large btn-primary btn-orange" type="submit"/>
+						</div>
+						
+					</form>
+				</div>
+				
+
+			</div>
+		</div>
+		
+
+
+<% include('include/login/footer.jag'); %>
+<script src="js/login.js"></script>
+
+<% // } %>

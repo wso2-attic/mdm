@@ -1,0 +1,10 @@
+<%
+    include("../model/dashboardQuery.jag");
+    var verb = request.getMethod();
+    if(verb=="GET"){
+        var arrayOfData = getDashboardInfo();
+        response.content = arrayOfData;
+        response.status = 200;
+    }
+
+%>

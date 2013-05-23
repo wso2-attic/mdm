@@ -1,0 +1,52 @@
+<%
+    include("dbcon.jag");
+    include("devicesQuery.jag");
+    /*Send message to group*/
+
+    function sendMessageToGroup(groupID, featureName){
+        var result = db.query("SELECT d.id, d.reg_id FROM Devices AS d Join Users As u ON d.userid = u.id WHERE u.usergroup_id="+groupID);
+        var succeeded="";
+        var failed="";
+        for(var i=0; i<result.length; i++){
+            var status = sendMessageToDevice(result[i].id, featureName);
+            if(status == true){
+                succeeded += result[i].id+",";
+            }else{
+                failed += result[i].id+",";
+            }
+
+        }
+        if(succeeded != "" && failed != ""){
+            return "Succeeded : "+succeeded+", Failed : "+failed;
+        }else{
+            return "Succeeded : "+succeeded;
+        }
+
+    }
+
+    function addGroup(gpName){
+        var result=db.query("insert into Groups(name,tenant_id,description) values('"+gpName+"','1','"+gpName+"')")      ;
+        if(result==1){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+	function removeGroup(groupid){
+		log.info(groupid);
+		db.query("UPDATE Groups SET deleted=1 WHERE id='"+groupid+"' ");
+		return true;
+	}
+
+    function getUsersFromGroup(id){
+        var result=db.query("select * from Users where Users.usergroup_id="+id+"");
+        return result;
+    }
+
+    function getAllGroups(){
+        var result=db.query("select Groups.id,Groups.name from Groups where deleted=0");
+        return result;
+    }
+%>

@@ -1,0 +1,8 @@
+<div class="span2 offset2" id="sidebar">
+	<ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
+		<!-- <li  <% PAGE == "global_config" ? print('class="active"') : print(""); %>><a href="<% print(SERVER_URL + "users_config.jag"); %>"><i class="icon-chevron-right"></i>Global Configurations</a></li> -->
+		<li <% PAGE == "users_config" ? print('class="active"') : print(""); %>><a href="<% print(SERVER_URL + "users_config.jag"); %>"><i class="icon-chevron-right"></i> User</a></li>
+		<li <% PAGE == "group_config" ? print('class="active"') : print(""); %>><a href="<% print(SERVER_URL + "group_config.jag"); %>"><i class="icon-chevron-right"></i> Groups</a></li>
+		<!-- <li><a href="<% print(SERVER_URL + "config/users/index.jag"); %>"><i class="icon-chevron-right"></i> Permissions</a></li>	 -->	
+	</ul>
+</div>

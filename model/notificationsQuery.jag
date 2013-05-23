@@ -1,0 +1,85 @@
+<%
+    include("dbcon.jag");
+    var log = new Log();
+    function addNotification(code,msgID,status,info){
+	        var features = db.query("select * from Features where code='"+code+"';");
+	        var featureDescription = features[0].description;
+	        log.info("Test MSG ID"+msgID);
+	        var result = db.query("select * from Notifications where id="+msgID);
+	        if(result != null && result != undefined && result[0] != null && result[0] != undefined){
+	            var deviceId =  result[0].device_id;
+	            var groupId =  result[0].group_id;
+	            var message =  result[0].message;
+	            var status =   "R";
+	            var sentDate =  result[0].sent_date;
+	            var featureCode =  result[0].feature_code;
+	            var userId =  result[0]. user_id;
+	            var msgId = result[0].msg_id;
+
+	            log.info(deviceId);
+	            log.info(groupId);
+	            log.info(message);
+	            log.info(status);
+	            log.info(sentDate);
+	            log.info(featureCode);
+	            log.info(userId);
+	            log.info(msgId);
+
+
+	            var currentdate = new Date();
+	            var recivedDate =  currentdate.getDate() + "/"
+	                + (currentdate.getMonth()+1)  + "/"
+	                + currentdate.getFullYear() + " @ "
+	                + currentdate.getHours() + ":"
+	                + currentdate.getMinutes() + ":"
+	                + currentdate.getSeconds();
+
+	            db.query("delete from Notifications where id='"+msgID+"';");
+	            log.info(info);
+	           // db.query("SET sql_mode='NO_BACKSLASH_ESCAPES'");
+	            var returnState = db.query("INSERT INTO Notifications (group_id, user_id, device_id, message, status,sent_date,received_date,received_data, feature_code,feature_description) values("+groupId+","+userId+","+deviceId+",'"+message+"','"+status+"','"+sentDate+"','"+recivedDate+"', '"+info+"','"+featureCode+"','"+featureDescription+"');");
+	            log.info(returnState);
+	        }
+	    }
+    /*function getNotifications(featureCode,deviceId){
+        var result = db.query("select * from Notifications where device_id="+deviceId+"&&feature_code='"+featureCode+"';");
+        var notifications = new Array();
+        for (i=0;i<10;i++){
+            notifications[i] = result[i];
+        }
+        return notifications;
+    }*/
+    function getNotifications(deviceId){
+        var result = db.query("select * from Notifications where device_id="+deviceId+" ORDER BY id DESC LIMIT 10");
+        var notifications = new Array();
+        for (i=0;i<10;i++){
+        	
+        	if(result[i] == null) {
+        		notifications[i] = {};
+        		continue;
+        	}
+        	
+            notifications[i] = result[i];
+        }
+        return notifications;
+    }
+    function getLastRecord(featureCode,deviceId){
+        log.info("Feature Code"+featureCode);
+        log.info("Device ID"+deviceId);
+        var result = db.query("select distinct * from Notifications where received_data is not null && device_id="+deviceId+" && feature_code='"+featureCode+"';");
+        var features = db.query("select * from Features where code='"+featureCode+"';");
+        log.info(features);
+        log.info(features[0].name);
+        log.info(deviceId);
+        sendMessageToDevice(deviceId,features[0].name,"hi");
+        
+        if(result == null || result == undefined ||
+        		result.length == 0) {
+        	return {};
+        }
+        
+        return result[result.length-1];
+        // return "hi";
+    }
+
+%>

@@ -1,0 +1,282 @@
+<%
+    include("dbcon.jag");
+
+    /*Checking for unregistered device*/
+    var log = new Log();
+    function isRegistered(reg_Id){
+        var result = db.query("select reg_id from Devices where reg_id='"+reg_Id+"'&&deleted="+0);
+        /*log.info(result[0].reg_id);
+        log.info(result[0]);
+        log.info(result);*/
+        log.info(result);
+        return (result != null && result != undefined && result[0] != null && result[0] != undefined);
+    }
+
+    /*Send message to device*/
+    /*temperaly commented for new function*/
+
+    /*function sendMessageToDevice(deviceId,code,data){
+        var token=Math.random()*1000000;
+        var gcm = require('gcm').gcm;
+        var result = db.query("select reg_id from Devices where id="+deviceId);
+        var regId = result[0].reg_id;
+
+        if(result[0]!=null){
+            print(gcm.sendViaGCMtoMobile(regId,code,token.toFixed(0),data,3));
+            return true;
+
+        }else{
+
+            return false;
+        }
+
+    }*/
+/*function sendMessageToDevice(deviceId,featureName){
+
+    var token=Math.random()*1000000;
+
+    var gcm = require('gcm').gcm;
+
+    var device_info = db.query("SELECT reg_id, os_version, platform_id FROM Devices WHERE id="+deviceId);
+
+    var feature = db.query("SELECT id, code FROM Features WHERE name LIKE '"+featureName+"'");
+
+    var regId = device_info[0].reg_id;*/
+
+   /* var string = device_info[0].os_version;
+
+    string = string.replace(".","");
+
+
+
+    for(var i=string.length; i<4; i++){
+
+        string+="0";
+
+    }
+
+    var platform_feature = db.query("SELECT id, template, min_version FROM PlatformFeatures WHERE (platform_id = "+device_info[0].platform_id+" AND feature_id = "+feature[0].id+")");
+
+    var stringnew = platform_feature[0].min_version;
+
+    stringnew = stringnew.replace(".","");
+
+
+
+    for(var i=stringnew.length; i<4; i++){
+
+        stringnew+="0";
+
+    }
+
+    var regId = device_info[0].reg_id;
+
+    var data = platform_feature[0].template;
+
+    if(parseInt(string) >= parseInt(stringnew)){ */
+
+ //       print(gcm.sendViaGCMtoMobile(regId,"503A",token.toFixed(0),"hi",3));
+
+    /*    return true;
+
+    }else{
+
+        return false;
+
+    } */
+
+/*}*/
+
+    function sendMessageToDevice(deviceId, featureName, data) {
+
+        var token = Math.random() * 1000000;
+
+        var gcm = require('gcm').gcm;
+
+        var status = false;
+
+        var device_info = db.query("SELECT reg_id, os_version, platform_id, user_id FROM Devices WHERE id=" +deviceId);
+
+        var feature = db.query("SELECT id, code FROM Features WHERE name LIKE '"+featureName +"'");
+        var userID = device_info[0].user_id;
+
+        var cur_user = db.query("SELECT group_id FROM UserGroups WHERE user_id=" +userID);
+        var groupID = cur_user[0].group_id;
+        var string = "0";
+
+        if (device_info[0] != null) {
+            string = device_info[0].os_version;
+        }
+
+        string = string.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+
+        for (var i = string.length; i < 4; i++) {
+
+        string += "0";
+
+        }
+
+        var platform_feature = db.query("SELECT id, template, min_version FROM PlatformFeatures WHERE (platform_id = " + device_info[0].platform_id + " AND feature_id = "+feature[0].id +")");
+
+        var stringnew = "0";
+        if (platform_feature[0] != null) {
+            stringnew = platform_feature[0].min_version;
+        }
+
+        stringnew = stringnew.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+
+        for (var i = stringnew.length; i < 4; i++) {
+
+        stringnew += "0";
+
+        }
+
+        var regId = device_info[0].reg_id;
+
+        //  var data = "{}";
+
+        if (platform_feature[0] != null) {
+        //     data = platform_feature[0].template;
+        }
+        var currentdate = new Date();
+            var datetime =  currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/"
+                + currentdate.getFullYear() + " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+
+        if (parseInt(string) >= parseInt(stringnew)) {
+
+
+    //    db.query("INSERT INTO Notifications (device_id, group_id, message, status, send_date, feature_code, user_id, msg_id) values("+deviceId+", 1, "+data+", 'Pending', "+datetime+", "+feature[0].code+", "+userID+", "+token.toFixed(0)+")");
+          db.query("INSERT INTO Notifications (device_id, group_id, message, status, sent_date, feature_code, user_id) values("+deviceId+", "+groupID+", '"+data+"', 'P', '"+datetime+"', '"+feature[0].code+"',"+userID+")");
+          var lastRecord = db.query("SELECT LAST_INSERT_ID()");
+          var lastRecordJson = lastRecord[0];
+          log.info(lastRecordJson["LAST_INSERT_ID()"]);
+          token = lastRecordJson["LAST_INSERT_ID()"];
+
+          log.info(token);
+          var msg = {};
+          msg.token = token;
+          log.info("MMMMMMMM"+msg.toSource());
+          jsonStringData = stringify(msg.toSource());
+          log.info(jsonStringData);
+
+
+          var gcmMSG = gcm.sendViaGCMtoMobile(regId, feature[0].code, token, data, 3);
+          log.info(gcmMSG);
+
+        return true;
+
+        } else {
+
+        return false;
+
+        }
+    }
+
+     function sendMessageToDevices(devices, featureName, data) {
+        var gcm = require('gcm').gcm;
+        log.info("Inside Funtion Devices :"+devices);
+        log.info("Inside Function first device :"+devices[0]);
+        for(i=0;i<devices.length;i++){
+
+           /* var device = db.query("SELECT * FROM Devices WHERE id="+devices[i]);
+            var regId = device[0].reg_id;
+            log.info("Feature Name :"+featureName);
+            var feature = db.query("SELECT code FROM Features WHERE name LIKE '"+"LOCK"+"'");
+            log.info(feature);
+            log.info(feature[0]);
+            var code = feature[0].code;
+            log.info(code);*/
+           // var gcmMSG = gcm.sendViaGCMtoMobile(regId, code, "hi", data, 3);
+           // log.info(gcmMSG);
+           sendMessageToDevice(devices[i], featureName, data)
+
+        }
+    }
+
+    function register(regId,info,email,osversion,vendor){
+
+        var result = db.query("select * from Users where username='"+email+"';");
+        var userId = result[0].id;
+
+       var currentdate = new Date();
+            var createdDate =  currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/"
+                + currentdate.getFullYear() + " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+
+        if(regId!=null){
+            var result = db.query("select * from Devices where reg_id='"+regId+"';");
+            if(result[0]==null){
+                db.query("insert into Devices (tenant_id,os_version,created_date,properties,reg_id,status,deleted,user_id,platform_id,vendor)values('1','"+osversion+"','"+createdDate+"','"+info+"','"+regId+"',"+1+","+0+","+userId+","+1+",'"+vendor+"');");
+                var devices = db.query("select * from Devices where reg_id='"+regId+"'");
+                sendMessageToDevice(devices[0].id,"INFO", "hi");
+                sendMessageToDevice(devices[0].id,"APPLIST", "hi");
+                return true;
+            }else{
+                db.query("UPDATE Devices SET deleted=0 WHERE reg_id='"+regId+"';");
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+
+
+    function unRegister(regId){
+        if(regId!=null){
+            var result = db.query("Delete from Devices where reg_id='"+regId+"'");
+            if(result=1){
+                return true;
+            }else{
+                return false
+            }
+        }else{
+            return false;
+        }
+    }
+
+    /*Getting all Features from a Device*/
+
+    function getFeaturesFromDevice(id){
+        /*var devicePlatform=db.query("select Devices.platform_id from Devices where Devices.id="+id+"");
+        var result=db.query("select PlatformFeatures.feature_id from PlatformFeatures where PlatformFeatures.platform_id="+devicePlatform[0].platform_id);
+
+        var dataAry=new Array();
+        for(var i=0;i<result.length;i++){
+            var tempData=db.query("select * from Features where id="+result[i].feature_id);
+            dataAry[i]=tempData;
+        }
+        return dataAry;*/
+       /* var featureList = db.query("select distinct * from Devices,PlatformFeatures,Features,FeatureType where Devices.platform_id=PlatformFeatures.platform_id and Devices.id=2 and Features.type_id=FeatureType.id and Features.id=PlatformFeatures.feature_id");
+        log.info(featureList[0].name);
+        return featureList;*/
+
+        var featureList = db.query("SELECT DISTINCT Features.description, Features.id, Features.name,Features.code, PlatformFeatures.template from Devices, PlatformFeatures,Features where Devices.platform_id=PlatformFeatures.platform_id and Devices.id="+id+" and Features.id=PlatformFeatures.feature_id;");
+
+
+        var obj = new Array();
+        for(var i=0; i<featureList.length; i++){
+        	var featureArr = {};
+        	var ftype = db.query("SELECT FeatureType.name FROM FeatureType, Features WHERE Features.type_id=FeatureType.id AND Features.id="+featureList[i].id);
+        	log.error(featureList[i]);
+        	featureArr["name"] = featureList[i].name;
+        	featureArr["feature_code"] = featureList[i].code;
+        	featureArr["feature_type"] = ftype[0].name;
+        	featureArr["description"] = featureList[i].description;
+        	if(featureList[i].template === null || featureList[i].template === ""){
+
+        	}else{
+				featureArr["template"] = featureList[i].template;
+			}
+        	obj.push(featureArr);
+        }
+
+        return obj;
+    }
+%>

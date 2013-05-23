@@ -1,0 +1,106 @@
+<%
+include("dbcon.jag");
+include("devicesQuery.jag");
+/*Authentication*/
+    var log = new Log();
+    function isAuthenticated(username,password){
+        log.info(username);
+        log.info(password);
+        var result = db.query("select * from Users where username='"+username+"'&&password='"+password+"';");
+        log.info(result);
+        if(result[0]!=null){
+            var obj = result[0];
+            session.put("user", obj);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    /*create Users*/
+
+    function addUser(userObj){
+        var result=db.query("insert into Users(first_name,last_name,tenant_id,mobile_no, username,password,category_id,created_date,deleted) values('"+userObj.first_name+"','"+userObj.last_name+"',"+userObj.tenant_id+",'"+userObj.mobile_no+"','"+userObj.username+"','"+userObj.password+"',"+userObj.usercategory_id+",'"+userObj.created_date+"',0)");
+        if(result==1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /*Get User*/
+    function getUser(userId){
+        var result = db.query("select * from Users where id="+userId);
+        return result[0];
+    }
+
+        /*Getting all Users*/
+
+    function getAllUsers(){
+            var result=db.query("select * from Users");
+            if(result[0] != null){
+                return result;
+            }else{
+                return null;
+            }
+     }
+    /*Send message to user*/
+
+    function sendMessageToUser(userID, featureName){
+        var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM Devices WHERE userid="+userID);
+        var succeeded="";
+        var failed="";
+        for(var i=0; i<device_list.length; i++){
+            var status = sendMessageToDevice(device_list[i].id, featureName);
+            if(status == true){
+                succeeded += device_list[i].id+",";
+            }else{
+                failed += device_list[i].id+",";
+            }
+        }
+        return "Succeeded : "+succeeded+", Failed : "+failed;
+    }
+
+    function getAllDevicesOfUser(id){
+        var result=db.query("select * from Devices where Devices.userid="+id+"");
+        return result;
+    }
+
+    /*Get all groups of a User*/
+    function getAllGroupsOfUser(userId){
+        var groupList = db.query("select * from Groups,Users,UserGroups where Users.id="+userId+"&&UserGroups.user_id=Users.id&&UserGroups.group_id=Groups.id");
+        return groupList;
+    }
+    function assignUsersToMultipleGroups(id,groups){
+
+        for(var i=0; i<groups.length; i++){
+            var group=groups[i];
+            var result=db.query("insert into UserGroups(UserGroups.user_id,UserGroups.group_id) values("+id+","+group.id+")");
+        }
+
+        if(result==1){
+
+            return true;
+
+        }else{
+
+            return false;
+        }
+    }
+	function assignUsersToMultipleGroups(userid, groups){
+		db.query("DELETE FROM UserGroups where user_id="+userid);
+		for (var i = 0; i < groups.length; i++) {
+		    var group = groups[i]+"";
+			db.query("INSERT INTO UserGroups(user_id, group_id) VALUES("+userid+","+group+")");
+		}
+	}
+	function getUserGroup(userid){
+		var result=db.query("select group_id from UserGroups where user_id="+userid);
+        if(result[0]!= null){
+            return result;
+        }else{
+            return null;
+        }
+	}
+%>

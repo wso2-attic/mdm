@@ -1,0 +1,156 @@
+<%
+	include("/model/dbcon.jag");
+	include('/model/devicesQuery.jag');
+	var log = new Log();
+	log.info('Users hit');
+    var Jally = require('jally.js').Jally;
+	
+	var jbj = new Jally('/mdm/');
+	jbj.route('users/authenticate/|POST', function(ctx){
+        var result = db.query("select * from Users where username='"+ctx.username+"' and password='"+ctx.password+"';");
+		log.info("select * from Users where username='"+ctx.username+"' and password='"+ctx.password+"';");
+		if(result[0]!=null){
+            var obj = result[0];
+            session.put("user", obj);
+			 // session.put("user",'pp');
+			//log.info(session.get("user")+"");
+			response.status=200;
+           	print(200+"|"+obj.category_id+"|"+obj.id);
+        }else{
+            response.status=401;
+            print("Authentication Failed");
+        }
+	});
+	jbj.route('users/authenticate/|GET', function(ctx){
+		var obj = session.get("user");
+		log.info('sfsdf');
+		log.info(session.get('user'));
+		if(obj==null){
+			response.status=401;
+            print("Authentication Failed");
+		}else{
+			var results = db.query("SELECT * FROM Devices WHERE Devices.`user_id`="+obj.id);
+			log.info('cat '+obj.category_id);
+			if(obj.category_id==1){
+				response.status=200;
+	            print(obj.category_id+"|"+obj.id);
+			}else if(results[0]!=undefined){
+				response.status=200;
+	            print(obj.category_id+"|"+obj.id);
+			}
+			else{
+				response.status=401;
+	            print("Authentication Failed");
+			}
+		}
+	});
+	jbj.route('users/unauthenicate/|GET', function(ctx){
+		session.put("user", null);
+		response.status=200;
+	});
+	jbj.route('users/{userid}/sendmail|GET',function(ctx){
+		log.info('email sending to user');
+		var result = db.query("select * from Users where id="+ctx.userid);
+		sendEmail(result[0].username, result[0].first_name);
+		log.info('Email sent to user with id '+result[0].username);
+	});
+	jbj.route('users/{userid}|GET',function(ctx){
+		var result = db.query("select * from Users where id="+ctx.userid);
+		log.info("select * from Users where id="+ctx.userid);
+	    if(result[0]!=null){
+	       response.content = result[0];
+           response.status = 200;
+        }else{
+           response.status = 404;
+       	}
+	});
+	jbj.route('users/|POST',function(ctx){
+		var result=db.query("insert into Users(first_name,last_name,tenant_id,mobile_no, username,password,category_id,created_date,deleted) values('"+ctx.first_name+"','"+ctx.last_name+"',"+ctx.tenant_id+",'"+ctx.mobile_no+"','"+ctx.username+"','"+ctx.password+"',"+ctx.usercategory_id+",'"+ctx.created_date+"',0)");
+		var lastRecord = db.query("SELECT LAST_INSERT_ID()");
+	    var lastRecordJson = lastRecord[0];
+	    log.info(lastRecordJson["LAST_INSERT_ID()"]);
+	    token = lastRecordJson["LAST_INSERT_ID()"];
+		db.query("INSERT INTO UserGroups(user_id, group_id) VALUES("+token+",1)");
+        if(result==1){
+            response.status = 201;
+			sendEmail(ctx.username, ctx.first_name);
+            print("User added Successful");
+        }else{
+           	response.status = 400;
+            print("Fail to Add User");
+        }
+	});
+	jbj.route('users/{userid}/groups/|PUT',function(ctx){
+		db.query("DELETE FROM UserGroups where user_id="+ctx.userid+" and UserGroups.group_id=1");
+			for (var i = 0; i < ctx.groups.length; i++) {
+			    var group = ctx.groups[i]+"";
+				db.query("INSERT INTO UserGroups(user_id, group_id) VALUES("+ctx.userid+","+group+")");
+		}
+        response.status = 200;
+        print("User assigned Successfully");
+	});
+	jbj.route('users/{userid}/groups/|GET',function(ctx){
+		var result=db.query("select group_id from UserGroups where user_id="+ctx.userid);
+        if(result[0]!= null){
+           	response.content = result;
+	        response.status = 200;
+			
+        }
+	});
+	jbj.route('users/|GET',function(ctx){
+		var result=db.query("select * from Users");
+		log.info('sdfsd');
+        if(result[0] != null){
+            response.content = result;
+            response.status = 200;
+        }else{
+            response.status = 404;
+        }
+	});
+	jbj.route('users/{userid}/devices|GET',function(ctx){
+		var result=db.query("select * from Devices where Devices.user_id="+ctx.userid+"");
+		log.info("select * from Devices where Devices.user_id="+ctx.userid+"");
+        if(result[0]!=null){
+			log.info(result);
+            response.content = result;
+            response.status = 200;
+        }else{
+            response.status = 404;
+        }
+	});
+	jbj.route('users/{userid}/operation/{operation}|POST',function(ctx){
+		var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM Devices WHERE user_id="+ctx.userID);
+	        var succeeded="";
+	        var failed="";
+	        for(var i=0; i<device_list.length; i++){
+	            var status = sendMessageToDevice(device_list[i].id, ctx.featureName,JSON.stringify(ctx.data));
+	            if(status == true){
+	                succeeded += device_list[i].id+",";
+	            }else{
+	                failed += device_list[i].id+",";
+	            }
+	        }
+	        return "Succeeded : "+succeeded+", Failed : "+failed;
+	});
+	// var uriMatcher = new URIMatcher(request.getRequestURI());
+	// 	if(uriMatcher.match('users/authenticatee/')){
+	//	request.getParameter('username');
+	// }
+	request.getRequestURI();
+	jbj.process(request);
+	
+function sendEmail(username, name){
+	 content = "Dear "+name+", \n You have been registered to the WSO2 MDM. Please click the link below to download the Android MDM Agent application to enroll your device. \n \n Link - http://10.200.3.46:9763/mdm/mdm.apk \n \n WSO2 MDM Team";
+     subject = "MDM Enrollment";
+
+    var email = require('email');
+    var sender = new email.Sender("smtp.gmail.com", "25", "dulitha@wso2mobile.com", "brainsteamer", "tls");
+    sender.from = "mdm@wso2mobile.com";
+	
+    log.info(username);
+    sender.to = username;
+    sender.subject = subject;
+    sender.text = content;
+    sender.send();
+}
+%>

@@ -1,0 +1,19 @@
+	<div id="push"></div>
+	</div>	
+	
+	
+	<footer class="text-center">
+	      <p><img src="img/wso2mlogo.png" style="width:150px">		
+		</a>  &copy; 2013 | WSO2Mobile - Lean. Enterprise. Mobileware     </p>
+	</footer>
+
+
+
+	<!-- Le javascript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="assets/js/jquery.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+
+</body>
+</html>

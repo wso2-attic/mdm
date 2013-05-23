@@ -1,0 +1,125 @@
+<%
+    include("../model/devicesQuery.jag");
+
+    var log = new Log();
+
+    var verb = request.getMethod();
+    log.info(verb);
+
+    var deviceId = null;
+    var data = null;
+    var strData = null;
+    var operation = null;
+
+    var regId = request.getParameter("regid");
+    var info = request.getParameter("info");
+    var email = request.getParameter("email");
+    var osversion = request.getParameter("osversion");
+    var unregister = request.getParameter("unregister");
+    var vendor = request.getParameter("vendor");
+	log.info(request.getContent());
+
+   if(request.getContent()!=""){
+        var jsonString = request.getContent();
+        var result = parse(jsonString);
+
+        if(result!=null){
+            deviceId = result.deviceid;
+            data = result.data;
+            strData = stringify(data);
+            log.info("deviceId from Json"+deviceId);
+            log.info("data from Json"+data);
+            log.info("Json data as String"+strData);
+        }
+    }
+
+
+
+	
+    log.info("Reg ID from Request"+regId);
+    log.info("Info from Request "+info);
+    log.info("Email from Request"+email);
+    log.info("OSversion from Request"+osversion);
+    log.info("Unregister from Request"+unregister);
+
+
+
+
+    log.info(request.getRequestURI());
+
+    var uriMatcher = new URIMatcher(request.getRequestURI());
+
+   if(uriMatcher.match('/mdm/devices/{deviceid}/{operation}')) {
+        deviceId = uriMatcher.elements().deviceid;
+        operation = uriMatcher.elements().operation;
+        if(operation=="features"){
+            operation = null;
+        }
+        log.info("Device ID from URI matcher"+deviceId);
+        log.info("Operation from URI matcher"+operation);
+    }
+
+    if(verb=="POST"&&regId!=null&&info!=null&&unregister==null&&operation==null){//http method has been changed POST--->GET for testing
+        log.info("Test Register function");
+       var state =  register(regId,info,email,osversion,vendor);
+       if(state){
+           response.status=201;
+           print("Registration Succesful");
+       }else{
+           response.status=400;
+           print("Registration Fail");
+       }
+    }else if(verb=="POST"&&regId!=null&&info==null&&unregister!=null&&operation==null){
+        log.info("Test unregister function");
+        var state =  unRegister(regId);
+        if(state){
+            response.status=200;
+            print("unregistered");
+        }else{
+            response.status=404;
+            print("unregisterfail");
+        }
+
+    }else if(verb=="POST"&&regId!=null&&info==null&&unregister==null&&operation==null){
+        log.info("Test IsRegistered function");
+        log.info(regId);
+        var state = isRegistered(regId);
+        log.info("Register State"+" "+state);
+        if(state){
+           // response.status = 200;
+            print("registered");
+        }else{
+           // response.status = 404;
+            print("notregistered");
+        }
+
+    }else if(verb=="POST"&&regId==null&&info==null&&deviceId!=null&&operation!=null){
+        log.info("Test sendMessageToDevice");
+        log.info("String Data"+strData);
+        if(strData==null){
+            strData = {};
+        }
+        var state = sendMessageToDevice(deviceId,operation,strData);
+        log.info(state);
+        log.info(deviceId);
+        log.info(operation);
+        log.info(strData);
+        if(state){
+            response.status=200;
+        }else{
+            response.status=400;
+        }
+    }else if(verb=="GET"&&regId==null&&info==null&&deviceId!=null&&operation==null){
+        log.info("Test getFeaturesFromDevice");
+        var featureList = getFeaturesFromDevice(deviceId);
+      //  log.info(featureList);
+
+        if(featureList[0]!=null){
+            response.content = featureList;
+            response.status=200;
+
+        }else{
+            response.status=404;
+        }
+    }
+  %>

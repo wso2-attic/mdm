@@ -1,0 +1,27 @@
+<%
+    include("../model/featuresQuery.jag");
+    var verb = request.getMethod();
+  //  var jsonString = request.getContent();
+  //   var result = parse(jsonString);
+    var featureId = null;
+    var uriMatcher = new URIMatcher(request.getRequestURI());
+    if(uriMatcher.match('features/{featureid}')) {
+        //If pattern matches, elements can be accessed from their keys
+        featureId = uriMatcher.elements().featureid;
+    }
+    if(verb=="POST"&&featureId==null){
+        addFeature();
+    }else if(verb=="DELETE"&&featureId!=null){
+        removeFeature(featureId);
+    }else if(verb=="GET"&&featureId!=null){
+        getFeature(featureId);
+    }else if(verb=="GET"&&featureId==null){
+        var featureList = getAllFeatures();
+        if(featureList!=null){
+            response.status = 200;
+            response.content = featureList;
+        }else{
+            response.status = 404;
+        }
+    }
+%>

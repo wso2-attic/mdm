@@ -1,0 +1,4 @@
+<%
+    include("../model/devicesQuery.jag");
+    sendMessageToDevice(1,"503A","hi");
+%>
