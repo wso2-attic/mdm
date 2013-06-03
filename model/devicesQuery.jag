@@ -197,10 +197,13 @@
         }
     }
 
-    function register(regId,info,email,osversion,vendor){
+    function register(regId,properties,email,osversion,vendor,platform){
 
         var result = db.query("select * from Users where username='"+email+"';");
         var userId = result[0].id;
+
+        var platforms = db.query("select id from Platforms where name='"+platform+"'");
+        var platformId = platforms[0].id;
 
        var currentdate = new Date();
             var createdDate =  currentdate.getDate() + "/"
@@ -213,7 +216,7 @@
         if(regId!=null){
             var result = db.query("select * from Devices where reg_id='"+regId+"';");
             if(result[0]==null){
-                db.query("insert into Devices (tenant_id,os_version,created_date,properties,reg_id,status,deleted,user_id,platform_id,vendor)values('1','"+osversion+"','"+createdDate+"','"+info+"','"+regId+"',"+1+","+0+","+userId+","+1+",'"+vendor+"');");
+                db.query("insert into Devices (tenant_id,os_version,created_date,properties,reg_id,status,deleted,user_id,platform_id,vendor)values('1','"+osversion+"','"+createdDate+"','"+properties+"','"+regId+"','"+"A"+"',"+0+","+userId+","+platformId+",'"+vendor+"');");
                 var devices = db.query("select * from Devices where reg_id='"+regId+"'");
                 sendMessageToDevice(devices[0].id,"INFO", "hi");
                 sendMessageToDevice(devices[0].id,"APPLIST", "hi");
