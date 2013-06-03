@@ -19,7 +19,7 @@ function displayUserData(id){
 	
 	userId = getURLParameter("user");
 	
-	jQuery.ajax({
+	jQuery.ajax({   
 	      url: getServerURL() + "/users/" + userId,  
 	      type: "GET",
 	      dataType: "json",
