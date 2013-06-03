@@ -11,7 +11,7 @@ function getURLParameter(name) {
 }
 
 
-function getServerURL(){ 
+function getServerURL(){
 	return "/mdm";
 }
 
@@ -19,7 +19,7 @@ function displayUserData(id){
 	
 	userId = getURLParameter("user");
 	
-	jQuery.ajax({   
+	jQuery.ajax({
 	      url: getServerURL() + "/users/" + userId,  
 	      type: "GET",
 	      dataType: "json",
@@ -74,6 +74,20 @@ function displayDeviceInfo(userId){
 	    		  		
 	    		  		$("#devices-tabs-content").append('<div deviceid="'+ devices[i].id +'" class="tab-pane ' + active + '" id="device-'+ i +'"></div>');
 	    		  		
+	    		  		
+	    		  		var properties = jQuery.parseJSON(devices[i].properties);
+	    		  		var properitesString = "";
+	    		  		
+	    		  		
+	    		  		for (var key in properties) {
+	    		  			
+	    		  			if(key){
+	    		  				 properitesString += '<div class="row-fluid">' +
+													'<b>' + key + ' : </b> ' + properties[key] +
+										       '</div>';
+	    		  			}
+						} 
+	    		  		
 	    		  		$("#device-" + i).append('<div class="row-fluid">' +
 	    		  				
 	    		  				'<div class="span4">' +		    		  				
@@ -104,18 +118,8 @@ function displayDeviceInfo(userId){
 				
 																'<div id="device-info-description" class="row-fluid">' +
 																	'<div class="span12 offset1">' +
-																		'<div class="row-fluid">' +
-																			'<b>Device Name:</b> ' + jQuery.parseJSON(devices[i].properties).device +
-																		'</div>' +
-																		'<div class="row-fluid">' +
-																			'<b>Model:</b> ' + jQuery.parseJSON(devices[i].properties).model +
-																		'</div>' +
-																		'<div class="row-fluid">' +
-																			'<b>Device OS:</b> ' + devices[i].os_version +
-																		'</div>' +
-																		'<div class="row-fluid">' +
-																			'<b>Operator:</b> ' + jQuery.parseJSON(devices[i].properties).opname +
-																		'</div>' +
+																	
+																		properitesString +
 																		
 																	'</div>' +
 																'</div>' +
