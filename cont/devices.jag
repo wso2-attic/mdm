@@ -1,134 +1,74 @@
 <%
     include("../model/devicesQuery.jag");
     var log = new Log();
+    log.error("invoking devices.jag");
     var verb = request.getMethod();
     
     var userAgent= request.getHeader("User-Agent");
     var android = userAgent.indexOf("Android");
  
     var uriMatcher = new URIMatcher(request.getRequestURI());
-    	
-    if(android > 0){
-		if(uriMatcher.match('/mdm/devices/register')) {
-		   	var regId = request.getParameter("regid");
-		   	var properties = request.getParameter("properties");
-		   	var email = request.getParameter("email");
-		   	var osversion = request.getParameter("osversion");
-		   	var vendor = request.getParameter("vendor");
-		   	var platform = request.getParameter("platform");
-		   	
-		   	var state =  register(regId,properties,email,osversion,vendor,platform);
-		    if(state){
-		    	response.status=201;
-		    }else{
-		        response.status=400;
-		    }
-		 }else if(uriMatcher.match('/mdm/devices/unregister')){
-		   	var regId = request.getParameter("regid");
-		   	var state =  unRegister(regId); 
-		        if(state){
-		            response.status=200;
-		            print("unregistered");
-		        }else{
-		            response.status=404;
-		            print("unregisterfail");
-		        }
-		 }else if(uriMatcher.match('/mdm/devices/isregistered')){
-		    var regId = request.getParameter("regid");
-		    var state = isRegistered(regId);	
-		        if(state){
-		            response.status = 200;
-		            print("registered");
-		        }else{
-		            response.status = 404;
-		            print("notregistered");
-		        }
-		 }else if(uriMatcher.match('mdm/devices/{deviceid}/operations/{operation}')){
-		   	var deviceId = uriMatcher.elements().deviceid;
-		    var operation = uriMatcher.elements().operation;
-		   	var jsonString = request.getContent();
-		    var result = parse(jsonString);
-		    	var strData = null;
-		        if(result!=null){
-		            var data = result.data;
-		            strData = stringify(data);
-		        } 
-		   	 	var state = sendMessageToDevice(deviceId,operation,strData); 
-		        if(state){
-		            response.status=200;
-		        }else{
-		            response.status=400;
-		        }     
-		 }else if(uriMatcher.match('mdm/devices/{deviceid}/features')){
-		   	var deviceId = uriMatcher.elements().deviceid;
-		   	var featureList = getFeaturesFromDevice(deviceId);
-		    	if(featureList[0]!=null){
-		            response.content = featureList;
-		            response.status=200;
-		        }else{
-		            response.status=404;
-		   	    } 
-		 } 
-	}else {
-	/*	if(uriMatcher.match('/mdm/devices/register')) {
-		   	var regId = request.getParameter("regid");
-		   	var properties = request.getParameter("properties");
-		   	var email = request.getParameter("email");
-		   	var osversion = request.getParameter("osversion");
-		   	var vendor = request.getParameter("vendor");
-		   	var platform = request.getParameter("platform");
-		   	
-		   	var state =  register(regId,properties,email,osversion,vendor,platform);
-		    if(state){
-		    	response.status=201;
-		    }else{
-		        response.status=400;
-		    }
-		 }else if(uriMatcher.match('/mdm/devices/unregister')){
-		   	var regId = request.getParameter("regid");
-		   	var state =  unRegister(regId); 
-		        if(state){
-		            response.status=200;
-		            print("unregistered");
-		        }else{
-		            response.status=404;
-		            print("unregisterfail");
-		        }
-		 }else if(uriMatcher.match('/mdm/devices/isregistered')){
-		    var regId = request.getParameter("regid");
-		    var state = isRegistered(regId);	
-		        if(state){
-		            response.status = 200;
-		            print("registered");
-		        }else{
-		            response.status = 404;
-		            print("notregistered");
-		        }
-		 }else if(uriMatcher.match('mdm/devices/{deviceid}/operations/{operation}')){
-		   	var deviceId = uriMatcher.elements().deviceid;
-		    var operation = uriMatcher.elements().operation;
-		   	var jsonString = request.getContent();
-		    var result = parse(jsonString);
-		    	var strData = null;
-		        if(result!=null){
-		            var data = result.data;
-		            strData = stringify(data);
-		        } 
-		   	 	var state = sendMessageToDevice(deviceId,operation,strData); 
-		        if(state){
-		            response.status=200;
-		        }else{
-		            response.status=400;
-		        }     
-		 }else if(uriMatcher.match('mdm/devices/{deviceid}/features')){
-		   	var deviceId = uriMatcher.elements().deviceid;
-		   	var featureList = getFeaturesFromDevice(deviceId);
-		    	if(featureList[0]!=null){
-		            response.content = featureList;
-		            response.status=200;
-		        }else{
-		            response.status=404;
-		   	    } 
-		 }*/ 		
-	}
+    log.error(request.getRequestURI());
+    	log.error(uriMatcher.match('/mdm/devices/register'));
+	if(uriMatcher.match('/mdm/devices/register')) {
+		log.error('hi');
+	   	var regId = request.getParameter("regid");
+	   	var properties = request.getParameter("properties");
+	   	var email = request.getParameter("email");
+	   	var osversion = request.getParameter("osversion");
+	   	var vendor = request.getParameter("vendor");
+	   	var platform = request.getParameter("platform");
+	   	
+	   	var state =  register(regId,properties,email,osversion,vendor,platform);
+	    if(state){
+	    	response.status=201;
+	    }else{
+	        response.status=400;
+	    }
+	 }else if(uriMatcher.match('/mdm/devices/unregister')){
+	   	var regId = request.getParameter("regid");
+	   	var state =  unRegister(regId); 
+	        if(state){
+	            response.status=200;
+	            print("unregistered");
+	        }else{
+	            response.status=404;
+	            print("unregisterfail");
+	        }
+	 }else if(uriMatcher.match('/mdm/devices/isregistered')){
+	    var regId = request.getParameter("regid");
+	    var state = isRegistered(regId);	
+	        if(state){
+	            response.status = 200;
+	            print("registered");
+	        }else{
+	            response.status = 404;
+	            print("notregistered");
+	        }
+	 }else if(uriMatcher.match('mdm/devices/{deviceid}/operations/{operation}')){
+	   	var deviceId = uriMatcher.elements().deviceid;
+	    var operation = uriMatcher.elements().operation;
+	   	var jsonString = request.getContent();
+	    var result = parse(jsonString);
+	    	var strData = null;
+	        if(result!=null){
+	            var data = result.data;
+	            strData = stringify(data);
+	        } 
+	   	 	var state = sendMessageToDevice(deviceId,operation,strData); 
+	        if(state){
+	            response.status=200;
+	        }else{
+	            response.status=400;
+	        }     
+	 }else if(uriMatcher.match('mdm/devices/{deviceid}/features')){
+	   	var deviceId = uriMatcher.elements().deviceid;
+	   	var featureList = getFeaturesFromDevice(deviceId);
+	    	if(featureList[0]!=null){
+	            response.content = featureList;
+	            response.status=200;
+	        }else{
+	            response.status=404;
+	   	    } 
+	 } 
   %>
