@@ -373,7 +373,7 @@ function loadGeneralInformation(id, devices){
 	    	  
 	    	  notificationsString = "";    	 	    		  
 	    		  
-	    		  notificationsString +=	'<div class="span3">';
+	    		  notificationsString +=	'<div class="span2">';
 	    		  notificationsString +=	'<div class="row text-center">';
 	    		  notificationsString +=	'<img style="height:60px" src="img/info/battery.png">';
 	    		  notificationsString +=	'</div>';
@@ -383,7 +383,7 @@ function loadGeneralInformation(id, devices){
 	    		  notificationsString +=    '</div>';
 	    		  
 	    		  
-	    		   notificationsString +=	'<div class="span3">';
+	    		   notificationsString +=	'<div class="span2">';
 	    		  notificationsString +=	'<div class="row text-center">';
 	    		  notificationsString +=	'<img style="height:60px" src="img/info/external_memory.png">';
 	    		  notificationsString +=	'</div>';
@@ -393,7 +393,7 @@ function loadGeneralInformation(id, devices){
 	    		  notificationsString +=    '</div>';
 	    		  
 	    		  
-	    		  notificationsString +=	'<div class="span3">';
+	    		  notificationsString +=	'<div class="span2">';
 	    		  notificationsString +=	'<div class="row text-center">';
 	    		  notificationsString +=	'<img style="height:60px" src="img/info/internal_memory.png">';
 	    		  notificationsString +=	'</div>';
@@ -403,14 +403,31 @@ function loadGeneralInformation(id, devices){
 	    		  notificationsString +=    '</div>';
 	    		  
 	    		  
-	    		  notificationsString +=	'<div class="span3">';
+	    		  notificationsString +=	'<div class="span2">';
 	    		  notificationsString +=	'<div class="row text-center">';
 	    		  notificationsString +=	'<img style="height:60px" href="#modelMap-'+ id + '" data-toggle="modal" src="img/info/location.png">';
 	    		  notificationsString +=	'</div>';
 	    		  notificationsString +=	'<div class="row text-center">';
 	    		  notificationsString +=	 "Location";
 	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=    '</div>';
+	    		  notificationsString +=    '</div>';  
+	    		  
+	    		   
+	    		  notificationsString +=	'<div class="span2">';
+	    		  notificationsString +=	'<div class="row text-center">';
+	    		  notificationsString +=	'<img style="height:60px" src="img/info/simcard.png">';
+	    		  notificationsString +=	'</div>';
+	    		  notificationsString +=	'<div class="row text-center">';
+	    		  notificationsString +=	 "Operator: ";
+	    		  for (var key in receivedData.operator) {
+	    		  	 	notificationsString +=	 receivedData.operator[key];
+	    		  	 	if(key < (receivedData.operator.length -1)){
+	    		  	 		notificationsString += ", ";
+	    		  	 	}
+	    		  }	    		 
+	    		  notificationsString +=	'</div>';
+	    		  notificationsString +=    '</div>';     		  
+	    		  
 	    		  
 	    		  
 				 
