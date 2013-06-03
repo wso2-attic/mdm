@@ -19,21 +19,22 @@
 	log.info(password);
 	log.info("Test 1");
     var userId = null;
-        var operation = null;
-        var uriMatcher = new URIMatcher(request.getRequestURI());
+    var operation = null;
+    var uriMatcher = new URIMatcher(request.getRequestURI());
     	
-        if(verb=="POST"&&username!=null&&password!=null){ //http method has been changed POST--->GET
-                   	var result = db.query("select * from Users where username='"+username+"' and password='"+password+"';");
-            		log.info('bbb');
-            		//log.info("select * from Users where username='"+ctx.username+"' and password='"+ctx.password+"';");
-            		if(result[0]!=null){
-            			response.status=200;
-                       	print(200);
-                    }else{
-                        response.status=401;
-                        print("Authentication Failed");
-                    }
-                 }
+    if(verb == "POST" && username != null && password != null) { 
+    	//http method has been changed POST--->GET
+       	var result = db.query("select * from Users where username='"+username+"' and password='"+password+"';");
+		
+		if(result[0]!=null) {
+			response.status=200;
+           	print(200);
+        } else{
+            response.status=401;
+            print("Authentication Failed");
+        }
+    }
+    
     function sendEmail(username){
     	 content = "You have been successfully added to the MDM Server";
          subject = "MDM Enrollment";

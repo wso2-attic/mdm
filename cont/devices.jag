@@ -59,7 +59,7 @@
         log.info("Operation from URI matcher"+operation);
     }
 
-    if(verb=="POST"&&regId!=null&&info!=null&&unregister==null&&operation==null){//http method has been changed POST--->GET for testing
+    if(verb=="POST" && regId!=null && info!=null && unregister==null && operation == null) {//http method has been changed POST--->GET for testing
         log.info("Test Register function");
        var state =  register(regId,info,email,osversion,vendor);
        if(state){
