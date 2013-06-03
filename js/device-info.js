@@ -11,7 +11,7 @@ function getURLParameter(name) {
 }
 
 
-function getServerURL(){
+function getServerURL(){ 
 	return "/mdm";
 }
 
