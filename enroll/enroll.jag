@@ -1,0 +1,14 @@
+<%
+     var log = new Log();
+    var userAgent= request.getHeader("User-Agent");
+
+    var android = userAgent.indexOf("Android");
+
+    if(android>0){
+        response.sendRedirect("https://10.200.3.43:9443/mdm/mdm.apk");
+    }else{
+        response.sendRedirect("https://10.200.3.36:8443");
+    }
+
+
+%>
