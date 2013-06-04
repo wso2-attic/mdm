@@ -78,16 +78,16 @@ function displayDeviceInfo(userId){
 	    		  		var properties = jQuery.parseJSON(devices[i].properties);
 	    		  		var properitesString = "";
 	    		  		
-	    		  		
+	    		  		 
 	    		  		for (var key in properties) {
 	    		  			
 	    		  			if(key){
 	    		  				 properitesString += '<div class="row-fluid">' +
-													'<b>' + key + ' : </b> ' + properties[key] +
+													'<b>' + capitaliseFirstLetter(key) + ' : </b> ' + properties[key] +  
 										       '</div>';
 	    		  			}
 						} 
-	    		  		
+	    		  		 
 	    		  		$("#device-" + i).append('<div class="row-fluid">' +
 	    		  				
 	    		  				'<div class="span4">' +		    		  				
@@ -804,3 +804,8 @@ function checkForNullMakeBlank(val){
 	}  
  }
 
+
+function capitaliseFirstLetter(string)
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
