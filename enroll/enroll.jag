@@ -1,14 +1,13 @@
 <%
-     var log = new Log();
-    var userAgent= request.getHeader("User-Agent");
+	var log = new Log();
+	var userAgent= request.getHeader("User-Agent");
+	log.info(userAgent);
+	var android = userAgent.indexOf("Android");
+	log.info(android);
 
-    var android = userAgent.indexOf("Android");
-
-    if(android>0){
-        response.sendRedirect("https://10.200.3.43:9443/mdm/mdm.apk");
-    }else{
-        response.sendRedirect("https://10.200.3.36:8443");
-    }
-
-
+	if(android>0){
+    	response.sendRedirect("http://10.200.3.89:9764/mdm/mdm.apk"); 
+ 	}else{
+    	response.sendRedirect("https://10.200.3.36:8443");
+	}
 %>
