@@ -309,7 +309,6 @@
 			
 			if(updateResult != null && updateResult != undefined && updateResult[0] != null 
 				&& updateResult[0] != undefined) {
-					log.error(">>>>>>>>>>>>> 3");
 				return true;
 			} 
 		} 
