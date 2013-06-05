@@ -1,5 +1,5 @@
 <%
-     var log = new Log();
+    var log = new Log();
     var userAgent= request.getHeader("User-Agent");
 
     var android = userAgent.indexOf("Android");
@@ -9,6 +9,4 @@
     }else{
         response.sendRedirect("https://10.200.3.62:8443");
     }
-
-
 %>
