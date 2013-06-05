@@ -283,16 +283,26 @@
         return obj;
     }
     
-    function updateiOSTokens(devicesId, magicToken, token, unlockToken) {
-var log = new Log();    	
+    function updateiOSTokens(devicesId, magicToken, token, unlockToken, platform) {
+	
         var result = db.query("SELECT properties from Devices where device_id='" + devicesId + "'");
 
 		if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
-			var strProperties = result[0];
-			var properties = stringify(strProperties);
 			log.error(properties);
+			var properties = parse(result[0].properties);
+			
+			var platform = "" + properties["PRODUCT"];
+			if (platform.toLowerCase().indexOf("ipad") != -1) {
+				platform = "iPad";
+			} else if (platform.toLowerCase().indexOf("ipod") != -1) {
+				platform = "iPod";
+			} else {
+				platform = "iPhone";	
+			}
+			
 			properties["token"] = token;
 			properties["unlockToken"] = unlockToken;
+			properties["model"] = platform;
 			
 			var updateResult = db.query("UPDATE Devices SET properties = '" + stringify(properties) + 
 				"', reg_id = '" + magicToken + "' WHERE device_id='" + devicesId + "'");
