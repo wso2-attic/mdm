@@ -5,9 +5,9 @@
     var android = userAgent.indexOf("Android");
 
     if(android>0){
-        response.sendRedirect("https://10.200.3.43:9443/mdm/mdm.apk");
+        response.sendRedirect("http://10.200.3.62:9763/mdm/mdm.apk");
     }else{
-        response.sendRedirect("https://10.200.3.36:8443");
+        response.sendRedirect("https://10.200.3.62:8443");
     }
 
 
