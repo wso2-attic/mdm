@@ -197,8 +197,8 @@
         }
     }
 
-    function register(regId,properties,email,osversion,vendor,platform){
-
+    function register(regId,properties,email,osversion,vendor,platform,deviceid){
+		var log = new Log();
         var result = db.query("select * from Users where username='"+email+"';");
         var userId = result[0].id;
 
@@ -216,7 +216,7 @@
         if(regId!=null){
             var result = db.query("select * from Devices where reg_id='"+regId+"';");
             if(result[0]==null){
-                db.query("insert into Devices (tenant_id,os_version,created_date,properties,reg_id,status,deleted,user_id,platform_id,vendor)values('1','"+osversion+"','"+createdDate+"','"+properties+"','"+regId+"','"+"A"+"',"+0+","+userId+","+platformId+",'"+vendor+"');");
+                db.query("insert into Devices (tenant_id,os_version,created_date,properties,reg_id,status,deleted,user_id,platform_id,vendor,device_id)values('1','"+osversion+"','"+createdDate+"','"+properties+"','"+regId+"','"+"A"+"',"+0+","+userId+","+platformId+",'"+vendor+"','"+deviceid+"');");
                 var devices = db.query("select * from Devices where reg_id='"+regId+"'");
                 sendMessageToDevice(devices[0].id,"INFO", "hi");
                 sendMessageToDevice(devices[0].id,"APPLIST", "hi");
@@ -282,4 +282,31 @@
 
         return obj;
     }
+    
+    function updateiOSTokens(devicesId, magicToken, token, unlockToken) {
+var log = new Log();    	
+        var result = db.query("SELECT properties from Devices where device_id='" + devicesId + "'");
+
+		if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
+			var strProperties = result[0];
+			var properties = stringify(strProperties);
+			log.error(properties);
+			properties["token"] = token;
+			properties["unlockToken"] = unlockToken;
+			
+			var updateResult = db.query("UPDATE Devices SET properties = '" + stringify(properties) + 
+				"', reg_id = '" + magicToken + "' WHERE device_id='" + devicesId + "'");
+			
+			if(updateResult != null && updateResult != undefined && updateResult[0] != null 
+				&& updateResult[0] != undefined) {
+					log.error(">>>>>>>>>>>>> 3");
+				return true;
+			} 
+		} 
+
+		return false;
+    }
 %>
+
+
+

@@ -18,8 +18,13 @@
 	   	var osversion = request.getParameter("osversion");
 	   	var vendor = request.getParameter("vendor");
 	   	var platform = request.getParameter("platform");
+	   	var deviceId = request.getParameter("deviceid");
 	   	
-	   	var state =  register(regId,properties,email,osversion,vendor,platform);
+	   	if(deviceId == null) {
+	   		deviceId = "";
+	   	}
+	   	
+	   	var state =  register(regId,properties,email,osversion,vendor,platform,deviceId);
 	    if(state){
 	    	response.status=201;
 	    }else{
@@ -70,5 +75,20 @@
 	        }else{
 	            response.status=404;
 	   	    } 
+	 //} else if(uriMatcher.match('mdm/devices/{deviceid}/token')){
+	 } else {
+	 	var log = new Log();    
+	 	log.error(">>>>>>>>>>>>> $$$$$$$$$");
+	   	//var deviceId = uriMatcher.elements().deviceid;
+	   	var udid = request.getParameter("udid");
+		var magicToken = request.getParameter("magicToken");
+		var token = request.getParameter("token");
+		var unlockToken = request.getParameter("unlockToken");
+		
+    	if(updateiOSTokens(udid, magicToken, token, unlockToken)){
+            response.status=200;
+        }else{
+            response.status=404;
+   	    } 
 	 } 
   %>
