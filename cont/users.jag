@@ -1,6 +1,7 @@
 <%
 	include("/model/dbcon.jag");
 	include('/model/devicesQuery.jag');
+    include('/commans/ipconf.jag');
 	var log = new Log();
 	log.info('Users hit');
     var Jally = require('jally.js').Jally;
@@ -141,7 +142,8 @@
 	
 function sendEmail(username, name){
 	//content = "Dear "+name+", \n You have been registered to the WSO2 MDM. Please click the link below to download the Android MDM Agent application to enroll your device. \n \n Link - https://10.200.3.62:9443/mdm/device_enroll \n \n WSO2 MDM Team";
-    content = "Dear "+name+", \n You have been registered to the WSO2 MDM. Please click here the link below enroll your device. \n \n Link - https://10.200.3.62:9443/mdm/device_enroll \n \n WSO2 MDM Team"; 
+   // content = "Dear "+name+", \n You have been registered to the WSO2 MDM. Please click here the link below enroll your device. \n \n Link - https://10.200.3.62:9443/mdm/device_enroll \n \n WSO2 MDM Team";
+    content = "Dear "+name+", \n You have been registered to the WSO2 MDM. Please click the link below to enroll your device. \n \n Link - "+HTTPS_URL+"/mdm/device_enroll \n \n WSO2 MDM Team";
     subject = "MDM Enrollment";
 
     var email = require('email');

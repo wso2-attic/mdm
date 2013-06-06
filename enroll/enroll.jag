@@ -1,12 +1,13 @@
 <%
+    include('/commans/ipconf.jag');
     var log = new Log();
     var userAgent= request.getHeader("User-Agent");
 
     var android = userAgent.indexOf("Android");
 
     if(android>0){
-        response.sendRedirect("http://10.200.3.62:9763/mdm/mdm.apk");
+        response.sendRedirect(HTTP_URL+"/mdm/mdm.apk");
     }else{
-        response.sendRedirect("https://10.200.3.62:8443");
+        response.sendRedirect( RUBY_SERVER_UR);
     }
 %>
