@@ -1,6 +1,7 @@
 <%
     include("../model/devicesQuery.jag");
     var log = new Log();
+     log.info("hi");
     log.error("invoking devices.jag");
     var verb = request.getMethod();
     
@@ -9,7 +10,7 @@
  
     var uriMatcher = new URIMatcher(request.getRequestURI());
     log.error(request.getRequestURI());
-    	log.error(uriMatcher.match('/mdm/devices/register'));
+    	
 	if(uriMatcher.match('/mdm/devices/register')) {
 		log.error('hi');
 	   	var regId = request.getParameter("regid");
@@ -50,35 +51,45 @@
 	            response.status = 404;
 	            print("notregistered");
 	        }
-	 }else if(uriMatcher.match('mdm/devices/{deviceid}/operations/{operation}')){
+	 }else if(uriMatcher.match('/mdm/devices/{deviceid}/operations/{operation}')){
 	   	var deviceId = uriMatcher.elements().deviceid;
-	    var operation = uriMatcher.elements().operation;
-	   	var jsonString = request.getContent();
-	    var result = parse(jsonString);
-	    	var strData = null;
-	        if(result!=null){
-	            var data = result.data;
-	            strData = stringify(data);
-	        } 
-	   	 	var state = sendMessageToDevice(deviceId,operation,strData); 
-	        if(state){
-	            response.status=200;
-	        }else{
-	            response.status=400;
-	        }     
-	 }else if(uriMatcher.match('mdm/devices/{deviceid}/features')){
+        var operation = uriMatcher.elements().operation;
+        var jsonString = request.getContent();
+        var result = parse(jsonString);
+        var strData = null;
+        
+        if(result!=null){
+            var data = result.data;
+            strData = stringify(data);
+        }
+         
+        var state = null;
+        
+        if(android > 0){
+            state = sendMessageToDevice(deviceId,operation,strData); 
+        }else{
+            state = sendMessageToIOSDevice(deviceId,operation,strData);
+        }
+            
+        if(state){
+            response.status=200;
+        }else{
+            response.status=400;
+        }     
+	 }else if(uriMatcher.match('/mdm/devices/{deviceid}/features')){
+	 	log.info("hi");
 	   	var deviceId = uriMatcher.elements().deviceid;
 	   	var featureList = getFeaturesFromDevice(deviceId);
-	    	if(featureList[0]!=null){
-	            response.content = featureList;
-	            response.status=200;
-	        }else{
-	            response.status=404;
-	   	    } 
-	 //} else if(uriMatcher.match('mdm/devices/{deviceid}/token')){
+    	if(featureList[0]!=null){
+            response.content = featureList;
+            response.status=200;
+        }else{
+            response.status=404;
+   	    } 
+	 
 	 } else {
 	 	var log = new Log();    
-	 	log.error(">>>>>>>>>>>>> $$$$$$$$$");
+	 	log.info("hiiii");
 	   	//var deviceId = uriMatcher.elements().deviceid;
 	   	var udid = request.getParameter("udid");
 		var magicToken = request.getParameter("magicToken");

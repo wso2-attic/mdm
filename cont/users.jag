@@ -140,8 +140,9 @@
 	jbj.process(request);
 	
 function sendEmail(username, name){
-	 content = "Dear "+name+", \n You have been registered to the WSO2 MDM. Please click the link below to download the Android MDM Agent application to enroll your device. \n \n Link - http://10.200.3.46:9763/mdm/mdm.apk \n \n WSO2 MDM Team";
-     subject = "MDM Enrollment";
+	//content = "Dear "+name+", \n You have been registered to the WSO2 MDM. Please click the link below to download the Android MDM Agent application to enroll your device. \n \n Link - https://10.200.3.62:9443/mdm/device_enroll \n \n WSO2 MDM Team";
+    content = "Dear "+name+", \n You have been registered to the WSO2 MDM. Please click here the link below enroll your device. \n \n Link - https://10.200.3.62:9443/mdm/device_enroll \n \n WSO2 MDM Team"; 
+    subject = "MDM Enrollment";
 
     var email = require('email');
     var sender = new email.Sender("smtp.gmail.com", "25", "dulitha@wso2mobile.com", "brainsteamer", "tls");
