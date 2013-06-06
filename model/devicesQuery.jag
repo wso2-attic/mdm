@@ -1,5 +1,5 @@
 <%
-    include("dbcon.jag");
+    include("dbcon.jag"); 
 
     /*Checking for unregistered device*/
     var log = new Log();
@@ -300,12 +300,15 @@
 				platform = "iPhone";	
 			}
 			
-			properties["token"] = token;
-			properties["unlockToken"] = unlockToken;
 			properties["model"] = platform;
 			
+			var tokenProperties = {};
+			tokenProperties["token"] = token;
+			tokenProperties["unlockToken"] = unlockToken;
+			tokenProperties["magicToken"] = magicToken;
+			
 			var updateResult = db.query("UPDATE Devices SET properties = '" + stringify(properties) + 
-				"', reg_id = '" + magicToken + "' WHERE device_id='" + devicesId + "'");
+				"', reg_id = '" + stringify(tokenProperties) + "' WHERE device_id='" + devicesId + "'");
 			
 			if(updateResult != null && updateResult != undefined && updateResult[0] != null 
 				&& updateResult[0] != undefined) {

@@ -76,7 +76,7 @@
         }else{
             response.status=400;
         }     
-	 }else if(uriMatcher.match('/mdm/devices/{deviceid}/features')){
+	 } else if(uriMatcher.match('/mdm/devices/{deviceid}/features')){
 	 	log.info("hi");
 	   	var deviceId = uriMatcher.elements().deviceid;
 	   	var featureList = getFeaturesFromDevice(deviceId);
@@ -87,16 +87,14 @@
             response.status=404;
    	    } 
 	 
-	 } else {
+	 } else if(uriMatcher.match('/mdm/devices/{deviceid}')) {
 	 	var log = new Log();    
-	 	log.info("hiiii");
-	   	//var deviceId = uriMatcher.elements().deviceid;
-	   	var udid = request.getParameter("udid");
+	   	var deviceId = uriMatcher.elements().deviceid;
 		var magicToken = request.getParameter("magicToken");
 		var token = request.getParameter("token");
 		var unlockToken = request.getParameter("unlockToken");
 		
-    	if(updateiOSTokens(udid, magicToken, token, unlockToken)){
+    	if(updateiOSTokens(deviceId, magicToken, token, unlockToken)){
             response.status=200;
         }else{
             response.status=404;
