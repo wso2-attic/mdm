@@ -1,6 +1,7 @@
 <%
     include("../model/devicesQuery.jag");
     var log = new Log();
+     log.info("hi");
     log.error("invoking devices.jag");
     var verb = request.getMethod();
     
