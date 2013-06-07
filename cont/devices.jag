@@ -99,5 +99,15 @@
         }else{
             response.status=404;
    	    } 
-	 } 
+	 }else if(uriMatcher.match('/mdm/pending/devices/{udid}/operations')){
+        var UDID = uriMatcher.elements().udid;
+        var featureCodeList = getPendingOperationsFromDevice(UDID);
+        if(featureCodeList!= undefined && featureCodeList!= null && featureCodeList[0]!=null){
+            response.content = featureCodeList;
+            response.status=200;
+        }else{
+            response.status=404;
+        }
+
+    }
   %>
