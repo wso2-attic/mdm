@@ -17,6 +17,9 @@ include('include/main/header.jag');
 			  <div class="tab-content">
 			    <div class="tab-pane active" id="tab1">
 			      <div class="row form-horizontal">
+			      	
+			      	<form  data-validate="parsley">
+			      		
 					<div class="control-group">
 					    <label class="control-label text-left" for="username">Email</label>
 					    <div class="controls">
@@ -44,7 +47,7 @@ include('include/main/header.jag');
 					<div class="control-group">
 					    <label class="control-label text-left" for="mobileNo">Mobile No</label>
 					    <div class="controls">
-					      <input type="text" class="mobileNo deletable" />
+					      <input type="text" class="mobileNo deletable" data-trigger="change" data-type="phone" />
 					    </div>
 					 </div>
 					<div class="control-group">
@@ -60,6 +63,8 @@ include('include/main/header.jag');
 					      <button class="btn btn-large btn-primary btn-orange saveuser" type="button">Save</button>
 					    </div>
 					 </div>
+					 
+					</form> 
 				</div>
 			    </div>
 			    <div class="tab-pane" id="tab2" style="display:none;">
