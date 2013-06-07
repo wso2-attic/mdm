@@ -65,7 +65,7 @@
          
         var state = null;
         
-        if(android > 0){
+        if(android > 0){ 
             state = sendMessageToDevice(deviceId,operation,strData); 
         }else{
             state = sendMessageToIOSDevice(deviceId,operation,strData);
