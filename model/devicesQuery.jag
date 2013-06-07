@@ -298,7 +298,7 @@
 				platform = "iPod";
 			} else {
 				platform = "iPhone";	
-			}
+			} 
 			
 			properties["model"] = platform;
 			
@@ -405,6 +405,17 @@
 
         return false;
 
+	}
+	
+    function getPendingOperationsFromDevice(UDID){
+
+        var deviceList = db.query("select id from Devices where udid='"+UDID+"'");
+        if(deviceList[0]!=null){
+            var deviceID = deviceList[0].id;
+            var pendingFeatureCodeList=db.query("SELECT distinct Notifications.feature_code from Notifications where Notifications.status='P' AND Notifications.device_id='"+deviceID+"'");
+            return pendingFeatureCodeList;
+        }else{
+            return null;
         }
     }
 %>
