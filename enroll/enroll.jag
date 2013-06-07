@@ -8,6 +8,6 @@
     if(android>0){
         response.sendRedirect(HTTP_URL+"/mdm/mdm.apk");
     }else{
-        response.sendRedirect( RUBY_SERVER_UR);
+        response.sendRedirect( RUBY_SERVER_URL);
     }
 %>
