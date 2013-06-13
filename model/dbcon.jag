@@ -1,7 +1,7 @@
 <%
 var db = application.get('db');
 if(db==null || db==undefined){
-	db = new Database("jdbc:mysql://localhost:3306/demodb","root","123");
+	db = new Database("jdbc:mysql://localhost:3306/demodb","root","");
 	//db = new Database("jdbc:mysql://localhost:3306/demodb","root","");
 	application.put('db',db);
 }

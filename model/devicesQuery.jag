@@ -339,7 +339,7 @@
 				platform = "iPod";
 			} else {
 				platform = "iPhone";	
-			}
+			} 
 			
 			properties["model"] = platform;
 			
@@ -348,8 +348,8 @@
 			tokenProperties["unlockToken"] = unlockToken;
 			tokenProperties["magicToken"] = magicToken;
 			
-			var updateResult = db.query("UPDATE Devices SET properties = '" + stringify(properties) + 
-				"', reg_id = '" + stringify(tokenProperties) + "' WHERE device_id='" + devicesId + "'");
+			var updateResult = db.query("UPDATE Devices SET properties = ?, reg_id = ? WHERE device_id= ?", 
+				stringify(properties), stringify(tokenProperties), devicesId);
 			
 			if(updateResult != null && updateResult != undefined && updateResult[0] != null 
 				&& updateResult[0] != undefined) {
@@ -359,6 +359,95 @@
 
 		return false;
     }
+     
+    function sendMessageToIOSDevice(deviceId, featureName, data) {
+
+        var token = Math.random() * 1000000;
+
+        var gcm = require('gcm').gcm;
+
+        var status = false;
+
+        var device_info = db.query("SELECT reg_id, os_version, platform_id, user_id FROM Devices WHERE id=" +deviceId);
+
+        var feature = db.query("SELECT id, code FROM Features WHERE name LIKE '"+featureName +"'");
+        var userID = device_info[0].user_id;
+
+        var cur_user = db.query("SELECT group_id FROM UserGroups WHERE user_id=" +userID);
+        var groupID = cur_user[0].group_id;
+        var string = "0";
+
+        if (device_info[0] != null) {
+            string = device_info[0].os_version;
+        }
+
+        string = string.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+
+        for (var i = string.length; i < 4; i++) {
+
+        string += "0";
+
+        }
+
+        var platform_feature = db.query("SELECT id, template, min_version FROM PlatformFeatures WHERE (platform_id = " + device_info[0].platform_id + " AND feature_id = "+feature[0].id +")");
+
+        var stringnew = "0";
+        if (platform_feature[0] != null) {
+            stringnew = platform_feature[0].min_version;
+        }
+
+        stringnew = stringnew.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+
+        for (var i = stringnew.length; i < 4; i++) {
+
+        stringnew += "0";
+
+        }
+
+        var regId = device_info[0].reg_id;
+
+        //  var data = "{}";
+
+        if (platform_feature[0] != null) {
+        //     data = platform_feature[0].template;
+        }
+        var currentdate = new Date();
+            var datetime =  currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/"
+                + currentdate.getFullYear() + " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+
+        if (parseInt(string) >= parseInt(stringnew)) {
+
+
+    //    db.query("INSERT INTO Notifications (device_id, group_id, message, status, send_date, feature_code, user_id, msg_id) values("+deviceId+", 1, "+data+", 'Pending', "+datetime+", "+feature[0].code+", "+userID+", "+token.toFixed(0)+")");
+          db.query("INSERT INTO Notifications (device_id, group_id, message, status, sent_date, feature_code, user_id) values("+deviceId+", "+groupID+", '"+data+"', 'P', '"+datetime+"', '"+feature[0].code+"',"+userID+")");
+          var lastRecord = db.query("SELECT LAST_INSERT_ID()");
+          var lastRecordJson = lastRecord[0];
+          log.info(lastRecordJson["LAST_INSERT_ID()"]);
+          token = lastRecordJson["LAST_INSERT_ID()"];
+
+          log.info(token);
+          var msg = {};
+          msg.token = token;
+          log.info("MMMMMMMM"+msg.toSource());
+          jsonStringData = stringify(msg.toSource());
+          log.info(jsonStringData);
+
+
+          var gcmMSG = gcm.sendViaGCMtoMobile(regId, feature[0].code, token, data, 3);
+          log.info(gcmMSG);
+
+        return true;
+
+        } else {
+
+        return false;
+
+	}
+	
     function getPendingOperationsFromDevice(UDID){
 
         var deviceList = db.query("select id from Devices where udid='"+UDID+"'");
