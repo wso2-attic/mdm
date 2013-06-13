@@ -8,24 +8,18 @@
     var operation = null;
 
     var uriMatcher = new URIMatcher(request.getRequestURI());
-    if(uriMatcher.match('/mdm/refresh/devices/{deviceid}/{operation}')) {
+    if(uriMatcher.match('/mdm/refresh/devices/{deviceid}/operations/{operation}')) {
         deviceId = uriMatcher.elements().deviceid;
         operation = uriMatcher.elements().operation;
         log.info(deviceId);
         log.info(operation);
-    }
-    if(verb=="GET"){
-       // sendMessageToDevice(deviceId,operation,"hi");
         var lastRecord =  getLastRecord(operation,deviceId);
         if(lastRecord!=null){
             response.content = lastRecord;
-            //print(lastRecord);
             response.status = 200;
         }else{
-          //  response.status = 404;
-           // print(lastRecord);
+           response.status = 404;
         }
 
     }
-
 %>

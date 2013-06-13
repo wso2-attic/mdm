@@ -1,0 +1,22 @@
+<%
+    include("../model/storeQuery.jag");
+    var uriMatcher = new URIMatcher(request.getRequestURI());
+
+    if(uriMatcher.match('/mdm/user/devices')){
+        var email = null;
+        var jsonString = request.getContent();
+        if(jsonString!=null && jsonString != ""){
+            var jsonObj = parse(jsonString);
+            email = jsonObj.email;
+        }
+        getAllDevicesFromEmail(email);
+    }else if(uriMatcher.match('/mdm/user/apps')){
+        var email = null;
+        var jsonString = request.getContent();
+        if(jsonString!=null && jsonString != ""){
+            var jsonObj = parse(jsonString);
+            email = jsonObj.email;
+        }
+        getAllApps(email);
+    }
+%>

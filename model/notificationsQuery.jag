@@ -82,4 +82,10 @@
         // return "hi";
     }
 
+    function addIosNotification(messageId,data){
+        var currentdate = new Date();
+        var recivedDate =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
+        db.query("UPDATE Notifications SET status='R',received_data='"+data+"' ,received_date='"+recivedDate+"' where id="+messageId);
+    }
+
 %>

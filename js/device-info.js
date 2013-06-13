@@ -686,7 +686,7 @@ function loadFeatures(id, devices){
 	    		  		 
 	    		  		 	    		  		
 	    		  		 
-	    		  		 operationURL = getServerURL()  + "/devices/" + devices[id].id + "/" + e.data.operation;
+	    		  		 operationURL = getServerURL()  + "/devices/" + devices[id].id + "/operations/" + e.data.operation;
 	    		  		 data["data"] = params;  		  		 
 	    		  		 
 	    		  			    		  		  

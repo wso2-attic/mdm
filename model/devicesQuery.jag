@@ -197,7 +197,7 @@
         }
     }
 
-    function register(regId,properties,email,osversion,vendor,platform,deviceid){
+    function register(regId,properties,email,osversion,vendor,platform,deviceid,udid){
 		var log = new Log();
         var result = db.query("select * from Users where username='"+email+"';");
         var userId = result[0].id;
@@ -216,7 +216,7 @@
         if(regId!=null){
             var result = db.query("select * from Devices where reg_id='"+regId+"';");
             if(result[0]==null){
-                db.query("insert into Devices (tenant_id,os_version,created_date,properties,reg_id,status,deleted,user_id,platform_id,vendor,device_id)values('1','"+osversion+"','"+createdDate+"','"+properties+"','"+regId+"','"+"A"+"',"+0+","+userId+","+platformId+",'"+vendor+"','"+deviceid+"');");
+                db.query("insert into Devices (tenant_id,os_version,created_date,properties,reg_id,status,deleted,user_id,platform_id,vendor,udid)values('1','"+osversion+"','"+createdDate+"','"+properties+"','"+regId+"','"+"A"+"',"+0+","+userId+","+platformId+",'"+vendor+"','"+udid+"');");
                 var devices = db.query("select * from Devices where reg_id='"+regId+"'");
                 sendMessageToDevice(devices[0].id,"INFO", "hi");
                 sendMessageToDevice(devices[0].id,"APPLIST", "hi");
@@ -228,6 +228,47 @@
         }else{
             return false;
         }
+    }
+
+    function registerIOS(regId,properties,email,osversion,vendor,platform,udid){
+		var log = new Log();
+		log.info(regId);
+		log.info(properties);
+		log.info(email);
+		log.info(osversion);
+		log.info(vendor);
+		log.info(platform);
+		log.info(udid);
+        var result = db.query("select * from Users where username='"+email+"';");
+        var userId = result[0].id;
+
+        var platforms = db.query("select id from Platforms where name='"+platform+"'");
+        var platformId = platforms[0].id;
+
+       var currentdate = new Date();
+       var createdDate =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
+
+
+
+
+        var devicesCheckUDID = db.query("select * from Devices where udid='"+udid+"'");
+        if(devicesCheckUDID != undefined && devicesCheckUDID != null && devicesCheckUDID[0] != undefined && devicesCheckUDID[0] != null){
+            db.query("Update Devices set reg_id='"+regId+"' where udid = '"+udid+"'");
+        }else{
+            db.query("insert into Devices (tenant_id,os_version,created_date,properties,reg_id,status,deleted,user_id,platform_id,vendor,udid)values('1','"+osversion+"','"+createdDate+"','"+properties+"','"+regId+"','"+"A"+"',"+0+","+userId+","+platformId+",'"+vendor+"','"+udid+"');");
+        }
+
+
+
+
+    //   db.query("insert into Devices (tenant_id,os_version,created_date,properties,reg_id,status,deleted,user_id,platform_id,vendor,udid)values('1','"+osversion+"','"+createdDate+"','"+properties+"','"+regId+"','"+"A"+"',"+0+","+userId+","+platformId+",'"+vendor+"','"+udid+"');");
+       var devices = db.query("select * from Devices where udid = '"+udid+"'");
+       var deviceID = devices[0].id;
+
+
+       sendMessageToIOSDevice(deviceID,"INFO","{}");
+    //   sendMessageToIOSDevice(deviceID,"APPLIST","{}")
+       return true;
     }
 
 
@@ -323,10 +364,59 @@
         var deviceList = db.query("select id from Devices where udid='"+UDID+"'");
         if(deviceList[0]!=null){
             var deviceID = deviceList[0].id;
-            var pendingFeatureCodeList=db.query("SELECT distinct Notifications.feature_code from Notifications where Notifications.status='P' AND Notifications.device_id='"+deviceID+"'");
+            var pendingFeatureCodeList=db.query("SELECT Notifications.feature_code, Notifications.id, Notifications.message from Notifications where Notifications.status='P' AND Notifications.device_id='"+deviceID+"'");
+            /*
+            var pendingFeatureCodeList=db.query("SELECT LAST(Notifications.feature_code) ,LAST(Notifications.message) ,LAST(Notifications.id) from Notifications where Notifications.status='P' AND Notifications.device_id='"+deviceID+"'");
+            var id =  pendingFeatureCodeList[0].id;
+            db.query("UPDATE Notifications SET status='C' where id="+id);
+            */
+            db.query("UPDATE Notifications SET status='C' where device_id ="+deviceID+"&& status = 'P'");
             return pendingFeatureCodeList;
         }else{
             return null;
+        }
+    }
+    function sendMessageToIOSDevice(deviceId,featureName,data){
+       log.info("reach sendMessageToIOSDevice method");
+       var devices = db.query("select reg_id from Devices where id="+deviceId);
+       var regId = devices[0].reg_id;
+
+       var regIdJsonObj = parse(regId);
+       var pushMagicToken = regIdJsonObj.push_magic_token;
+       var deviceToken = regIdJsonObj.device_token;
+
+       log.info(pushMagicToken);
+       log.info(deviceToken);
+
+
+
+       var users = db.query("select Users.id as userID from Users, Devices where Users.id=Devices.user_id && Devices.id="+deviceId);
+       var userId = users[0].userID;
+
+       var currentdate = new Date();
+       var datetime =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
+
+       var features = db.query("SELECT id, code FROM Features WHERE name LIKE '"+featureName+"'");
+       var featureCode = features[0].code;
+
+       db.query("UPDATE Notifications SET status='D' where device_id="+deviceId+" && feature_code='"+featureCode+"' && status='P'");
+
+       db.query("INSERT INTO Notifications (device_id, group_id, message, status, sent_date, feature_code, user_id) values("+deviceId+", "+1+", '"+data+"', 'P', '"+datetime+"', '"+featureCode+"',"+userId+")");
+
+       var url = "http://10.200.1.145:8444/push";
+       var data = {"push_magic_token":pushMagicToken,"device_token":deviceToken};
+       var ruby = get(url, data ,"text");
+       log.info(ruby);
+
+       return true;
+    }
+    function sentToDevice(deviceId,featureName,data){
+        var devices = db.query("select platform_id from Devices where id"+deviceId);
+        var platformID = devices[0].platform_id;
+        if(platformID==1){
+            return resendMessageToDevice(deviceId, featureName, data);
+        }else{
+            return sendMessageToIOSDevice(deviceId,featureName,data);
         }
     }
 %>

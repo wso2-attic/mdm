@@ -1,0 +1,28 @@
+<%
+    function getAllDevicesFromEmail(email){
+        var users = db.query("Select * from Users where username='"+email+"'");
+        var userID = users[0].id;
+
+        var devices = db.query("select * from Devices where Devices.user_id="+userID);
+        return devices;
+    }
+    function getAllApps(email){
+        var users = db.query("Select * from Users where username='"+email+"'");
+        var userID = users[0].id;
+        var androidDevices = db.query("select * from Devices where user_id = "+userID+" && udid ="+0);
+        var androidDeviceID = androidDevices[0].id;
+        var iosDevices = db.query("select * from Devices where user_id = "+userID+" && udid ="+0);
+        var iosDeviceID = iosDevices[0].id;
+        var androidNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+"feature_code = '"+"502A"+"' && status = 'R'");
+        var androidAppList = androidNotificationList[androidNotificationList.length - 1];
+
+        var iosNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+"feature_code = '"+"502A"+"' && status = 'R'");
+        var iosAppList = iosNotificationList[iosNotificationList.length - 1];
+
+        var result = {};
+        result.Android = androidAppList;
+        result.iOS = iosAppList;
+
+        return result;
+    }
+%>

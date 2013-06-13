@@ -7,7 +7,6 @@
     var msgID = request.getParameter("msgID");
     var status = request.getParameter("status");
     var data = request.getParameter("data");
-
     var deviceId = request.getParameter("deviceid");
 
     var verb = request.getMethod();
@@ -15,25 +14,26 @@
 
     var uriMatcher = new URIMatcher(request.getRequestURI());
     if(uriMatcher.match('/mdm/notifications/devices/{deviceid}')) {
-        //If pattern matches, elements can be accessed from their keys
+
         deviceId = uriMatcher.elements().deviceid;
+        var notificationList = getNotifications(deviceId);
+
+    }else if(uriMatcher.match('/mdm/notifications/ios')) {
+
+        addIosNotification(msgID,data);
+
+    }else if(uriMatcher.match('/mdm/notifications')){
+
+        addNotification(code,msgID,status,data);
+
     }
 
-    log.info(verb);
     log.info("Request Recived");
+    log.info(verb);
     log.info(status);
     log.info(msgID);
     log.info(code);
     log.info(data);
 
-
-    if(verb=="POST"){
-        addNotification(code,msgID,status,data);
-        response.content = data;
-    }if(verb=="GET"){
-        log.info(deviceId);
-        var notificationList = getNotifications(deviceId);
-        print(notificationList);
-    }
 
 %>

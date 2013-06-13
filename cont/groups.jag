@@ -26,7 +26,7 @@
 		//log.info('sss');
 		log.info("SELECT a.id,a.first_name, a.last_name,  (SELECT count(id) as no_of_devices FROM devices WHERE user_id = a.id) AS no_of_devices FROM Users AS a, usergroups AS b, groups as c WHERE a.id = b.user_id && group_id =  "+ctx.groupid+" GROUP BY a.id;");
 		
-		var result = db.query("SELECT a.id,a.first_name, a.last_name,  (SELECT count(id) as no_of_devices FROM devices WHERE user_id = a.id) AS no_of_devices FROM Users AS a, usergroups AS b, groups as c WHERE a.id = b.user_id && group_id =  "+ctx.groupid+" GROUP BY a.id;");
+		var result = db.query("SELECT a.id,a.first_name, a.last_name,  (SELECT count(id) as no_of_devices FROM Devices WHERE user_id = a.id) AS no_of_devices FROM Users AS a, UserGroups AS b, Groups as c WHERE a.id = b.user_id && group_id =  "+ctx.groupid+" GROUP BY a.id;");
 		
         response.content = result;
         response.status = 200;

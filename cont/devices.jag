@@ -1,7 +1,6 @@
 <%
     include("../model/devicesQuery.jag");
     var log = new Log();
-     log.info("hi");
     log.error("invoking devices.jag");
     var verb = request.getMethod();
     
@@ -19,13 +18,16 @@
 	   	var osversion = request.getParameter("osversion");
 	   	var vendor = request.getParameter("vendor");
 	   	var platform = request.getParameter("platform");
-	   	var deviceId = request.getParameter("deviceid");
+        var udid = request.getParameter("udid");
+
+        log.info("Test Reg ID"+regId);
 	   	
 	   	if(deviceId == null) {
 	   		deviceId = "";
 	   	}
 	   	
-	   	var state =  register(regId,properties,email,osversion,vendor,platform,deviceId);
+	 //  	var state =  register(regId,properties,email,osversion,vendor,platform,udid);
+        var state =  registerIOS(regId,properties,email,osversion,vendor,platform,udid);
 	    if(state){
 	    	response.status=201;
 	    }else{
@@ -55,21 +57,22 @@
 	   	var deviceId = uriMatcher.elements().deviceid;
         var operation = uriMatcher.elements().operation;
         var jsonString = request.getContent();
-        var result = parse(jsonString);
+
         var strData = null;
-        
-        if(result!=null){
-            var data = result.data;
+
+        if(jsonString!=null && jsonString != ""){
+            var jsonObj = parse(jsonString);
+            var data = jsonObj.data;
             strData = stringify(data);
         }
          
         var state = null;
         
-        if(android > 0){
-            state = sendMessageToDevice(deviceId,operation,strData); 
-        }else{
+        //if(android > 0){
+        //    state = sendMessageToDevice(deviceId,operation,strData);
+        //}else{
             state = sendMessageToIOSDevice(deviceId,operation,strData);
-        }
+        //}
             
         if(state){
             response.status=200;
@@ -109,5 +112,29 @@
             response.status=404;
         }
 
+    }else if(uriMatcher.match('/mdm/devices/{deviceid}/AppInstall')){
+        var deviceId = uriMatcher.elements().deviceid;
+        var jsonString = request.getContent();
+
+        var strData = null;
+
+        if(jsonString!=null && jsonString != ""){
+            var jsonObj = parse(jsonString);
+            var data = jsonObj.data;
+            strData = stringify(data);
+        }
+        sendMessageToDevice(deviceId,"INSTALL",strData);
+    }else if(uriMatcher.match('/mdm/devices/{deviceid}/AppUNInstall')){
+        var deviceId = uriMatcher.elements().deviceid;
+        var jsonString = request.getContent();
+
+        var strData = null;
+
+        if(jsonString!=null && jsonString != ""){
+            var jsonObj = parse(jsonString);
+            var data = jsonObj.data;
+            strData = stringify(data);
+        }
+        sendMessageToDevice(deviceId,"UNINSTALL",strData);
     }
   %>
