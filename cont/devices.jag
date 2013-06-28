@@ -25,9 +25,14 @@
 	   	if(deviceId == null) {
 	   		deviceId = "";
 	   	}
+        if(android > 0){
+            state = register(regId,properties,email,osversion,vendor,platform);
+        }else{
+            state = registerIOS(regId,properties,email,osversion,vendor,platform,udid);
+        }
 	   	
 	 //  	var state =  register(regId,properties,email,osversion,vendor,platform,udid);
-        var state =  registerIOS(regId,properties,email,osversion,vendor,platform,udid);
+     //   var state =  registerIOS(regId,properties,email,osversion,vendor,platform,udid);
 	    if(state){
 	    	response.status=201;
 	    }else{
@@ -71,9 +76,10 @@
         //if(android > 0){
         //    state = sendMessageToDevice(deviceId,operation,strData);
         //}else{
-            state = sendMessageToIOSDevice(deviceId,operation,strData);
+        //    state = sendMessageToIOSDevice(deviceId,operation,strData);
         //}
-            
+        log.info("Data Format"+strData);
+        sentToDevice(deviceId,operation,strData);
         if(state){
             response.status=200;
         }else{
@@ -105,7 +111,7 @@
 	 }else if(uriMatcher.match('/mdm/pending/devices/{udid}/operations')){
         var UDID = uriMatcher.elements().udid;
         var featureCodeList = getPendingOperationsFromDevice(UDID);
-        if(featureCodeList!= undefined && featureCodeList!= null && featureCodeList[0]!=null){
+        if(featureCodeList!= undefined && featureCodeList!= null){
             response.content = featureCodeList;
             response.status=200;
         }else{
@@ -124,6 +130,7 @@
             strData = stringify(data);
         }
         sendMessageToDevice(deviceId,"INSTALL",strData);
+        response.status=200;
     }else if(uriMatcher.match('/mdm/devices/{deviceid}/AppUNInstall')){
         var deviceId = uriMatcher.elements().deviceid;
         var jsonString = request.getContent();
@@ -136,5 +143,14 @@
             strData = stringify(data);
         }
         sendMessageToDevice(deviceId,"UNINSTALL",strData);
+    }else if(uriMatcher.match('/mdm/devices/{deviceid}/CHECKNOTIFICATION')){
+        var deviceId = uriMatcher.elements().deviceid;
+        var state = checkNotification(deviceid);
+        if(state){
+            response.content = true;
+        }else{
+            response.content = false;
+        }
+
     }
   %>

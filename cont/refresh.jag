@@ -8,18 +8,26 @@
     var operation = null;
 
     var uriMatcher = new URIMatcher(request.getRequestURI());
-    if(uriMatcher.match('/mdm/refresh/devices/{deviceid}/operations/{operation}')) {
+    if(uriMatcher.match('/mdm/refresh/devices/{deviceid}/{operation}')) {
         deviceId = uriMatcher.elements().deviceid;
         operation = uriMatcher.elements().operation;
         log.info(deviceId);
         log.info(operation);
+
         var lastRecord =  getLastRecord(operation,deviceId);
+
+        sentToDevice(deviceId,"INFO","");
+        sentToDevice(deviceId,"APPLIST","");
+
         if(lastRecord!=null){
             response.content = lastRecord;
+            //print(lastRecord);
             response.status = 200;
         }else{
-           response.status = 404;
+            //  response.status = 404;
+            // print(lastRecord);
         }
 
     }
+
 %>

@@ -1,10 +1,31 @@
 <%
+    include("dbcon.jag");
+    var log = new Log();
+
     function getAllDevicesFromEmail(email){
+        log.info(email);
         var users = db.query("Select * from Users where username='"+email+"'");
         var userID = users[0].id;
 
         var devices = db.query("select * from Devices where Devices.user_id="+userID);
-        return devices;
+
+        var devicesArray = new Array();
+        for(var i=0;i<devices.length;i++){
+            var deviceID = devices[i].id;
+            var properties = devices[i].properties;
+            var propertiesJsonObj = parse(properties);
+            var name = propertiesJsonObj.device;
+            var model = propertiesJsonObj.model;
+            var packet = {};
+            packet.id = deviceID;
+            packet.name = name;
+            packet.model = model;
+            devicesArray.push(packet);
+        }
+
+       // log.info(devicesArray);
+       // print(devices);
+        return devicesArray;
     }
     function getAllApps(email){
         var users = db.query("Select * from Users where username='"+email+"'");
@@ -13,10 +34,10 @@
         var androidDeviceID = androidDevices[0].id;
         var iosDevices = db.query("select * from Devices where user_id = "+userID+" && udid ="+0);
         var iosDeviceID = iosDevices[0].id;
-        var androidNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+"feature_code = '"+"502A"+"' && status = 'R'");
+        var androidNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+" && feature_code ='"+"502A"+"' && status = 'R'");
         var androidAppList = androidNotificationList[androidNotificationList.length - 1];
 
-        var iosNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+"feature_code = '"+"502A"+"' && status = 'R'");
+        var iosNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+" && feature_code = '"+"502A"+"' && status = 'R'");
         var iosAppList = iosNotificationList[iosNotificationList.length - 1];
 
         var result = {};

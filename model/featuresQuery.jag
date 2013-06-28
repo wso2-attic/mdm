@@ -37,26 +37,13 @@
 
     /*Get features in devices*/
     function getAllFeatures(){
-        /*var devicePlatform=db.query("select Devices.platform_id from Devices where Devices.id="+id+"");
-         var result=db.query("select PlatformFeatures.feature_id from PlatformFeatures where PlatformFeatures.platform_id="+devicePlatform[0].platform_id);
-
-         var dataAry=new Array();
-         for(var i=0;i<result.length;i++){
-         var tempData=db.query("select * from Features where id="+result[i].feature_id);
-         dataAry[i]=tempData;
-         }
-         return dataAry;*/
-        /* var featureList = db.query("select distinct * from Devices,PlatformFeatures,Features,FeatureType where Devices.platform_id=PlatformFeatures.platform_id and Devices.id=2 and Features.type_id=FeatureType.id and Features.id=PlatformFeatures.feature_id");
-         log.info(featureList[0].name);
-         return featureList;*/
-
         var featureList = db.query("SELECT DISTINCT Features.description, Features.id, Features.name,Features.code, PlatformFeatures.template from Devices, PlatformFeatures,Features where Devices.platform_id=PlatformFeatures.platform_id and Features.id=PlatformFeatures.feature_id;");
 
 
         var obj = new Array();
         for(var i=0; i<featureList.length; i++){
             var featureArr = {};
-            var ftype = db.query("SELECT FeatureType.name FROM FeatureType, Features WHERE Features.type_id=FeatureType.id AND Features.id="+featureList[i].id);
+            var ftype = db.query("SELECT DISTINCT FeatureType.name FROM FeatureType, Features WHERE Features.type_id=FeatureType.id AND Features.id="+featureList[i].id);
             log.error(featureList[i]);
             featureArr["name"] = featureList[i].name;
             featureArr["feature_code"] = featureList[i].code;
@@ -70,6 +57,12 @@
             obj.push(featureArr);
         }
 
+        /*
+         var features = db.query("select distinct Features.name as name ,Features.code as feature_code , FeatureType.name as feature_type, Features.description as description , PlatformFeatures.template as  template from Features, PlatformFeatures, FeatureType where PlatformFeatures.feature_id = Features.id  && Features.type_id = FeatureType.id && FeatureType.id = 1");
+         log.info(features);
+       */
+
         return obj;
+
     }
 %>

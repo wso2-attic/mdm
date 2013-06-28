@@ -14,9 +14,11 @@
 
     var uriMatcher = new URIMatcher(request.getRequestURI());
     if(uriMatcher.match('/mdm/notifications/devices/{deviceid}')) {
-
+        log.info("matched getNotifications");
         deviceId = uriMatcher.elements().deviceid;
         var notificationList = getNotifications(deviceId);
+        log.info(notificationList);
+        response.content = notificationList;
 
     }else if(uriMatcher.match('/mdm/notifications/ios')) {
 
@@ -24,7 +26,7 @@
 
     }else if(uriMatcher.match('/mdm/notifications')){
 
-        addNotification(code,msgID,status,data);
+        addNotification(msgID,data);
 
     }
 
@@ -33,7 +35,7 @@
     log.info(status);
     log.info(msgID);
     log.info(code);
-    log.info(data);
+    log.info("Recieved Data"+data);
 
 
 %>

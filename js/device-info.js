@@ -373,60 +373,96 @@ function loadGeneralInformation(id, devices){
 	    	  
 	    	  notificationsString = "";    	 	    		  
 	    		  
-	    		  notificationsString +=	'<div class="span2">';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	'<img style="height:60px" src="img/info/battery.png">';
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	 "Battery Level: " + receivedData.battery.level.toFixed(2) + "%";
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=    '</div>';
+	    		  if(receivedData.battery){
+				notificationsString +=	'<div class="span2">';
+		    		  notificationsString +=	'<div class="row text-center">';
+
+
+                      if( receivedData.battery.level.toFixed(2) > 95){
+                          notificationsString +=	'<img style="height:60px" src="img/info/battery/battery-100.png">';
+                      }else if( receivedData.battery.level.toFixed(2) > 75){
+                          notificationsString +=	'<img style="height:60px" src="img/info/battery/battery-80.png">';
+
+                      }else if( receivedData.battery.level.toFixed(2) > 55){
+                          notificationsString +=	'<img style="height:60px" src="img/info/battery/battery-60.png">';
+
+                      }else if( receivedData.battery.level.toFixed(2) > 35){
+                          notificationsString +=	'<img style="height:60px" src="img/info/battery/battery-40.png">';
+
+                      }else if( receivedData.battery.level.toFixed(2) > 15){
+                          notificationsString +=	'<img style="height:60px" src="img/info/battery/battery-20.png">';
+
+                      }else{
+                          notificationsString +=	'<img style="height:60px" src="img/info/battery/battery-0.png">';
+                      }
+
+
+
+
+
+
+
+
+
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=	'<div class="row text-center">';
+		    		  notificationsString +=	 "Battery Level: " + receivedData.battery.level.toFixed(2) + "%";
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=    '</div>';
+	    		  }
+	    		  
+			  if(receivedData.external_memory){
+		    		  notificationsString +=	'<div class="span2">';
+		    		  notificationsString +=	'<div class="row text-center">';
+		    		  notificationsString +=	'<img style="height:60px" src="img/info/external_memory.png">';
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=	'<div class="row text-center">';
+		    		  notificationsString +=	 "External Memory: " + bytesToSize(receivedData.external_memory.available, 0) + " of " + bytesToSize(receivedData.external_memory.total, 0);
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=    '</div>';
+			  }
 	    		  
 	    		  
-	    		   notificationsString +=	'<div class="span2">';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	'<img style="height:60px" src="img/info/external_memory.png">';
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	 "External Memory: " + bytesToSize(receivedData.external_memory.available, 0) + " of " + bytesToSize(receivedData.external_memory.total, 0);
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=    '</div>';
+	    		  if(receivedData.internal_memory){
+				  notificationsString +=	'<div class="span2">';
+		    		  notificationsString +=	'<div class="row text-center">';
+		    		  notificationsString +=	'<img style="height:60px" src="img/info/internal_memory.png">';
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=	'<div class="row text-center">';
+		    		  notificationsString +=	 "Internal Memory : " + receivedData.internal_memory.available.toFixed(2) + "GB of " + receivedData.internal_memory.total.toFixed(2) + "GB";
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=    '</div>';
+                          }
 	    		  
+	    		  if(receivedData.location){
+		    		  notificationsString +=	'<div class="span2">';
+		    		  notificationsString +=	'<div class="row text-center">';
+		    		  notificationsString +=	'<img style="height:60px" href="#modelMap-'+ id + '" data-toggle="modal" src="img/info/location.png">';
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=	'<div class="row text-center">';
+		    		  notificationsString +=	 "Location";
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=    '</div>'; 
+			  }
+
+ 
 	    		  
-	    		  notificationsString +=	'<div class="span2">';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	'<img style="height:60px" src="img/info/internal_memory.png">';
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	 "Internal Memory: " + bytesToSize(receivedData.internal_memory.available, 0) + " of " + bytesToSize(receivedData.internal_memory.total, 0);
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=    '</div>';
-	    		  
-	    		  
-	    		  notificationsString +=	'<div class="span2">';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	'<img style="height:60px" href="#modelMap-'+ id + '" data-toggle="modal" src="img/info/location.png">';
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	 "Location";
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=    '</div>';  
-	    		  
-	    		   
-	    		  notificationsString +=	'<div class="span2">';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	'<img style="height:60px" src="img/info/simcard.png">';
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=	'<div class="row text-center">';
-	    		  notificationsString +=	 "Operator: ";
-	    		  for (var key in receivedData.operator) {
-	    		  	 	notificationsString +=	 receivedData.operator[key];
-	    		  	 	if(key < (receivedData.operator.length -1)){
-	    		  	 		notificationsString += ", ";
-	    		  	 	}
-	    		  }	    		 
-	    		  notificationsString +=	'</div>';
-	    		  notificationsString +=    '</div>';     		  
+	    		  if(receivedData.operator){ 
+		    		  notificationsString +=	'<div class="span2">';
+		    		  notificationsString +=	'<div class="row text-center">';
+		    		  notificationsString +=	'<img style="height:60px" src="img/info/simcard.png">';
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=	'<div class="row text-center">';
+		    		  notificationsString +=	 "Operator: ";
+		    		  for (var key in receivedData.operator) {
+		    		  	 	notificationsString +=	 receivedData.operator[key];
+		    		  	 	if(key < (receivedData.operator.length -1)){
+		    		  	 		notificationsString += ", ";
+		    		  	 	}
+		    		  }	    		 
+		    		  notificationsString +=	'</div>';
+		    		  notificationsString +=    '</div>';
+    		         }
 	    		  
 	    		  
 	    		  
@@ -505,7 +541,23 @@ function loadApplications(id, devices){
 		    		 
 		    		  
 		    		  //notificationsString += '<li title="'+ receivedData[i].name +'"><img class="app-icon" src="data:image/png;base64,'+ receivedData[i].icon +'" />' + receivedData[i].name + '</li>';
-		    		 notificationsString += '<li title="'+ receivedData[i].name +'"><img style="width:50px" class="app-icon" src="img/appicon.png" />' + receivedData[i].name + '</li>';
+		    		 
+				if(jQuery.parseJSON(devices[id].properties).model == "iPad"){
+					notificationsString += '<li title="'+ receivedData[i].name +'"><img style="width:50px" class="app-icon" src="img/apple.png" />' + receivedData[i].name + '</li>';
+
+				}else if(jQuery.parseJSON(devices[id].properties).model == "iPhone"){
+                          notificationsString += '<li title="'+ receivedData[i].name +'"><img style="width:50px" class="app-icon" src="img/apple.png" />' + receivedData[i].name + '</li>';
+
+                  }
+
+                else{
+					notificationsString += '<li title="'+ receivedData[i].name +'"><img style="width:50px" class="app-icon" src="img/appicon.png" />' + receivedData[i].name + '</li>';
+
+				}
+				
+
+
+
 			  	  }
 		    	  
 		    	 

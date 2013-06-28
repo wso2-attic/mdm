@@ -1,46 +1,12 @@
 <%
     include("dbcon.jag");
     var log = new Log();
-    function addNotification(code,msgID,status,info){
-	        var features = db.query("select * from Features where code='"+code+"';");
-	        var featureDescription = features[0].description;
-	        log.info("Test MSG ID"+msgID);
-	        var result = db.query("select * from Notifications where id="+msgID);
-	        if(result != null && result != undefined && result[0] != null && result[0] != undefined){
-	            var deviceId =  result[0].device_id;
-	            var groupId =  result[0].group_id;
-	            var message =  result[0].message;
-	            var status =   "R";
-	            var sentDate =  result[0].sent_date;
-	            var featureCode =  result[0].feature_code;
-	            var userId =  result[0]. user_id;
-	            var msgId = result[0].msg_id;
+    function addNotification(messageId,data){
+        var currentdate = new Date();
+        var recivedDate =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
 
-	            log.info(deviceId);
-	            log.info(groupId);
-	            log.info(message);
-	            log.info(status);
-	            log.info(sentDate);
-	            log.info(featureCode);
-	            log.info(userId);
-	            log.info(msgId);
-
-
-	            var currentdate = new Date();
-	            var recivedDate =  currentdate.getDate() + "/"
-	                + (currentdate.getMonth()+1)  + "/"
-	                + currentdate.getFullYear() + " @ "
-	                + currentdate.getHours() + ":"
-	                + currentdate.getMinutes() + ":"
-	                + currentdate.getSeconds();
-
-	            db.query("delete from Notifications where id='"+msgID+"';");
-	            log.info(info);
-	           // db.query("SET sql_mode='NO_BACKSLASH_ESCAPES'");
-	            var returnState = db.query("INSERT INTO Notifications (group_id, user_id, device_id, message, status,sent_date,received_date,received_data, feature_code,feature_description) values("+groupId+","+userId+","+deviceId+",'"+message+"','"+status+"','"+sentDate+"','"+recivedDate+"', '"+info+"','"+featureCode+"','"+featureDescription+"');");
-	            log.info(returnState);
-	        }
-	    }
+        db.query("UPDATE Notifications SET status='R',received_data='"+data+"' ,received_date='"+recivedDate+"' where id="+messageId);
+	}
     /*function getNotifications(featureCode,deviceId){
         var result = db.query("select * from Notifications where device_id="+deviceId+"&&feature_code='"+featureCode+"';");
         var notifications = new Array();
@@ -85,6 +51,7 @@
     function addIosNotification(messageId,data){
         var currentdate = new Date();
         var recivedDate =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
+
         db.query("UPDATE Notifications SET status='R',received_data='"+data+"' ,received_date='"+recivedDate+"' where id="+messageId);
     }
 

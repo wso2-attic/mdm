@@ -8,7 +8,7 @@
         var succeeded="";
         var failed="";
         for(var i=0; i<result.length; i++){
-            var status = sendMessageToDevice(result[i].id, featureName);
+            var status = sentToDevice(result[i].id, featureName);
             if(status == true){
                 succeeded += result[i].id+",";
             }else{

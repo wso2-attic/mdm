@@ -12,7 +12,7 @@ include('include/main/header.jag');
 			<div class="tabbable" style="padding-top:30px"> 
 			  <ul class="nav nav-tabs">
 			    <li class="active"><a href="#tab1" data-toggle="tab">Add User</a></li>
-			    <li><a href="#tab2" data-toggle="tab"  style="display:none;">Assign User to Group</a></li>
+			    <li><a href="#tab2" data-toggle="tab"  style="display:none;">Assign User to Role</a></li>
 			  </ul>
 			  <div class="tab-content">
 			    <div class="tab-pane active" id="tab1">
@@ -51,7 +51,7 @@ include('include/main/header.jag');
 					    </div>
 					 </div>
 					<div class="control-group">
-						<label class="control-label text-left" for="group">Group</label>
+						<label class="control-label text-left" for="group">Role</label>
 					    <div class="controls group">
 					      <label class="checkbox">
 						   </label>
@@ -82,7 +82,7 @@ include('include/main/header.jag');
 						    </div>
 						 </div>
 						<div class="control-group">
-							<label class="control-label text-left" for="group">Group</label>
+							<label class="control-label text-left" for="group">Role</label>
 						    <div class="controls group">
 						      <label class="checkbox">
 
