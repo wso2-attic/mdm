@@ -103,5 +103,10 @@ include("devicesQuery.jag");
             return null;
         }
 	}
+    function executeOperation(operation, userID, data){
+
+        var result = db.query("SELECT Devices.id from Users, Devices where Devices.user_id = Users.id && Users.id="+userID);
+        result
+    }
 
 %>

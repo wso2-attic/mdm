@@ -1,10 +1,56 @@
 <%
 	include("/model/dbcon.jag");
 	include('/model/devicesQuery.jag');
+    include('/model/usersQuery.jag');
     include('/commans/ipconf.jag');
 	var log = new Log();
-	log.info('Users hit');
-    var Jally = require('jally.js').Jally;
+    var verb = request.getMethod();
+    log.info(verb);
+    log.info("invoking users.jag");
+    var uriMatcher = new URIMatcher(request.getRequestURI());
+
+    if(uriMatcher.match('/mdm/users/{id}/operations/{operation}')) {
+        var userId = uriMatcher.elements().id;
+        var operation = uriMatcher.elements().operation;
+
+        var jsonString = request.getContent();
+        log.info("Test getContent :"+jsonString);
+
+        var strData = {};
+
+        if(jsonString!=null && jsonString != ""){
+            var jsonObj = parse(jsonString);
+            var data = jsonObj.data;
+            strData = stringify(data);
+        }
+
+        log.info("Data Format"+strData);
+        executeOperation(operation, userId, strData);
+    }else if(uriMatcher.match('/mdm/users/{id}')){
+        /*var userId = uriMatcher.elements().id;
+        var result = getUser(userId);
+
+        if(result!= undefined && result != null){
+            response.content = result;
+            response.status = 200;
+        }else{
+            response.status = 404;
+        }*/
+    }else if(uriMatcher.match('/user/{id}/groups')){
+        var userId = uriMatcher.elements().id;
+        var result = getAllGroupsOfUser(userId);
+        if(result!= undefined && result != null && result[0] != undefined && result[0] != null ){
+            response.content = result;
+            response.status = 200;
+        }else{
+            response.status = 404;
+        }
+    }
+
+
+
+
+var Jally = require('jally.js').Jally;
 	
 	var jbj = new Jally('/mdm/');
 	jbj.route('users/authenticate/|POST', function(ctx){
