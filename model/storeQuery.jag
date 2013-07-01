@@ -8,7 +8,6 @@
         var userID = users[0].id;
 
         var devices = db.query("select * from Devices where Devices.user_id="+userID);
-
         var devicesArray = new Array();
         for(var i=0;i<devices.length;i++){
             var deviceID = devices[i].id;
@@ -24,26 +23,25 @@
         }
 
        // log.info(devicesArray);
-       // print(devices);
-        return devicesArray;
+       return devicesArray;
     }
-    function getAllApps(email){
-        var users = db.query("Select * from Users where username='"+email+"'");
-        var userID = users[0].id;
-        var androidDevices = db.query("select * from Devices where user_id = "+userID+" && udid ="+0);
-        var androidDeviceID = androidDevices[0].id;
-        var iosDevices = db.query("select * from Devices where user_id = "+userID+" && udid ="+0);
-        var iosDeviceID = iosDevices[0].id;
-        var androidNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+" && feature_code ='"+"502A"+"' && status = 'R'");
-        var androidAppList = androidNotificationList[androidNotificationList.length - 1];
-
-        var iosNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+" && feature_code = '"+"502A"+"' && status = 'R'");
-        var iosAppList = iosNotificationList[iosNotificationList.length - 1];
-
-        var result = {};
-        result.Android = androidAppList;
-        result.iOS = iosAppList;
-
+    function getAllApps(userid){
+        // var users = db.query("Select * from Users where username='"+email+"'");
+        //         var userID = users[0].id;
+        //         var androidDevices = db.query("select * from Devices where user_id = "+userID+" && udid ="+0);
+        //         var androidDeviceID = androidDevices[0].id;
+        //         var iosDevices = db.query("select * from Devices where user_id = "+userID+" && udid ="+0);
+        //         var iosDeviceID = iosDevices[0].id;
+        //         var androidNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+" and feature_code = '"+"502A"+"' and status = 'R'");
+        //         var androidAppList = androidNotificationList[androidNotificationList.length - 1];
+        // 		new Log().info("ALL APP");
+        // 		new Log().info(androidAppList);
+        //         var iosNotificationList =  db.query("Select received_data from Notifications where device_id="+androidDeviceID+" and feature_code = '"+"502A"+"' and status = 'R'");
+        //         var iosAppList = iosNotificationList[iosNotificationList.length - 1];
+        //         var result = {};
+        //         result.Android = androidAppList;
+        //         result.iOS = iosAppList;
+		var apps= db.query("SELECT * FROM UserApps where user_id="+strData.userid);
         return result;
     }
 %>
