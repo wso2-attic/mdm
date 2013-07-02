@@ -9,14 +9,14 @@
     var uriMatcher = new URIMatcher(request.getRequestURI());
 
     if(uriMatcher.match('/mdm/groups/{id}/users')) {
-        var groupId = uriMatcher.elements().id;
+       /* var groupId = uriMatcher.elements().id;
         var result = getUsersFromGroup(groupId);
         if(result!= undefined && result != null && result[0] != undefined && result[0] != null ){
             response.content = result;
             response.status = 200;
         }else{
             response.status = 404;
-        }
+        }*/
     }else if(uriMatcher.match('/mdm/groups')){
         var result = getAllGroups();
         if(result!= undefined && result != null && result[0] != undefined && result[0] != null ){
