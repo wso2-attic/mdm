@@ -64,7 +64,6 @@ var Jally = require('jally.js').Jally;
 			response.status=200;
            	//print(200+"|"+obj.category_id+"|"+obj.id);
 		print(obj);
-        }else{
             response.status=401;
             print("Authentication Failed");
         }
