@@ -1,4 +1,4 @@
-var user = (function () {
+ var user = (function () {
     var configs = require('/config.json');
     var routes = new Array();
 	var log = new Log();
@@ -22,7 +22,7 @@ var user = (function () {
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
             try {
-                // Property in destination object set; update its value.
+                // Property in desgtination object set; update its value.
                 if (obj2[p].constructor == Object) {
                     obj1[p] = MergeRecursive(obj1[p], obj2[p]);
                 } else {

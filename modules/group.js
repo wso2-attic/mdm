@@ -53,7 +53,13 @@ var group = (function () {
 			return arrRole;
 		},
 		delete: function(ctx){
-			db.query("UPDATE groups SET deleted=1 WHERE id='"+ctx.groupid+"' ");
+            var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
+            var result = um.removeRole(ctx.role);
+            if(result){
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
 		},
 		getUsers: function(ctx){
 
@@ -137,6 +143,11 @@ var group = (function () {
 
 			return objResult;
 		},
+        assignUsers: function(ctx){
+            var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
+            um.updateUserListOfRole(ctx.groupid , ctx.deletedUsers, ctx.newUsers);
+
+        },
 		operation: function(ctx){
 			
 	        var succeeded="";
@@ -175,6 +186,7 @@ var group = (function () {
 
 		}
     };
+
     // return module
     return module;
 })();
