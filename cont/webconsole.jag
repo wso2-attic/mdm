@@ -1,9 +1,0 @@
-<%
-    include('/model/webconsoleQuery.jag');
-    var verb = request.getMethod();
-    if(verb=="GET"){
-        var result = getDevicesCountAndUserCountForAllGroups();
-        response.content = result;
-        response.status = 200;
-    }
-%>

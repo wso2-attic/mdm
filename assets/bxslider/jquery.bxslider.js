@@ -195,7 +195,7 @@
 			var slidesShowing = getNumberSlidesShowing();
 			// make modifications to the viewport (.bx-viewport)
 			slider.viewport.css({
-				width: '100%',
+				width: '98%',
 				overflow: 'hidden',
 				position: 'relative'
 			});
@@ -344,7 +344,7 @@
 		 * Returns the calculated width to be used for the outer wrapper / viewport
 		 */
 		var getViewportMaxWidth = function(){
-			var width = '100%';
+			var width = '98%';
 			if(slider.settings.slideWidth > 0){
 				if(slider.settings.mode == 'horizontal'){
 					width = (slider.settings.maxSlides * slider.settings.slideWidth) + ((slider.settings.maxSlides - 1) * slider.settings.slideMargin);

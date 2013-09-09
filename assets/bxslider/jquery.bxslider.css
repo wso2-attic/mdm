@@ -14,9 +14,13 @@
 /** RESET AND LAYOUT
 ===================================*/
 
+.bxslider{
+	margin-left: 40px;	
+}
+
 .bx-wrapper {
 	position: relative;
-	margin: 0 auto 60px;
+	margin: 0 auto 30px;
 	padding: 0;
 	*zoom: 1;
 }
@@ -31,11 +35,7 @@
 ===================================*/
 
 .bx-wrapper .bx-viewport {
-	-moz-box-shadow: 0 0 5px #ccc;
-	-webkit-box-shadow: 0 0 5px #ccc;
-	box-shadow: 0 0 5px #ccc;
-	border: solid #fff 5px;
-	left: -5px;
+	
 	background: #fff;
 }
 
@@ -99,6 +99,7 @@
 
 .bx-wrapper .bx-prev {
 	left: 10px;
+	padding-left: -15px;
 	background: url(images/controls.png) no-repeat 0 -32px;
 }
 

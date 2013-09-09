@@ -1,7 +1,0 @@
-<%
-
-    var HTTP_URL = "http://10.200.1.142:9764";
-    var HTTPS_URL = "https://10.200.1.142:9444";
-    var RUBY_SERVER_URL = "https://10.200.1.145:8443";
-
-%>

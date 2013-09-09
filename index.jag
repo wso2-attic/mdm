@@ -1,70 +1,206 @@
 <%
-var PAGE = "dashboard";
-include('conf/conf.jag');
-include('include/main/header.jag');
-%>
-<div class="container-fluid">
-	<div class="dashboard functionlayer container">
-		<div class="page-header">
-		  <h1>Devices by OS</h1>
-		</div>
-		<div id="device-widget" class="span12 row">
-			<div id="main-widget" class="span5">
-				<!--<h4>Devices by OS</h4>-->
-				<div class="row widget">
-					<div><canvas id="chartOS" width="300" height="300"></canvas></div>
-					<ul>
-						<li data-os='Windows'><a href="#"><span class="icn window"><img src="img/windows.png"/><span class="valWindows label">%</span></span></a></li>
-						<li data-os='iOS' ><a href="#"><span class="icn apple"><img src="img/apple.png"/><span class="valApple label">%</span></span></a></li>
-						<li data-os='Android' class='active'><a href="#"><span class="icn android"><img src="img/android.png"/><span class="valAndroid label">%</span></span></a></li>
-					</ul>
-				</div>
-			</div>
-			<div id="superdiv" class="span5">
-				<div class="tabbable span6">
-					<ul class="nav nav-tabs targets">
-						<li class="active">
-							<a href="#chartVersion" data-toggle="tab">Version</a>
-						</li>
-						<li>
-							<a href="#chartVendor" data-toggle="tab">Vendor</a>
-						</li>
-						<li>
-							<a href="#chartBYOD" data-toggle="tab">BYOD</a>
-						</li>
-						<li>
-							<a href="#chartConnectivity" data-toggle="tab"  style="display:none;">Connectivity</a>
-						</li>
-					</ul>
-					<p class="totalcount"></p>
-					<div id="sub-widget" class="tab-content">
-						<div id="chartVersion" class="tab-pane active widget">
-							<div><canvas width="200" height="200"></canvas></div>
-							<ul>
-							</ul>
-						</div>	
-						<div id="chartVendor" class="tab-pane widget">
-							<div><canvas width="100" height="100"></canvas></div>
-							<ul>
-							</ul>
-						</div>
-						<div id="chartBYOD" class="tab-pane widget" >
-							<div><canvas  width="100" height="100"></canvas></div>
-							<ul>
-							</ul>
-						</div>
-						<div id="chartConnectivity" class="tab-pane widget" style="display:none;">
-							<div><canvas  width="100" height="100"></canvas></div>
-							<ul>
-							</ul>
-							
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-    <hr>
-</div>
+var absolute = require ('modules/absolute.js').mvc;
+var goose = require('modules/goose.js').goose;
+var router = new goose({CONTEXT: "/mdm/api/"});
+var log =new Log();
+var configs = require('config.json');
 
-<% include('include/main/footer.jag'); %>
+var db = application.get('db');
+var dbconfig = require('db.json');
+if(db==null || db==undefined){
+	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
+	application.put('db',db);
+}
+
+var mvc = new absolute({
+	SERVER_URL:"/mdm/",
+	IGNORE:["sso.jag", "login.jag", "logout.jag"],
+	API:"api",
+	ROUTER: router
+});
+
+var userRouter = require('api/userRouter.js').user;
+var userRouterInstance = new userRouter(db,router);
+
+var featureRouter = require('api/featureRouter.js').feature;
+var featureRouterInstance = new featureRouter(db,router);
+
+var permissionRouter = require('api/permissionRouter.js').permission;
+var permissionRouterInstance = new permissionRouter(db,router);
+
+var policyRouter = require('api/policyRouter.js').policy;
+var policyRouterInstance = new policyRouter(db,router);
+
+var deviceRouter = require('api/deviceRouter.js').device;
+var deviceRouterInstance = new deviceRouter(db, router);
+
+var notificationRouter = require('api/notificationRouter.js').notification;
+var notificationRouterInstance = new notificationRouter(db, router);
+
+var webconsoleModule = require('modules/webconsole.js').webconsole;
+var webconsole = new webconsoleModule(db);
+
+var dashboardModule = require('modules/dashboard.js').dashboard;
+var dashboard = new dashboardModule(db);
+
+var featureModule = require('modules/feature.js').feature;
+var feature = new featureModule(db);
+
+var storeModule = require('modules/store.js').store;
+var store = new storeModule(db);
+
+var groupRouter = require('api/groupRouter.js').group;
+var groupRouterInstance = new groupRouter(db,router);
+
+
+router.post('store/users/devices', function(ctx){
+    var result = store.getAllDevicesFromEmail(ctx);
+    if(result!= null && result != undefined && result[0] != null && result[0] != undefined){
+        response.content = result;
+        response.status = 200;
+    }else{
+        response.status = 404;
+    }
+});
+
+router.post('store/users/apps', function(ctx){
+    var result = getAllApps(ctx);
+});
+
+
+router.get('dashboard/devices/all/info', function(ctx){
+    var result = dashboard.getAllDevices(ctx);
+    if(result!= null && result != undefined){
+        response.content = result;
+        response.status = 200;
+    }else{
+        response.status = 404;
+    }
+});
+
+router.get('dashboard/all/info', function(ctx){
+    var result = dashboard.getDashboardInfo(ctx);
+    if(result!= null && result != undefined){
+        response.content = result;
+        response.status = 200;
+    }else{
+        response.status = 404;
+    }
+});
+
+router.get('dashboard/devices/android/info', function(ctx){
+    log.info("Test /api/dashboard/devices/android/info");
+    var result = dashboard.getAllAndroidDevices(ctx);
+    if(result!= null && result != undefined){
+        response.content = result;
+        response.status = 200;
+    }else{
+        response.status = 404;
+    }
+});
+
+router.get('dashboard/devices/ios/info', function(ctx){
+    var result = dashboard.getAlliOSDevices(ctx);
+    if(result!= null && result != undefined){
+        response.content = result;
+        response.status = 200;
+    }else{
+        response.status = 404;
+    }
+});
+
+
+router.get('webconsole/devices', function(ctx){
+    var result = webconsole.getDevicesCountAndUserCountForAllGroups(ctx);
+	response.content = result;
+});
+
+
+router.get('features', function(ctx){
+    var result = feature.getAllFeatures(ctx);
+    if(result!= null && result != undefined){
+        response.content = result;
+        response.status = 200;
+    }else{
+        response.status = 404;
+    }
+});
+
+
+mvc.registerHelper('showActive', function(currentPage, page, options) {
+  if(currentPage == page){
+  	return "active";
+  }else{
+  	return "";
+  }
+});
+
+
+mvc.registerHelper('stringify', function(context) {
+var log = new Log();log.error("CONTEXT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+stringify(context));
+    return JSON.stringify(context);
+});
+
+
+
+mvc.registerHelper('compare', function(lvalue, rvalue, options) {
+
+    if (arguments.length < 3)
+        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+
+    operator = options.hash.operator || "==";
+
+    var operators = {
+        '==':       function(l,r) { return l == r; },
+        '===':      function(l,r) { return l === r; },
+        '!=':       function(l,r) { return l != r; },
+        '<':        function(l,r) { return l < r; },
+        '>':        function(l,r) { return l > r; },
+        '<=':       function(l,r) { return l <= r; },
+        '>=':       function(l,r) { return l >= r; },
+        'typeof':   function(l,r) { return typeof l == r; }
+    }
+
+    if (!operators[operator])
+        throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
+
+    var result = operators[operator](lvalue,rvalue);
+
+    if( result ) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+
+});
+
+
+
+mvc.registerHelper('eachkeys', function(context, options) {
+  var fn = options.fn, inverse = options.inverse;
+  var ret = "";
+
+  var empty = true;
+  for (key in context) { empty = false; break; }
+
+  if (!empty) {
+    for (key in context) {
+        ret = ret + fn({ 'key': key.toUpperCase(), 'value': context[key]});
+    }
+  } else {
+    ret = inverse(this);
+  }
+  return ret;
+});
+
+
+mvc.registerHelper('elipsis', function(maxLength, context, options) {
+  if(context.length > maxLength) {
+    context = context.substring(0, maxLength)+"...";
+  }
+  
+  return context;
+});
+
+mvc.route(request);
+%>

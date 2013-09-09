@@ -1,9 +1,0 @@
-<%
-    include("dbcon.jag");
-    function getDevicesCountAndUserCountForAllGroups(){
-
-        var result = db.query("SELECT a.id, a.name, (SELECT COUNT(id) FROM UserGroups WHERE group_id = a.id) AS no_of_users, (SELECT COUNT(id) FROM Devices WHERE user_id IN (SELECT user_id FROM UserGroups WHERE group_id = a.id)) AS no_of_devices FROM Groups AS a GROUP BY a.name");
-       // print(result);
-        return result;
-    }
-%>

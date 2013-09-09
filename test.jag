@@ -1,20 +1,7 @@
-
 <%
- /*var url = 'https://10.200.3.86:8444/push';
- var result = post(url, 'Jaggery HTTP POST', {
-   "User-Agent" : "Jaggery-XHR",
-   "push_magic_token" : "test1",
-	"device_token" : "test2"
- }, 'json');
- print(result.data);*/
-
-
-var url = "http://10.200.1.142:9764/mdm/view/testgcm.jag";
-var data = { include_entities:true,include_rts:true,screen_name:"wso2",count:1 };
-get(url, data ,"json");
-//print(twitterJson);
-
-
-
- %>
-
+var log = new Log();
+/*var policy = require("policy");
+var entitlementPolicyAdminServiceStub = policy.entitlement.setEntitlementPolicyAdminServiceParameters();
+policy.entitlement.login();
+log.info(policy.entitlement.readExistingPolicy(entitlementPolicyAdminServiceStub,"Engineering-Android-CAMERA-MUTE-PASSCODEPOLICY-INFORMATION-INFO-MESSAGING-NOTIFICATION"));*/
+%>

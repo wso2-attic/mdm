@@ -1,0 +1,24 @@
+{ "APIS": {
+        "getGroupsList": "webconsole/devices",
+        "getGroupsFeatures": "features",
+        "getGroupUsers": "groups/{0}/users",
+        "getUserDevices": "users/{0}/devices",        
+        "getDeviceFeatures": "devices/{0}/features",
+        "getUserAuthenticate": "users/authenticate",
+        "getCurrentUser": "users/current",
+        "groupsCRUD": "groups/{0}",
+        "usersCRUD": "users/{0}",        
+        "getDeviceAppList": "refresh/devices/{0}/502A",
+		"getDeviceGenInfo": "refresh/devices/{0}/500A",
+		"getDeviceNotifications": "notifications/devices/{0}",
+		"performDeviceOperation" : "devices/{0}/operations/{1}",
+		"performGroupOperation" : "groups/{0}/operations/{1}",
+		"performUserOperation" : "users/{0}/operations/{1}",		
+		"dashboardMethods" : "dashboard/{0}",
+		"userGroups": "users/{0}/groups",
+		"permissionsCRUD": "permissions",
+		"policiesCRUD": "policies",
+		"permissionFeatures": "features" 
+    }
+
+}

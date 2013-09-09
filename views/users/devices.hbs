@@ -1,0 +1,212 @@
+<div class="container-fluid">
+
+	<div class="raw-fluid">
+	
+	{{#compare contextData.user.role 'admin'}}
+
+		<ul class="breadcrumb">
+			<li>
+				<a href="{{appInfo.server_url}}roles/management">Roles</a><span class="divider">/</span>
+			</li>
+			<li>
+				<a href="{{appInfo.server_url}}roles/users">Users</a><span class="divider">/</span>
+			</li>
+			<li class="active">
+				Devices
+			</li>
+		</ul>
+	</div>
+	
+	{{/compare}}
+
+	<div class="raw-fluid">
+		<div class="span12">
+			<div class="block">
+				<div class="block-header">
+					<div class="block-header-title pull-left">
+						{{#data.user}}
+							{{firstName}} {{lastName}}'s Devices
+						{{/data.user}}
+					</div>
+
+				</div>
+
+				<div class="block-body container-fluid raw-fluid well-small">
+
+					<ul class="nav nav-tabs" id="devicesTab">
+
+						{{#data.devices}}
+
+						<li class="{{#compare @index 0}}active{{/compare}}">
+							<a id="device-tab-heading-{{@index}}" data-toggle="tab" href="#device-tab-{{@index}}" data-tab-id="{{@index}}" data-device-id="{{id}}" >{{properties.model}}</a>
+						</li>
+
+						{{/data.devices}}
+
+					</ul>
+
+					<div class="tab-content">
+
+						{{#data.devices}}
+
+						<div class="tab-pane {{#compare @index 0}}active{{/compare}}" id="device-tab-{{@index}}">
+							<div class="raw">
+
+								<div class="span4">
+
+									<div class="raw">
+
+										<div class="block">
+											<div class="block-header-small">
+												<div class="pull-left">
+													Device
+												</div>
+												
+												<div class="pull-right button-block-refresh">
+													<a href="#" class="btn btn-small btn-refresh" data-command="genInfo"><i class="icon-refresh"> </i> </a>
+												</div>
+											</div>
+
+											<div class="block-body container-fluid raw-fluid well-small">
+												<div class="pull-left">
+													<img class="device-image"  data-tab-id="{{@index}}" data-device-id="{{id}}" src="{{../deviceImageService}}/{{properties.model}}.png" style="height: 300px; padding-left: 10px">
+												</div>												
+												<div class="pull-right" style="font-size: x-small" id="gen-info-{{@index}}">
+													
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+
+									<div class="raw">
+
+										<div class="block">
+											<div class="block-header-small">
+												<div class="pull-left">
+													Notifications
+												</div>
+											</div>
+
+											<div id="notifications-{{@index}}" class="block-body container-fluid raw-fluid well-small">
+
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+
+								<div class="span7">
+									
+									<div class="raw">
+
+										<div class="block">
+											<div class="block-header-small">
+												<div class="pull-left">
+													Device Info
+												</div>												
+											</div>
+
+											<div class="block-body container-fluid raw-fluid well-small">
+															{{#eachkeys properties}}
+																<div class="span3" style="font-size: x-small">
+																	<b>{{this.key}}</b>: {{this.value}}
+																</div>
+															{{/eachkeys}}
+											</div>
+
+										</div>
+
+									</div>								
+									
+
+									
+									
+
+									<div class="raw">
+
+										<div class="block">
+											<div class="block-header-small">
+												<div class="pull-left">
+													Operations
+												</div>
+											</div>
+
+											<div class="block-body container-fluid raw-fluid">
+
+												{{#features}}
+												
+												{{#compare feature_type 'OPERATION'}}
+												<div class="features-device" data-feature="{{name}}"   data-template="{{template}}" style="cursor: move;">
+													<div title="{{description}}" class="span2" draggable="true">
+														<div class="raw text-center">
+															<img src="{{../../../resourcePath}}features/{{name}}.png" class="features-role-image">
+														</div>
+														<div class="raw text-center"  style="font-size: x-small">
+															{{#elipsis 30 description}}{{/elipsis}}
+														</div>
+													</div>
+												</div>
+												{{/compare}}
+
+												{{/features}}
+
+											</div>
+
+										</div>
+
+									</div>
+									
+									
+									<div class="raw">
+
+										<div class="block">
+											<div class="block-header-small">
+												<div class="pull-left">
+													Application List
+												</div>
+												<div class="pull-right button-block-refresh">
+													<a href="#" class="btn btn-small btn-refresh" data-command="appList"><i class="icon-refresh" > </i> </a>
+												</div>
+											</div>
+
+											<div id="app-list-{{@index}}" class="block-body container-fluid raw-fluid well-small">
+													<span style="font-size: small;">No Apps to display</span>
+											</div>
+
+										</div>
+
+									</div>
+
+									
+
+								</div>
+
+							</div>
+						</div>
+
+						{{/data.devices}}
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+
+
+
+
+
+ 
+<!-- Modal Features -->
+<div id="featureModal" class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
+
+</div>

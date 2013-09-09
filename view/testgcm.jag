@@ -1,7 +1,0 @@
-<%
-    var log = new Log();
-    log.info("hi");
-    print("hi");
-response.code = 200;
-
-%>
