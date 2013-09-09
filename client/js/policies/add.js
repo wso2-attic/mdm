@@ -13,24 +13,39 @@ $("#btn-add").click(function() {
 			params[prefix] = new Object();
 		}
 		
+		var param = params[prefix];	
+		
 		if($(this).attr('type') == 'checkbox'){	
-			var param = params[prefix];			
-			params[prefix][suffix] = $(this).is(':checked');			
-		}else{
-			var param = params[prefix];			
+			
+			if($(this).is(':checked')){
+				var checkVal = $(this).data("trueVal");
+				params[prefix]["function"] = checkVal;
+			}else{
+				var checkVal = $(this).data("falseVal");
+				params[prefix]["function"] = checkVal;
+			}	
+				
+		}else{				
 			params[prefix][suffix] = $(this).val();
 		}
 	});
 	
 
+	//alert(params.length);
 	
+	var policyData =  {"code": "527A", "data": []};
+	
+	for (var param in params) {     	
+     	policyData.data.push({code: param, data: params[param]});
+	}
+
 	
 		
 	jQuery.ajax({
 		url : getServiceURLs("policiesCRUD", ""),
 		type : "POST",
 		async : "false",
-		data: JSON.stringify({params: params, policyName: policyName}),		
+		data: JSON.stringify({policyData: policyData, policyName: policyName}),		
 		contentType : "application/json",
 		dataType : "json",		
 	});
