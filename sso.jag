@@ -1,0 +1,109 @@
+<%
+var log = new Log();
+
+/*
+ var isLogin = session.get("Loged");
+
+ if (isLogin) {
+ response.sendRedirect('/mdm');
+ }
+ */
+
+var configs = require('/config.json');
+var db = application.get('db');
+var dbconfig = require('db.json');
+if(db==null || db==undefined){
+	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
+	application.put('db',db);
+}
+
+var samlResponse = request.getParameter("SAMLResponse");
+var sessionId = session.getId();
+var samlRequest = request.getParameter("SAMLRequest");
+// create a sso relying party js object
+var security = require("sso");
+var ssoRelyingParty = new security.SSORelyingParty(configs.ssoConfiguration.issuer);
+var isLogoutResponse = false;
+var isLogoutRequest = false;
+var carbon = require('carbon');
+var server = new carbon.server.Server(configs.HTTPS_URL + '/admin');
+
+
+if (samlResponse != null) {
+    isLogoutResponse = ssoRelyingParty.isLogoutResponse(samlResponse);
+    if (!Boolean(isLogoutResponse)) {
+
+// relay state value should be a valid value, this value is mapped with request uri.
+        var relayState = request.getParameter("RelayState");
+        var requestedURI = ssoRelyingParty.getRelayStateProperty(relayState);
+        log.debug(requestedURI);
+        if (requestedURI == null) {
+            log.debug("Relaystate value is invalid.");
+
+        }
+
+// validating the signature
+        if (configs.ssoConfiguration.responseSigningEnabled) {
+            var isSignatureValid = ssoRelyingParty.validateSignature(samlResponse);
+            if (!Boolean(isSignatureValid)) {
+                log.debug("SAML response signature is verification failed.");
+            }
+        }
+
+        ssoRelyingParty.setSessionAuthenticated(sessionId, samlResponse);
+        session.put("LOGGED_IN_USER", ssoRelyingParty.getLoggedInUser(sessionId));
+        session.put("Loged", "true");
+        var username = ssoRelyingParty.getLoggedInUser(sessionId);
+
+        var userModule = require('/modules/user.js').user;
+
+		var user = new userModule(db);
+		var objUser = user.getUser({'userid': username});
+		log.info("OBJECT U >>>>"+objUser);
+		if(objUser != null){
+			var userFeed = {};
+			userFeed.tenantId = stringify(objUser["um"]["tenantId"]);
+			log.info("TenantID-"+userFeed.tenantId);
+			userFeed.username = objUser["username"];
+			userFeed.email = objUser["email"];
+			userFeed.firstName = objUser["firstName"];
+			userFeed.lastName = objUser["lastName"];
+			userFeed.mobile = objUser["mobile"];
+			var parsedRoles = parse(objUser["roles"]);
+			var isAdmin = false;
+			for (var i = 0; i < parsedRoles.length; i++) {
+				if(parsedRoles[i] == 'admin') {
+					isAdmin = true;
+					break;
+				}
+			}
+			userFeed.isAdmin = isAdmin;
+			session.put("mdmConsoleUserLogin", "true");
+			session.put("mdmConsoleUser", userFeed);
+			if(isAdmin){
+				response.sendRedirect('console/dashboard');
+			}else{
+				response.sendRedirect(appController.appInfo().server_url + 'users/devices?user=' + userFeed.username);
+			}
+	    }
+    } else {
+        log.debug('logout from mdm');
+// if the saml response is log out request from IDP, we log out from web app.
+        ssoRelyingParty.invalidateSessionBySessionId(sessionId);
+        session.invalidate();
+        response.sendRedirect('/mdm');
+
+    }
+
+}
+// if saml request is a log out request, then invalidate session.
+if (samlRequest != null) {
+    log.debug('logout request recived from store');
+    isLogoutRequest = ssoRelyingParty.isLogoutRequest(samlRequest);
+    if (Boolean(isLogoutRequest)) {
+        ssoRelyingParty.invalidateSessionBySAMLResponse(samlRequest);
+        session.invalidate();
+    }
+}
+
+%>

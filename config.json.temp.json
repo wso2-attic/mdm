@@ -1,0 +1,58 @@
+{
+	"HTTPS_URL": "https://10.100.0.151:9443",
+    "HTTP_URL": "http://10.100.0.151:9763",
+    "RUBY_SERVER_URL": "https://10.100.0.151:8443",
+    "MDM_UI_URI": "/mdm/",
+    "MDM_API_URI": "/mdm/api/",
+    "MDM_THEME": "wso2sinine",
+    "server": {
+        "https": "https://localhost:9443",
+        "http": "http://localhost:9763"
+    },
+    "roles": {
+        "portal": {
+            "/permission/admin/login": ["ui.execute"]
+        }
+    },
+    "adminRole": "admin",
+    "user": {
+        "username": "admin",
+        "password": "admin"
+    },
+    "userRoles": ["portal"],
+    "permissions": {
+        "login": {
+            "/permission/admin/login": ["ui.execute"]
+        }
+    },
+    "userSpace": {
+        "space": "mdm",
+        "options": {
+            "type": "registry",
+            "serverUrl": "https://localhost:9443/admin",
+            "path": "/_system/governance/users",
+            "username": "admin",
+            "password": "admin"
+        }
+    },
+    "storeSpace": {
+        "space": "store",
+        "options": {
+            "type": "registry",
+            "serverUrl": "https://localhost:9443/admin",
+            "path": "/_system/governance/users",
+            "username": "admin",
+            "password": "admin"
+        }
+    },
+    "ssoConfiguration": {
+        "enabled": true,
+        "issuer": "mdm",
+        "identityProviderURL": "https://localhost:9443/sso/samlsso.jag",
+        "keyStorePassword": "wso2carbon",
+        "identityAlias": "wso2carbon",
+        "responseSigningEnabled": "true",
+        "keyStoreName": "/repository/resources/security/wso2carbon.jks",
+        "appAcs" : "https://localhost:9443/mdm/sso.jag"
+    }
+}
