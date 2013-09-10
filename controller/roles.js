@@ -155,7 +155,8 @@ view_users = function(appController){
 	context.data = {
 		configOption : "roles",
 		users: users,
-		groups: groups		
+		groups: groups,
+		groupId: groupId		
 	}
 	return context;	
 }

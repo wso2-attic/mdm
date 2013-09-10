@@ -26,24 +26,7 @@ var group = (function () {
 		    response.status = 200;
 		});
         router.get('groups/{groupid}/users', function(ctx){
-            var users = group.getUsers(ctx);
-            var allUsers = user.getUsers(ctx);
-            if(users.length==0){
-                for(var i=0;i<allUsers.length;i++){
-                    allUsers[i].available = false;
-                }
-            }else{
-                for(var i=0;i<allUsers.length;i++){
-                    for(var j=0;j<users.length;j++){
-                        if(allUsers[i].username==users[j].userid){
-                            allUsers[i].available = true;
-                            break;
-                        }else{
-                            allUsers[i].available = false;
-                        }
-                    }
-                }
-            }
+            var allUsers = group.getUsersByGroup(ctx);
             response.content =  allUsers;
             response.status = 200;
         });
