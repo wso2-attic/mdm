@@ -134,12 +134,12 @@ add = function(appController){
 view_users = function(appController){	
 	
 	
-	var group = request.getParameter('group');
+	var groupId = request.getParameter('group');
 		
 	
 	
 	try{
-		var users = group.getUsersByGroup({group: group});
+		var users = group.getUsersByGroup({group: groupId});
 	}catch(e){
 		var users = [];
 	}
