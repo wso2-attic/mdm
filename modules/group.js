@@ -151,7 +151,7 @@ var group = (function () {
 
         },
         getUsersByGroup:function(ctx){
-            var users = getUsers(ctx);
+            var users = this.getUsers(ctx);
             var allUsers = user.getUsers(ctx);
             if(users.length==0){
                 for(var i=0;i<allUsers.length;i++){
