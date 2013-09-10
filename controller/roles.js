@@ -153,7 +153,7 @@ view_users = function(appController){
 	context.page = "configuration";
 	context.jsFile= "users/configuration.js"
 	context.data = {
-		configOption : "groups",
+		configOption : "roles",
 		users: users,
 		groups: groups		
 	}
