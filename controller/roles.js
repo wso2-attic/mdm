@@ -139,7 +139,7 @@ view_users = function(appController){
 	
 	
 	try{
-		var users = group.getUsersByGroup({group: groupId});
+		var users = group.getUsers({groupid: groupId});
 	}catch(e){
 		var users = [];
 	}
