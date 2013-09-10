@@ -6,9 +6,11 @@ var group = (function () {
 	var log = new Log();
 	var db;
 	var deviceModule = require('device.js').device;
+    var userModule = require('user.js').user;
 	var carbon = require('carbon');
 	var server = new carbon.server.Server(configs.HTTPS_URL + '/admin');
 	var device = new deviceModule();
+    var user =  new userModule();
 	var common = require('common.js');
 	var claimFirstName = "http://wso2.org/claims/givenname";
 	var claimLastName = "http://wso2.org/claims/lastname";
@@ -147,6 +149,27 @@ var group = (function () {
             var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
             um.updateUserListOfRole(ctx.groupid , ctx.deletedUsers, ctx.newUsers);
 
+        },
+        getUsersByGroup:function(ctx){
+            var users = getUsers(ctx);
+            var allUsers = user.getUsers(ctx);
+            if(users.length==0){
+                for(var i=0;i<allUsers.length;i++){
+                    allUsers[i].available = false;
+                }
+            }else{
+                for(var i=0;i<allUsers.length;i++){
+                    for(var j=0;j<users.length;j++){
+                        if(allUsers[i].username==users[j].userid){
+                            allUsers[i].available = true;
+                            break;
+                        }else{
+                            allUsers[i].available = false;
+                        }
+                    }
+                }
+            }
+            return allUsers;
         },
 		operation: function(ctx){
 			
