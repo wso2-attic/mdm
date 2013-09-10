@@ -131,6 +131,34 @@ add = function(appController){
 }
 
 
+
+assign_users = function(appController){	
+	
+	
+	var groupId = request.getParameter('group');
+		
+	try{
+		var users = user.getUsersByGroup({groupid: groupId});
+		
+	}catch(e){
+		var users = [];
+	}
+	log.info("sdfsd");
+	log.info(session.get("mdmConsoleUser"));
+	context = appController.context();
+	context.title = context.title + " | Assign Users to group";	
+	context.page = "configuration";	
+	context.jsFile= "roles/assign_users.js"
+	context.data = {
+		configOption : "roles",
+		users: users,
+		tenantId:session.get("mdmConsoleUser").tenantId,
+		groupId: groupId
+	}
+	return context;
+}
+
+
 view_users = function(appController){	
 	
 	

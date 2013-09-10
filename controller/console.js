@@ -85,6 +85,7 @@ configuration = function(appController){
 	}
 	return context;	
 }
+
 management = function(appController){		
 	context = appController.context();
 	context.title = context.title + " | Management";

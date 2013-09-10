@@ -36,10 +36,12 @@
 										<td class="center">
 											{{#compare ../contextData.user.role 'masteradmin'}}
 												<a href="#assignPermissions" data-group="{{this}}"  data-toggle="modal" title="Assign Permissions"
-												class="add-permission-link"><i class="icon-cog"> </i> Permissions </a>
+												class="add-permission-link"><i class="icon-cog"> </i> Permissions </a> |
 											{{/compare}}
 											<a href="view_users?group={{this}}" data-group="{{this}}"  data-toggle="modal" title="View Users"
-												class="add-permission-link"><i class="icon-user"> </i> View Users </a>										
+												><i class="icon-user"> </i> View Users </a> |
+											<a href="assign_users?group={{this}}" data-group="{{this}}"  data-toggle="modal" title="Assign Users"
+												><i class="icon-user"> </i> Assign Users </a>																							
 										</td>
 									</tr>
 									{{/data.groups}}
