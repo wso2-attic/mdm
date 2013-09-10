@@ -39,7 +39,8 @@ var policy = (function () {
         constructor: module,
 
         addPolicy: function(ctx){
-            var result = db.query("insert into permissions (name,content) values (?,?)",ctx.name,ctx.content);
+            var result = db.query("insert into policy (name,content) values (?,?)",ctx.policyName,ctx.policyData);
+            log.info("Result >>>>>>>"+result);
             return result;
         },
         deletePolicy:function(ctx){

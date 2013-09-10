@@ -169,6 +169,7 @@ var group = (function () {
                     }
                 }
             }
+            log.info("All Users "+allUsers);
             return allUsers;
         },
 		operation: function(ctx){
