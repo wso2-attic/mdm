@@ -131,3 +131,32 @@ add = function(appController){
 }
 
 
+view_users = function(appController){	
+	
+	
+	var groupId = request.getParameter('group');
+		
+	
+	
+	try{
+		var users = group.getUsersByGroup({group: groupId});
+	}catch(e){
+		var users = [];
+	}
+	try{
+		var groups = group.getGroups({});
+	}catch(e){
+		var groups = [];
+	}
+	context = appController.context();
+	context.title = context.title + " | Configuration";	
+	context.page = "configuration";
+	context.jsFile= "users/configuration.js"
+	context.data = {
+		configOption : "roles",
+		users: users,
+		groups: groups		
+	}
+	return context;	
+}
+
