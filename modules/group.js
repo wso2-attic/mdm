@@ -147,7 +147,7 @@ var group = (function () {
 		},
         assignUsers: function(ctx){
             var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
-            um.updateUserListOfRole(ctx.groupid , ctx.deletedUsers, ctx.newUsers);
+            um.updateUserListOfRole(ctx.groupid , ctx.removed_users, ctx.added_users);
 
         },
         getUsersByGroup:function(ctx){
