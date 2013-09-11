@@ -37,7 +37,7 @@ $("#btn-add").click(function() {
 
 	jQuery.ajax({
 		url : getServiceURLs("groupsCRUD", ""),
-		type : "POST",
+		type : "PUT",
 		async : "false",
 		data : JSON.stringify(jso),
 		contentType : "application/json",
