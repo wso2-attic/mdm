@@ -30,6 +30,25 @@ var policy = (function () {
             }
 
         });
+        router.put('policies/{policyid}/groups', function(ctx){
+
+            log.info("check policy router GET");
+            log.info(ctx);
+            var result = policy.getAllPolicies(ctx);
+            if(result != undefined && result != null && result[0] != undefined && result[0]!= null){
+                response.content = result;
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
+
+        });
+        router.get('policies/{policyid}/groups', function(ctx){
+
+            var result = policy.getGroupsByPolicy(ctx);
+
+        });
+
 
 
 

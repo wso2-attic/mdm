@@ -4,6 +4,9 @@ var policy = (function () {
     var userModule = require('user.js').user;
     var user;
 
+    var groupModule = require('group.js').group;
+    var group;
+
     var configs = {
         CONTEXT: "/"
     };
@@ -14,6 +17,7 @@ var policy = (function () {
     var module = function (dbs) {
         db = dbs;
         user = new userModule(db);
+        group = new groupModule(db);
         //mergeRecursive(configs, conf);
     };
 
@@ -53,6 +57,28 @@ var policy = (function () {
         },
         assignGroupsToPolicy:function(ctx){
             //var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);
+            return result;
+        },
+        getGroupsByPolicy:function(ctx){
+            var allGroups = group.getGroups(ctx);
+            var result = db.query("SELECT * FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? ",ctx.policyid);
+
+            var array = new Array();
+            for(var i =0; i < allGroups.length;i++){
+                var element = {};
+                for(var j=0 ;j< result.length;j++){
+                    if(allGroups[i]==result[j].group_id){
+                        element.name = allGroups[i];
+                        element.available = true;
+                        break;
+                    }else{
+                        element.name = allGroups[i];
+                        element.available = false;
+                    }
+                }
+                array[i] = element;
+            }
+            log.info(array);
             return result;
         },
         removePolicyFromGroup:function(ctx){
