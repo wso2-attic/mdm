@@ -25,8 +25,11 @@ $("#btn-add").click(function() {
 				params[prefix]["function"] = checkVal;
 			}	
 				
-		}else{				
-			params[prefix][suffix] = $(this).val();
+		}else{	
+			if($(this).val() !== ""){
+				params[prefix][suffix] = $(this).val();
+			}			
+			
 		}
 	});
 	
