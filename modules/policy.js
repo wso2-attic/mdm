@@ -43,6 +43,10 @@ var policy = (function () {
             log.info("Result >>>>>>>"+result);
             return result;
         },
+        getAllPolicies:function(ctx){
+            var result = db.query("SELECT * FROM policies");
+            return result;
+        },
         deletePolicy:function(ctx){
             var result = db.query("REMOVE FROM permissions where name = ?",ctx.name);
             return result;
