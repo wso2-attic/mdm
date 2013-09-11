@@ -6,8 +6,6 @@ var device = (function () {
     var carbon = require('carbon');
 	var server = new carbon.server.Server(configs.HTTPS_URL + '/admin');
 
-    var userModule = require('user.js').user;
-    var user;
 
     var log = new Log();
     var gcm = require('gcm').gcm;
@@ -15,8 +13,6 @@ var device = (function () {
     var db;
     var module = function (dbs) {
         db = dbs;
-        user = new userModule(db);
-        //mergeRecursive(configs, conf);
     };
 
     function mergeRecursive(obj1, obj2) {
@@ -214,7 +210,7 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "TRACKCALLS", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
-                    var roles = user.getUserRoles({'username':userId});
+                    var roles = this.getUserRoles({'username':userId});
                     var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roles[0]);
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
                     return true;
@@ -340,6 +336,15 @@ var device = (function () {
             log.info(obj);
 
             return obj;
+        },
+        getUserRoles: function(ctx){
+
+            var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
+            log.info(tenantAwareUsername);
+            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
+            var user = um.getUser(tenantAwareUsername);
+
+            return stringify(user.getRoles());
         },
         unRegister:function(ctx){
             if(ctx.regid!=null){
