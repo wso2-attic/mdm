@@ -1,6 +1,6 @@
 $("#btn-add").click(function() {
 
-	var name = $('#inputName').val();
+	var groupName = $('#inputName').val();
 	var users = $('#inputUsers').val();
 	
 	var tenantId = $('#tenantId').val();
@@ -25,7 +25,7 @@ $("#btn-add").click(function() {
 		
 	jso = {
 		"tenant_id" : tenantId,
-		"name" : name,
+		"name" : groupName,
 		"added_users" : usersArray,
 		"removed_users" : removedUsers
 	};
@@ -34,9 +34,10 @@ $("#btn-add").click(function() {
 		text : 'Users assigned to groups successfully!',
 		'layout' : 'center'
 	});
-
+	
+	
 	jQuery.ajax({
-		url : getServiceURLs("groupsCRUD", ""),
+		url : getServiceURLs("groupsCRUD", groupName + "/users"),
 		type : "PUT",
 		async : "false",
 		data : JSON.stringify(jso),
