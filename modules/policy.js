@@ -64,19 +64,28 @@ var policy = (function () {
             var result = db.query("SELECT * FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? ",ctx.policyid);
 
             var array = new Array();
-            for(var i =0; i < allGroups.length;i++){
-                var element = {};
-                for(var j=0 ;j< result.length;j++){
-                    if(allGroups[i]==result[j].group_id){
-                        element.name = allGroups[i];
-                        element.available = true;
-                        break;
-                    }else{
-                        element.name = allGroups[i];
-                        element.available = false;
-                    }
+            if(result == undefined || result == null || result[0] == undefined || result[0] == null){
+                for(var i =0; i < allGroups.length;i++){
+                    var element = {};
+                    element.name = allGroups[i];
+                    element.available = false;
+                    array[i] = element;
                 }
-                array[i] = element;
+            }else{
+                for(var i =0; i < allGroups.length;i++){
+                    var element = {};
+                    for(var j=0 ;j< result.length;j++){
+                        if(allGroups[i]==result[j].group_id){
+                            element.name = allGroups[i];
+                            element.available = true;
+                            break;
+                        }else{
+                            element.name = allGroups[i];
+                            element.available = false;
+                        }
+                    }
+                    array[i] = element;
+                }
             }
             log.info(array);
             return array;
