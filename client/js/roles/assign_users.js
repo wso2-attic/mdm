@@ -2,21 +2,36 @@ $("#btn-add").click(function() {
 
 	var name = $('#inputName').val();
 	var users = $('#inputUsers').val();
+	
 	var tenantId = $('#tenantId').val();
-
+	
+	
+	
 	var usersArray = []
 	if (users != null) {
 		usersArray = users.toString().split(",");
 	}
-	// alert(JSON.stringify(userGroupsArray));
+	
+
+	var removedUsers = Array();
+	
+	//this is not a good thing to have it in the UI, but backend logic need it badly
+	$("#inputUsers option").each(function(){ 
+		if(usersArray.indexOf($(this).val()) < 0){
+				 removedUsers.push($(this).val());
+		}  		
+	});
+	
+		
 	jso = {
 		"tenant_id" : tenantId,
 		"name" : name,
-		"users" : usersArray
+		"added_users" : usersArray,
+		"removed_users" : removedUsers
 	};
 
 	noty({
-		text : 'Group Added successfully!',
+		text : 'Users assigned to groups successfully!',
 		'layout' : 'center'
 	});
 
