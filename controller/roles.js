@@ -138,11 +138,12 @@ assign_users = function(appController){
 	var groupId = request.getParameter('group');
 		
 	try{
-		var users = user.getUsersByGroup({groupid: groupId});
-		
+		var users = group.getUsersByGroup({groupid: groupId});		
 	}catch(e){
 		var users = [];
 	}
+		
+	
 	log.info("sdfsd");
 	log.info(session.get("mdmConsoleUser"));
 	context = appController.context();
