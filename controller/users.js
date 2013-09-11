@@ -119,7 +119,7 @@ devices = function(appController){
 assign_groups = function(appController){	
 	
 	
-	var username = request.getParameter('username');
+	var username = request.getParameter('user');
 		
 	try{
 		var groups = policy.getGroups({});		
