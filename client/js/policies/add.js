@@ -19,14 +19,21 @@ $("#btn-add").click(function() {
 			
 			if($(this).is(':checked')){
 				var checkVal = $(this).data("trueVal");
-				params[prefix]["function"] = checkVal;
+				if(checkVal !== ""){
+					params[prefix]["function"] = checkVal;
+				}
 			}else{
 				var checkVal = $(this).data("falseVal");
-				params[prefix]["function"] = checkVal;
+				if(checkVal !== ""){
+					params[prefix]["function"] = checkVal;
+				}
 			}	
 				
-		}else{				
-			params[prefix][suffix] = $(this).val();
+		}else{	
+			if($(this).val() !== ""){
+				params[prefix][suffix] = $(this).val();
+			}			
+			
 		}
 	});
 	
