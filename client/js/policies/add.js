@@ -40,10 +40,10 @@ $("#btn-add").click(function() {
 
 	//alert(params.length);
 	
-	var policyData =  {"code": "527A", "data": []};
+	var policyData =  Array();
 	
 	for (var param in params) {     	
-     	policyData.data.push({code: param, data: params[param]});
+     	policyData.push({code: param, data: params[param]});
 	}
 
 	
