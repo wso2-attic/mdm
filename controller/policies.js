@@ -43,7 +43,7 @@ assign_groups = function(appController){
 	var policyName = request.getParameter('policyName');
 		
 	try{
-		var groups = group.getGroups({});		
+		var groups = policy.getGroupsByPolicy({policyid: policyId});		
 	}catch(e){
 		var groups = [];
 	}
