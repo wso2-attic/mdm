@@ -360,6 +360,16 @@ var device = (function () {
             }else{
                 return false;
             }
+        },
+        enforcePolicy:function(ctx){
+            var result = db.query("SELECT * from devices where id = ?",ctx.id);
+            var userId = result[0].user_id;
+            var roles = this.getUserRoles({'username':userId});
+            var roleList = parse(roles);
+            log.info(roleList[0]);
+            var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+            log.info(gpresult[0]);
+            sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
         }
     };
     // return module
