@@ -4,20 +4,18 @@ var group = new groupModule(db);
 var featureModule = require('/modules/feature.js').feature;
 var feature = new featureModule(db);
 
+var policyModule = require('/modules/policy.js').policy;
+var policy = new policyModule(db);
 
 
 configuration = function(appController){	
 	
-	//var permissionGroup = [{id: 1, name: "test1", features: "Test|Test"}, { id: 2, name: "test1", features: "Test|Test"}];
-	
-		
-	
 	try{
-		var permissionGroup = JSON.parse(get(appController.getServiceURLs("permissionsCRUD", "")).data);
+		var policies = policy.getAllPolicies({});
 	}catch(e){
-		var permissionGroup = [];
+		var policies = [];
 	}
-	
+			
 	try{
 		var groups = group.getGroups({});
 	}catch(e){
@@ -30,12 +28,41 @@ configuration = function(appController){
 	context.page = "configuration";
 	context.data = {
 			configOption : "policies",
-			permissionGroup: permissionGroup,
+			policies: policies,
 			groups: groups
 		
 		}
 	return context;
 }
+
+
+assign_groups = function(appController){	
+	
+	
+	var policyId = request.getParameter('policy');
+	var policyName = request.getParameter('policyName');
+		
+	try{
+		var groups = group.getGroups({});		
+	}catch(e){
+		var groups = [];
+	}
+	
+				
+	context = appController.context();
+	context.title = context.title + " | Assign Users to group";	
+	context.page = "configuration";	
+	context.jsFile= "policies/assign_groups.js"
+	context.data = {
+		configOption : "policies",
+		groups: groups,
+		tenantId:session.get("mdmConsoleUser").tenantId,
+		policyId: policyId,
+		policyName: policyName
+	}
+	return context;
+}
+
 
 
 add = function(appController){	

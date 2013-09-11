@@ -10,7 +10,20 @@ var policy = (function () {
             log.info("check policy router POST");
             log.info(ctx);
             var result = policy.addPolicy(ctx);
-            if(result == 'success'){
+            if(result == 1){
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
+
+        });
+        router.get('policies/', function(ctx){
+
+            log.info("check policy router GET");
+            log.info(ctx);
+            var result = policy.getAllPolicies(ctx);
+            if(result != undefined && result != null && result[0] != undefined && result[0]!= null){
+                response.content = result;
                 response.status = 200;
             }else{
                 response.status = 404;
