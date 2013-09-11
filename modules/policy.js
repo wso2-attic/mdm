@@ -79,7 +79,7 @@ var policy = (function () {
                 array[i] = element;
             }
             log.info(array);
-            return result;
+            return array;
         },
         removePolicyFromGroup:function(ctx){
         //    var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);
