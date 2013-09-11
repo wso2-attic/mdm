@@ -115,3 +115,29 @@ devices = function(appController){
 	
 }
 
+
+assign_groups = function(appController){	
+	
+	
+	var username = request.getParameter('username');
+		
+	try{
+		var groups = policy.getGroups({});		
+	}catch(e){
+		var groups = [];
+	}
+	
+				
+	context = appController.context();
+	context.title = context.title + " | Assign Users to group";	
+	context.page = "configuration";	
+	context.jsFile= "policies/assign_groups.js"
+	context.data = {
+		configOption : "policies",
+		groups: groups,
+		tenantId:session.get("mdmConsoleUser").tenantId,
+		username: username
+		
+	}
+	return context;
+}
