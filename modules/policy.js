@@ -65,8 +65,12 @@ var policy = (function () {
                 log.info("Result1 >>>>>"+result);
             }
             for(var i = 0; i< newGroups.length;i++){
-                var result =db.query(" INSERT INTO group_policy_mapping (group_id,policy_id) VALUES (?,?)",newGroups[i],policyId);
-                log.info("Result2 >>>>>"+result);
+                try{
+                    var result =db.query(" INSERT INTO group_policy_mapping (group_id,policy_id) VALUES (?,?)",newGroups[i],policyId);
+                    log.info("Result2 >>>>>"+result);
+                }catch(e){
+                    log.info("ERROR Occured >>>>>");
+                }
             }
         },
         getGroupsByPolicy:function(ctx){
