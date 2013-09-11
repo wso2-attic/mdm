@@ -56,8 +56,18 @@ var policy = (function () {
             return result;
         },
         assignGroupsToPolicy:function(ctx){
-            //var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);
-            return result;
+            var deletedGroups = ctx.removed_groups;
+            var newGroups = ctx.added_groups;
+            var policyId = ctx.policyid;
+
+            for(var i = 0; i< deletedGroups.length;i++){
+                var result = db.query("DELETE FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? && group_policy_mapping.group_id = ? ",policyId,deletedGroups[i]);
+                log.info("Result1 >>>>>"+result);
+            }
+            for(var i = 0; i< newGroups.length;i++){
+                var result =db.query(" INSERT INTO group_policy_mapping (group_id,policy_id) VALUES (?,?)",newGroups[i],policyId);
+                log.info("Result2 >>>>>"+result);
+            }
         },
         getGroupsByPolicy:function(ctx){
             var allGroups = group.getGroups(ctx);

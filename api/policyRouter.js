@@ -31,16 +31,10 @@ var policy = (function () {
 
         });
         router.put('policies/{policyid}/groups', function(ctx){
-
-            log.info("check policy router GET");
+            log.info("check policy router PUT");
             log.info(ctx);
-            var result = policy.getAllPolicies(ctx);
-            if(result != undefined && result != null && result[0] != undefined && result[0]!= null){
-                response.content = result;
-                response.status = 200;
-            }else{
-                response.status = 404;
-            }
+            policy.assignGroupsToPolicy(ctx);
+
 
         });
         router.get('policies/{policyid}/groups', function(ctx){
