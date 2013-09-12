@@ -107,6 +107,11 @@ var user = (function () {
 		       	response.content = groups;
 		    }*/
 		});
+        router.put('users/{+username}/groups/',function(ctx){
+            var groups = user.updateRoleListOfUser(ctx);
+             response.status = 200;
+             response.content = groups;
+        });
 		router.get('users/',function(ctx){
 			var obj = session.get("user");
 			var log = new Log();

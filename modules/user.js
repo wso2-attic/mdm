@@ -245,6 +245,11 @@
 
 			return objUser;
 		},
+        updateRoleListOfUser:function(ctx){
+            var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
+            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
+            um.updateRoleListOfUser(ctx.username,ctx.removed_groups,ctx.added_groups);
+        },
         getRolesByUser:function(ctx){
 
             var allRoles = this.getGroups(ctx);
