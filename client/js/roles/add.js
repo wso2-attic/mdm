@@ -25,8 +25,7 @@ $("#btn-add").click(function() {
 		type : "POST",
 		async : "false",
 		data : JSON.stringify(jso),
-		contentType : "application/json",
-		dataType : "json"
+		contentType : "text/plain"	
 	});
 	
 	window.location.assign("configuration");
