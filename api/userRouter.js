@@ -99,12 +99,13 @@ var user = (function () {
                 response.status = 404;
             }
         });
-		router.get('users/{userid}/groups/',function(ctx){
-			var groups = user.getGroups(ctx);
-		    if(groups[0]!= null){
+		router.get('users/{+username}/groups/',function(ctx){
+            log.info("Check Router");
+			var groups = user.getRolesByUser(ctx);
+		    /*if(groups[0]!= null){
 		     	response.status = 200;
 		       	response.content = groups;
-		    }
+		    }*/
 		});
 		router.get('users/',function(ctx){
 			var obj = session.get("user");

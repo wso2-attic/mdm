@@ -245,6 +245,29 @@
 
 			return objUser;
 		},
+        getRolesByUser:function(ctx){
+
+            var allRoles = this.getGroups(ctx);
+            var userRoles = parse(this.getUserRoles(ctx));
+            var array = new Array();
+
+            for(var i=0;i < allRoles.length;i++){
+                var obj = {};
+                for(var j=0;j< userRoles.length;j++){
+                    if(allRoles[i]==userRoles[j]){
+                        obj.name = allRoles[i];
+                        obj.available = true;
+                        break;
+                    }else{
+                        obj.name = allRoles[i];
+                        obj.available = false;
+                    }
+                }
+                array.push(obj);
+            }
+            log.info(array);
+            return array;
+        },
 		operation: function(ctx){
 			var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", ctx.userid);
 		    var succeeded="";
@@ -258,7 +281,21 @@
 		        }
 		    }
 		    return "Succeeded : "+succeeded+", Failed : "+failed;
-		}
+		},
+        getGroups: function(ctx){
+            var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
+            var roles = um.allRoles();
+
+            var arrRole = new Array();
+
+            for(var i = 0; i < roles.length; i++) {
+                if(common.isMDMRole(roles[i])) {
+                    arrRole.push(roles[i]);
+                }
+            }
+            return arrRole;
+        }
+
     };
     // return module
     return module;
