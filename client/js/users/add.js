@@ -33,8 +33,7 @@ $("#btn-add").click(function() {
 		type : "PUT",
 		async : "false",
 		data : JSON.stringify(jso),
-		contentType : "application/json",
-		dataType : "json",		
+		contentType : "text/plain"		
 	});
 	
 	window.location.assign("configuration");

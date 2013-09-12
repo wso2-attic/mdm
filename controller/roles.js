@@ -138,8 +138,8 @@ add = function(appController){
 
 
 
-assign_users = function(appController){
 
+assign_users = function(appController){
 
 	var groupId = request.getParameter('group');
 
