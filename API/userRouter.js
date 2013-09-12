@@ -91,6 +91,14 @@ var user = (function () {
 		        print("User added Successful");
 		    }
 		});
+        router.delete('users/{userid}', function(ctx){
+            var result = user.deleteUser(ctx);
+            if(result==true){
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
+        });
 		router.get('users/{userid}/groups/',function(ctx){
 			var groups = user.getGroups(ctx);
 		    if(groups[0]!= null){

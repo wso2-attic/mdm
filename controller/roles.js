@@ -20,6 +20,12 @@ configuration = function(appController){
 	}catch(e){
 		var groups = [];
 	}
+	
+	
+	//remove admin and masteradmin
+	groups.splice(groups.indexOf("masteradmin"), 1);
+	groups.splice(groups.indexOf("admin"), 1);
+	
 			
 	context = appController.context();
 	context.title = context.title + " | Configuration";	

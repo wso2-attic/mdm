@@ -58,7 +58,7 @@ $("#btn-add").click(function() {
 	});
 	
 	noty({
-		text : 'Permission Added successfully!',
+		text : 'Policies added successfully!',
 		'layout' : 'center',
 		'modal': false
 	});

@@ -37,7 +37,9 @@
 										<td>{{name}}</td>										
 										<td class="center">											
 											<a href="assign_groups?policy={{id}}&policyName={{name}}"  data-toggle="modal" title="Assign Groups"
-												><i class="icon-user"> </i> Assign Roles</a>																							
+												><i class="icon-user"> </i> Assign Roles</a> |
+												<a href="#"  class="btn-item-remove" data-item="{{id}}" title="Remove"
+												><i class="icon-remove"> </i> Remove</a>																								
 										</td>
 									</tr>
 									{{/data.policies}}
