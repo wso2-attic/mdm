@@ -111,6 +111,7 @@ var goose = (function () {
                                     log.info(parse(request.getContent()));
 									mergeRecursive(jResult, parse(request.getContent()));
 								}else{
+                                    log.info(">>>>>Result "+jResult);
 									mergeRecursive(jResult,request.getContent());
 								}
 							}
