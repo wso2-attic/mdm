@@ -250,21 +250,30 @@
             var allRoles = this.getGroups(ctx);
             var userRoles = parse(this.getUserRoles(ctx));
             var array = new Array();
-
-            for(var i=0;i < allRoles.length;i++){
-                var obj = {};
-                for(var j=0;j< userRoles.length;j++){
-                    if(allRoles[i]==userRoles[j]){
-                        obj.name = allRoles[i];
-                        obj.available = true;
-                        break;
-                    }else{
-                        obj.name = allRoles[i];
-                        obj.available = false;
-                    }
+            if(userRoles.length == 0){
+                for(var i=0;i < allRoles.length;i++){
+                    var obj = {};
+                    obj.name = allRoles[i];
+                    obj.available = false;
+                    array.push(obj);
                 }
-                array.push(obj);
+            }else{
+                for(var i=0;i < allRoles.length;i++){
+                    var obj = {};
+                    for(var j=0;j< userRoles.length;j++){
+                        if(allRoles[i]==userRoles[j]){
+                            obj.name = allRoles[i];
+                            obj.available = true;
+                            break;
+                        }else{
+                            obj.name = allRoles[i];
+                            obj.available = false;
+                        }
+                    }
+                    array.push(obj);
+                }
             }
+
             log.info(array);
             return array;
         },
