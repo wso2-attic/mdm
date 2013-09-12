@@ -63,6 +63,6 @@ $("#btn-add").click(function() {
 		'modal': false
 	});
 	
-	//window.location.reload(true);
+	 window.location.assign("configuration");
 	
 });

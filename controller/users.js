@@ -122,7 +122,7 @@ assign_groups = function(appController){
 	var username = request.getParameter('user');
 		
 	try{
-		var groups = policy.getGroups({});		
+		var groups = user.getRolesByUser({username: username});		
 	}catch(e){
 		var groups = [];
 	}
@@ -131,7 +131,7 @@ assign_groups = function(appController){
 	context = appController.context();
 	context.title = context.title + " | Assign Users to group";	
 	context.page = "configuration";	
-	context.jsFile= "policies/assign_groups.js"
+	context.jsFile= "users/assign_groups.js"
 	context.data = {
 		configOption : "policies",
 		groups: groups,

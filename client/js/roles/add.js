@@ -28,6 +28,8 @@ $("#btn-add").click(function() {
 		contentType : "application/json",
 		dataType : "json"
 	});
+	
+	window.location.assign("configuration");
 
 });
 

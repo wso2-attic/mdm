@@ -37,6 +37,6 @@ $("#btn-add").click(function() {
 		dataType : "json",		
 	});
 	
-	
+	window.location.assign("configuration");
 
 });

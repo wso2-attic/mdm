@@ -25,15 +25,14 @@ $("#btn-add").click(function() {
 		
 	jso = {
 		"tenant_id" : tenantId,
-		"id" : id,
+		"username" : id,
 		"added_groups" : groupsArray,
 		"removed_groups" : removedGroups
 	};
 
 	
-
 	jQuery.ajax({
-		url : getServiceURLs("policiesCRUD", id + "/groups"),
+		url : getServiceURLs("usersCRUD", id + "/groups"),
 		type : "PUT",
 		async : "false",
 		data : JSON.stringify(jso),
@@ -42,9 +41,11 @@ $("#btn-add").click(function() {
 	});
 	
 	noty({
-		text : 'Roles are assigned to policies successfully!',
+		text : 'Roles are assigned to the user successfully!',
 		'layout' : 'center'
 	});
+
+	
 	window.location.assign("configuration");
 
 });
