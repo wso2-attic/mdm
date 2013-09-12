@@ -19,7 +19,7 @@ var policy = (function () {
         });
         router.delete('policies/{policyid}', function(ctx){
             var result = policy.deletePolicy(ctx);
-            if(result==true){
+            if(result==1){
                 response.status = 200;
             }else{
                 response.status = 404;

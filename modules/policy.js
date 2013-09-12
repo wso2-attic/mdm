@@ -52,7 +52,7 @@ var policy = (function () {
             return result;
         },
         deletePolicy:function(ctx){
-            var result = db.query("REMOVE FROM permissions where name = ?",ctx.name);
+            var result = db.query("DELETE FROM policies where id = ?",ctx.policyid);
             return result;
         },
         assignGroupsToPolicy:function(ctx){
