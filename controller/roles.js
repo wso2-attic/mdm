@@ -21,11 +21,11 @@ configuration = function(appController){
 		var groups = [];
 	}
 	
-	
-	//remove admin and masteradmin
-	groups.splice(groups.indexOf("masteradmin"), 1);
-	groups.splice(groups.indexOf("admin"), 1);
-	
+	for(var i =0; i < groups.length; i++){
+		if(groups[i] == 'masteradmin' | groups[i] == "admin"){
+			groups.splice(i, 1);
+		}
+	}
 			
 	context = appController.context();
 	context.title = context.title + " | Configuration";	
