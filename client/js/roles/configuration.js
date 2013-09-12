@@ -73,6 +73,44 @@ $(".add-permission-link").click(function() {
 
 
 
+$(".btn-item-remove").click(function() {
+	var item = $(this).data("item");
+		
+	noty({
+		text : 'Are you sure you want delete this group?',
+		buttons : [{
+			addClass : 'btn btn-cancel',
+			text : 'Cancel',
+			onClick : function($noty) {
+				$noty.close();
+
+			}
+			
+			
+		}, {
+			
+			addClass : 'btn btn-orange',
+			text : 'Ok',
+			onClick : function($noty) {
+				
+				jQuery.ajax({
+					url : getServiceURLs("groupsCRUD", item),
+					type : "DELETE",					
+					contentType : "application/json",
+					dataType : "json"
+			
+				});
+				
+				window.location.reload(true);
+			}
+			
+		}]
+	});	
+
+
+});
+
+
 $(document).ready( function () {
 	
 	jQuery.ajax({

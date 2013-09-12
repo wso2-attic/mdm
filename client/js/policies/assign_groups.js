@@ -31,7 +31,7 @@ $("#btn-add").click(function() {
 	};
 
 	noty({
-		text : 'Roles assigned to policies successfully!',
+		text : 'Roles are assigned to policies successfully!',
 		'layout' : 'center'
 	});
 
