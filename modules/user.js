@@ -95,6 +95,16 @@
 			var devices = db.query("SELECT * FROM devices WHERE user_id= ? AND tenant_id = ?", String(obj.userid), common.getTenantID());
 			return devices;
 		},
+        deleteUser: function(ctx){
+            var tenantAwareUsername = server.getTenantAwareUsername(ctx.userid);
+            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.userid));
+            if(um.userExists(tenantAwareUsername)){
+                um.removeUser(tenantAwareUsername);
+                return true;
+            }else{
+                return false;
+            }
+        },
 		getUser: function(ctx){
 			try {
 				var tenantAwareUsername = server.getTenantAwareUsername(ctx.userid);

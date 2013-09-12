@@ -17,6 +17,14 @@ var policy = (function () {
             }
 
         });
+        router.delete('policies/{policyid}', function(ctx){
+            var result = policy.deletePolicy(ctx);
+            if(result==true){
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
+        });
         router.get('policies/', function(ctx){
 
             log.info("check policy router GET");
