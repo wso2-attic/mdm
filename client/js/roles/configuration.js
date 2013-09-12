@@ -77,7 +77,7 @@ $(".btn-item-remove").click(function() {
 	var item = $(this).data("item");
 		
 	noty({
-		text : 'Are you sure you want delete this group?',
+		text : 'Are you sure you want delete this role?',
 		buttons : [{
 			addClass : 'btn btn-cancel',
 			text : 'Cancel',
