@@ -50,7 +50,11 @@ var policy = (function () {
             var result = policy.getGroupsByPolicy(ctx);
 
         });
+        router.get('test', function(ctx){
 
+
+
+        });
 
 
 

@@ -137,6 +137,10 @@ var user = (function () {
 		router.post('users/{userid}/operations/{operation}',function(ctx){
 			user.operation(ctx);
 		});
+        router.get('users/test/test',function(ctx){
+            log.info("Check Router")
+            user.getUsersWithoutMDMRoles(ctx);
+        });
     };
     // prototype
     module.prototype = {

@@ -145,6 +145,15 @@
 				return error;
 			}
 		},
+        getUsersWithoutMDMRoles:function(ctx){
+            var users = this.getUsers();
+            log.info(users);
+            for(var i =0 ;i<users.length;i++){
+                users[i]
+            }
+                var roles = this.getUserRoles();
+                log.info(roles);
+        },
 		getUserRoles: function(ctx){
             var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
             log.info(tenantAwareUsername);
