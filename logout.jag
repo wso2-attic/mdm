@@ -1,12 +1,11 @@
 <%
 (function(){
-	session.put("mdmConsoleUserLogin", null);
-	session.put("mdmConsoleUser", null);
     var user = session.get("mdmConsoleUser");
     if(user === null) {
         response.sendRedirect('/mdm');
     } else {
-		new Log().info("");
+		session.put("mdmConsoleUserLogin", null);
+		session.put("mdmConsoleUser", null);
         var config = require('/mdm.js').config(),
         sso = require('sso'),
         sessionId = session.getId(),
