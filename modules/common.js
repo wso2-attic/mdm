@@ -1,5 +1,5 @@
 var isMDMRole = function (role) {
-	var otherRoles = new Array("everyone", "portal", "store", "wso2.anonymous.role");
+	var otherRoles = new Array("everyone", "portal", "store", "wso2.anonymous.role", "admin", "publisher", "reviewer");
 	for(var i = 0; i < otherRoles.length; i++) {
 		if(role == otherRoles[i]) {
 			return false;
@@ -9,7 +9,7 @@ var isMDMRole = function (role) {
 }
 
 var isMDMUser = function (user) {
-	var otherUsers = new Array("wso2.anonymous.user");
+	var otherUsers = new Array("wso2.anonymous.user", "admin");
 	for(var i = 0; i < otherUsers.length; i++) {
 		if(user == otherUsers[i]) {
 			return false;
@@ -19,6 +19,9 @@ var isMDMUser = function (user) {
 }
 
 var getTenantID = function(){
-    log.info("Tenant ID>>>>>"+stringify(session.get("mdmConsoleUser")));
-	return session.get("mdmConsoleUser").tenantId;
+	if(session.get("mdmConsoleUser")){
+		return session.get("mdmConsoleUser")['tenantId'];
+	}else{
+		return null;
+	}
 }

@@ -4,7 +4,6 @@ var goose = require('modules/goose.js').goose;
 var router = new goose({CONTEXT: "/mdm/api/"});
 var log =new Log();
 var configs = require('config.json');
-
 var db = application.get('db');
 var dbconfig = require('db.json');
 if(db==null || db==undefined){
@@ -64,7 +63,9 @@ router.post('store/users/devices', function(ctx){
 });
 
 router.post('store/users/apps', function(ctx){
-    var result = getAllApps(ctx);
+    var result = store.getAllAppFromDevice(ctx);
+	response.content = result;
+    response.status = 200;
 });
 
 

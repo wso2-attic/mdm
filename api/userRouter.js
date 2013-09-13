@@ -70,10 +70,9 @@ var user = (function () {
 		});
 		router.get('users/{userid}',function(ctx){
 			var log = new Log();
-			var userObj = user.getUser(ctx)[0];
-			
-		    if(u!=null){
-		       response.content = u;
+			var userObj = user.getUser(ctx);
+		    if(userObj!=null){
+		       response.content = userObj;
 		       response.status = 200;
 		    }else{
 		       response.status = 404;

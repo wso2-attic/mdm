@@ -184,7 +184,7 @@ var device = (function () {
             var log = new Log();
             
             var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.email));
-		    var userId = server.getTenantAwareUsername(ctx.email);
+		    var userId = server.tenantUser(ctx.email).username;
 			var tenantId = server.getTenantIdByDomain(server.getTenantDomain(ctx.email));
 			
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
@@ -228,7 +228,7 @@ var device = (function () {
         registerIOS: function(ctx){
             
             var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.email));
-		    var userId = server.getTenantAwareUsername(ctx.email);
+		    var userId = server.tenantUser(ctx.email).username;
 			var tenantId = server.getTenantIdByDomain(server.getTenantDomain(ctx.email));
 			
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
