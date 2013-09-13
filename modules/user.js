@@ -50,7 +50,7 @@ var user = (function () {
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
             try {
-                // Property in desgtination object set; update its value.
+                // Property in destination object set; update its value.
                 if (obj2[p].constructor == Object) {
                     obj1[p] = MergeRecursive(obj1[p], obj2[p]);
                 } else {
@@ -68,11 +68,12 @@ var user = (function () {
     module.prototype = {
         constructor: module,
 		authenticate: function(ctx){
-			var authStatus = server.authenticate(ctx.username, ctx.password);
+			log.info("username "+ctx.username);
+			var authStatus = server().authenticate(ctx.username, ctx.password);
 			if(!authStatus) {
 				return null;
 			}
-			var user =  getUser({userid: ctx.username});
+			var user =  this.getUser({userid: ctx.username});
 			var result = db.query("SELECT COUNT(id) AS record_count FROM tenantplatformfeatures WHERE tenant_id = ?",  stringify(user.tenantId));
 			if(result[0].record_count == 0) {
 				for(var i = 1; i < 13; i++) {
@@ -85,16 +86,6 @@ var user = (function () {
 			var devices = db.query("SELECT * FROM devices WHERE user_id= ? AND tenant_id = ?", String(obj.userid), common.getTenantID());
 			return devices;
 		},
-        deleteUser: function(ctx){
-            var tenantAwareUsername = server.getTenantAwareUsername(ctx.userid);
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.userid));
-            if(um.userExists(tenantAwareUsername)){
-                um.removeUser(tenantAwareUsername);
-                return true;
-            }else{
-                return false;
-            }
-        },
 		getUser: function(ctx){
 			try {
 				var proxy_user = {};
@@ -117,19 +108,6 @@ var user = (function () {
 				return error;
 			}
 		},
-        getUsersWithoutMDMRoles:function(ctx){
-            var users = this.getUsers();
-            log.info("All Users >>>>>>>>>"+stringify(users));
-            for(var i =0 ;i<users.length;i++){
-                var roles = parse(this.getUserRoles({'username':users[i].username}));
-                for(var j=0 ;j<roles.length;j++){
-                    if(roles[i]=='admin'||roles[i]=='masteradmin'){
-                        users.splice(i);
-                    }
-                }
-            }
-            log.info("Users without admins >>>>>>>>>"+users);
-        },
 		getUserRoles: function(ctx){
             var tenantUser = carbon.server.tenantUser(ctx.userid);
 			var um = userManager(tenantUser.tenantId);
@@ -217,43 +195,6 @@ var user = (function () {
 			log.info(users_list);
 			return users_list;
 		},
-        updateRoleListOfUser:function(ctx){
-            var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
-            um.updateRoleListOfUser(ctx.username,ctx.removed_groups,ctx.added_groups);
-        },
-        getRolesByUser:function(ctx){
-
-            var allRoles = this.getGroups(ctx);
-            var userRoles = parse(this.getUserRoles(ctx));
-            var array = new Array();
-            if(userRoles.length == 0){
-                for(var i=0;i < allRoles.length;i++){
-                    var obj = {};
-                    obj.name = allRoles[i];
-                    obj.available = false;
-                    array.push(obj);
-                }
-            }else{
-                for(var i=0;i < allRoles.length;i++){
-                    var obj = {};
-                    for(var j=0;j< userRoles.length;j++){
-                        if(allRoles[i]==userRoles[j]){
-                            obj.name = allRoles[i];
-                            obj.available = true;
-                            break;
-                        }else{
-                            obj.name = allRoles[i];
-                            obj.available = false;
-                        }
-                    }
-                    array.push(obj);
-                }
-            }
-
-            log.info(array);
-            return array;
-        },
 		operation: function(ctx){
 			var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", ctx.userid);
 		    var succeeded="";
@@ -267,21 +208,7 @@ var user = (function () {
 		        }
 		    }
 		    return "Succeeded : "+succeeded+", Failed : "+failed;
-		},
-        getGroups: function(ctx){
-            var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
-            var roles = um.allRoles();
-
-            var arrRole = new Array();
-
-            for(var i = 0; i < roles.length; i++) {
-                if(common.isMDMRole(roles[i])) {
-                    arrRole.push(roles[i]);
-                }
-            }
-            return arrRole;
-        }
-
+		}
     };
     // return module
     return module;

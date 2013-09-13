@@ -1,14 +1,38 @@
+var TENANT_CONFIGS = 'tenant.configs';
+var USER_MANAGER = 'user.manager';
 var device = (function () {
     var configs = {
         CONTEXT: "/"
     };
 
     var carbon = require('carbon');
-	var server = new carbon.server.Server(configs.HTTPS_URL + '/admin');
-
+	var server = function(){
+		return application.get("SERVER");
+	}
 
     var log = new Log();
     var gcm = require('gcm').gcm;
+	var configs = function (tenantId) {
+	    var config = application.get(TENANT_CONFIGS);
+		if (!tenantId) {
+	        return config;
+	    }
+	    return config[tenantId] || (config[tenantId] = {});
+	};			
+	/**
+	 * Returns the user manager of the given tenant.
+	 * @param tenantId
+	 * @return {*}
+	 */
+	var userManager = function (tenantId) {
+	    var config = configs(tenantId);
+	    if (!config || !config[USER_MANAGER]) {
+			var um = new carbon.user.UserManager(server, tenantId);
+			config[USER_MANAGER] = um;
+	        return um;
+	    }
+	    return configs(tenantId)[USER_MANAGER];
+	};			
 
     var db;
     var module = function (dbs) {
@@ -182,10 +206,9 @@ var device = (function () {
         },
         register: function(ctx){
             var log = new Log();
-            
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.email));
-		    var userId = server.tenantUser(ctx.email).username;
-			var tenantId = server.getTenantIdByDomain(server.getTenantDomain(ctx.email));
+			var tenantUser = carbon.server.tenantUser(ctx.email);
+		    var userId = tenantUser.username;
+			var tenantId = tenantUser.tenantId;
 			
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
