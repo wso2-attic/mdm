@@ -150,7 +150,7 @@ var group = (function () {
 			return proxy_role;
 		},
         assignUsers: function(ctx){
-            var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
+            var um = userManager(common.getTenantID());
             um.updateUserListOfRole(ctx.groupid , ctx.removed_users, ctx.added_users);
 
         },
@@ -179,8 +179,8 @@ var group = (function () {
 		operation: function(ctx){
 	        var succeeded="";
 	        var failed="";
-	        
-	        var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
+
+            var um = userManager(common.getTenantID());
 			var userList = um.getUserListOfRole(ctx.groupid);
 
 			var arrUsers = new Array();	
