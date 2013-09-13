@@ -192,13 +192,8 @@ var user = (function () {
         deleteUser: function(ctx){
             var um = userManager(common.getTenantID());
 
-            var result = um.removeUser(ctx.userid);
+            um.removeUser(ctx.userid);
 
-            if(result){
-                response.status = 200;
-            }else{
-                response.status = 404;
-            }
         },
 		getGroups: function(ctx){
 			var um =  userManager(common.getTenantID());
