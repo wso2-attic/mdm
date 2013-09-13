@@ -55,9 +55,11 @@ $(".btn-item-remove").click(function() {
 					type : "DELETE",					
 					contentType : "text/plain"
 			
+				}).done(function() {
+					window.location.reload(true);
 				});
 				
-				window.location.reload(true);
+				
 			}
 			
 		}]
