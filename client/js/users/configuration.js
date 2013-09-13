@@ -49,7 +49,7 @@ $(".btn-item-remove").click(function() {
 			
 				});
 				
-				//window.location.reload(true);
+				window.location.reload(true);
 			}
 			
 		}]
