@@ -45,8 +45,7 @@ $(".btn-item-remove").click(function() {
 				jQuery.ajax({
 					url : getServiceURLs("usersCRUD", item),
 					type : "DELETE",					
-					contentType : "application/json",
-					dataType : "json"
+					contentType : "text/plain"
 			
 				});
 				
