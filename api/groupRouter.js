@@ -33,9 +33,9 @@ var group = (function () {
         });
         router.put('groups/{groupid}/users', function(ctx){
             log.info("Test Request PUTTTTT"+ctx);
-           // var result = group.assignUsers(ctx);
-          //  response.content = result;
-         //   response.status = 200;
+             var result = group.assignUsers(ctx);
+             response.content = result;
+             response.status = 200;
         });
 		router.post('groups', function(ctx){
             log.info("Test Groups >>>>>>>>>>");
