@@ -147,12 +147,16 @@
 		},
         getUsersWithoutMDMRoles:function(ctx){
             var users = this.getUsers();
-            log.info(users);
+            log.info("All Users >>>>>>>>>"+stringify(users));
             for(var i =0 ;i<users.length;i++){
-                users[i]
+                var roles = parse(this.getUserRoles({'username':users[i].username}));
+                for(var j=0 ;j<roles.length;j++){
+                    if(roles[i]=='admin'||roles[i]=='masteradmin'){
+                        users.splice(i);
+                    }
+                }
             }
-                var roles = this.getUserRoles();
-                log.info(roles);
+            log.info("Users without admins >>>>>>>>>"+users);
         },
 		getUserRoles: function(ctx){
             var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
