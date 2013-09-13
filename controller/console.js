@@ -17,7 +17,7 @@ login = function(appController){
 					print("200");
 				}else{
 					var userFeed = {};
-					userFeed.tenantId = stringify(objUser["um"]["tenantId"]);
+					userFeed.tenantId = stringify(objUser["tenantId"]);
 					userFeed.username = objUser["username"];
 					userFeed.email = objUser["email"];
 					userFeed.firstName = objUser["firstName"];

@@ -1,3 +1,5 @@
+var TENANT_CONFIGS = 'tenant.configs';
+var USER_MANAGER = 'user.manager';
 var group = (function () {
     var configs = {
         CONTEXT: "/"
@@ -6,12 +8,37 @@ var group = (function () {
 	var log = new Log();
 	var db;
 	var deviceModule = require('device.js').device;
-	var carbon = require('carbon');
-	var server = new carbon.server.Server(configs.HTTPS_URL + '/admin');
 	var device = new deviceModule();
 	var common = require('common.js');
 	var claimFirstName = "http://wso2.org/claims/givenname";
 	var claimLastName = "http://wso2.org/claims/lastname";
+	
+	var carbon = require('carbon');
+	var server = function(){
+		return application.get("SERVER");
+	}
+	
+	var configs = function (tenantId) {
+	    var config = application.get(TENANT_CONFIGS);
+		if (!tenantId) {
+	        return config;
+	    }
+	    return config[tenantId] || (config[tenantId] = {});
+	};			
+	/**
+	 * Returns the user manager of the given tenant.
+	 * @param tenantId
+	 * @return {*}
+	 */
+	var userManager = function (tenantId) {
+	    var config = configs(tenantId);
+	    if (!config || !config[USER_MANAGER]) {
+			var um = new carbon.user.UserManager(server, tenantId);
+			config[USER_MANAGER] = um;
+	        return um;
+	    }
+	    return configs(tenantId)[USER_MANAGER];
+	};
 	
     var module = function (dbs) {
 		db = dbs;
@@ -39,106 +66,84 @@ var group = (function () {
     module.prototype = {
         constructor: module,
 		getGroups: function(ctx){
-			var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
+			var um = userManager(common.getTenantID());
 			var roles = um.allRoles();
-			
 			var arrRole = new Array();
-			
 			for(var i = 0; i < roles.length; i++) {
 				if(common.isMDMRole(roles[i])) {
 					arrRole.push(roles[i]);
 				}
 			}
-			
 			return arrRole;
 		},
 		delete: function(ctx){
 			db.query("UPDATE groups SET deleted=1 WHERE id='"+ctx.groupid+"' ");
 		},
 		getUsers: function(ctx){
+			var tenantId = common.getTenantID();
+			var users_list = Array();
+			if(tenantId){
+				var um = userManager(common.getTenantID());
+				var arrUserName = um.getUserListOfRole(ctx.groupid);
 
-			var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
-			var userList = um.getUserListOfRole(ctx.groupid);
-
-			var arrUsers = new Array();	
-
-			for(var i = 0; i < userList.length; i++) {
-				
-				if(!common.isMDMUser(userList[i])) {
-					continue;
-				}
-			
-				var objUser = {};
-				
-				var resultDeviceCount = db.query("SELECT COUNT(id) AS device_count FROM devices WHERE user_id = ? AND tenant_id = ?", userList[i], common.getTenantID());
-				objUser.no_of_devices = resultDeviceCount[0].device_count;
-				objUser.userid = String(userList[i]);
-				
-				var claims = [claimFirstName, claimLastName];
-				var claimResult = um.getUserClaimValues(userList[i], claims, null);
-				
-				var keyIterator = claimResult.keySet().iterator();	
-	
-				while(keyIterator.hasNext()) {
-					var claimKey = keyIterator.next();
-					var claimValue = claimResult.get(claimKey);
-					
-					if(claimKey == claimFirstName) {
-						objUser.firstName = String(claimValue);
+				for(var i = 0; i < arrUserName.length; i++) {
+					if(!common.isMDMUser(arrUserName[i])) {
+						continue;
 					}
-					
-					if(claimKey == claimLastName) {
-						objUser.lastName = String(claimValue);
-					}
-
-				}
-				
-				arrUsers.push(objUser);
+					var user = um.getUser(arrUserName[i]);
+					var proxy_user = {};
+					proxy_user.username = arrUserName[i];
+					var claims = [claimEmail, claimFirstName, claimLastName];
+					var claimResult = user.getClaimsForSet(claims,null);
+					proxy_user.email = claimResult.get(claimEmail);
+					proxy_user.firstName = claimResult.get(claimFirstName);
+					proxy_user.lastName = claimResult.get(claimLastName);
+					proxy_user.mobile = claimResult.get(claimMobile);
+					proxy_user.tenantId = tenantId;
+					proxy_user.roles = stringify(user.getRoles());
+					var resultDeviceCount = db.query("SELECT COUNT(id) AS device_count FROM devices WHERE user_id = ? AND tenant_id = ?", arrUserName[i], proxy_user.tenantId);
+					proxy_user.no_of_devices = resultDeviceCount[0].device_count;
+					users_list.push(proxy_user);
+				}	
+			}else{
+				log.error('Error in getting the tenantId from session');
+				print('Error in getting the tenantId from session');
 			}
-			
-			return arrUsers;
+			return users_list;
 		},
 		add: function(ctx){
-			
-			var objResult = {};
-			
-			try {
-				var tenant_id = common.getTenantID();
-				var l = new Log();
-				l.info("Baby");
-				l.info(server.getDomainByTenantId(tenant_id));
-				var um = new carbon.user.UserManager(server, server.getDomainByTenantId(tenant_id));
-				
-				if(um.roleExists(ctx.name)) {
-					objResult.error = 'Role already exist in the system.';
-				} else {
-				    var permission = [
-				        'http://www.wso2mobile.org/projects/mdm/actions/get',
-				        'authorize'
-				    ];
-				    
-				    var arrPermission = {};
-				    var permission = [
-				        'http://www.wso2.org/projects/registry/actions/get',
-				        'http://www.wso2.org/projects/registry/actions/add',
-				        'http://www.wso2.org/projects/registry/actions/delete',
-				        'authorize'
-				    ];
-				    arrPermission["0"] = permission;
-				    
-					um.addRole(ctx.name, ctx.users, arrPermission);
-					objResult.success = 'Role added successfully.';
+			var proxy_role = {};
+			var tenant_id = common.getTenantID();
+			if(tenant_id){
+				var um = userManager(tenant_id);
+				try{
+					if(um.roleExists(ctx.name)) {
+						proxy_role.error = 'Role already exist in the system.';
+					} else {
+					    var permission = [
+					        'http://www.wso2mobile.org/projects/mdm/actions/get',
+					        'authorize'
+					    ];
+					    var arrPermission = {};
+					    var permission = [
+					        'http://www.wso2.org/projects/registry/actions/get',
+					        'http://www.wso2.org/projects/registry/actions/add',
+					        'http://www.wso2.org/projects/registry/actions/delete',
+					        'authorize'
+					    ];
+					    arrPermission["0"] = permission;
+						um.addRole(ctx.name, ctx.users, arrPermission);
+						proxy_role.success = 'Role added successfully.';
+					}
+				}catch(e){
+					log.error(e);
 				}
-		
-			} catch(e) {
-				log.info(e);
-				objResult.error = 'Error occurred while creating the role.';
+			}else{
+				print('Error in getting the tenantId from session');
 			}
-
-			return objResult;
+			return proxy_role;
 		},
 		operation: function(ctx){
-			
 	        var succeeded="";
 	        var failed="";
 	        
