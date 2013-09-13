@@ -27,9 +27,9 @@ $("#btn-add").click(function() {
 		data : JSON.stringify(jso),
 		contentType : "application/json",
      	dataType : "json"			
+	}).done(function() {
+					window.location.reload(true);
 	});
-	
-	window.location.assign("configuration");
 
 });
 

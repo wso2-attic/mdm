@@ -61,8 +61,8 @@ $("#btn-add").click(function() {
 		text : 'Policies added successfully!',
 		'layout' : 'center',
 		'modal': false
+	}).done(function() {
+			window.location.reload(true);
 	});
-	
-	 window.location.assign("configuration");
 	
 });

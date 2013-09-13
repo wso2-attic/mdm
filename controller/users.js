@@ -37,6 +37,13 @@ add = function(appController) {
 	} catch(e) {
 		var groups = [];
 	}
+	
+	// Array Remove - By John Resig (MIT Licensed)
+	Array.prototype.remove = function(from, to) {
+	  var rest = this.slice((to || from) + 1 || this.length);
+	  this.length = from < 0 ? this.length + from : from;
+	  return this.push.apply(this, rest);
+	};
 
 	if (context.contextData.user.role != 'masteradmin') {
 		for (var i = 0; i < groups.length; i++) {
@@ -136,6 +143,13 @@ assign_groups = function(appController) {
 	}
 
 	context = appController.context();
+	
+	// Array Remove - By John Resig (MIT Licensed)
+	Array.prototype.remove = function(from, to) {
+	  var rest = this.slice((to || from) + 1 || this.length);
+	  this.length = from < 0 ? this.length + from : from;
+	  return this.push.apply(this, rest);
+	};
 	
 	
 	if (context.contextData.user.role != 'masteradmin') {
