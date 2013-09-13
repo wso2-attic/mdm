@@ -34,11 +34,9 @@ var webconsole = (function () {
     module.prototype = {
         constructor: module,
         getDevicesCountAndUserCountForAllGroups: function(ctx) {
-        	var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
+        	var um = userManager(common.getTenantID());
         	var roles =  um.allRoles();
-			
 			var arrRole = new Array();
-			
 			for(var i = 0; i < roles.length; i++) {
 				
 				if(!common.isMDMRole(roles[i])) {

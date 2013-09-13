@@ -185,7 +185,7 @@ var user = (function () {
 			return proxy_user;
 		},
 		getGroups: function(ctx){
-			var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
+			var um =  userManager(common.getTenantID());
 			return um.allRoles();
 		},
 		getUsers: function(ctx){
