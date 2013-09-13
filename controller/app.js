@@ -1,5 +1,6 @@
 var config = require('../config.json');
 var configApis = require('../config/apis.json');
+var log = new Log();
 appInfo = function() {
     var appInfo = {
         headerTitle : "WSO2 Mobile Device Management",
@@ -19,7 +20,6 @@ getServiceURLs = function(item){
     var urls = configApis.APIS;
     arguments[0] = urls[item];
     var returnURL;
-    var log = new Log();
     if(session.get("mdmConsoleUser") != null) {
         var log = new Log();
         returnURL = serverURL + String.format.apply(this, arguments) + "?tenantId=" + session.get("mdmConsoleUser").tenantId;

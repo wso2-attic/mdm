@@ -13,7 +13,7 @@ if(db==null || db==undefined){
 
 var mvc = new absolute({
 	SERVER_URL:"/mdm/",
-	IGNORE:["sso.jag", "login.jag", "logout.jag"],
+	IGNORE:["acs.jag", "login.jag", "logout.jag"],
 	API:"api",
 	ROUTER: router
 });
