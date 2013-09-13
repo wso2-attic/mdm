@@ -52,6 +52,7 @@
 							userFeed.firstName = objUser["firstName"];
 							userFeed.lastName = objUser["lastName"];
 							userFeed.mobile = objUser["mobile"];
+                            log.info("TestTTTTTTTTTT"+objUser["roles"]);
 							var parsedRoles = parse(objUser["roles"]);
 							var isAdmin = false;
 							for (var i = 0; i < parsedRoles.length; i++) {
