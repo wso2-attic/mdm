@@ -132,6 +132,10 @@ var user = (function () {
 		        response.status = 404;
 		    }
 		});
+        router.get('users/test/test',function(ctx){
+            user.getUsersWithoutMDMRoles(ctx);
+
+        });
 		router.post('users/{userid}/operations/{operation}',function(ctx){
 			user.operation(ctx);
 		});
