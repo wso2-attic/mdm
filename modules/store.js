@@ -9,6 +9,8 @@ var store = (function () {
         db = dbs;
         //mergeRecursive(configs, conf);
     };
+    var userModule = require('user.js').user;
+    var user = new userModule();
 
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
@@ -35,8 +37,9 @@ var store = (function () {
            log.info("Test platform :"+ctx.data.platform);
            var devicesArray;
 		   if(ctx.data.platform=='webapp'){
-			   var users = db.query("Select * from users where username='"+ctx.data.email+"'");
-               var userID = users[0].id;
+			user.getUser(ctx.user)
+			   	var userID = user.getUser({userid:ctx.data.email}).id;
+               var devices = db.query("select * from devices where devices.user_id="+userID);
 
                var devices = db.query("select * from devices where devices.user_id="+userID);
                devicesArray = new Array();
@@ -65,8 +68,8 @@ var store = (function () {
 			
            if(ctx.data.platform!=undefined && ctx.data.platform != null){
 
-               var users = db.query("Select * from users where username='"+ctx.data.email+"'");
-               var userID = users[0].id;
+               	var userID = user.getUser({userid:ctx.data.email}).id;
+               var devices = db.query("select * from devices where devices.user_id="+userID);
            //    ctx.data.platform = "iOS";
                 var platforms = db.query("select * from platforms where type_name ='"+ctx.data.platform+"'");
                // platformId = platforms[0].id;
@@ -94,10 +97,10 @@ var store = (function () {
                     }
                }
            }else{
-                var users = db.query("Select * from users where username='"+ctx.data.email+"'");
-                var userID = users[0].id;
-
-                var devices = db.query("select * from devices where devices.user_id="+userID);
+				log.info(ctx.data.email);
+				log.info(stringify(user.getUser({userid:ctx.data.email})));
+                var userID = user.getUser({userid:ctx.data.email}).username;
+                var devices = db.query("select * from devices where devices.user_id="+String(userID));
                 devicesArray = new Array();
                 for(var i=0;i<devices.length;i++){
                     var deviceID = devices[i].id;
@@ -123,7 +126,14 @@ var store = (function () {
            }
            return devicesArray;
 
-        }
+        },
+		getAllAppFromDevice: function(ctx){
+			var deviceId = ctx.data.deviceId;
+			var GET_APP_FEATURE_CODE = '502A';
+			var last_notification = db.query("select * from notifications where `device_id`=? and `feature_code`= '"+GET_APP_FEATURE_CODE+"' and `status`='R' and `id` = (select MAX(`id`) from notifications where `device_id`=? and `feature_code`= '"+GET_APP_FEATURE_CODE+"' and `status`='R')", deviceId,deviceId);
+			last_notification[0].received_data = JSON.parse(unescape(last_notification[0].received_data));
+			return last_notification[0];
+		}
     };
     // return module
     return module;

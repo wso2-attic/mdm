@@ -1,28 +1,56 @@
- var user = (function () {
+var TENANT_CONFIGS = 'tenant.configs';
+var USER_MANAGER = 'user.manager';
+var user = (function () {
     var configs = require('/config.json');
     var routes = new Array();
+
 	var log = new Log();
 	var db;
-	var deviceModule = require('device.js').device;
 	var device;
+	var deviceModule = require('device.js').device;
 	var common = require("/modules/common.js");
-    var module = function (dbs) {
-		db = dbs;
-        device = new deviceModule(db);
-        //mergeRecursive(configs, conf);
-    };
 	var carbon = require('carbon');
-	var server = new carbon.server.Server(configs.HTTPS_URL + '/admin');
+	var server = function(){
+		return application.get("SERVER");
+	}
 	
 	var claimEmail = "http://wso2.org/claims/emailaddress";
 	var claimFirstName = "http://wso2.org/claims/givenname";
 	var claimLastName = "http://wso2.org/claims/lastname";
 	var claimMobile = "http://wso2.org/claims/mobile";
-				
+	
+    var module = function (dbs) {
+		db = dbs;
+        device = new deviceModule(db);
+        //mergeRecursive(configs, conf);
+    };
+
+	var configs = function (tenantId) {
+	    var config = application.get(TENANT_CONFIGS);
+		if (!tenantId) {
+	        return config;
+	    }
+	    return config[tenantId] || (config[tenantId] = {});
+	};			
+	/**
+	 * Returns the user manager of the given tenant.
+	 * @param tenantId
+	 * @return {*}
+	 */
+	var userManager = function (tenantId) {
+	    var config = configs(tenantId);
+	    if (!config || !config[USER_MANAGER]) {
+			var um = new carbon.user.UserManager(server, tenantId);
+			config[USER_MANAGER] = um;
+	        return um;
+	    }
+	    return configs(tenantId)[USER_MANAGER];
+	};			
+	
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
             try {
-                // Property in desgtination object set; update its value.
+                // Property in destination object set; update its value.
                 if (obj2[p].constructor == Object) {
                     obj1[p] = MergeRecursive(obj1[p], obj2[p]);
                 } else {
@@ -40,108 +68,43 @@
     module.prototype = {
         constructor: module,
 		authenticate: function(ctx){
-			
-			var authStatus = server.authenticate(ctx.username, ctx.password);
-			
+			log.info("username "+ctx.username);
+			var authStatus = server().authenticate(ctx.username, ctx.password);
 			if(!authStatus) {
 				return null;
 			}
-
-			var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
-            log.info(tenantAwareUsername);
-		    var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
-		    var user = um.getUser(tenantAwareUsername);
-		    user.roles = stringify(user.getRoles());
-		    
-	    	var claims = [claimEmail, claimFirstName, claimLastName];
-			var claimResult = um.getUserClaimValues(tenantAwareUsername, claims, null);
-			
-			var keyIterator = claimResult.keySet().iterator();	
-
-			while(keyIterator.hasNext()) {
-				var claimKey = keyIterator.next();
-				var claimValue = claimResult.get(claimKey);
-				
-				if(claimKey == claimEmail) {
-					user.email = claimValue;
-				}
-				
-				if(claimKey == claimFirstName) {
-					user.firstName = claimValue;
-				}
-				
-				if(claimKey == claimLastName) {
-					user.lastName = claimValue;
-				}
-				
-				if(claimKey == claimMobile) {
-					user.mobile = claimValue;
-				}
-			}
-			
-			//temporarily adding platform features from code 
-			var tenantId = server.getTenantIdByDomain(server.getTenantDomain(ctx.username));
-			var result = db.query("SELECT COUNT(id) AS record_count FROM tenantplatformfeatures WHERE tenant_id = ?",  stringify(tenantId));
-			
+			var user =  this.getUser({userid: ctx.username});
+			var result = db.query("SELECT COUNT(id) AS record_count FROM tenantplatformfeatures WHERE tenant_id = ?",  stringify(user.tenantId));
 			if(result[0].record_count == 0) {
 				for(var i = 1; i < 13; i++) {
-					var result = db.query("INSERT INTO tenantplatformfeatures (tenant_id, platformFeature_Id) VALUES (?, ?)", stringify(tenantId), i);
+					var result = db.query("INSERT INTO tenantplatformfeatures (tenant_id, platformFeature_Id) VALUES (?, ?)", stringify(user.tenantId), i);
 				}
 			}
-
 		    return user;
 		},
 		devices: function(obj){
 			var devices = db.query("SELECT * FROM devices WHERE user_id= ? AND tenant_id = ?", String(obj.userid), common.getTenantID());
 			return devices;
 		},
-        deleteUser: function(ctx){
-            var tenantAwareUsername = server.getTenantAwareUsername(ctx.userid);
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.userid));
-            if(um.userExists(tenantAwareUsername)){
-                um.removeUser(tenantAwareUsername);
-                return true;
-            }else{
-                return false;
-            }
-        },
 		getUser: function(ctx){
 			try {
-				var tenantAwareUsername = server.getTenantAwareUsername(ctx.userid);
-			    var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.userid));
-			    var user = um.getUser(tenantAwareUsername);
-			    user.roles = stringify(user.getRoles());
-		    	
+				var proxy_user = {};
+				var tenantUser = carbon.server.tenantUser(ctx.userid);
+				var um = userManager(tenantUser.tenantId);
+			    var user = um.getUser(tenantUser.username);
 		    	var claims = [claimEmail, claimFirstName, claimLastName];
-				var claimResult = um.getUserClaimValues(tenantAwareUsername, claims, null);
-				
-				var keyIterator = claimResult.keySet().iterator();	
-	
-				while(keyIterator.hasNext()) {
-					var claimKey = keyIterator.next();
-					var claimValue = claimResult.get(claimKey);
-					
-					if(claimKey == claimEmail) {
-						user.email = claimValue;
-					}
-					
-					if(claimKey == claimFirstName) {
-						user.firstName = claimValue;
-					}
-					
-					if(claimKey == claimLastName) {
-						user.lastName = claimValue;
-					}
-					
-					if(claimKey == claimMobile) {
-						user.mobile = claimValue;
-					}
-				}
-
-				return user;
+				var claimResult = user.getClaimsForSet(claims,null);
+				proxy_user.email = claimResult.get(claimEmail);
+				proxy_user.firstName = claimResult.get(claimFirstName);
+				proxy_user.lastName = claimResult.get(claimLastName);
+				proxy_user.mobile = claimResult.get(claimMobile);
+				proxy_user.username = tenantUser.username;
+				proxy_user.tenantId = tenantUser.tenantId;
+				proxy_user.roles = stringify(user.getRoles());
+				return proxy_user;
 			} catch(e) {
+				log.error(e);
 				var error = 'Error occurred while retrieving user.';
-				
 				return error;
 			}
 		},
@@ -172,11 +135,9 @@
             return array;
         },
 		getUserRoles: function(ctx){
-            var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
-            log.info(tenantAwareUsername);
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
-            var user = um.getUser(tenantAwareUsername);
-
+            var tenantUser = carbon.server.tenantUser(ctx.userid);
+			var um = userManager(tenantUser.tenantId);
+		    var user = um.getUser(tenantUser.username);
 			return stringify(user.getRoles());
 		},
 		sendEmail: function(ctx){
@@ -194,120 +155,72 @@
 		    sender.send();
 		},
 		addUser: function(ctx){
-			
 			var claimMap = new java.util.HashMap();
 			claimMap.put(claimEmail, ctx.username);
 			claimMap.put(claimFirstName, ctx.first_name);
 			claimMap.put(claimLastName, ctx.last_name);
 			claimMap.put(claimMobile, ctx.mobile_no);
-	
-			var objResult = {};
+			var proxy_user = {};
 			
 			try {
-				var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
-				
-				if(um.userExists(server.getTenantAwareUsername(ctx.username))) {
-					objResult.error = 'User already exist with the email address.';
-				} else {
-					um.addUser(server.getTenantAwareUsername(ctx.username), ctx.password, 
-						ctx.groups, claimMap, null);					
+				var tenantId = common.getTenantID();
+				var users_list = Array();
+				if(tenantId){
+					var um = userManager(common.getTenantID());
+					if(um.userExists(ctx.username)) {
+						objResult.error = 'User already exist with the email address.';
+					} else {
+						um.addUser(ctx.username, ctx.password, 
+							ctx.groups, claimMap, null);					
+					}
 				}
-
+				else{
+					log.error('Error in getting the tenantId from session');
+					print('Error in getting the tenantId from session');
+				}
 			} catch(e) {
-				objResult.error = 'Error occurred while creating the user.';
+				log.error(e);
+				proxy_user.error = 'Error occurred while creating the user.';
 			}
-
-			return objResult;
+			return proxy_user;
 		},
 		getGroups: function(ctx){
 			var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
 			return um.allRoles();
 		},
 		getUsers: function(ctx){
-			var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
-			var arrUserName = parse(stringify(um.listUsers()));
-			
-			//get profiles um.getAllProfileNames()
-			
-			var objUser = Array();
-			
-			for(var i = 0; i < arrUserName.length; i++) {
+			var tenantId = common.getTenantID();
+			var users_list = Array();
+			if(tenantId){
+					var um = userManager(common.getTenantID());
+					var arrUserName = parse(stringify(um.listUsers()));
 
-				if(!common.isMDMUser(arrUserName[i])) {
-					continue;
-				}
-				
-				var user = {};
-				user.username = arrUserName[i];
-				
-				var claims = [claimEmail, claimFirstName, claimLastName];
-				var claimResult = um.getUserClaimValues(arrUserName[i], claims, null);
-				
-				var keyIterator = claimResult.keySet().iterator();	
-
-				while(keyIterator.hasNext()) {
-					var claimKey = keyIterator.next();
-					var claimValue = claimResult.get(claimKey);
-					
-					if(claimKey == claimEmail) {
-						user.email = claimValue;
-					}
-					
-					if(claimKey == claimFirstName) {
-						user.firstName = claimValue;
-					}
-					
-					if(claimKey == claimLastName) {
-						user.lastName = claimValue;
-					}
-					
-					if(claimKey == claimMobile) {
-						user.mobile = claimValue;
-					}
-				}
-
-				objUser.push(user);
+					for(var i = 0; i < arrUserName.length; i++) {
+						if(!common.isMDMUser(arrUserName[i])) {
+							continue;
+						}
+						var user = um.getUser(arrUserName[i]);
+						
+						var proxy_user = {};
+						proxy_user.username = arrUserName[i];
+						var claims = [claimEmail, claimFirstName, claimLastName];
+						var claimResult = user.getClaimsForSet(claims,null);
+						proxy_user.email = claimResult.get(claimEmail);
+						proxy_user.firstName = claimResult.get(claimFirstName);
+						proxy_user.lastName = claimResult.get(claimLastName);
+						proxy_user.mobile = claimResult.get(claimMobile);
+						proxy_user.tenantId = tenantId;
+						proxy_user.roles = stringify(user.getRoles());
+						users_list.push(proxy_user);
+						
+					}	
+			}else{
+				print('Error in getting the tenantId from session');
 			}
-
-			return objUser;
+			log.info(">>>>>");
+			log.info(users_list);
+			return users_list;
 		},
-        updateRoleListOfUser:function(ctx){
-            var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
-            um.updateRoleListOfUser(ctx.username,ctx.removed_groups,ctx.added_groups);
-        },
-        getRolesByUser:function(ctx){
-
-            var allRoles = this.getGroups(ctx);
-            var userRoles = parse(this.getUserRoles(ctx));
-            var array = new Array();
-            if(userRoles.length == 0){
-                for(var i=0;i < allRoles.length;i++){
-                    var obj = {};
-                    obj.name = allRoles[i];
-                    obj.available = false;
-                    array.push(obj);
-                }
-            }else{
-                for(var i=0;i < allRoles.length;i++){
-                    var obj = {};
-                    for(var j=0;j< userRoles.length;j++){
-                        if(allRoles[i]==userRoles[j]){
-                            obj.name = allRoles[i];
-                            obj.available = true;
-                            break;
-                        }else{
-                            obj.name = allRoles[i];
-                            obj.available = false;
-                        }
-                    }
-                    array.push(obj);
-                }
-            }
-
-            log.info(array);
-            return array;
-        },
 		operation: function(ctx){
 			var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", ctx.userid);
 		    var succeeded="";
@@ -321,21 +234,7 @@
 		        }
 		    }
 		    return "Succeeded : "+succeeded+", Failed : "+failed;
-		},
-        getGroups: function(ctx){
-            var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
-            var roles = um.allRoles();
-
-            var arrRole = new Array();
-
-            for(var i = 0; i < roles.length; i++) {
-                if(common.isMDMRole(roles[i])) {
-                    arrRole.push(roles[i]);
-                }
-            }
-            return arrRole;
-        }
-
+		}
     };
     // return module
     return module;
