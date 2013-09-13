@@ -60,10 +60,8 @@ login = function(appController){
 	return context;	
 
 }
-logout = function(appController){		
-	session.put("mdmConsoleUserLogin", null);
-	session.put("mdmConsoleUser", null);
-	response.sendRedirect('login');
+logout = function(appController){
+	
 }
 
 dashboard = function(appController){		

@@ -9,9 +9,9 @@ appInfo = function() {
     };
     return appInfo;
 }
-
-if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "console/login"){
-    response.sendRedirect(appInfo().server_url + "console/login");
+log.info(session.get("mdmConsoleUserLogin") );
+if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "login"){
+	response.sendRedirect(appInfo().server_url + "login");
 }
 
 getServiceURLs = function(item){
