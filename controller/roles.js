@@ -13,30 +13,24 @@ var user = new userModule(db);
 var deviceModule = require('/modules/device.js').device;
 var device = new deviceModule(db);
 
-configuration = function(appController) {
+configuration = function(appController){
 
-	try {
+	try{
 		var groups = group.getGroups({});
-	} catch(e) {
+	}catch(e){
 		var groups = [];
 	}
 
-	Array.prototype.remove = function(from, to) {
-		var rest = this.slice((to || from) + 1 || this.length);
-		this.length = from < 0 ? this.length + from : from;
-		return this.push.apply(this, rest);
-	};
-
-	for (var i = 0; i < groups.length; i++) {
-		if (groups[i] == 'masteradmin' | groups[i] == "admin") {
-			groups.remove(i);
+	for(var i =0; i < groups.length; i++){
+		if(groups[i] == 'masteradmin' | groups[i] == "admin"){
+			groups.splice(i, 1);
 		}
 	}
 
 	context = appController.context();
 	context.title = context.title + " | Configuration";
 	context.page = "configuration";
-	context.jsFile = "roles/configuration.js";
+	context.jsFile= "roles/configuration.js";
 	context.data = {
 		configOption : "roles",
 		groups : groups
@@ -44,65 +38,63 @@ configuration = function(appController) {
 	return context;
 
 }
-management = function(appController) {
+
+
+management = function(appController){
 
 	context = appController.context();
 	var groups;
-	try {
+	try{
 		groups = webconsole.getDevicesCountAndUserCountForAllGroups({});
-	} catch(e) {
+	}catch(e){
 		groups = [];
 	}
 	var features
-	try {
-		features = feature.getAllFeatures({});
-	} catch(e) {
-		features = [];
+	try{
+		features =feature.getAllFeatures({});
+	}catch(e){
+		 features = [];
 	}
 
 	context.title = context.title + " | Management";
 	context.page = "management";
-	context.jsFile = "roles/management.js";
+	context.jsFile= "roles/management.js";
 	context.data = {
 		configOption : "roles",
-		groups : groups,
-		features : features,
-		tenantId : session.get("mdmConsoleUser").tenantId
+		groups: groups,
+		features: features,
+		tenantId:session.get("mdmConsoleUser").tenantId
 	}
 	return context;
 
 }
-users = function(appController) {
+
+
+users = function(appController){
 	context = appController.context();
 	var role = request.getParameter('role');
-	if (!role) {
+	if(!role){
 		role = session.get('mdmConsoleSelectedRole');
 	}
 	session.put('mdmConsoleSelectedRole', role)
-	try {
-		var users = group.getUsers({
-			'groupid' : role
-		});
-	} catch(e) {
+	try{
+		var users = group.getUsers({'groupid':role});
+	}catch(e){
 		var users = [];
 	}
 	for (var i = 0; i < users.length; i++) {
 
-		if (users[i].no_of_devices > 0) {
-			var devices = user.devices({
-				'userid' : users[i].userid
-			});
+		if(users[i].no_of_devices > 0){
+			var devices = user.devices({'userid':users[i].userid});
 
 			for (var j = 0; j < devices.length; j++) {
-				devices[j].properties = JSON.parse(devices[j].properties);
-				try {
-					featureList = device.getFeaturesFromDevice({
-						"deviceid" : devices[j].id
-					});
-				} catch(e) {
-					featureList = [];
-				}
-				devices[j].features = featureList;
+		  		devices[j].properties = JSON.parse(devices[j].properties);
+		  		try{
+		  			featureList = device.getFeaturesFromDevice({"deviceid":devices[j].id});
+		  		}catch(e){
+		  			featureList = [];
+		  		}
+		  		devices[j].features = featureList;
 
 			}
 
@@ -113,19 +105,21 @@ users = function(appController) {
 	var features = feature.getAllFeatures({});
 	context.title = context.title + " | Users";
 	context.page = "management";
-	context.jsFile = "roles/users.js";
+	context.jsFile= "roles/users.js";
 	context.data = {
 		configOption : "roles",
-		users : users,
-		features : features
+		users: users,
+		features: features
 	}
 	return context;
 
 }
-add = function(appController) {
-	try {
+
+
+add = function(appController){
+	try{
 		var users = user.getUsers({});
-	} catch(e) {
+	}catch(e){
 		var users = [];
 	}
 	log.info("sdfsd");
@@ -133,67 +127,71 @@ add = function(appController) {
 	context = appController.context();
 	context.title = context.title + " | Add Group";
 	context.page = "configuration";
-	context.jsFile = "roles/add.js"
+	context.jsFile= "roles/add.js"
 	context.data = {
 		configOption : "roles",
-		users : users,
-		tenantId : session.get("mdmConsoleUser").tenantId
+		users: users,
+		tenantId:session.get("mdmConsoleUser").tenantId
 	}
 	return context;
 }
 
 
-assign_users = function(appController) {
+
+
+assign_users = function(appController){
 
 	var groupId = request.getParameter('group');
 
-	try {
-		var users = group.getUsersByGroup({
-			groupid : groupId
-		});
-	} catch(e) {
+	try{
+		var users = group.getUsersByGroup({groupid: groupId});
+	}catch(e){
 		var users = [];
 	}
+
 
 	log.info("sdfsd");
 	log.info(session.get("mdmConsoleUser"));
 	context = appController.context();
 	context.title = context.title + " | Assign Users to group";
 	context.page = "configuration";
-	context.jsFile = "roles/assign_users.js"
+	context.jsFile= "roles/assign_users.js"
 	context.data = {
 		configOption : "roles",
-		users : users,
-		tenantId : session.get("mdmConsoleUser").tenantId,
-		groupId : groupId
+		users: users,
+		tenantId:session.get("mdmConsoleUser").tenantId,
+		groupId: groupId
 	}
 	return context;
 }
-view_users = function(appController) {
+
+
+view_users = function(appController){
+
 
 	var groupId = request.getParameter('group');
 
-	try {
-		var users = group.getUsers({
-			groupid : groupId
-		});
-	} catch(e) {
+
+
+	try{
+		var users = group.getUsers({groupid: groupId});
+	}catch(e){
 		var users = [];
 	}
-	try {
+	try{
 		var groups = group.getGroups({});
-	} catch(e) {
+	}catch(e){
 		var groups = [];
 	}
 	context = appController.context();
 	context.title = context.title + " | Configuration";
 	context.page = "configuration";
-	context.jsFile = "users/configuration.js"
+	context.jsFile= "users/configuration.js"
 	context.data = {
 		configOption : "roles",
-		users : users,
-		groups : groups,
-		groupId : groupId
+		users: users,
+		groups: groups,
+		groupId: groupId
 	}
 	return context;
 }
