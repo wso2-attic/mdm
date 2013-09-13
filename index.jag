@@ -10,7 +10,6 @@ if(db==null || db==undefined){
 	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
 	application.put('db',db);
 }
-
 var mvc = new absolute({
 	SERVER_URL:"/mdm/",
 	IGNORE:["acs.jag", "login.jag", "logout.jag"],

@@ -10,7 +10,6 @@ appInfo = function() {
     };
     return appInfo;
 }
-log.info(session.get("mdmConsoleUserLogin") );
 if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "login"){
 	response.sendRedirect(appInfo().server_url + "login");
 }
@@ -42,7 +41,17 @@ String.format = function() {
 }
 
 
+index = function(){
+	var user = session.get("mdmConsoleUser");
+	if(user!=null){
+		if(user.isAdmin){
+			response.sendRedirect('console/dashboard');
+		}else{
+			response.sendRedirect(appInfo().server_url + 'users/devices?user=' + userFeed.username);
+		}
+	}
 
+}
 
 navigation = function(role) {
 
