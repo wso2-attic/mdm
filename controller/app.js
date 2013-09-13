@@ -70,7 +70,7 @@ navigation = function(role) {
     var topNavigation = [];
     var configNavigation = [];
     if(currentUser){
-        if(role == 'masteradmin'){
+        if(role == 'admin'){
             topNavigation = [
                 {name : "Dashboard"	, link: appInfo().server_url + "console/dashboard", displayPage: "dashboard", icon: "icon-th-large"},
                 {name : "Configurations", link: appInfo().server_url + "users/configuration", displayPage: "configuration", icon:"icon-wrench"},
@@ -83,7 +83,7 @@ navigation = function(role) {
 //{name : "Permissions", link: appInfo().server_url + "permissions/configuration", displayPage: "permissions", icon:"icon-globe"},
                 {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-edit"},
             ];
-        }else if(role == 'admin'){
+        }else if(role == 'mdmadmin'){
             topNavigation = [
                 {name : "Dashboard"	, link: appInfo().server_url + "console/dashboard", displayPage: "dashboard", icon: "icon-th-large"},
                 {name : "Configurations", link: appInfo().server_url + "users/configuration", displayPage: "configuration", icon:"icon-wrench"},
@@ -130,15 +130,15 @@ context = function() {
     var contextData = {};
     var currentUser = session.get("mdmConsoleUser");
     if(currentUser){
-        if(currentUser.isMasterAdmin){
-            contextData.user = {
-                name : "Master Admin",
-                role : "masteradmin"
-            };
-        }else if(currentUser.isAdmin){
+        if(currentUser.isAdmin){
             contextData.user = {
                 name : "Admin",
                 role : "admin"
+            };
+        }else if(currentUser.isMDMAdmin){
+            contextData.user = {
+                name : "MDM Admin",
+                role : "mdmadmin"
             };
         }else{
             contextData.user = {
