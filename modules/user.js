@@ -114,8 +114,8 @@ var user = (function () {
             var array =  new Array();
 
             for(var i =0 ;i<users.length;i++){
-
-                var roles = parse(this.getUserRoles({'username':users[i].username}));
+                log.info(users[i].username);
+                var roles = parse(this.getUserRoles({'userid':users[i].username}));
 
                 var flag = false;
                 for(var j=0 ;j<roles.length;j++){
@@ -140,6 +140,11 @@ var user = (function () {
 		    var user = um.getUser(tenantUser.username);
 			return stringify(user.getRoles());
 		},
+        updateRoleListOfUser:function(ctx){
+            var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
+            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
+            um.updateRoleListOfUser(ctx.username,ctx.removed_groups,ctx.added_groups);
+        },
 		sendEmail: function(ctx){
 		    content = "Dear "+ ctx.first_name+", \nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \nLink - "+configs.HTTPS_URL+"/mdm/api/device_enroll \n \nWSO2 MDM Team";
 		    subject = "MDM Enrollment";
@@ -185,7 +190,7 @@ var user = (function () {
 			return proxy_user;
 		},
 		getGroups: function(ctx){
-			var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
+			var um =  userManager(common.getTenantID());
 			return um.allRoles();
 		},
 		getUsers: function(ctx){
@@ -217,7 +222,6 @@ var user = (function () {
 			}else{
 				print('Error in getting the tenantId from session');
 			}
-			log.info(">>>>>");
 			log.info(users_list);
 			return users_list;
 		},
