@@ -11,11 +11,13 @@ configuration = function(appController) {
 	try {
 		var users = user.getUsersWithoutMDMRoles({});
 	} catch(e) {
+		log.info(e);
 		var users = [];
 	}
 	try {
 		var groups = group.getGroups({});
 	} catch(e) {
+		log.info(e);
 		var groups = [];
 	}
 	context = appController.context();

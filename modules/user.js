@@ -217,7 +217,6 @@ var user = (function () {
 			}else{
 				print('Error in getting the tenantId from session');
 			}
-			log.info(">>>>>");
 			log.info(users_list);
 			return users_list;
 		},

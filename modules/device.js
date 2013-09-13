@@ -249,10 +249,9 @@ var device = (function () {
             }
         },
         registerIOS: function(ctx){
-            
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.email));
-		    var userId = server.tenantUser(ctx.email).username;
-			var tenantId = server.getTenantIdByDomain(server.getTenantDomain(ctx.email));
+            var tenantUser = carbon.server.tenantUser(ctx.email);
+		    var userId = tenantUser.username;
+			var tenantId = tenantUser.tenantId;
 			
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
@@ -364,13 +363,10 @@ var device = (function () {
             return obj;
         },
         getUserRoles: function(ctx){
-
-            var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
-            log.info(tenantAwareUsername);
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
-            var user = um.getUser(tenantAwareUsername);
-
-            return stringify(user.getRoles());
+            var tenantUser = carbon.server.tenantUser(ctx.userid);
+			var um = userManager(tenantUser.tenantId);
+		    var user = um.getUser(tenantUser.username);
+			return stringify(user.getRoles());
         },
         unRegister:function(ctx){
             if(ctx.regid!=null){
