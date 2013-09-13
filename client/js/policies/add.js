@@ -53,7 +53,8 @@ $("#btn-add").click(function() {
 		type : "POST",
 		async : "false",
 		data: JSON.stringify({policyData: policyData, policyName: policyName}),		
-		contentType : "text/plain"		
+		contentType : "application/json",
+     	dataType : "json"		
 	});
 	
 	noty({

@@ -32,8 +32,9 @@ $("#btn-add").click(function() {
 		url : getServiceURLs("usersCRUD", ""),
 		type : "PUT",
 		async : "false",
-		data : JSON.stringify(jso),
-		contentType : "text/plain"		
+		data : JSON.stringify(jso),		
+		contentType : "application/json",
+     	dataType : "json"				
 	});
 	
 	window.location.assign("configuration");
