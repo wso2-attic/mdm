@@ -53,7 +53,7 @@ $(".btn-item-remove").click(function() {
 			}
 			
 		}]
-	});	
+	}); 	
 
 
 });
