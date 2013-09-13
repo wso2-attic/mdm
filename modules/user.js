@@ -120,7 +120,7 @@ var user = (function () {
                 var flag = false;
                 for(var j=0 ;j<roles.length;j++){
                     log.info("Test iteration2"+roles[j]);
-                    if(roles[j]=='admin'||roles[j]=='masteradmin'){
+                    if(roles[j]=='admin'||roles[j]=='mdmadmin'){
                         flag = true;
                         break;
                     }else{

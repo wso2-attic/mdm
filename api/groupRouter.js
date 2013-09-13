@@ -16,9 +16,9 @@ var group = (function () {
 		    }
 		});
 		router.delete('groups/{groupid}', function(ctx){
+            log.info("Test Delete Router");
 			group.delete(ctx);
 		    response.status = 201;
-			return true;
 		});
 		router.get('groups/{groupid}/users/device_count', function(ctx){
 			var users = group.getUsers(ctx);
@@ -26,25 +26,35 @@ var group = (function () {
 		    response.status = 200;
 		});
         router.get('groups/{groupid}/users', function(ctx){
+            log.info("Test Router");
             var allUsers = group.getUsersByGroup(ctx);
             response.content =  allUsers;
             response.status = 200;
         });
         router.put('groups/{groupid}/users', function(ctx){
             log.info("Test Request PUTTTTT"+ctx);
-            var result = group.assignUsers(ctx);
-            response.content = result;
-            response.status = 200;
+           // var result = group.assignUsers(ctx);
+          //  response.content = result;
+         //   response.status = 200;
         });
 		router.post('groups', function(ctx){
             log.info("Test Groups >>>>>>>>>>");
 			var returnMsg = group.add(ctx);
-		    if(returnMsg.success != null && returnMsg.success != undefined){
-				response.status = 201;
-		    }else{
-		 		response.status = 400;
-		 		print(returnMsg.error);
-		    }
+            if(returnMsg.status == 'ALLREADY_EXIST'){
+                response.status = 409;
+                response.content = "Already Exist";
+            }else if(returnMsg.status == 'SUCCESSFULL' ){
+                response.status = 201;
+                response.content = "Successfull";
+            }else if(returnMsg.status == 'BAD_REQUEST'){
+                response.status = 400;
+                response.content = "Name not According to Policy";
+            }else if(returnMsg.status == 'SERVER_ERROR'){
+                response.status = 500;
+                response.content = "Session Expired";
+            }else{
+                response.status = 400;
+            }
 		});
 		router.post('groups/{groupid}/operations/{operation}', function(ctx){
             log.info("Group Name >>>>>>>>>>>>>>"+ctx.groupid);
