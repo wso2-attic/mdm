@@ -46,8 +46,7 @@ $(document).ready( function () {
         }
       }     
     });
-		
-		
+				
 		
 		}
 	});
@@ -98,6 +97,8 @@ $("#btn-add").click(function() {
 										'layout' : 'center',
 										'modal' : false
 									});
+									
+									window.location.assign("configuration");
 									
 
 								} else {
