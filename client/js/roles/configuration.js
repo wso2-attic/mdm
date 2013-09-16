@@ -99,6 +99,7 @@ $(".btn-item-remove").click(function() {
 					contentType : "text/plain"
 			
 				}).done(function() {
+					$noty.close();
 					window.location.reload(true);
 				});
 			}

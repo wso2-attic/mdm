@@ -18,6 +18,7 @@ var policy = (function () {
 
         });
         router.delete('policies/{policyid}', function(ctx){
+            log.info("Check Delete Router");
             var result = policy.deletePolicy(ctx);
             if(result==1){
                 response.status = 200;
@@ -49,19 +50,6 @@ var policy = (function () {
 
             var result = policy.getGroupsByPolicy(ctx);
 
-        });
-        router.get('test', function(ctx){
-
-
-
-        });
-
-
-
-        router.delete('policies/{policyid}', function(ctx){
-            policy.delete(ctx);
-            response.status = 201;
-            return true;
         });
 
     };

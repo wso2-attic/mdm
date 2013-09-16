@@ -90,13 +90,11 @@ var user = (function () {
 		        print("User added Successful");
 		    }
 		});
-        router.delete('users/{userid}', function(ctx){
+        router.delete('users/{+userid}', function(ctx){
+            log.info("Test User Delete");
             var result = user.deleteUser(ctx);
-            if(result==true){
-                response.status = 200;
-            }else{
-                response.status = 404;
-            }
+            response.status = 200;
+
         });
 		router.get('users/{+username}/groups/',function(ctx){
             log.info("Check Router");
