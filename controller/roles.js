@@ -166,6 +166,24 @@ assign_users = function(appController){
 }
 
 
+
+assign_permissions = function(appController){
+
+	var groupId = request.getParameter('group');
+	
+	context = appController.context();
+	context.title = context.title + " | Assign permissions to group";
+	context.page = "configuration";
+	context.jsFile= "roles/assign_permissions.js"
+	context.data = {
+		configOption : "roles",		
+		tenantId:session.get("mdmConsoleUser").tenantId,
+		groupId: groupId
+	}
+	return context;
+}
+
+
 view_users = function(appController){
 
 
