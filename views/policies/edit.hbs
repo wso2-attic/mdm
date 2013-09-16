@@ -1,0 +1,547 @@
+<div class="container">
+
+	<div class="raw-fluid">
+		<div class="span12">
+
+			<ul class="breadcrumb">
+				<li>
+					<a href="configuration">Policy</a><span class="divider">/</span>
+				</li>
+				<li class="active">
+					Add
+				</li>
+			</ul>
+
+		</div>
+
+		<div class="span12">
+
+			<div class="raw-fluid">
+				<div class="block">
+					<div class="block-header">
+						<div class="block-header-title pull-left">
+							Add Policy
+						</div>
+
+					</div>
+
+					<div class="block-body">
+						<form class="form-horizontal">
+
+							<div class="control-group">
+								<label class="control-label">Policy Name</label>
+								<div class="controls">
+									<input type="text" id="policyName" class="input-xxlarge">
+								</div>
+							</div>
+
+							<div class="accordion" id="accordionPolicies">
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse1"> Wifi </a>
+									</div>
+									<div id="collapse1" class="accordion-body collapse" style="height: 0px; ">
+
+										<div class="control-group">
+											<label class="control-label">SSID</label>
+											<div class="controls">
+												<input type="text" id="500A-SSID" class="policy-input">
+											</div>
+										</div>
+
+										<div class="control-group">
+											<label class="control-label">Password</label>
+											<div class="controls">
+												<input type="password" id="500A-password" class="policy-input" >
+											</div>
+
+										</div>
+
+									</div>
+								</div>
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse2"> Encryption </a>
+									</div>
+									<div id="collapse2" class="accordion-body collapse">
+										<div class="accordion-inner">
+
+											<div class="control-group">
+												<label class="control-label">Password</label>
+												<div class="controls">
+													<input type="password" id="502A-password" class="policy-input" >
+												</div>
+											</div>
+
+											<div class="control-group">
+												<label class="control-label">Encrypt</label>
+												<div class="controls">
+													<input type="checkbox" id="500A-encrypt" class="policy-input" data-true-val="encrypt" data-false-val="decrypt" >
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse3">Passcode Policy </a>
+									</div>
+									<div id="collapse3" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<!-- Poasscode Policy Start -->
+											<div class="control-group">
+												<label class="control-label">Maximum failed attempts</label>
+												<div class="controls">
+													<input type="text" id="519A-maxFailedAttempts" class="policy-input">
+												</div>
+										    </div>
+											
+											<div class="control-group">
+												<label class="control-label">Minimum length</label>
+												<div class="controls">
+													<input type="text" id="519A-minLength" class="policy-input">
+												</div>
+										    </div>
+											
+											<div class="control-group">
+												<label class="control-label">Days of Expiration</label>
+												<div class="controls">
+													<input type="text" id="519A-maxPINAgeInDays" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Minimum complex characters</label>
+												<div class="controls">
+													<input type="text" id="519A-minComplexChars" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Password History Length</label>
+												<div class="controls">
+													<input type="text" id="519A-pinHistory" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <br /><div class="control-group">
+												<label class="control-label">Allow Simple</label>
+												<div class="controls">
+													<input type="checkbox" id="519A-allowSimple" class="policy-input" data-true-val="true" data-false-val="false" >
+												</div>
+											</div>
+											
+											<br /><div class="control-group">
+												<label class="control-label">Require Alphanumeric</label>
+												<div class="controls">
+													<input type="checkbox" id="519A-requireAlphanumeric" class="policy-input" data-true-val="true" data-false-val="false" >
+												</div>
+											</div>
+											
+											<!-- Poasscode Policy End -->
+										</div>
+									</div>
+								</div>
+
+								
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse5">eMail Configurations</a>
+									</div>
+									<div id="collapse5" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<!-- eMail Configurations Start -->
+											<div class="control-group">
+												<label class="control-label">Account Description</label>
+												<div class="controls">
+													<input type="text" id="520A-emaildesc" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Account Name</label>
+												<div class="controls">
+													<input type="text" id="520A-emailname" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Account Type</label>
+												<div class="controls">
+													<select id="520A-emailtype" class="policy-input"><option value="EmailTypeIMAP">IMAP</option><option value="EmailTypePOP">POP</option></select>
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Email Address</label>
+												<div class="controls">
+													<input type="text" id="520A-emailid" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Incoming Host</label>
+												<div class="controls">
+													<input type="text" id="520A-incoming_hostname" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Incoming Port</label>
+												<div class="controls">
+													<input type="text" id="520A-incoming_portnumber" class="policy-input">
+												</div>
+										    </div>
+										    
+										   <div class="control-group">
+												<label class="control-label">Username</label>
+												<div class="controls">
+													<input type="text" id="520A-incoming_username" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Password</label>
+												<div class="controls">
+													<input type="password" id="520A-incoming_password" class="policy-input">
+												</div>
+										    </div>
+											
+											<br /><div class="control-group">
+												<label class="control-label">Use SSL</label>
+												<div class="controls">
+													<input type="checkbox" id="520A-incoming_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+												</div>
+											</div>
+											
+											<div class="control-group">
+												<label class="control-label">Outgoing Host</label>
+												<div class="controls">
+													<input type="text" id="520A-outgoing_hostname" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Outgoing Port</label>
+												<div class="controls">
+													<input type="text" id="520A-outgoing_portnumber" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Username</label>
+												<div class="controls">
+													<input type="text" id="520A-outgoing_username" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Password</label>
+												<div class="controls">
+													<input type="password" id="520A-outgoing_password" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <br /><div class="control-group">
+												<label class="control-label">Use SSL</label>
+												<div class="controls">
+													<input type="checkbox" id="520A-outgoing_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+												</div>
+											</div>
+											
+											<!-- eMail Configurations End -->
+										</div>
+									</div>
+								</div>
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse6">IPSec VPN Profile Configuration</a>
+									</div>
+									<div id="collapse6" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<!-- VPN Configurations Start -->
+											<div class="control-group">
+												<label class="control-label">Display Name</label>
+												<div class="controls">
+													<input type="text" id="523A-display_name" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Authentication Method</label>
+												<div class="controls">
+													<select id="523A-type" class="policy-input"><option value="SharedSecret">Shared Secret</option><option value="Certificate">Certificate</option></select>
+												</div>
+										    </div>
+											
+											<div class="control-group">
+												<label class="control-label">Domain Server</label>
+												<div class="controls">
+													<input type="text" id="523A-domain_server" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Group Name</label>
+												<div class="controls">
+													<input type="text" id="523A-group_name" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Shared Secret</label>
+												<div class="controls">
+													<input type="password" id="523A-shared_secret" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <br /><div class="control-group">
+												<label class="control-label">Allow Hybrid Authentication</label>
+												<div class="controls">
+													<input type="checkbox" id="523A-hybrid_authentication" class="policy-input" data-true-val="true" data-false-val="false">
+												</div>
+											</div>
+											
+											<br /><div class="control-group">
+												<label class="control-label">Prompt for Password</label>
+												<div class="controls">
+													<input type="checkbox" id="523A-prompt_for_password" class="policy-input" data-true-val="true" data-false-val="false">
+												</div>
+											</div>
+											
+											<!-- VPN Configurations End -->
+										</div>
+									</div>
+								</div>
+								
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse7">Google Calendar Configuration</a>
+									</div>
+									<div id="collapse7" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<!-- Google Calendar Configuration Start -->
+											<div class="control-group">
+												<label class="control-label">Username</label>
+												<div class="controls">
+													<input type="text" id="525A-username" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Password</label>
+												<div class="controls">
+													<input type="password" id="525A-password" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Hostname</label>
+												<div class="controls">
+													<input type="text" id="525A-hostname" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Port</label>
+												<div class="controls">
+													<input type="text" id="525A-portnumber" class="policy-input">
+												</div>
+										    </div>
+										    
+										     <div class="control-group">
+												<label class="control-label">Description</label>
+												<div class="controls">
+													<input type="text" id="525A-caldavdesc" class="policy-input">
+												</div>
+										    </div>
+										    
+										     <div class="control-group">
+												<label class="control-label">Principal Url(optional)</label>
+												<div class="controls">
+													<input type="text" id="525A-principalUrl" class="policy-input">
+												</div>
+										    </div>
+											
+											<br /><div class="control-group">
+												<label class="control-label">Use SSL</label>
+												<div class="controls">
+													<input type="checkbox" id="525A-usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+												</div>
+											</div>
+											
+											<!-- Google Calendar Configuration End -->
+										</div>
+									</div>
+								</div>
+								
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse8">APN Configuration</a>
+									</div>
+									<div id="collapse8" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<!-- APN Configuration Start -->
+											<div class="control-group">
+												<label class="control-label">Carrier</label>
+												<div class="controls">
+													<input type="text" id="512A-carrier" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Username</label>
+												<div class="controls">
+													<input type="text" id="512A-user_name" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Password</label>
+												<div class="controls">
+													<input type="password" id="512A-password" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Proxy Server</label>
+												<div class="controls">
+													<input type="text" id="512A-proxy_server" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Proxy Port</label>
+												<div class="controls">
+													<input type="text" id="512A-proxy_port" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <br /><div class="control-group">
+												<label class="control-label">Use SSL</label>
+												<div class="controls">
+													<input type="checkbox" id="512A-usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+												</div>
+											</div>
+											
+											<!-- APN Configuration End -->
+										</div>
+									</div>
+								</div>
+								
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse9">LDAP Configuration</a>
+									</div>
+									<div id="collapse9" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<!-- LDAP Configuration Start -->
+											<div class="control-group">
+												<label class="control-label">LDAP Description</label>
+												<div class="controls">
+													<input type="text" id="524A-ldapdesc" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Host Name</label>
+												<div class="controls">
+													<input type="text" id="524A-hostname" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Username</label>
+												<div class="controls">
+													<input type="text" id="524A-username" class="policy-input">
+												</div>
+										    </div>
+										    
+										    <div class="control-group">
+												<label class="control-label">Password</label>
+												<div class="controls">
+													<input type="password" id="524A-password" class="policy-input">
+												</div>
+										    </div>
+			
+											<!-- LDAP Configuration End -->
+										</div>
+									</div>
+								</div>
+
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse10">Operation Restrictions</a>
+									</div>
+									<div id="collapse10" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<!-- Operation Restrictions Start -->
+											<div class="control-group">
+												<label class="control-label">Disable Camera</label>
+												<div class="controls">
+													<input type="checkbox" id="508A-function" class="policy-input" data-true-val="Disable" data-false-val="Enable" >
+												</div>
+											</div>
+											
+											<div class="control-group">
+												<label class="control-label">Lock Device</label>
+												<div class="controls">
+													<input type="checkbox" id="503A-lock" class="policy-input" data-true-val="Lock" data-false-val="" >
+												</div>
+											</div>
+											
+											<div class="control-group">
+												<label class="control-label">Clear Lock Code</label>
+												<div class="controls">
+													<input type="checkbox" id="505A-clear" class="policy-input" data-true-val="Unlock" data-false-val="" >
+												</div>
+											</div>
+											
+											<div class="control-group">
+												<label class="control-label">Change Lock Code</label>
+												<div class="controls">
+													<input type="text" id="526A-password" class="policy-input">
+												</div>
+											</div>
+											
+											<div class="control-group">
+												<label class="control-label">Mute</label>
+												<div class="controls">
+													<input type="checkbox" id="513A-mute" class="policy-input" data-true-val="Mute" data-false-val="" >
+												</div>
+											</div>
+											
+											
+											
+											<!-- Operation Restrictions End -->
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</form>
+
+						<div id="extra-fileds"></div>
+
+						<hr>
+						<div class="offset10 well-small">
+							<a class="btn btn-orange btn-large" id="btn-add"><i
+							class="icon-plus icon-white"></i>Add</a>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>

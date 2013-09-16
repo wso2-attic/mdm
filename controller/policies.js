@@ -95,6 +95,22 @@ add = function(appController){
 }
 
 
+edit = function(appController){	
+	
+	context = appController.context();	
+	
+	context.jsFile= "policies/edit.js";
+	context.title = context.title + " | Configuration";	
+	context.page = "configuration";
+	context.data = {
+			configOption : "policies"
+			
+	}
+	return context;
+}
+
+
+
 
 
 
