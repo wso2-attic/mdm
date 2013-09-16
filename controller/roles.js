@@ -85,7 +85,7 @@ users = function(appController){
 	for (var i = 0; i < users.length; i++) {
 
 		if(users[i].no_of_devices > 0){
-			var devices = user.devices({'userid':users[i].userid});
+			var devices = user.devices({'userid':users[i].username});
 
 			for (var j = 0; j < devices.length; j++) {
 		  		devices[j].properties = JSON.parse(devices[j].properties);

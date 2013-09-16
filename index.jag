@@ -138,7 +138,7 @@ mvc.registerHelper('showActive', function(currentPage, page, options) {
 
 mvc.registerHelper('stringify', function(context) {
 var log = new Log();log.error("CONTEXT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+stringify(context));
-    return JSON.stringify(context);
+    return stringify(context);
 });
 
 
