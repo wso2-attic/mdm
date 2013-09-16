@@ -1,11 +1,19 @@
+<<<<<<< HEAD
 <Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="fdfdf" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
+=======
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="Leadership" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
+>>>>>>> eae4c5bfdb5827dddb6712fd6d0a5efad66bb8e9
   <Target/>
   <Rule Effect="Permit" RuleId="rule1">
     <Target>
       <AnyOf>
         <AllOf>
           <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+<<<<<<< HEAD
             <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">fdfdf/(NOTIFICATION)</AttributeValue>
+=======
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Leadership/(LOCK|WIPE|CLEARPASSWORD|LOCATION|CAMERA|MUTE|ENCRYPT|ENTERPRISEWIPE|POLICY)</AttributeValue>
+>>>>>>> eae4c5bfdb5827dddb6712fd6d0a5efad66bb8e9
             <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
           </Match>
           <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
