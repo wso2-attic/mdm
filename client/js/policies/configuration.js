@@ -30,6 +30,45 @@ $(".add-group-link").click(function() {
 });
 
 
+$(".btn-item-remove").click(function() {
+	var item = $(this).data("item");
+		
+	noty({
+		text : 'Are you sure you want delete this policy?',
+		buttons : [{
+			addClass : 'btn btn-cancel',
+			text : 'Cancel',
+			onClick : function($noty) {
+				$noty.close();
+
+			}
+			
+			
+		}, {
+			
+			addClass : 'btn btn-orange',
+			text : 'Ok',
+			onClick : function($noty) {
+				
+				jQuery.ajax({
+					url : getServiceURLs("policiesCRUD", item),
+					type : "DELETE",					
+					contentType : "text/plain"
+			
+				}).done(function() {
+					window.location.reload(true);
+				});
+				
+				
+			}
+			
+		}]
+	});	
+
+
+});
+
+
 
 
 $("#btn-assign-group").click(function() {	
@@ -41,7 +80,7 @@ $("#btn-assign-group").click(function() {
 
 
 	noty({
-				text : 'Groups are assigned to the permission successfully!',
+				text : 'Groups are assigned to the permissions successfully!',
 				'layout' : 'center'
 	});
 	

@@ -1,7 +1,7 @@
 { "APIS": {
         "getGroupsList": "webconsole/devices",
         "getGroupsFeatures": "features",
-        "getGroupUsers": "groups/{0}/users",
+        "getGroupUsers": "groups/{0}/users/device_count",
         "getUserDevices": "users/{0}/devices",        
         "getDeviceFeatures": "devices/{0}/features",
         "getUserAuthenticate": "users/authenticate",
@@ -17,7 +17,7 @@
 		"dashboardMethods" : "dashboard/{0}",
 		"userGroups": "users/{0}/groups",
 		"permissionsCRUD": "permissions",
-		"policiesCRUD": "policies",
+		"policiesCRUD": "policies/{0}",
 		"permissionFeatures": "features" 
     }
 

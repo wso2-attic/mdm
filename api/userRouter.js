@@ -19,7 +19,7 @@ var user = (function () {
 						print("200");
 					}else{
 						var userFeed = {};
-						userFeed.tenantId = stringify(objUser["um"]["tenantId"]);
+						userFeed.tenantId = stringify(objUser["tenantId"]);
 						userFeed.username = objUser["username"];
 						userFeed.email = objUser["email"];
 						userFeed.firstName = objUser["firstName"];
@@ -90,13 +90,25 @@ var user = (function () {
 		        print("User added Successful");
 		    }
 		});
-		router.get('users/{userid}/groups/',function(ctx){
-			var groups = user.getGroups(ctx);
-		    if(groups[0]!= null){
+        router.delete('users/{+userid}', function(ctx){
+            log.info("Test User Delete");
+            var result = user.deleteUser(ctx);
+            response.status = 200;
+
+        });
+		router.get('users/{+username}/groups/',function(ctx){
+            log.info("Check Router");
+			var groups = user.getRolesByUser(ctx);
+		    /*if(groups[0]!= null){
 		     	response.status = 200;
 		       	response.content = groups;
-		    }
+		    }*/
 		});
+        router.put('users/{+username}/groups/',function(ctx){
+            var groups = user.updateRoleListOfUser(ctx);
+             response.status = 200;
+             response.content = groups;
+        });
 		router.get('users/',function(ctx){
 			var obj = session.get("user");
 			var log = new Log();
@@ -118,6 +130,10 @@ var user = (function () {
 		        response.status = 404;
 		    }
 		});
+        router.get('users/test/test',function(ctx){
+            user.getUsersWithoutMDMRoles(ctx);
+
+        });
 		router.post('users/{userid}/operations/{operation}',function(ctx){
 			user.operation(ctx);
 		});

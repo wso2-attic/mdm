@@ -100,7 +100,7 @@ var store = (function () {
 				log.info(ctx.data.email);
 				log.info(stringify(user.getUser({userid:ctx.data.email})));
                 var userID = user.getUser({userid:ctx.data.email}).username;
-                var devices = db.query("select * from devices where devices.user_id="+String(userID));
+                var devices = db.query("select * from devices where devices.user_id='"+String(userID)+"'");
                 devicesArray = new Array();
                 for(var i=0;i<devices.length;i++){
                     var deviceID = devices[i].id;

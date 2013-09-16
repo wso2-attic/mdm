@@ -32,11 +32,11 @@ $("#btn-add").click(function() {
 		url : getServiceURLs("usersCRUD", ""),
 		type : "PUT",
 		async : "false",
-		data : JSON.stringify(jso),
+		data : JSON.stringify(jso),		
 		contentType : "application/json",
-		dataType : "json",		
+     	dataType : "json"				
+	}).done(function() {
+			window.location.reload(true);
 	});
-	
-	
 
 });

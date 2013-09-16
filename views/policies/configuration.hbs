@@ -10,10 +10,10 @@
 
 				<div class="block">
 					<div class="block-header">
-						<div class="block-header-title pull-left">Permissions</div>
+						<div class="block-header-title pull-left">Policies</div>
 						<div class="pull-right">
 							<a class="btn btn-orange" href="add"><i
-								class="icon-plus icon-white"> </i> Add Policies</a>							
+								class="icon-plus icon-white"> </i> Add Policy</a>							
 						</div>
 					</div>
 
@@ -31,16 +31,22 @@
 									</tr>
 								</thead>
 								<tbody>								
-									{{#data.permissionGroup}}
+									{{#data.policies}}
 									<tr>
 										<td>{{id}}</td>			
 										<td>{{name}}</td>										
-										<td  style="text-align: right"><a href="edit" title="Edit"
-										class="icon-edit"> </a><a href="#assignGroup" data-permission="{{name}}" data-name="{{name}}" data-toggle="modal" title="Assign Groups"
-										class="icon-cog add-group-link"> </a><a href="edit" title="Delete"
-										class="icon-remove"> </a></td>
+										<td class="center">											
+											<a href="assign_groups?policy={{id}}&policyName={{name}}"  data-toggle="modal" title="Assign Groups"
+												><i class="icon-user"> </i> Assign Roles</a> |
+												
+												<a href="edit?policy={{id}}&policyName={{name}}"  data-toggle="modal" title="Edit"
+												><i class="icon-edit"> </i> Edit</a> |
+												
+												<a href="#"  class="btn-item-remove" data-item="{{id}}" title="Remove"
+												><i class="icon-remove"> </i> Remove</a>																								
+										</td>
 									</tr>
-									{{/data.permissionGroup}}
+									{{/data.policies}}
 								</tbody>
 							</table>
 						

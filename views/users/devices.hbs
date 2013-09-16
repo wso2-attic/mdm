@@ -140,16 +140,42 @@
 												{{#features}}
 												
 												{{#compare feature_type 'OPERATION'}}
-												<div class="features-device" data-feature="{{name}}"   data-template="{{template}}" style="cursor: move;">
-													<div title="{{description}}" class="span2" draggable="true">
-														<div class="raw text-center">
-															<img src="{{../../../resourcePath}}features/{{name}}.png" class="features-role-image">
-														</div>
-														<div class="raw text-center"  style="font-size: x-small">
-															{{#elipsis 30 description}}{{/elipsis}}
+												
+												{{#if enable}}
+												
+												
+													<div class="features-device" data-feature="{{name}}"   data-template="{{template}}" style="cursor: move;">
+														<div title="{{description}}" class="span2" draggable="true">
+															<div class="raw text-center">
+																<img src="{{../../../../resourcePath}}features/{{name}}.png" class="features-role-image">
+															</div>
+															<div class="raw text-center"  style="font-size: x-small">
+																{{#elipsis 30 description}}{{/elipsis}}
+															</div>
 														</div>
 													</div>
-												</div>
+												
+												
+												{{else}}
+												
+													<div  data-feature="{{name}}"   data-template="{{template}}">
+														<div title="{{description}}" class="span2">
+															<div class="raw text-center">
+																<img src="{{../../../../resourcePath}}features/{{name}}.png" class="features-role-image" style="opacity: 0.3">
+															</div>
+															<div class="raw text-center"  style="font-size: x-small; opacity: 0.3" >
+																{{#elipsis 30 description}}{{/elipsis}}
+															</div>
+														</div>
+													</div>
+												
+												
+												
+												{{/if}}
+												
+												
+												
+												
 												{{/compare}}
 
 												{{/features}}

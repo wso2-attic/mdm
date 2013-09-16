@@ -1,5 +1,6 @@
 var config = require('../config.json');
 var configApis = require('../config/apis.json');
+var log = new Log();
 appInfo = function() {
     var appInfo = {
         headerTitle : "WSO2 Mobile Device Management",
@@ -9,9 +10,8 @@ appInfo = function() {
     };
     return appInfo;
 }
-
-if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "console/login"){
-    response.sendRedirect(appInfo().server_url + "console/login");
+if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "login"){
+	response.sendRedirect(appInfo().server_url + "login");
 }
 
 getServiceURLs = function(item){
@@ -19,7 +19,6 @@ getServiceURLs = function(item){
     var urls = configApis.APIS;
     arguments[0] = urls[item];
     var returnURL;
-    var log = new Log();
     if(session.get("mdmConsoleUser") != null) {
         var log = new Log();
         returnURL = serverURL + String.format.apply(this, arguments) + "?tenantId=" + session.get("mdmConsoleUser").tenantId;
@@ -42,7 +41,17 @@ String.format = function() {
 }
 
 
+index = function(){
+	var user = session.get("mdmConsoleUser");
+	if(user!=null){
+		if(user.isAdmin){
+			response.sendRedirect('console/dashboard');
+		}else{
+			response.sendRedirect(appInfo().server_url + 'users/devices?user=' + userFeed.username);
+		}
+	}
 
+}
 
 navigation = function(role) {
 
@@ -61,7 +70,7 @@ navigation = function(role) {
     var topNavigation = [];
     var configNavigation = [];
     if(currentUser){
-        if(role == 'masteradmin'){
+        if(role == 'admin'){
             topNavigation = [
                 {name : "Dashboard"	, link: appInfo().server_url + "console/dashboard", displayPage: "dashboard", icon: "icon-th-large"},
                 {name : "Configurations", link: appInfo().server_url + "users/configuration", displayPage: "configuration", icon:"icon-wrench"},
@@ -74,7 +83,7 @@ navigation = function(role) {
 //{name : "Permissions", link: appInfo().server_url + "permissions/configuration", displayPage: "permissions", icon:"icon-globe"},
                 {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-edit"},
             ];
-        }else if(role == 'admin'){
+        }else if(role == 'mdmadmin'){
             topNavigation = [
                 {name : "Dashboard"	, link: appInfo().server_url + "console/dashboard", displayPage: "dashboard", icon: "icon-th-large"},
                 {name : "Configurations", link: appInfo().server_url + "users/configuration", displayPage: "configuration", icon:"icon-wrench"},
@@ -119,17 +128,17 @@ theme = function() {
 context = function() {
 
     var contextData = {};
-    var currentUser = session.get("mdmConsoleUser");
+    var currentUser = session.get("mdmConsoleUser");  
     if(currentUser){
-        if(currentUser.isMasterAdmin){
-            contextData.user = {
-                name : "Master Admin",
-                role : "masteradmin"
-            };
-        }else if(currentUser.isAdmin){
+        if(currentUser.isAdmin){
             contextData.user = {
                 name : "Admin",
                 role : "admin"
+            };
+        }else if(currentUser.isMDMAdmin){
+            contextData.user = {
+                name : "MDM Admin",
+                role : "mdmadmin"
             };
         }else{
             contextData.user = {

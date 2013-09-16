@@ -10,10 +10,9 @@ if(db==null || db==undefined){
 	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
 	application.put('db',db);
 }
-
 var mvc = new absolute({
 	SERVER_URL:"/mdm/",
-	IGNORE:["sso.jag", "login.jag", "logout.jag"],
+	IGNORE:["acs.jag", "login.jag", "logout.jag"],
 	API:"api",
 	ROUTER: router
 });
@@ -139,7 +138,7 @@ mvc.registerHelper('showActive', function(currentPage, page, options) {
 
 mvc.registerHelper('stringify', function(context) {
 var log = new Log();log.error("CONTEXT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+stringify(context));
-    return JSON.stringify(context);
+    return stringify(context);
 });
 
 
@@ -199,7 +198,7 @@ mvc.registerHelper('elipsis', function(maxLength, context, options) {
   if(context.length > maxLength) {
     context = context.substring(0, maxLength)+"...";
   }
-  
+
   return context;
 });
 

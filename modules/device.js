@@ -1,18 +1,42 @@
+var TENANT_CONFIGS = 'tenant.configs';
+var USER_MANAGER = 'user.manager';
 var device = (function () {
     var configs = {
         CONTEXT: "/"
     };
 
     var carbon = require('carbon');
-	var server = new carbon.server.Server(configs.HTTPS_URL + '/admin');
+	var server = function(){
+		return application.get("SERVER");
+	}
 
     var log = new Log();
     var gcm = require('gcm').gcm;
+	var configs = function (tenantId) {
+	    var config = application.get(TENANT_CONFIGS);
+		if (!tenantId) {
+	        return config;
+	    }
+	    return config[tenantId] || (config[tenantId] = {});
+	};			
+	/**
+	 * Returns the user manager of the given tenant.
+	 * @param tenantId
+	 * @return {*}
+	 */
+	var userManager = function (tenantId) {
+	    var config = configs(tenantId);
+	    if (!config || !config[USER_MANAGER]) {
+			var um = new carbon.user.UserManager(server, tenantId);
+			config[USER_MANAGER] = um;
+	        return um;
+	    }
+	    return configs(tenantId)[USER_MANAGER];
+	};			
 
     var db;
     var module = function (dbs) {
         db = dbs;
-        //mergeRecursive(configs, conf);
     };
 
     function mergeRecursive(obj1, obj2) {
@@ -31,24 +55,23 @@ var device = (function () {
         }
         return obj1;
     }
-    function checkPermission(deviceId,operationName){
+    function checkPermission(deviceId,operationName, that){
 
         var policy = require('policy');
         log.info(policy.policy.init());
 
         var result = db.query("select * from devices where id ="+deviceId);
         var userId = result[0].user_id;
-        var roleList = parse(user.getUserRoles({'username':userId}));
+        var roleList = parse(that.getUserRoles({'username':userId}));
 
-      //  log.info("Role List >>>>>>>>"+roleList[0]);
 
         for(var i = 0;i<roleList.length;i++){
             var resource = roleList[i]+"/"+operationName;
             var action = 'POST';
             var subject = 'Admin';
             log.info("Resource >>>>>>>"+resource);
-            log.info("Resource >>>>>>>"+action);
-            log.info("Resource >>>>>>>"+subject);
+            log.info("Action >>>>>>>"+action);
+            log.info("Subject >>>>>>>"+subject);
             var decision = policy.policy.getDecision(resource,action,subject,"");
             log.info("Test Decision >>>>>>>>>>>>>>"+decision);
             if(decision=="Permit"){
@@ -67,6 +90,7 @@ var device = (function () {
     }
 
 	function sendMessageToDevice(ctx){
+        log.info("Test Function");
         var message = stringify(ctx.data);
         var token = Math.random() * 1000000;
         var status = false;
@@ -182,10 +206,9 @@ var device = (function () {
         },
         register: function(ctx){
             var log = new Log();
-            
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.email));
-		    var userId = server.tenantUser(ctx.email).username;
-			var tenantId = server.getTenantIdByDomain(server.getTenantDomain(ctx.email));
+			var tenantUser = carbon.server.tenantUser(ctx.email);
+		    var userId = tenantUser.username;
+			var tenantId = tenantUser.tenantId;
 			
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
@@ -208,8 +231,15 @@ var device = (function () {
                     var deviceID = "" + devices[0].id;
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
-                    sendMessageToDevice({'deviceid':deviceID, 'operation': "TRACKCALLS", 'data': "hi"});
+                 //   sendMessageToDevice({'deviceid':deviceID, 'operation': "TRACKCALLS", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
+                    var roles = this.getUserRoles({'username':userId});
+                    var roleList = parse(roles);
+                    log.info(roleList[0]);
+                    var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+                    log.info("Policy Payload :"+gpresult[0].data);
+                    var jsonData = parse(gpresult[0].data);
+                    sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                     return true;
                 }else{
                     db.query("UPDATE devices SET deleted = 0 WHERE reg_id = ?", ctx.regid);
@@ -220,10 +250,9 @@ var device = (function () {
             }
         },
         registerIOS: function(ctx){
-            
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.email));
-		    var userId = server.tenantUser(ctx.email).username;
-			var tenantId = server.getTenantIdByDomain(server.getTenantDomain(ctx.email));
+            var tenantUser = carbon.server.tenantUser(ctx.email);
+		    var userId = tenantUser.username;
+			var tenantId = tenantUser.tenantId;
 			
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
@@ -244,6 +273,20 @@ var device = (function () {
 
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
+
+            var roles = this.getUserRoles({'userid':userId});
+            var roleList = parse(roles);
+            log.info(roleList[0]);
+            var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+            log.info("Policy Payload :"+gpresult[0].data);
+            var jsonData = parse(gpresult[0].data);
+            for(var i =0 ;i < jsonData.length; i++){
+                var code = jsonData[i].code;
+                var result = db.query("select name from features where code = ? ",code);
+                var featureName = result[0].name;
+                var data = jsonData[i].data;
+                sendMessageToIOSDevice({'deviceid':deviceID, 'operation':featureName, 'data': data});
+            }
 
             return true;
         },
@@ -321,7 +364,8 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                featureArr["enable"] = checkPermission(deviceId, featureList[i].name);
+                featureArr["enable"] = checkPermission(deviceId, featureList[i].name, this);
+             //   featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
                 }else{
@@ -330,9 +374,16 @@ var device = (function () {
                 obj.push(featureArr);
             }
 
-            log.info(obj);
+         //   log.info(obj);
 
             return obj;
+        },
+        getUserRoles: function(ctx){
+
+            var tenantUser = carbon.server.tenantUser(ctx.username);
+			var um = userManager(tenantUser.tenantId);
+		    var user = um.getUser(tenantUser.username);
+			return stringify(user.getRoles());
         },
         unRegister:function(ctx){
             if(ctx.regid!=null){
@@ -345,6 +396,16 @@ var device = (function () {
             }else{
                 return false;
             }
+        },
+        enforcePolicy:function(ctx){
+            var result = db.query("SELECT * from devices where id = ?",ctx.id);
+            var userId = result[0].user_id;
+            var roles = this.getUserRoles({'username':userId});
+            var roleList = parse(roles);
+            log.info(roleList[0]);
+            var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+            log.info(gpresult[0]);
+            sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
         }
     };
     // return module
