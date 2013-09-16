@@ -135,7 +135,7 @@ var user = (function () {
             return array;
         },
 		getUserRoles: function(ctx){
-            var tenantUser = carbon.server.tenantUser(ctx.userid);
+            var tenantUser = carbon.server.tenantUser(ctx.username);
 			var um = userManager(tenantUser.tenantId);
 		    var user = um.getUser(tenantUser.username);
 			return stringify(user.getRoles());

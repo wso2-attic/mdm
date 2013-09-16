@@ -55,16 +55,15 @@ var device = (function () {
         }
         return obj1;
     }
-    function checkPermission(deviceId,operationName){
+    function checkPermission(deviceId,operationName, that){
 
         var policy = require('policy');
         log.info(policy.policy.init());
 
         var result = db.query("select * from devices where id ="+deviceId);
         var userId = result[0].user_id;
-        var roleList = parse(user.getUserRoles({'username':userId}));
+        var roleList = parse(that.getUserRoles({'username':userId}));
 
-      //  log.info("Role List >>>>>>>>"+roleList[0]);
 
         for(var i = 0;i<roleList.length;i++){
             var resource = roleList[i]+"/"+operationName;
@@ -91,6 +90,7 @@ var device = (function () {
     }
 
 	function sendMessageToDevice(ctx){
+        log.info("Test Function");
         var message = stringify(ctx.data);
         var token = Math.random() * 1000000;
         var status = false;
@@ -274,6 +274,20 @@ var device = (function () {
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
 
+            var roles = this.getUserRoles({'userid':userId});
+            var roleList = parse(roles);
+            log.info(roleList[0]);
+            var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+            log.info("Policy Payload :"+gpresult[0].data);
+            var jsonData = parse(gpresult[0].data);
+            for(var i =0 ;i < jsonData.length; i++){
+                var code = jsonData[i].code;
+                var result = db.query("select name from features where code = ? ",code);
+                var featureName = result[0].name;
+                var data = jsonData[i].data;
+                sendMessageToIOSDevice({'deviceid':deviceID, 'operation':featureName, 'data': data});
+            }
+
             return true;
         },
         sendToDevice: function(ctx){
@@ -350,7 +364,8 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                featureArr["enable"] = checkPermission(deviceId, featureList[i].name);
+                featureArr["enable"] = checkPermission(deviceId, featureList[i].name, this);
+             //   featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
                 }else{
@@ -364,7 +379,8 @@ var device = (function () {
             return obj;
         },
         getUserRoles: function(ctx){
-            var tenantUser = carbon.server.tenantUser(ctx.userid);
+
+            var tenantUser = carbon.server.tenantUser(ctx.username);
 			var um = userManager(tenantUser.tenantId);
 		    var user = um.getUser(tenantUser.username);
 			return stringify(user.getRoles());

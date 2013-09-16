@@ -60,6 +60,8 @@ var device = (function () {
 
             var result = db.query("select * from devices where id ="+ctx.deviceid);
             var userId = result[0].user_id;
+            log.info("Test User ID >>>>>"+userId);
+
             var roleList = parse(user.getUserRoles({'username':userId}));
 
             log.info("Role List >>>>>>>>"+roleList[0]);
