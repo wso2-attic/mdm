@@ -51,6 +51,10 @@ var policy = (function () {
             var result = db.query("SELECT * FROM policies");
             return result;
         },
+        getPolicy:function(ctx){
+            var result = db.query("SELECT * FROM policies where id = ?",ctx.policyid);
+            return result;
+        },
         deletePolicy:function(ctx){
             var result = db.query("DELETE FROM policies where id = ?",ctx.policyid);
             return result;

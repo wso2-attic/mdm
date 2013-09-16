@@ -1,3 +1,5 @@
+var TENANT_CONFIGS = 'tenant.configs';
+var USER_MANAGER = 'user.manager';
 var webconsole = (function () {
     var configs = {
         CONTEXT: "/"
@@ -10,8 +12,29 @@ var webconsole = (function () {
         //mergeRecursive(configs, conf);
     };
     var carbon = require('carbon');
-	var server = new carbon.server.Server(configs.HTTPS_URL + '/admin');
+    var server = function(){
+        return application.get("SERVER");
+    }
 	var common = require('common.js');
+
+
+    var configs = function (tenantId) {
+        var config = application.get(TENANT_CONFIGS);
+        if (!tenantId) {
+            return config;
+        }
+        return config[tenantId] || (config[tenantId] = {});
+    };
+
+    var userManager = function (tenantId) {
+        var config = configs(tenantId);
+        if (!config || !config[USER_MANAGER]) {
+            var um = new carbon.user.UserManager(server, tenantId);
+            config[USER_MANAGER] = um;
+            return um;
+        }
+        return configs(tenantId)[USER_MANAGER];
+    };
 
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
@@ -60,7 +83,7 @@ var webconsole = (function () {
 
 				arrRole.push(objRole);
 			}
-
+            log.info(arrRole);
             return arrRole;
         }
     };

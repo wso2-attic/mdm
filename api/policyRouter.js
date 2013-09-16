@@ -39,6 +39,18 @@ var policy = (function () {
             }
 
         });
+        router.get('policies/{policyid}', function(ctx){
+
+            var result = policy.getPolicy(ctx);
+
+            if(result != undefined && result != null && result[0] != undefined && result[0]!= null){
+                response.content = result;
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
+
+        });
         router.put('policies/{policyid}/groups', function(ctx){
             log.info("check policy router PUT");
             log.info(ctx);

@@ -71,8 +71,8 @@ var device = (function () {
             var action = 'POST';
             var subject = 'Admin';
             log.info("Resource >>>>>>>"+resource);
-            log.info("Resource >>>>>>>"+action);
-            log.info("Resource >>>>>>>"+subject);
+            log.info("Action >>>>>>>"+action);
+            log.info("Subject >>>>>>>"+subject);
             var decision = policy.policy.getDecision(resource,action,subject,"");
             log.info("Test Decision >>>>>>>>>>>>>>"+decision);
             if(decision=="Permit"){
@@ -231,12 +231,13 @@ var device = (function () {
                     var deviceID = "" + devices[0].id;
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
-                    sendMessageToDevice({'deviceid':deviceID, 'operation': "TRACKCALLS", 'data': "hi"});
+                 //   sendMessageToDevice({'deviceid':deviceID, 'operation': "TRACKCALLS", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
-                    var roles = this.getUserRoles({'username':userId});
+                    var roles = this.getUserRoles({'userid':userId});
                     var roleList = parse(roles);
                     log.info(roleList[0]);
                     var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+                    log.info("Policy Payload :"+gpresult[0].data);
                     var jsonData = parse(gpresult[0].data);
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                     return true;
@@ -358,7 +359,7 @@ var device = (function () {
                 obj.push(featureArr);
             }
 
-            log.info(obj);
+         //   log.info(obj);
 
             return obj;
         },
