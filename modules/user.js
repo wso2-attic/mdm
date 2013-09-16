@@ -115,7 +115,7 @@ var user = (function () {
 
             for(var i =0 ;i<users.length;i++){
                 log.info(users[i].username);
-                var roles = parse(this.getUserRoles({'userid':users[i].username}));
+                var roles = parse(this.getUserRoles({'username':users[i].username}));
 
                 var flag = false;
                 for(var j=0 ;j<roles.length;j++){
@@ -140,6 +140,38 @@ var user = (function () {
 		    var user = um.getUser(tenantUser.username);
 			return stringify(user.getRoles());
 		},
+        getRolesByUser:function(ctx){
+
+            var allRoles = this.getGroups(ctx);
+            var userRoles = parse(this.getUserRoles(ctx));
+            var array = new Array();
+            if(userRoles.length == 0){
+                for(var i=0;i < allRoles.length;i++){
+                    var obj = {};
+                    obj.name = allRoles[i];
+                    obj.available = false;
+                    array.push(obj);
+                }
+            }else{
+                for(var i=0;i < allRoles.length;i++){
+                    var obj = {};
+                    for(var j=0;j< userRoles.length;j++){
+                        if(allRoles[i]==userRoles[j]){
+                            obj.name = allRoles[i];
+                            obj.available = true;
+                            break;
+                        }else{
+                            obj.name = allRoles[i];
+                            obj.available = false;
+                        }
+                    }
+                    array.push(obj);
+                }
+            }
+
+            log.info(array);
+            return array;
+        },
         updateRoleListOfUser:function(ctx){
             var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
             var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
@@ -195,10 +227,21 @@ var user = (function () {
             um.removeUser(ctx.userid);
 
         },
-		getGroups: function(ctx){
-			var um =  userManager(common.getTenantID());
-			return um.allRoles();
-		},
+
+        getGroups: function(ctx){
+            var um = userManager(common.getTenantID());
+            var roles = um.allRoles();
+            log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
+            var arrRole = new Array();
+            for(var i = 0; i < roles.length; i++) {
+                if(common.isMDMRole(roles[i])) {
+                    arrRole.push(roles[i]);
+                }
+            }
+            log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
+            return arrRole;
+        },
+
 		getUsers: function(ctx){
 			var tenantId = common.getTenantID();
 			var users_list = Array();

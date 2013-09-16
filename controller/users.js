@@ -9,7 +9,7 @@ var device = new deviceModule(db);
 
 configuration = function(appController) {
 	try {
-		var users = user.getUsersWithoutMDMRoles({});
+        var users = user.getUsersWithoutMDMRoles({});
 	} catch(e) {
 		log.info(e);
 		var users = [];
