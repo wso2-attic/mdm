@@ -30,13 +30,15 @@ login = function(appController){
 						if(parsedRoles[i] == 'mdmadmin') {
 							isMDMAdmin = true;
 							break;
-					}
+						}
 						if(parsedRoles[i] == 'admin') {
 							isAdmin = true;
 							isMDMAdmin = true;
 							break;
 						}
-					}
+					}				
+					
+					return;	
 					userFeed.isMDMAdmin = isMDMAdmin;
 					userFeed.isAdmin = isAdmin;
 					session.put("mdmConsoleUserLogin", "true");

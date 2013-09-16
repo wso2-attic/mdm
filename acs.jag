@@ -54,13 +54,20 @@
 							userFeed.mobile = objUser["mobile"];
                             log.info("TestTTTTTTTTTT"+objUser["roles"]);
 							var parsedRoles = parse(objUser["roles"]);
+							var isMDMAdmin = false;
 							var isAdmin = false;
 							for (var i = 0; i < parsedRoles.length; i++) {
-								if(parsedRoles[i] == 'admin') {
-									isAdmin = true;
+								if(parsedRoles[i] == 'mdmadmin') {
+									isMDMAdmin = true;
 									break;
 								}
-							}
+								if(parsedRoles[i] == 'admin') {
+									isAdmin = true;
+									isMDMAdmin = true;
+									break;
+								}
+							}	
+							userFeed.isMDMAdmin = isMDMAdmin;
 							userFeed.isAdmin = isAdmin;
 							session.put("mdmConsoleUserLogin", "true");
 							session.put("mdmConsoleUser", userFeed);
