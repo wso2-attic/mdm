@@ -93,9 +93,9 @@ var permission = (function () {
 
             var action = 'POST';
 
-            var subject = 'Admin'
+            var subject = group;
 
-            var resource =group+"/"+featureConcat;
+            var resource =featureConcat;
 
             xacml.add = getRule(resource, action, subject,'rule1');
 
