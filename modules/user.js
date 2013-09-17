@@ -274,7 +274,8 @@ var user = (function () {
 			log.info(users_list);
 			return users_list;
 		},
-        getUsersForDashboard:function(ctx){
+        getUsersByType:function(ctx){
+            var role = ctx.role;
             if(role == 'admin'){
                 var users = this.getUsers();
                 for(var i =0 ;i<users.length;i++){
@@ -316,12 +317,12 @@ var user = (function () {
                         }
                     }
                     if(flag == false){
+                        users[i].type = 'user';
                         array.push(users[i]);
                     }
                 }
                 return array;
             }
-
         },
 		operation: function(ctx){
 			var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", ctx.userid);

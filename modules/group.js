@@ -67,19 +67,6 @@ var group = (function () {
     // prototype
     module.prototype = {
         constructor: module,
-        getGroupsWithAdmins: function(ctx){
-            var um = userManager(common.getTenantID());
-            var roles = um.allRoles();
-            log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
-            var arrRole = new Array();
-            for(var i = 0; i < roles.length; i++) {
-                if(common.isMDMRole (roles[i])) {
-                    arrRole.push(roles[i]);
-                }
-            }
-            log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
-            return arrRole;
-        },
 		getGroups: function(ctx){
 			var um = userManager(common.getTenantID());
 			var roles = um.allRoles();
