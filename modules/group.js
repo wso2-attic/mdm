@@ -68,6 +68,7 @@ var group = (function () {
     module.prototype = {
         constructor: module,
 		getGroups: function(ctx){
+
 			var um = userManager(common.getTenantID());
 			var roles = um.allRoles();
             log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
@@ -80,6 +81,46 @@ var group = (function () {
             log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
 			return arrRole;
 		},
+        getGroupsByType: function(ctx){
+            var role = ctx.role;
+
+            if(role == 'admin'){
+                var um = userManager(common.getTenantID());
+                var roles = um.allRoles();
+                log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
+                var arrRole = new Array();
+                for(var i = 0; i < roles.length; i++) {
+                    if(common.isMDMRoleWithAdmins(roles[i])) {
+                        var obj = {};
+                        if(roles[i] == 'admin'||roles[i] == 'mdmadmin'){
+                            obj.name = roles[i];
+                            obj.type = 'administrator';
+                        }else{
+                            obj.name = roles[i];
+                            obj.type = 'user';
+                        }
+                        arrRole.push(obj);
+                    }
+                }
+                log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
+                return arrRole;
+            }else if(role == 'mdmadmin'){
+                var um = userManager(common.getTenantID());
+                var roles = um.allRoles();
+                log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
+                var arrRole = new Array();
+                for(var i = 0; i < roles.length; i++) {
+                    if(common.isMDMRole(roles[i])) {
+                        var obj = {};
+                        obj.name = roles[i];
+                        obj.type = 'user';
+                        arrRole.push(obj);
+                    }
+                }
+                log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
+                return arrRole;
+            }
+        },
 		delete: function(ctx){
             var um = userManager(common.getTenantID());
 

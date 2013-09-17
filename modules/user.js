@@ -293,7 +293,7 @@ var user = (function () {
                         }
                     }
                     if(flag == true){
-                        users[i].type = 'administrators';
+                        users[i].type = 'administrator';
                     }else {
                         users[i].type = 'user';
                     }
