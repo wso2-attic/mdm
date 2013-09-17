@@ -8,10 +8,11 @@ var deviceModule = require('/modules/device.js').device;
 var device = new deviceModule(db);
 
 configuration = function(appController) {
+	context = appController.context();
+	
 	try {
-        var users = user.getUsersWithoutMDMRoles({});
-	} catch(e) {
-		log.info(e);
+        var users = user.getUsersByType({role:context.contextData.user.role});
+	} catch(e) {		
 		var users = [];
 	}
 	try {
@@ -20,7 +21,7 @@ configuration = function(appController) {
 		log.info(e);
 		var groups = [];
 	}
-	context = appController.context();
+	
 	context.title = context.title + " | Configuration";
 	context.page = "configuration";
 	context.jsFile = "users/configuration.js"
