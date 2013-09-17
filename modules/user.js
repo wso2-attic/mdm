@@ -274,6 +274,55 @@ var user = (function () {
 			log.info(users_list);
 			return users_list;
 		},
+        getUsersForDashboard:function(ctx){
+            if(role == 'admin'){
+                var users = this.getUsers();
+                for(var i =0 ;i<users.length;i++){
+                    log.info(users[i].username);
+
+                    var roles = parse(this.getUserRoles({'username':users[i].username}));
+                    var flag = false;
+                    for(var j=0 ;j<roles.length;j++){
+                        log.info("Test iteration2"+roles[j]);
+                        if(roles[j]=='admin'||roles[j]=='mdmadmin'){
+                            flag = true;
+                            break;
+                        }else{
+                            flag = false;
+                        }
+                    }
+                    if(flag == true){
+                        users[i].type = 'administrators';
+                    }else {
+                        users[i].type = 'user';
+                    }
+                }
+                return users;
+            }else if (role == 'mdmadmin'){
+                var users = this.getUsers();
+                var array = new Array();
+                for(var i =0 ;i<users.length;i++){
+                    log.info(users[i].username);
+
+                    var roles = parse(this.getUserRoles({'username':users[i].username}));
+                    var flag = false;
+                    for(var j=0 ;j<roles.length;j++){
+                        log.info("Test iteration2"+roles[j]);
+                        if(roles[j]=='admin'||roles[j]=='mdmadmin'){
+                            flag = true;
+                            break;
+                        }else{
+                            flag = false;
+                        }
+                    }
+                    if(flag == false){
+                        array.push(users[i]);
+                    }
+                }
+                return array;
+            }
+
+        },
 		operation: function(ctx){
 			var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", ctx.userid);
 		    var succeeded="";
