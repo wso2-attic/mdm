@@ -91,12 +91,15 @@ var group = (function () {
                 var arrRole = new Array();
                 for(var i = 0; i < roles.length; i++) {
                     if(common.isMDMRoleWithAdmins(roles[i])) {
+                        var obj = {};
                         if(roles[i] == 'admin'||roles[i] == 'mdmadmin'){
-                            roles[i].type = 'administrator';
+                            obj.name = roles[i];
+                            obj.type = 'administrator';
                         }else{
-                            roles[i].type = 'user';
+                            obj.name = roles[i];
+                            obj.type = 'user';
                         }
-                        arrRole.push(roles[i]);
+                        arrRole.push(obj);
                     }
                 }
                 log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
@@ -108,8 +111,10 @@ var group = (function () {
                 var arrRole = new Array();
                 for(var i = 0; i < roles.length; i++) {
                     if(common.isMDMRole(roles[i])) {
-                        roles[i].type = 'user';
-                        arrRole.push(roles[i]);
+                        var obj = {};
+                        obj.name = roles[i];
+                        obj.type = 'user';
+                        arrRole.push(obj);
                     }
                 }
                 log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
