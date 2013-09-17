@@ -3,7 +3,7 @@ var selectedUser = null;
 $(document).ready(function() {
 	oTable = $('#main-table').dataTable({
 		"sDom" : "<'row-fluid'<'tabel-filter-group span8'T><'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-		"iDisplayLength" : 6,
+		"iDisplayLength" : 6,		
 		"bStateSave" : false,
 		"oTableTools" : {
 			"aButtons" : ["copy", "print", {
@@ -13,8 +13,30 @@ $(document).ready(function() {
 			}]
 		}
 	});
+	
+	
+	$(".tabel-filter-group").html("User Type: " + fnCreateSelect( oTable.fnGetColumnData(4)));
+	
+	$('.tabel-filter-group select').change( function () {
+            oTable.fnFilter( $(this).val(), 4 );
+     } );
+	
+	
 
 });
+
+
+
+function fnCreateSelect( aData ){
+    var r='<select><option value="">--All--</option>', i, iLen=aData.length;
+    for ( i=0 ; i<iLen ; i++ )
+    {
+        r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
+    }
+    return r+'</select>';
+}
+ 
+
 
 $(".add-group-link").click(function() {
 	selectedUser = $(this).data("user");
