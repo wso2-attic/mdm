@@ -13,13 +13,19 @@ var user = new userModule(db);
 var deviceModule = require('/modules/device.js').device;
 var device = new deviceModule(db);
 
+
 configuration = function(appController){
 
+	context = appController.context();
+	
 	try{
-		var groups = group.getGroups({});
+		var groups = group.getGroupsByType({role:context.contextData.user.role});		
 	}catch(e){
+		
 		var groups = [];
 	}
+	
+	
 
 	for(var i =0; i < groups.length; i++){
 		if(groups[i] == 'masteradmin' | groups[i] == "admin"){
@@ -27,7 +33,7 @@ configuration = function(appController){
 		}
 	}
 
-	context = appController.context();
+	
 	context.title = context.title + " | Configuration";
 	context.page = "configuration";
 	context.jsFile= "roles/configuration.js";

@@ -180,7 +180,12 @@ $(document).ready( function () {
 	} );
 	
 	
+$(".tabel-filter-group").html("Type: " + fnCreateSelect( oTable.fnGetColumnData(1)));
 	
+	$('.tabel-filter-group select').change( function () {
+            oTable.fnFilter( $(this).val(), 1 );
+     } );
+		
 	
 	
 //	createFilter(oTable, 0, "select-filter-0", "Groups");
@@ -199,6 +204,16 @@ $(document).ready( function () {
 	
 	
 } );
+
+
+function fnCreateSelect( aData ){
+    var r='<select><option value="">--All--</option>', i, iLen=aData.length;
+    for ( i=0 ; i<iLen ; i++ )
+    {
+        r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
+    }
+    return r+'</select>';
+}
 
 
 
