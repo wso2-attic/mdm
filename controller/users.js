@@ -112,7 +112,7 @@ devices = function(appController) {
 		devices[i].properties = JSON.parse(devices[i].properties);
 		try {
 			featureList = device.getFeaturesFromDevice({
-				"deviceid" : devices[i].id
+				"deviceid" : devices[i].id, role:context.contextData.user.role
 			});
 			log.info("Feature List >>>>>>>>>>" + featureList);
 		} catch(e) {
