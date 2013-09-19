@@ -3,7 +3,7 @@ var absolute = require ('modules/absolute.js').mvc;
 var goose = require('modules/goose.js').goose;
 var router = new goose({CONTEXT: "/mdm/api/"});
 var log =new Log();
-var configs = require('config.json');
+var configs = require('config/config.json');
 var db = application.get('db');
 var dbconfig = require('config/db.json');
 

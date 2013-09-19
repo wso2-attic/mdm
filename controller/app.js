@@ -1,4 +1,4 @@
-var config = require('../config.json');
+var config = require('../config/config.json');
 var configApis = require('../config/apis.json');
 var log = new Log();
 appInfo = function() {

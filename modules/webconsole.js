@@ -1,9 +1,7 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
 var webconsole = (function () {
-    var configs = {
-        CONTEXT: "/"
-    };
+
     var routes = new Array();
     var log = new Log();
     var db;
@@ -19,11 +17,11 @@ var webconsole = (function () {
 
 
     var configs = function (tenantId) {
-        var config = application.get(TENANT_CONFIGS);
+        var configg = application.get(TENANT_CONFIGS);
         if (!tenantId) {
-            return config;
+            return configg;
         }
-        return config[tenantId] || (config[tenantId] = {});
+        return configs[tenantId] || (configs[tenantId] = {});
     };
 
     var userManager = function (tenantId) {

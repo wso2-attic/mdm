@@ -47,11 +47,12 @@ configuration = function(appController){
 
 
 management = function(appController){
-
+    log.info("Test Function");
 	context = appController.context();
 	var groups;
 	try{
 		groups = webconsole.getDevicesCountAndUserCountForAllGroups({});
+        log.info("Groups >>>>>>"+groups);
 	}catch(e){
 		groups = [];
 	}
@@ -86,6 +87,7 @@ users = function(appController){
 	try{
 		var users = group.getUsers({'groupid':role});
 	}catch(e){
+        log.info(group.getUsers({'groupid':role}));
 		var users = [];
 	}
 	for (var i = 0; i < users.length; i++) {
