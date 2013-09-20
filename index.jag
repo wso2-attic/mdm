@@ -8,18 +8,6 @@ var db = application.get('db');
 var dbconfig = require('config/db.json');
 
 
-setInterval(
-        function(){
-            log.info("Hello1");
-        }
-,3000);
-
- setInterval(
-    function(){
-        log.info("Hello2");
-    }
- ,3000);
-
 
 if(db==null || db==undefined){
 	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
