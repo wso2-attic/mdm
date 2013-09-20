@@ -1,3 +1,5 @@
+var log = new Log();
+
 var app_TENANT_CONFIGS = 'tenant.configs';
 var app_carbon = require('carbon');
 var app_configs = require('mdm.js').config();
@@ -8,3 +10,4 @@ var app_server = new app_carbon.server.Server({
 });
 application.put("SERVER", app_server);
 application.put(app_TENANT_CONFIGS, {});
+

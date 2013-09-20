@@ -6,7 +6,7 @@
     } else {
 		session.put("mdmConsoleUserLogin", null);
 		session.put("mdmConsoleUser", null);
-        var config = require('/mdm.js').config(),
+        var config = require('config/mdm.js').config(),
         sso = require('sso'),
         sessionId = session.getId(),
         encodedSAMLLogoutRequest = sso.client.getEncodedSAMLLogoutRequest(user, config.ssoConfiguration.issuer),

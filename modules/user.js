@@ -1,7 +1,7 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
 var user = (function () {
-    var configs = require('/config.json');
+    var config = require('../config/config.json');
     var routes = new Array();
 
 	var log = new Log();
@@ -26,11 +26,11 @@ var user = (function () {
     };
 
 	var configs = function (tenantId) {
-	    var config = application.get(TENANT_CONFIGS);
+	    var configg = application.get(TENANT_CONFIGS);
 		if (!tenantId) {
-	        return config;
+	        return configg;
 	    }
-	    return config[tenantId] || (config[tenantId] = {});
+	    return configs[tenantId] || (configs[tenantId] = {});
 	};			
 	/**
 	 * Returns the user manager of the given tenant.
@@ -87,6 +87,7 @@ var user = (function () {
 			return devices;
 		},
 		getUser: function(ctx){
+            log.info("User ID >>>>>>"+ctx.userid);
 			try {
 				var proxy_user = {};
 				var tenantUser = carbon.server.tenantUser(ctx.userid);
@@ -178,7 +179,7 @@ var user = (function () {
             um.updateRoleListOfUser(ctx.username,ctx.removed_groups,ctx.added_groups);
         },
 		sendEmail: function(ctx){
-		    content = "Dear "+ ctx.first_name+", \nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \nLink - "+configs.HTTPS_URL+"/mdm/api/device_enroll \n \nWSO2 MDM Team";
+		    content = "Dear "+ ctx.first_name+", \nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \nLink - "+config.HTTPS_URL+"/mdm/api/device_enroll \n \nWSO2 MDM Team";
 		    subject = "MDM Enrollment";
 
 		    var email = require('email');

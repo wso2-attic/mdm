@@ -25,13 +25,17 @@ var device = (function () {
 	 * @return {*}
 	 */
 	var userManager = function (tenantId) {
+
 	    var config = configs(tenantId);
+
 	    if (!config || !config[USER_MANAGER]) {
+
 			var um = new carbon.user.UserManager(server, tenantId);
 			config[USER_MANAGER] = um;
 	        return um;
 	    }
-	    return configs(tenantId)[USER_MANAGER];
+        var uManager = configs(tenantId)[USER_MANAGER];
+	    return uManager;
 	};			
 
     var db;
@@ -55,16 +59,40 @@ var device = (function () {
         }
         return obj1;
     }
-    function checkPermission(deviceId,operationName, that){
+    function checkPermission(role, deviceId, operationName, that){
+
+        log.info("Device >>>"+deviceId);
+        log.info("Operation >>>"+operationName);
 
         var policy = require('policy');
         log.info(policy.policy.init());
 
-        var result = db.query("select * from devices where id ="+deviceId);
-        var userId = result[0].user_id;
-        var roleList = parse(that.getUserRoles({'username':userId}));
-
-
+        var decision = null;
+        var action = 'POST';
+        if(role == 'admin'){
+            decision = policy.policy.getDecision(operationName, action, role, "");
+            log.info("Test Decision1 >>>>>>>>>>>>>>"+decision);
+        }else if(role == 'mdmadmin'){
+           decision = policy.policy.getDecision(operationName, action, role, "");
+            log.info("Test Decision2 >>>>>>>>>>>>>>"+decision);
+        }else{
+            var result = db.query("select * from devices where id ="+deviceId);
+            var userId = result[0].user_id;
+            log.info("Test1");
+            log.info("Role List1 >>>"+that.getUserRoles({'username':userId}));
+            log.info("Test2");
+            var roleList = parse(that.getUserRoles({'username':userId}));
+            log.info("Role List2 >>>"+roleList);
+            for(var i = 0;i<roleList.length;i++){
+                var decision = policy.policy.getDecision(operationName,action,roleList[i],"");
+                log.info("Test Decision3 >>>>>>>>>>>>>>"+decision);
+                if(decision=="Permit"){
+                    break;
+                }
+            }
+            log.info("Test Decision3 >>>>>>>>>>>>>>"+decision);
+        }
+        /*var roleList = parse(that.getUserRoles({'username':userId}));
         for(var i = 0;i<roleList.length;i++){
             var resource = roleList[i]+"/"+operationName;
             var action = 'POST';
@@ -77,8 +105,7 @@ var device = (function () {
             if(decision=="Permit"){
                 break;
             }
-        }
-
+        }*/
 
         if(decision=="Permit"){
             return true;
@@ -352,6 +379,7 @@ var device = (function () {
             return false;
         },
         getFeaturesFromDevice: function(ctx){
+            var role = ctx.role;
        	    var deviceId =  ctx.deviceid;
             var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id", stringify(deviceId));
 			
@@ -364,7 +392,7 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                featureArr["enable"] = checkPermission(deviceId, featureList[i].name, this);
+                featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
              //   featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
@@ -381,8 +409,15 @@ var device = (function () {
         getUserRoles: function(ctx){
 
             var tenantUser = carbon.server.tenantUser(ctx.username);
+            log.info("Tenant ID"+tenantUser.tenantId);
+            log.info("Tenant Username"+tenantUser.username);
+
 			var um = userManager(tenantUser.tenantId);
+            log.info("getUser");
 		    var user = um.getUser(tenantUser.username);
+
+            log.info("User"+stringify(user));
+
 			return stringify(user.getRoles());
         },
         unRegister:function(ctx){

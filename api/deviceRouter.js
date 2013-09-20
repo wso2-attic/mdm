@@ -55,7 +55,7 @@ var device = (function () {
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
 
-            var policy = require('policy');
+         /*   var policy = require('policy');
             policy.policy.init();
 
             var result = db.query("select * from devices where id ="+ctx.deviceid);
@@ -85,7 +85,11 @@ var device = (function () {
              }else{
                 response.status = 404;
                 print("Not Allowed");
-             }
+             }*/
+            device.sendToDevice(ctx);
+            response.status = 200;
+            response.content = "success";
+
 		});
 
 		router.get('devices/{deviceid}/features', function(ctx){
