@@ -38,13 +38,15 @@ $("#btn-add").click(function() {
 		data : JSON.stringify(jso),
 		contentType : "application/json",
 		dataType : "json"
-	}).done(function() {
-					window.location.reload(true);
 	});
 	
 	noty({
 		text : 'Roles are assigned to the user successfully!',
 		'layout' : 'center'
+	});
+	
+	$( document ).ajaxComplete(function() {
+		window.location.assign("configuration");
 	});
 	
 
