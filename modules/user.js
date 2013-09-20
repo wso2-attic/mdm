@@ -174,8 +174,11 @@ var user = (function () {
             return array;
         },
         updateRoleListOfUser:function(ctx){
-            var tenantAwareUsername = server.getTenantAwareUsername(ctx.username);
-            var um = new carbon.user.UserManager(server, server.getTenantDomain(ctx.username));
+            log.info(ctx.username);
+            log.info(ctx.removed_groups);
+            log.info(ctx.added_groups);
+            var tenantUser = carbon.server.tenantUser(ctx.username);
+            var um = userManager(tenantUser.tenantId);
             um.updateRoleListOfUser(ctx.username,ctx.removed_groups,ctx.added_groups);
         },
 		sendEmail: function(ctx){
