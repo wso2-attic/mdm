@@ -1,9 +1,15 @@
 var appConfig = getAppConfig();
 var apiConfig = getApiConfig();
+var uiConfig = getUIConfig();
 
 function getAppConfig(){
 	var appConfig = loadTextFileAjaxSync("/mdm/config.json", "application/json");	
 	return JSON.parse(appConfig);
+}
+
+function getUIConfig(){
+	var uiConfig = loadTextFileAjaxSync("/mdm/config/ui.json", "application/json");	
+	return JSON.parse(uiConfig);
 }
 
 function getApiConfig(){	
@@ -15,9 +21,9 @@ function getApiConfig(){
 context = function() {	
 	
 	var appDefault = {				
-		resourcePath: appConfig.MDM_UI_URI + "themes/" + appConfig.MDM_THEME + "/img/",
-		serverURL: appConfig.MDM_API_URI,
-		appsImageService: appConfig.APPS_IMAGE_SERVICE
+		resourcePath: uiConfig.MDM_UI_URI + "themes/" + uiConfig.MDM_THEME + "/img/",
+		serverURL: uiConfig.MDM_API_URI,
+		appsImageService: uiConfig.APPS_IMAGE_SERVICE
 	}
 	return appDefault;
 }

@@ -1,4 +1,5 @@
 var config = require('../config.json');
+var ui = require('../config/ui.json');
 var configApis = require('../config/apis.json');
 var log = new Log();
 appInfo = function() {
@@ -6,7 +7,7 @@ appInfo = function() {
         headerTitle : "WSO2 Mobile Device Management",
         title : "WSO2 Mobile Device Management",
         copyright : "Copyright (c) 2013 - WSO2 Mobile .Inc",
-        server_url: config.MDM_UI_URI
+        server_url: ui.MDM_UI_URI
     };
     return appInfo;
 }
@@ -15,7 +16,7 @@ if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != ap
 }
 
 getServiceURLs = function(item){
-    var serverURL = config.HTTP_URL + config.MDM_API_URI;
+    var serverURL = config.HTTP_URL + ui.MDM_API_URI;
     var urls = configApis.APIS;
     arguments[0] = urls[item];
     var returnURL;
@@ -115,7 +116,7 @@ navigation = function(role) {
 theme = function() {
 
     var theme = {
-        name : config.MDM_THEME,
+        name : ui.MDM_THEME,
         default_layout : "1-column"
     }
 
@@ -163,7 +164,7 @@ context = function() {
         resourcePath: "../themes/" + this.theme().name + "/img/",
         contextData : contextData,
         navigation : this.navigation(contextData.user.role),
-        deviceImageService: config.DEVICES_IMAGE_SERVICE
+        deviceImageService: ui.DEVICES_IMAGE_SERVICE
     }
 
     return appDefault;
