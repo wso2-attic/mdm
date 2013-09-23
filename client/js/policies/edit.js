@@ -50,7 +50,7 @@ $("#btn-add").click(function() {
 		
 	jQuery.ajax({
 		url : getServiceURLs("policiesCRUD", ""),
-		type : "POST",
+		type : "PUT",
 		async : "false",
 		data: JSON.stringify({policyData: policyData, policyName: policyName}),		
 		contentType : "application/json",
@@ -58,11 +58,52 @@ $("#btn-add").click(function() {
 	});
 	
 	noty({
-		text : 'Policies added successfully!',
+		text : 'Policies changed successfully!',
 		'layout' : 'center',
 		'modal': false
-	}).done(function() {
-			window.location.reload(true);
+	});
+	
+	$( document ).ajaxComplete(function() {
+		window.location.assign("configuration");
 	});
 	
 });
+
+
+
+$(document).ready( function () {
+	
+	policyId = getURLParameter("policy");	
+	
+	jQuery.ajax({
+		url : getServiceURLs("policiesCRUD", policyId),
+		type : "GET",
+		dataType : "json",
+		success : function(policyData) {
+			//policyData = policyData[0];			
+			$("#policyName").val(policyData.name);	
+			policyContent = JSON.parse(policyData.content);				
+			for( var i = 0; i < policyContent.length; i++){
+				var code = policyContent[i].code;
+				var data = policyContent[i].data;				
+				$.each( data, function( key, value ) {
+					if($("#" + code + "-" + value).attr('type') == "checkbox"){
+						$("#" + code + "-" + value).prop('checked', true);
+					}else{
+						$("#" + code + "-" + key).val(value);
+					}
+					
+				});
+				
+				
+			}
+			
+					
+		}
+	});
+
+		
+	
+	
+	
+} );
