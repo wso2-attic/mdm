@@ -1,7 +1,7 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
 var user = (function () {
-    var configs = require('/config.json');
+    var config = require('../config/config.json');
     var routes = new Array();
 
 	var log = new Log();
@@ -26,11 +26,11 @@ var user = (function () {
     };
 
 	var configs = function (tenantId) {
-	    var config = application.get(TENANT_CONFIGS);
+	    var configg = application.get(TENANT_CONFIGS);
 		if (!tenantId) {
-	        return config;
+	        return configg;
 	    }
-	    return config[tenantId] || (config[tenantId] = {});
+	    return configs[tenantId] || (configs[tenantId] = {});
 	};			
 	/**
 	 * Returns the user manager of the given tenant.
@@ -68,11 +68,12 @@ var user = (function () {
     module.prototype = {
         constructor: module,
 		authenticate: function(ctx){
-			var authStatus = server.authenticate(ctx.username, ctx.password);
+			log.info("username "+ctx.username);
+			var authStatus = server().authenticate(ctx.username, ctx.password);
 			if(!authStatus) {
 				return null;
 			}
-			var user =  getUser({userid: ctx.username});
+			var user =  this.getUser({userid: ctx.username});
 			var result = db.query("SELECT COUNT(id) AS record_count FROM tenantplatformfeatures WHERE tenant_id = ?",  stringify(user.tenantId));
 			if(result[0].record_count == 0) {
 				for(var i = 1; i < 13; i++) {
@@ -86,6 +87,7 @@ var user = (function () {
 			return devices;
 		},
 		getUser: function(ctx){
+            log.info("User ID >>>>>>"+ctx.userid);
 			try {
 				var proxy_user = {};
 				var tenantUser = carbon.server.tenantUser(ctx.userid);
@@ -107,14 +109,80 @@ var user = (function () {
 				return error;
 			}
 		},
+        getUsersWithoutMDMRoles:function(ctx){
+            var users = this.getUsers();
+            log.info("All Users >>>>>>>>>"+stringify(users));
+            var array =  new Array();
+
+            for(var i =0 ;i<users.length;i++){
+                log.info(users[i].username);
+                var roles = parse(this.getUserRoles({'username':users[i].username}));
+
+                var flag = false;
+                for(var j=0 ;j<roles.length;j++){
+                    log.info("Test iteration2"+roles[j]);
+                    if(roles[j]=='admin'||roles[j]=='mdmadmin'){
+                        flag = true;
+                        break;
+                    }else{
+                        flag = false;
+                    }
+                }
+                if(flag == false){
+                   array.push(users[i]);
+                }
+            }
+            log.info("Users without admins >>>>>>>>>"+stringify(array));
+            return array;
+        },
 		getUserRoles: function(ctx){
-            var tenantUser = carbon.server.tenantUser(ctx.userid);
+            var tenantUser = carbon.server.tenantUser(ctx.username);
 			var um = userManager(tenantUser.tenantId);
 		    var user = um.getUser(tenantUser.username);
 			return stringify(user.getRoles());
 		},
+        getRolesByUser:function(ctx){
+
+            var allRoles = this.getGroups(ctx);
+            var userRoles = parse(this.getUserRoles(ctx));
+            var array = new Array();
+            if(userRoles.length == 0){
+                for(var i=0;i < allRoles.length;i++){
+                    var obj = {};
+                    obj.name = allRoles[i];
+                    obj.available = false;
+                    array.push(obj);
+                }
+            }else{
+                for(var i=0;i < allRoles.length;i++){
+                    var obj = {};
+                    for(var j=0;j< userRoles.length;j++){
+                        if(allRoles[i]==userRoles[j]){
+                            obj.name = allRoles[i];
+                            obj.available = true;
+                            break;
+                        }else{
+                            obj.name = allRoles[i];
+                            obj.available = false;
+                        }
+                    }
+                    array.push(obj);
+                }
+            }
+
+            log.info(array);
+            return array;
+        },
+        updateRoleListOfUser:function(ctx){
+            log.info(ctx.username);
+            log.info(ctx.removed_groups);
+            log.info(ctx.added_groups);
+            var tenantUser = carbon.server.tenantUser(ctx.username);
+            var um = userManager(tenantUser.tenantId);
+            um.updateRoleListOfUser(ctx.username,ctx.removed_groups,ctx.added_groups);
+        },
 		sendEmail: function(ctx){
-		    content = "Dear "+ ctx.first_name+", \nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \nLink - "+configs.HTTPS_URL+"/mdm/api/device_enroll \n \nWSO2 MDM Team";
+		    content = "Dear "+ ctx.first_name+", \nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \nLink - "+config.HTTPS_URL+"/mdm/api/device_enroll \n \nWSO2 MDM Team";
 		    subject = "MDM Enrollment";
 
 		    var email = require('email');
@@ -157,10 +225,27 @@ var user = (function () {
 			}
 			return proxy_user;
 		},
-		getGroups: function(ctx){
-			var um = new carbon.user.UserManager(server, server.getDomainByTenantId(common.getTenantID()));
-			return um.allRoles();
-		},
+        deleteUser: function(ctx){
+            var um = userManager(common.getTenantID());
+
+            um.removeUser(ctx.userid);
+
+        },
+
+        getGroups: function(ctx){
+            var um = userManager(common.getTenantID());
+            var roles = um.allRoles();
+            log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
+            var arrRole = new Array();
+            for(var i = 0; i < roles.length; i++) {
+                if(common.isMDMRole(roles[i])) {
+                    arrRole.push(roles[i]);
+                }
+            }
+            log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
+            return arrRole;
+        },
+
 		getUsers: function(ctx){
 			var tenantId = common.getTenantID();
 			var users_list = Array();
@@ -190,10 +275,59 @@ var user = (function () {
 			}else{
 				print('Error in getting the tenantId from session');
 			}
-			log.info(">>>>>");
 			log.info(users_list);
 			return users_list;
 		},
+        getUsersByType:function(ctx){
+            var role = ctx.role;
+            if(role == 'admin'){
+                var users = this.getUsers();
+                for(var i =0 ;i<users.length;i++){
+                    log.info(users[i].username);
+
+                    var roles = parse(this.getUserRoles({'username':users[i].username}));
+                    var flag = false;
+                    for(var j=0 ;j<roles.length;j++){
+                        log.info("Test iteration2"+roles[j]);
+                        if(roles[j]=='admin'||roles[j]=='mdmadmin'){
+                            flag = true;
+                            break;
+                        }else{
+                            flag = false;
+                        }
+                    }
+                    if(flag == true){
+                        users[i].type = 'administrator';
+                    }else {
+                        users[i].type = 'user';
+                    }
+                }
+                return users;
+            }else if (role == 'mdmadmin'){
+                var users = this.getUsers();
+                var array = new Array();
+                for(var i =0 ;i<users.length;i++){
+                    log.info(users[i].username);
+
+                    var roles = parse(this.getUserRoles({'username':users[i].username}));
+                    var flag = false;
+                    for(var j=0 ;j<roles.length;j++){
+                        log.info("Test iteration2"+roles[j]);
+                        if(roles[j]=='admin'||roles[j]=='mdmadmin'){
+                            flag = true;
+                            break;
+                        }else{
+                            flag = false;
+                        }
+                    }
+                    if(flag == false){
+                        users[i].type = 'user';
+                        array.push(users[i]);
+                    }
+                }
+                return array;
+            }
+        },
 		operation: function(ctx){
 			var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", ctx.userid);
 		    var succeeded="";

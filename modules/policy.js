@@ -4,6 +4,9 @@ var policy = (function () {
     var userModule = require('user.js').user;
     var user;
 
+    var groupModule = require('group.js').group;
+    var group;
+
     var configs = {
         CONTEXT: "/"
     };
@@ -14,6 +17,7 @@ var policy = (function () {
     var module = function (dbs) {
         db = dbs;
         user = new userModule(db);
+        group = new groupModule(db);
         //mergeRecursive(configs, conf);
     };
 
@@ -39,16 +43,70 @@ var policy = (function () {
         constructor: module,
 
         addPolicy: function(ctx){
-            var result = db.query("insert into permissions (name,content) values (?,?)",ctx.name,ctx.content);
+            var result = db.query("insert into policies (name,content) values (?,?)",ctx.policyName,ctx.policyData);
+            log.info("Result >>>>>>>"+result);
+            return result;
+        },
+        getAllPolicies:function(ctx){
+            var result = db.query("SELECT * FROM policies");
+            return result;
+        },
+        getPolicy:function(ctx){
+            var result = db.query("SELECT * FROM policies where id = ?",ctx.policyid);
             return result;
         },
         deletePolicy:function(ctx){
-            var result = db.query("REMOVE FROM permissions where name = ?",ctx.name);
+            var result = db.query("DELETE FROM policies where id = ?",ctx.policyid);
             return result;
         },
         assignGroupsToPolicy:function(ctx){
-            //var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);
-            return result;
+            var deletedGroups = ctx.removed_groups;
+            var newGroups = ctx.added_groups;
+            var policyId = ctx.policyid;
+
+            for(var i = 0; i< deletedGroups.length;i++){
+                var result = db.query("DELETE FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? && group_policy_mapping.group_id = ? ",policyId,deletedGroups[i]);
+                log.info("Result1 >>>>>"+result);
+            }
+            for(var i = 0; i< newGroups.length;i++){
+                try{
+                    var result =db.query(" INSERT INTO group_policy_mapping (group_id,policy_id) VALUES (?,?)",newGroups[i],policyId);
+                    log.info("Result2 >>>>>"+result);
+                }catch(e){
+                    log.info("ERROR Occured >>>>>");
+                }
+            }
+        },
+        getGroupsByPolicy:function(ctx){
+            var allGroups = group.getGroups(ctx);
+            var result = db.query("SELECT * FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? ",ctx.policyid);
+
+            var array = new Array();
+            if(result == undefined || result == null || result[0] == undefined || result[0] == null){
+                for(var i =0; i < allGroups.length;i++){
+                    var element = {};
+                    element.name = allGroups[i];
+                    element.available = false;
+                    array[i] = element;
+                }
+            }else{
+                for(var i =0; i < allGroups.length;i++){
+                    var element = {};
+                    for(var j=0 ;j< result.length;j++){
+                        if(allGroups[i]==result[j].group_id){
+                            element.name = allGroups[i];
+                            element.available = true;
+                            break;
+                        }else{
+                            element.name = allGroups[i];
+                            element.available = false;
+                        }
+                    }
+                    array[i] = element;
+                }
+            }
+            log.info(array);
+            return array;
         },
         removePolicyFromGroup:function(ctx){
         //    var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);

@@ -1,10 +1,12 @@
 <%
 (function(){
-    var user = session.get("LOGGED_IN_USER");
+    var user = session.get("mdmConsoleUser");
     if(user === null) {
         response.sendRedirect('/mdm');
     } else {
-        var config = require('/mdm.js').config(),
+		session.put("mdmConsoleUserLogin", null);
+		session.put("mdmConsoleUser", null);
+        var config = require('config/mdm.js').config(),
         sso = require('sso'),
         sessionId = session.getId(),
         encodedSAMLLogoutRequest = sso.client.getEncodedSAMLLogoutRequest(user, config.ssoConfiguration.issuer),

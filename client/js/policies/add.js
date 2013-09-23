@@ -13,34 +13,58 @@ $("#btn-add").click(function() {
 			params[prefix] = new Object();
 		}
 		
+		var param = params[prefix];	
+		
 		if($(this).attr('type') == 'checkbox'){	
-			var param = params[prefix];			
-			params[prefix][suffix] = $(this).is(':checked');			
-		}else{
-			var param = params[prefix];			
-			params[prefix][suffix] = $(this).val();
+			
+			if($(this).is(':checked')){
+				var checkVal = $(this).data("trueVal");
+				if(checkVal !== ""){
+					params[prefix]["function"] = checkVal;
+				}
+			}else{
+				var checkVal = $(this).data("falseVal");
+				if(checkVal !== ""){
+					params[prefix]["function"] = checkVal;
+				}
+			}	
+				
+		}else{	
+			if($(this).val() !== ""){
+				params[prefix][suffix] = $(this).val();
+			}			
+			
 		}
 	});
 	
 
+	//alert(params.length);
 	
+	var policyData =  Array();
+	
+	for (var param in params) {     	
+     	policyData.push({code: param, data: params[param]});
+	}
+
 	
 		
 	jQuery.ajax({
 		url : getServiceURLs("policiesCRUD", ""),
 		type : "POST",
 		async : "false",
-		data: JSON.stringify({params: params, policyName: policyName}),		
+		data: JSON.stringify({policyData: policyData, policyName: policyName}),		
 		contentType : "application/json",
-		dataType : "json",		
+     	dataType : "json"		
 	});
 	
 	noty({
-		text : 'Permission Added successfully!',
+		text : 'Policies added successfully!',
 		'layout' : 'center',
 		'modal': false
 	});
 	
-	//window.location.reload(true);
+	$( document ).ajaxComplete(function() {
+		window.location.assign("configuration");
+	});
 	
 });

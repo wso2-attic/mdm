@@ -55,11 +55,13 @@ var device = (function () {
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
 
-            var policy = require('policy');
+         /*   var policy = require('policy');
             policy.policy.init();
 
             var result = db.query("select * from devices where id ="+ctx.deviceid);
             var userId = result[0].user_id;
+            log.info("Test User ID >>>>>"+userId);
+
             var roleList = parse(user.getUserRoles({'username':userId}));
 
             log.info("Role List >>>>>>>>"+roleList[0]);
@@ -83,7 +85,11 @@ var device = (function () {
              }else{
                 response.status = 404;
                 print("Not Allowed");
-             }
+             }*/
+            device.sendToDevice(ctx);
+            response.status = 200;
+            response.content = "success";
+
 		});
 
 		router.get('devices/{deviceid}/features', function(ctx){

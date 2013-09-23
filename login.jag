@@ -1,6 +1,6 @@
 <%
 (function(){
-    var dataConfi = require('/mdm.js').config(),
+    var dataConfi = require('config/mdm.js').config(),
             sso = require("sso"),
             process = require("process"),
             sessionId = session.getId(),
@@ -10,7 +10,7 @@
             encodedSAMLAuthRequest = sso.client.getEncodedSAMLAuthRequest(dataConfi.ssoConfiguration.issuer),
             log = new Log();
 
-    if (!session.get("Loged")) {
+    if (!session.get("mdmConsoleUserLogin")) {
         %>
 
                 <div>

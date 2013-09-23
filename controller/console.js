@@ -24,21 +24,23 @@ login = function(appController){
 					userFeed.lastName = objUser["lastName"];
 					userFeed.mobile = objUser["mobile"];
 					var parsedRoles = parse(objUser["roles"]);
-					var isAdmin = false;
-					var isMasterAdmin = false;
+					var isMDMAdmin = false;
+					var isMAdmin = false;
 					for (var i = 0; i < parsedRoles.length; i++) {
-						if(parsedRoles[i] == 'admin') {
-							isAdmin = true;
-							break;
-					}
-						if(parsedRoles[i] == 'masteradmin') {
-							isAdmin = true;
-							isMasterAdmin = true;
+						if(parsedRoles[i] == 'mdmadmin') {
+							isMDMAdmin = true;
 							break;
 						}
-					}
+						if(parsedRoles[i] == 'admin') {
+							isAdmin = true;
+							isMDMAdmin = true;
+							break;
+						}
+					}				
+					
+					return;	
+					userFeed.isMDMAdmin = isMDMAdmin;
 					userFeed.isAdmin = isAdmin;
-					userFeed.isMasterAdmin = isMasterAdmin;
 					session.put("mdmConsoleUserLogin", "true");
 					session.put("mdmConsoleUser", userFeed);
 					if(isAdmin){
@@ -60,10 +62,8 @@ login = function(appController){
 	return context;	
 
 }
-logout = function(appController){		
-	session.put("mdmConsoleUserLogin", null);
-	session.put("mdmConsoleUser", null);
-	response.sendRedirect('login');
+logout = function(appController){
+	
 }
 
 dashboard = function(appController){		
@@ -85,6 +85,7 @@ configuration = function(appController){
 	}
 	return context;	
 }
+
 management = function(appController){		
 	context = appController.context();
 	context.title = context.title + " | Management";

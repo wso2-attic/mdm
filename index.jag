@@ -3,17 +3,31 @@ var absolute = require ('modules/absolute.js').mvc;
 var goose = require('modules/goose.js').goose;
 var router = new goose({CONTEXT: "/mdm/api/"});
 var log =new Log();
-var configs = require('config.json');
+var configs = require('config/config.json');
 var db = application.get('db');
-var dbconfig = require('db.json');
+var dbconfig = require('config/db.json');
+
+
+setInterval(
+        function(){
+            log.info("Hello1");
+        }
+,3000);
+
+ setInterval(
+    function(){
+        log.info("Hello2");
+    }
+ ,3000);
+
+
 if(db==null || db==undefined){
 	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
 	application.put('db',db);
 }
-
 var mvc = new absolute({
 	SERVER_URL:"/mdm/",
-	IGNORE:["sso.jag", "login.jag", "logout.jag"],
+	IGNORE:["acs.jag", "login.jag", "logout.jag"],
 	API:"api",
 	ROUTER: router
 });
@@ -139,7 +153,7 @@ mvc.registerHelper('showActive', function(currentPage, page, options) {
 
 mvc.registerHelper('stringify', function(context) {
 var log = new Log();log.error("CONTEXT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+stringify(context));
-    return JSON.stringify(context);
+    return stringify(context);
 });
 
 
@@ -199,7 +213,7 @@ mvc.registerHelper('elipsis', function(maxLength, context, options) {
   if(context.length > maxLength) {
     context = context.substring(0, maxLength)+"...";
   }
-  
+
   return context;
 });
 

@@ -32,7 +32,8 @@
 										<th>First Name</th>
 										<th>Last Name</th>
 										<th>e Mail</th>
-										<th>Mobile</th>
+										<th>Mobile</th>	
+										<th>Type</th>										
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -43,10 +44,13 @@
 										<td>{{lastName}}</td>
 										<td>{{email}}</td>
 										<td>{{mobile}}</td>
-										<td class="center"><a href="edit" title="Edit"
-										class="icon-edit"> </a><a href="#assignGroup" data-user="{{email}}" data-name="{{firstName}} {{lastName}}" data-toggle="modal" title="Assign Groups"
-										class="icon-cog add-group-link"> </a><a href="edit" title="Delete"
-										class="icon-remove"> </a></td>
+										<td>{{type}}</td>
+										<td class="center">
+											|<a href="assign_groups?user={{username}}"  data-toggle="modal" title="Assign Groups"
+												><i class="icon-user"> </i> Assign Roles</a>
+											|<a href="#"  class="btn-item-remove" data-item="{{username}}" title="Remove"
+												><i class="icon-remove"> </i> Remove</a>	
+										</td>
 									</tr>
 									{{/data.users}}
 								</tbody>

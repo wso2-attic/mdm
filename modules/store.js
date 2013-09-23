@@ -100,7 +100,7 @@ var store = (function () {
 				log.info(ctx.data.email);
 				log.info(stringify(user.getUser({userid:ctx.data.email})));
                 var userID = user.getUser({userid:ctx.data.email}).username;
-                var devices = db.query("select * from devices where devices.user_id="+String(userID));
+                var devices = db.query("select * from devices where devices.user_id='"+String(userID)+"'");
                 devicesArray = new Array();
                 for(var i=0;i<devices.length;i++){
                     var deviceID = devices[i].id;
@@ -130,6 +130,8 @@ var store = (function () {
 		getAllAppFromDevice: function(ctx){
 			var deviceId = ctx.data.deviceId;
 			var GET_APP_FEATURE_CODE = '502A';
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" + "select * from notifications where `device_id`=? and `feature_code`= '"+GET_APP_FEATURE_CODE+"' and `status`='R' and `id` = (select MAX(`id`) from notifications where `device_id`=? and `feature_code`= '"+GET_APP_FEATURE_CODE+"' and `status`='R')");
+
 			var last_notification = db.query("select * from notifications where `device_id`=? and `feature_code`= '"+GET_APP_FEATURE_CODE+"' and `status`='R' and `id` = (select MAX(`id`) from notifications where `device_id`=? and `feature_code`= '"+GET_APP_FEATURE_CODE+"' and `status`='R')", deviceId,deviceId);
 			last_notification[0].received_data = JSON.parse(unescape(last_notification[0].received_data));
 			return last_notification[0];

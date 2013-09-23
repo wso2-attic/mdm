@@ -93,9 +93,9 @@ var permission = (function () {
 
             var action = 'POST';
 
-            var subject = 'Admin'
+            var subject = group;
 
-            var resource =group+"/"+featureConcat;
+            var resource =featureConcat;
 
             xacml.add = getRule(resource, action, subject,'rule1');
 
@@ -117,6 +117,11 @@ var permission = (function () {
             policy.entitlement.login();
 
             var entitlementPolicyAdminService = policy.entitlement.setEntitlementPolicyAdminServiceParameters();
+            try{
+                policy.entitlement.removePolicy(group,entitlementPolicyAdminService);
+            }catch(e){
+                log.info(e);
+            }
 
             policy.entitlement.addPolicy(xacmlFile,entitlementPolicyAdminService,group);
 
@@ -124,14 +129,6 @@ var permission = (function () {
         },
         deletePolicy:function(ctx){
 
-        },
-        addPermissionGroup:function(ctx){
-            var result = db.query("insert into permissions (name,content) values ('"+ctx.bundleName+"','"+ctx.featureList+"')");
-            return result;
-        },
-        getAllPermissionGroups:function(ctx){
-            var result = db.query("select id,name from permissions");
-            return result;
         }
 
     };
