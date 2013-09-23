@@ -99,11 +99,18 @@ edit = function(appController){
 	
 	context = appController.context();	
 	
+	
+	var policyId = request.getParameter('policy');
+	var policyName = request.getParameter('policy');
+	
+	
 	context.jsFile= "policies/edit.js";
 	context.title = context.title + " | Configuration";	
 	context.page = "configuration";
 	context.data = {
-			configOption : "policies"
+			configOption : "policies",
+			policyId: policyId,
+			policyName: policyName
 			
 	}
 	return context;
