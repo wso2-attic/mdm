@@ -268,10 +268,10 @@ var device = (function () {
                     var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
                     log.info("Policy Payload :"+gpresult[0].data);
                     var jsonData = parse(gpresult[0].data);
-                    var obj = {};
+                    /*var obj = {};
                     obj.type = gpresult[0].type;
-                    obj.policies = jsonData;
-                    sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': obj});
+                    obj.policies = jsonData;*/
+                    sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                     return true;
                 }else{
                     db.query("UPDATE devices SET deleted = 0 WHERE reg_id = ?", ctx.regid);
