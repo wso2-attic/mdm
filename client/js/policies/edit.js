@@ -1,6 +1,8 @@
 $("#btn-add").click(function() {
 	
 	var policyName = $('#policyName').val();
+	var policyId = $(this).data("policy");
+		
 	params = {};
 	
 	$(".policy-input").each(function(index) {
@@ -46,7 +48,7 @@ $("#btn-add").click(function() {
      	policyData.push({code: param, data: params[param]});
 	}
 
-	var policyId = $(this).data("policyId");
+	
 		
 	jQuery.ajax({
 		url : getServiceURLs("policiesCRUD", policyId),
