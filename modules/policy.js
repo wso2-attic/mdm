@@ -43,12 +43,14 @@ var policy = (function () {
         constructor: module,
 
         updatePolicy:function(ctx){
+            var result;
             var policy = db.query("SELECT * FROM policies where name = ?",ctx.policyName);
             if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
-                var result = db.query("UPDATE policies SET content= ? WHERE name = ?",ctx.policyData,ctx.policyName);
+                log.info("Content >>>>>"+stringify( ctx.policyData));
+                result = db.query("UPDATE policies SET content= ? WHERE name = ?",ctx.policyData,ctx.policyName);
                 log.info("Result >>>>>>>"+result);
             }else{
-                this.addPolicy(ctx);
+                result = this.addPolicy(ctx);
             }
             return result;
         },

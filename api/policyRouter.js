@@ -17,11 +17,11 @@ var policy = (function () {
             }
 
         });
-        router.put('policies/', function(ctx){
+        router.put('policies/{policyid}', function(ctx){
 
             log.info("check policy router POST");
             log.info(ctx);
-            var result = policy.addPolicy(ctx);
+            var result = policy.updatePolicy(ctx);
             if(result == 1){
                 response.status = 200;
             }else{
