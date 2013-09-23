@@ -177,9 +177,44 @@ var user = (function () {
             log.info(ctx.username);
             log.info(ctx.removed_groups);
             log.info(ctx.added_groups);
+            var existingRoles = this.getUserRoles(ctx);
+            var addedRoles = ctx.added_groups;
+            var newRoles = new Array();
+            for(var i=0;i<addedRoles.length;i++){
+               var flag = false;
+               for(var j=0;j<existingRoles.length;j++){
+                   if(addedRoles[i]== existingRoles[j]){
+                        flag = true;
+                        break;
+                   }else{
+                       flag = false;
+                   }
+               }
+               if(flag == false){
+                   newRoles.push(addedRoles[i]);
+               }
+            }
+
+            var removedRoles = ctx.removed_groups;
+            var deletedRoles = new Array();
+            for(var i=0;i<removedRoles.length;i++){
+                var flag = false;
+                for(var j=0;j<existingRoles.length;j++){
+                    if(removedRoles[i]== existingRoles[j]){
+                        flag = true;
+                        break;
+                    }else{
+                        flag = false;
+                    }
+                }
+                if(flag == true){
+                    deletedRoles.push(removedRoles[i]);
+                }
+            }
+
             var tenantUser = carbon.server.tenantUser(ctx.username);
             var um = userManager(tenantUser.tenantId);
-            um.updateRoleListOfUser(ctx.username,ctx.removed_groups,ctx.added_groups);
+            um.updateRoleListOfUser(ctx.username, deletedRoles, newRoles);
         },
 		sendEmail: function(ctx){
 		    content = "Dear "+ ctx.first_name+", \nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \nLink - "+config.HTTPS_URL+"/mdm/api/device_enroll \n \nWSO2 MDM Team";

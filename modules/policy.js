@@ -47,7 +47,7 @@ var policy = (function () {
             var policy = db.query("SELECT * FROM policies where name = ?",ctx.policyName);
             if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
                 log.info("Content >>>>>"+stringify( ctx.policyData));
-                result = db.query("UPDATE policies SET content= ? WHERE name = ?",ctx.policyData,ctx.policyName);
+                result = db.query("UPDATE policies SET content= ?,type = ? WHERE name = ?",ctx.policyData, ctx.policyType, ctx.policyName);
                 log.info("Result >>>>>>>"+result);
             }else{
                 result = this.addPolicy(ctx);
@@ -55,7 +55,7 @@ var policy = (function () {
             return result;
         },
         addPolicy: function(ctx){
-            var result = db.query("insert into policies (name,content) values (?,?)",ctx.policyName,ctx.policyData);
+            var result = db.query("insert into policies (name,content,type) values (?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType);
             log.info("Result >>>>>>>"+result);
             return result;
         },
