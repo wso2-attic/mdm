@@ -90,9 +90,14 @@ $(document).ready( function () {
 				var code = policyContent[i].code;
 				var data = policyContent[i].data;				
 				$.each( data, function( key, value ) {
-					if($("#" + code + "-" + value).attr('type') == "checkbox"){
-						$("#" + code + "-" + value).prop('checked', true);
-					}else{
+					if($("#" + code + "-function").attr('type') == "checkbox"){
+						if($("#" + code + "-function").data("trueVal") == value){
+							$("#" + code + "-function").prop('checked', true);
+						}
+						
+					}
+					
+					if($("#" + code + "-" + key).attr('type') == "text"){
 						$("#" + code + "-" + key).val(value);
 					}
 					
