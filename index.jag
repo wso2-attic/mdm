@@ -10,7 +10,35 @@ var dbconfig = require('config/db.json');
 var deviceModule = require('modules/device.js').device;
 var device = new deviceModule();
 
+var userModule = require('modules/user.js').user;
+var user = new userModule();
 
+/*
+setInterval(
+ function(ctx){
+ monitorPolicy(ctx);
+ }
+ ,100000);
+
+
+ function monitorPolicy(ctx){
+    var result = db.query("SELECT * from devices");
+
+    for(var i=0; i<result.length; i++){
+        var deviceId = result[i].id;
+        var operation = 'MONITORING';
+        var data = {};
+        var userId = result[i].user_id;
+        var roles = user.getUserRoles({'username':userId});
+        var roleList = parse(roles);
+        log.info(roleList[0]);
+        var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+        log.info("Policy Payload :"+gpresult[0].data);
+        var jsonData = parse(gpresult[0].data);
+        device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
+    }
+ }
+ */
 
 if(db==null || db==undefined){
 	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);

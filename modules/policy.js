@@ -42,15 +42,19 @@ var policy = (function () {
     module.prototype = {
         constructor: module,
 
-        addPolicy: function(ctx){
+        updatePolicy:function(ctx){
             var policy = db.query("SELECT * FROM policies where name = ?",ctx.policyName);
             if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
                 var result = db.query("UPDATE policies SET content= ? WHERE name = ?",ctx.policyData,ctx.policyName);
                 log.info("Result >>>>>>>"+result);
             }else{
-                var result = db.query("insert into policies (name,content) values (?,?)",ctx.policyName,ctx.policyData);
-                log.info("Result >>>>>>>"+result);
+                this.addPolicy(ctx);
             }
+            return result;
+        },
+        addPolicy: function(ctx){
+            var result = db.query("insert into policies (name,content) values (?,?)",ctx.policyName,ctx.policyData);
+            log.info("Result >>>>>>>"+result);
             return result;
         },
         getAllPolicies:function(ctx){
