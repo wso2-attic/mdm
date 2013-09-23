@@ -214,8 +214,46 @@ var group = (function () {
 		},
         assignUsers: function(ctx){
             log.info("Test Function");
+
+            var existingUsers = this.getUsers(ctx);
+            var addedUsers = ctx.added_users;
+            var newUsers = new Array();
+
+            for(var i=0;i<addedUsers.length;i++){
+                var flag = false;
+                for(var j=0;j<existingUsers.length;j++){
+                    if(addedUsers[i]== existingUsers[j].username){
+                        flag = true;
+                        break;
+                    }else{
+                        flag = false;
+                    }
+                }
+                if(flag == false){
+                    newUsers.push(addedUsers[i]);
+                }
+            }
+
+            var removedUsers = ctx.removed_users;
+            var deletedUsers = new Array();
+            for(var i=0;i<removedUsers.length;i++){
+                var flag = false;
+                for(var j=0;j<existingUsers.length;j++){
+                    if(removedUsers[i]== existingUsers[j]){
+                        flag = true;
+                        break;
+                    }else{
+                        flag = false;
+                    }
+                }
+                if(flag == true){
+                    deletedUsers.push(removedUsers[i]);
+                }
+            }
+
+
             var um = userManager(common.getTenantID());
-            um.updateUserListOfRole(ctx.groupid , ctx.removed_users, ctx.added_users);
+            um.updateUserListOfRole(ctx.groupid , deletedUsers, newUsers);
 
         },
         getUsersByGroup:function(ctx){
