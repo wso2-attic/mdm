@@ -1,6 +1,7 @@
 $("#btn-add").click(function() {
 	
 	var policyName = $('#policyName').val();
+	var policyType = $('#policyType').val();
 	var policyId = $(this).data("policy");
 		
 	params = {};
@@ -54,7 +55,7 @@ $("#btn-add").click(function() {
 		url : getServiceURLs("policiesCRUD", policyId),
 		type : "PUT",
 		async : "false",
-		data: JSON.stringify({policyData: policyData, policyName: policyName}),		
+		data: JSON.stringify({policyData: policyData, policyName: policyName, policyType: policyType}),		
 		contentType : "application/json",
      	dataType : "json"		
 	});
