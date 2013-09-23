@@ -271,3 +271,9 @@ function urlExists(url)
     return http.status!=404;
 }
 
+
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
