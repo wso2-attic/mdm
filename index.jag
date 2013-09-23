@@ -13,12 +13,12 @@ var device = new deviceModule();
 var userModule = require('modules/user.js').user;
 var user = new userModule();
 
-/*
+
 setInterval(
  function(ctx){
  monitorPolicy(ctx);
  }
- ,100000);
+ ,10000);
 
 
  function monitorPolicy(ctx){
@@ -32,13 +32,16 @@ setInterval(
         var roles = user.getUserRoles({'username':userId});
         var roleList = parse(roles);
         log.info(roleList[0]);
-        var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
         log.info("Policy Payload :"+gpresult[0].data);
         var jsonData = parse(gpresult[0].data);
-        device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
+        var obj = {};
+        obj.type = gpresult[0].type;
+        obj.policies = jsonData;
+        device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
     }
  }
- */
+
 
 if(db==null || db==undefined){
 	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
