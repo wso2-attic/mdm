@@ -43,8 +43,14 @@ var policy = (function () {
         constructor: module,
 
         addPolicy: function(ctx){
-            var result = db.query("insert into policies (name,content) values (?,?)",ctx.policyName,ctx.policyData);
-            log.info("Result >>>>>>>"+result);
+            var policy = db.query("SELECT * FROM policies where name = ?",ctx.policyName);
+            if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
+                var result = db.query("UPDATE policies SET content= ? WHERE name = ?",ctx.policyData,ctx.policyName);
+                log.info("Result >>>>>>>"+result);
+            }else{
+                var result = db.query("insert into policies (name,content) values (?,?)",ctx.policyName,ctx.policyData);
+                log.info("Result >>>>>>>"+result);
+            }
             return result;
         },
         getAllPolicies:function(ctx){
@@ -53,7 +59,7 @@ var policy = (function () {
         },
         getPolicy:function(ctx){
             var result = db.query("SELECT * FROM policies where id = ?",ctx.policyid);
-            return result;
+            return result[0];
         },
         deletePolicy:function(ctx){
             var result = db.query("DELETE FROM policies where id = ?",ctx.policyid);
@@ -107,6 +113,17 @@ var policy = (function () {
             }
             log.info(array);
             return array;
+        },
+        enforcePolicy:function(ctx){
+            var policies = db.query("SELECT * from group_policy_mapping where policy_id=?",ctx.policy_id);
+            var policyData = policies[0].content;
+
+            var result = db.query("SELECT * from group_policy_mapping where policy_id=?",ctx.policy_id);
+            var groupId = result[0].group_id;
+            var users = group.getUsers({'groupid':groupId});
+            for(var i=0;i<users.length;i++){
+                user.operation({'userid': users[i].username,'operation':'POLICY','data':parse(policyData)});
+            }
         },
         removePolicyFromGroup:function(ctx){
         //    var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);

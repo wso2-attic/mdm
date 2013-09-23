@@ -117,7 +117,7 @@ var device = (function () {
     }
 
 	function sendMessageToDevice(ctx){
-        log.info("Test Function");
+
         var message = stringify(ctx.data);
         var token = Math.random() * 1000000;
         var status = false;
@@ -158,6 +158,8 @@ var device = (function () {
             + currentdate.getHours() + ":"
             + currentdate.getMinutes() + ":"
             + currentdate.getSeconds();
+
+        log.info("Test Function");
         if (parseInt(string) >= parseInt(stringnew)) {
             db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", 
             	ctx.deviceid, groupID, message, datetime, feature[0].code, userID,feature[0].description);	
@@ -318,12 +320,14 @@ var device = (function () {
             return true;
         },
         sendToDevice: function(ctx){
-            log.info("Test Device ID"+ctx.deviceid);
+
             var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
             var platformID = devices[0].platform_id;
             if(platformID==1){
+                log.info("platformID"+platformID);
                 return sendMessageToDevice(ctx);
             }else{
+                log.info("platformID"+platformID);
                 return sendMessageToIOSDevice(ctx);
             }
         },

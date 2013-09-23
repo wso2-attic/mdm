@@ -7,19 +7,26 @@ var configs = require('config/config.json');
 var db = application.get('db');
 var dbconfig = require('config/db.json');
 
+var deviceModule = require('modules/device.js').device;
+var device = new deviceModule();
 
-setInterval(
-        function(){
-            log.info("Hello1");
+
+/*setInterval(
+        function(ctx){
+            monitorPolicy(ctx);
         }
-,3000);
+,10000);
 
- setInterval(
-    function(){
-        log.info("Hello2");
+function monitorPolicy(ctx){
+    var result = db.query("SELECT * from devices");
+
+    for(var i=0; i<result.length; i++){
+        var deviceId = result[i].id;
+        var operation = 'MONITORING';
+        var data = {};
+        device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':data});
     }
- ,3000);
-
+}*/
 
 if(db==null || db==undefined){
 	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
