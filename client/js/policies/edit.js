@@ -46,10 +46,10 @@ $("#btn-add").click(function() {
      	policyData.push({code: param, data: params[param]});
 	}
 
-	
+	var policyId = $(this).data("policyId");
 		
 	jQuery.ajax({
-		url : getServiceURLs("policiesCRUD", ""),
+		url : getServiceURLs("policiesCRUD", policyId),
 		type : "PUT",
 		async : "false",
 		data: JSON.stringify({policyData: policyData, policyName: policyName}),		
@@ -64,7 +64,7 @@ $("#btn-add").click(function() {
 	});
 	
 	$( document ).ajaxComplete(function() {
-		window.location.assign("configuration");
+	//	window.location.assign("configuration");
 	});
 	
 });
