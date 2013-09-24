@@ -1,4 +1,14 @@
 $("#btn-add").click(function() {
+	
+	$( 'form').parsley( 'validate' );	
+	if(!$('form').parsley('isValid')){
+		noty({
+				text : 'Data cannot be validated!',
+				'layout' : 'center',
+				'type' : 'error'
+		});		
+		return;
+	}
 
 	var firstname = $('#inputFirstName').val();
 	var lastname = $('#inputLastName').val();

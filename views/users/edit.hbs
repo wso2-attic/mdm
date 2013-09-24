@@ -26,35 +26,35 @@
 					</div>
 
 					<div class="block-body">
-						<form class="form-horizontal">
+						<form class="form-horizontal" data-validate="parsley">
 							<div class="control-group">
 								<label class="control-label" for="inputFirstName">First Name</label>
 								<div class="controls">
-									<input type="text" id="inputFirstName" class="input-xxlarge">
+									<input type="text" id="inputFirstName" class="input-xxlarge" data-required="true">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputLastName">Last Name</label>
 								<div class="controls">
-									<input type="text" id="inputLastName" class="input-xxlarge">
+									<input type="text" id="inputLastName" class="input-xxlarge" data-required="true">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Email</label>
 								<div class="controls">
-									<input type="text" id="inputEmail" class="input-xlarge">
+									<input type="text" id="inputEmail" class="input-xlarge" data-trigger="change" data-required="true" data-type="email" >
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputPassword">Password</label>
 								<div class="controls">
-									<input type="password" id="inputPassword">
+									<input type="password" id="inputPassword" data-required="true">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputMobile">Mobile</label>
 								<div class="controls">
-									<input type="text" id="inputMobile">
+									<input type="text" id="inputMobile" data-trigger="change" data-required="true" data-type="phone" >
 								</div>
 							</div>
 

@@ -1,9 +1,9 @@
-<form class="form-horizontal">
+<form class="form-horizontal" data-validate="parsley">
 
 	<div class="control-group">
 		<label class="control-label">Policy Name</label>
 		<div class="controls">
-			<input type="text" id="policyName" class="input-xxlarge">
+			<input type="text" id="policyName" class="input-xxlarge" data-required="true">
 		</div>
 	</div>
 
@@ -61,7 +61,7 @@
 					<div class="control-group">
 						<label class="control-label">Encrypt</label>
 						<div class="controls">
-							<input type="checkbox" id="500A-function" class="policy-input" data-true-val="encrypt" data-false-val="decrypt" >
+							<input type="checkbox" data-group="policies" id="500A-function" class="policy-input" data-true-val="encrypt" data-false-val="decrypt" >
 						</div>
 					</div>
 
@@ -115,7 +115,7 @@
 					<div class="control-group">
 						<label class="control-label">Allow Simple</label>
 						<div class="controls">
-							<input type="checkbox" id="519A-allowSimple" class="policy-input" data-true-val="true" data-false-val="false" >
+							<input type="checkbox" data-group="policies" id="519A-allowSimple" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 
@@ -123,7 +123,7 @@
 					<div class="control-group">
 						<label class="control-label">Require Alphanumeric</label>
 						<div class="controls">
-							<input type="checkbox" id="519A-requireAlphanumeric" class="policy-input" data-true-val="true" data-false-val="false" >
+							<input type="checkbox" data-group="policies" id="519A-requireAlphanumeric" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 
@@ -201,7 +201,7 @@
 					<div class="control-group">
 						<label class="control-label">Use SSL</label>
 						<div class="controls">
-							<input type="checkbox" id="520A-incoming_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+							<input type="checkbox" data-group="policies" id="520A-incoming_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
 						</div>
 					</div>
 
@@ -237,7 +237,7 @@
 					<div class="control-group">
 						<label class="control-label">Use SSL</label>
 						<div class="controls">
-							<input type="checkbox" id="520A-outgoing_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+							<input type="checkbox" data-group="policies" id="520A-outgoing_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
 						</div>
 					</div>
 
@@ -294,7 +294,7 @@
 					<div class="control-group">
 						<label class="control-label">Allow Hybrid Authentication</label>
 						<div class="controls">
-							<input type="checkbox" id="523A-hybrid_authentication" class="policy-input" data-true-val="true" data-false-val="false">
+							<input type="checkbox" data-group="policies" id="523A-hybrid_authentication" class="policy-input" data-true-val="true" data-false-val="false">
 						</div>
 					</div>
 
@@ -302,7 +302,7 @@
 					<div class="control-group">
 						<label class="control-label">Prompt for Password</label>
 						<div class="controls">
-							<input type="checkbox" id="523A-prompt_for_password" class="policy-input" data-true-val="true" data-false-val="false">
+							<input type="checkbox" data-group="policies" id="523A-prompt_for_password" class="policy-input" data-true-val="true" data-false-val="false">
 						</div>
 					</div>
 
@@ -364,7 +364,7 @@
 					<div class="control-group">
 						<label class="control-label">Use SSL</label>
 						<div class="controls">
-							<input type="checkbox" id="525A-usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+							<input type="checkbox" data-group="policies" id="525A-usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
 						</div>
 					</div>
 
@@ -419,7 +419,7 @@
 					<div class="control-group">
 						<label class="control-label">Use SSL</label>
 						<div class="controls">
-							<input type="checkbox" id="512A-usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+							<input type="checkbox" data-group="policies" id="512A-usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
 						</div>
 					</div>
 
@@ -478,21 +478,21 @@
 					<div class="control-group">
 						<label class="control-label">Disable Camera</label>
 						<div class="controls">
-							<input type="checkbox" id="508A-function" class="policy-input" data-true-val="Disable" data-false-val="Enable" >
+							<input type="checkbox" data-group="policies" id="508A-function" class="policy-input" data-true-val="Disable" data-false-val="Enable" >
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Lock Device</label>
 						<div class="controls">
-							<input type="checkbox" id="503A-function" class="policy-input" data-true-val="lock" data-false-val="" >
+							<input type="checkbox" data-group="policies" id="503A-function" class="policy-input" data-true-val="lock" data-false-val="" >
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Clear Lock Code</label>
 						<div class="controls">
-							<input type="checkbox" id="505A-function" class="policy-input" data-true-val="unlock" data-false-val="" >
+							<input type="checkbox" data-group="policies" id="505A-function" class="policy-input" data-true-val="unlock" data-false-val="" >
 						</div>
 					</div>
 
@@ -506,7 +506,7 @@
 					<div class="control-group">
 						<label class="control-label">Mute</label>
 						<div class="controls">
-							<input type="checkbox" id="513A-function" class="policy-input" data-true-val="mute" data-false-val="" >
+							<input type="checkbox" data-group="policies" id="513A-function" class="policy-input" data-true-val="mute" data-false-val="" >
 						</div>
 					</div>
 
