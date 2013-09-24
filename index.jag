@@ -18,7 +18,8 @@ setInterval(
  function(ctx){
  //monitorPolicy(ctx);
  }
- ,10000);
+ ,100000);
+
 
 
  function monitorPolicy(ctx){
@@ -240,4 +241,5 @@ mvc.registerHelper('elipsis', function(maxLength, context, options) {
 });
 
 mvc.route(request);
+
 %>
