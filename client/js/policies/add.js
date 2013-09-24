@@ -3,7 +3,7 @@ $("#btn-add").click(function() {
 	$( 'form').parsley( 'validate' );	
 	if(!$('form').parsley('isValid')){
 		noty({
-				text : 'Data cannot be validated!',
+				text : 'Input validation failed!',
 				'layout' : 'center',
 				'type' : 'error'
 		});		
