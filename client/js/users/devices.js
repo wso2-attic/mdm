@@ -49,6 +49,8 @@ var selectedFeature = null;
 var selectedFeatureTemplate = null;
 var selectedDevice = null;
 
+
+/*drag and drop feature
 $('.features-device').draggable({
 	revert : true,
 	cursor : 'move',
@@ -62,6 +64,7 @@ $('.features-device').draggable({
 	}
 });
 
+
 $('.device-image').droppable({
 	tolerance : "pointer",
 	drop : function() {
@@ -69,6 +72,18 @@ $('.device-image').droppable({
 		prePerformOperation(selectedDevice, selectedFeature, selectedFeatureTemplate);
 	}
 });
+
+*/
+
+
+$(".features-device").click(function() {
+	selectedFeatureText = $(this).html();
+	selectedFeature = $(this).data('feature');
+	selectedFeatureTemplate = $(this).data('template');	
+	prePerformOperation(selectedDevice, selectedFeature, selectedFeatureTemplate);
+});
+
+
 
 function prePerformOperation(deviceId, feature, featureTemplate) {
 
