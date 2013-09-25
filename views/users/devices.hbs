@@ -38,7 +38,7 @@
 						{{#data.devices}}
 
 						<li class="{{#compare @index 0}}active{{/compare}}">
-							<a id="device-tab-heading-{{@index}}" data-toggle="tab" href="#device-tab-{{@index}}" data-tab-id="{{@index}}" data-device-id="{{id}}" >{{properties.model}} {{#if policies.violated}}<i class="icon-remove-sign" title="Policy Violated"></i>{{/if}}</a>
+							<a id="device-tab-heading-{{@index}}" data-toggle="tab" href="#device-tab-{{@index}}" data-tab-id="{{@index}}" data-device-id="{{id}}" >{{properties.model}} {{#if policies.violated}}<i class="icon-remove-sign" style="color:#B94A48" title="Policy Violated"></i>{{/if}}</a>
 							
 						</li>
 
@@ -207,9 +207,9 @@
 														<div class="span2">																									
 															<span style="font-size: x-small">{{name}}</span>
 															{{#if status}}
-																<i class="icon-ok-sign"></i>
+																<i class="icon-ok-sign" style="color:#468847"></i>
 																{{else}}
-																<i class="icon-remove-sign"></i>																
+																<i class="icon-remove-sign" style="color:#B94A48"></i>																
 															{{/if}}															
 														</div>														
 													{{/policies.policies}}
