@@ -1,4 +1,15 @@
 $("#btn-add").click(function() {
+	
+	$( 'form').parsley( 'validate' );	
+	if(!$('form').parsley('isValid')){
+		noty({
+				text : 'Input validation failed!',
+				'layout' : 'center',
+				'type' : 'error'
+		});		
+		return;
+	}
+	
 
 	var name = $('#inputName').val();
 	var users = $('#inputUsers').val();
