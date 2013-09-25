@@ -136,7 +136,8 @@ devices = function(appController) {
 				devices[i].policies = policies;
 		} catch(e) {
 				
-		}				
+		}
+		
 	
 		
 		devices[i].properties = JSON.parse(devices[i].properties);

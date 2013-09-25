@@ -38,7 +38,8 @@
 						{{#data.devices}}
 
 						<li class="{{#compare @index 0}}active{{/compare}}">
-							<a id="device-tab-heading-{{@index}}" data-toggle="tab" href="#device-tab-{{@index}}" data-tab-id="{{@index}}" data-device-id="{{id}}" >{{properties.model}}</a>
+							<a id="device-tab-heading-{{@index}}" data-toggle="tab" href="#device-tab-{{@index}}" data-tab-id="{{@index}}" data-device-id="{{id}}" >{{properties.model}} {{#if policies.violated}}<span class="badge badge-important" title="Policy Violated">x</span>{{/if}}</a>
+							
 						</li>
 
 						{{/data.devices}}
@@ -192,22 +193,24 @@
 										<div class="block">
 											<div class="block-header-small">
 												<div class="pull-left">
-													Policy Compliance
+													Policy
 													{{#if policies.violated}}
-													<span class="label label-important" data-toggle="tooltip">Policy violated</span>
+													<span class="label label-important" data-toggle="tooltip">Violated</span>
+													{{else}}
+													<span class="label label-success" data-toggle="tooltip">Comply</span>
 													{{/if}}
 												</div>												
 											</div>
 
 											<div class="block-body container-fluid raw-fluid well-small">
 													{{#policies.policies}}
-														<div class="span2">
+														<div class="span2">																									
 															<span style="font-size: x-small">{{name}}</span>
 															{{#if status}}
 																<i class="icon-ok-sign"></i>
 																{{else}}
 																<i class="icon-remove-sign"></i>																
-															{{/if}}
+															{{/if}}															
 														</div>														
 													{{/policies.policies}}
 											</div>
