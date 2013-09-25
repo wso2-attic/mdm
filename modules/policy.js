@@ -7,6 +7,10 @@ var policy = (function () {
     var groupModule = require('group.js').group;
     var group;
 
+    var deviceModule = require('device.js').device;
+    var device
+
+
     var configs = {
         CONTEXT: "/"
     };
@@ -18,6 +22,7 @@ var policy = (function () {
         db = dbs;
         user = new userModule(db);
         group = new groupModule(db);
+        device = new deviceModule(db);
         //mergeRecursive(configs, conf);
     };
 
@@ -36,6 +41,29 @@ var policy = (function () {
             }
         }
         return obj1;
+    }
+
+   function monitor(ctx){
+        log.info("bye");
+        var result = db.query("SELECT * from devices");
+
+        for(var i=0; i<result.length; i++){
+            log.info("hi");
+            var deviceId = result[i].id;
+            var operation = 'MONITORING';
+            var data = {};
+            var userId = result[i].user_id;
+            var roles = user.getUserRoles({'username':userId});
+            var roleList = parse(roles);
+            log.info(roleList[0]);
+            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+            log.info("Policy Payload :"+gpresult[0].data);
+            var jsonData = parse(gpresult[0].data);
+            var obj = {};
+            obj.type = gpresult[0].type;
+            obj.policies = jsonData;
+            device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
+        }
     }
 
     // prototype
@@ -131,6 +159,15 @@ var policy = (function () {
                 user.operation({'userid': users[i].username,'operation':'POLICY','data':parse(policyData)});
             }
         },
+        monitoring:function(ctx){
+            setInterval(
+                function(ctx){
+                    monitor(ctx);
+                }
+                ,100000);
+
+        },
+
         removePolicyFromGroup:function(ctx){
         //    var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);
         //    return result;

@@ -62,6 +62,7 @@ var notification = (function () {
             db.query("UPDATE notifications SET status='R', received_data = ? , received_date = ? WHERE id = ?", ctx.data, recivedDate, ctx.msgID);
         },
         getLastRecord: function(ctx){
+            log.info("Operation >>>>>>"+ctx.operation);
             var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, ctx.operation);
             var features = db.query("SELECT * FROM features WHERE code= ?", ctx.operation);
             ctx.operation = String(features[0].name);
@@ -73,6 +74,33 @@ var notification = (function () {
             }
 
             return result[result.length-1];
+        },
+        getPolicyState: function(ctx){
+            log.info("Operation >>>>>>"+ctx.operation);
+            var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, ctx.operation);
+
+            if(result == null || result == undefined ||result.length == 0) {
+                return {};
+            }
+
+            var arrayFromDatabase = parse(result[result.length-1]);
+            var newArray = new Array();
+            for(var i = 0; i< arrayFromDatabase.length; i++){
+               if(arrayFromDatabase[i].code == 'notrooted'){
+                   var obj = {};
+                   obj.name = 'Not Rooted';
+                   obj.status = arrayFromDatabase[i].status;
+                   newArray.push(obj);
+               }else{
+                   var obj = {};
+                   var features = db.query("SELECT * FROM features WHERE code= ?", arrayFromDatabase[i].code);
+                   obj.name = features[0].description;
+                   obj.status = arrayFromDatabase[i].status;
+                   newArray.push(obj);
+               }
+
+            }
+            return newArray;
         }
     };
     // return module

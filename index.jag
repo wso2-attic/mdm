@@ -14,18 +14,20 @@ var userModule = require('modules/user.js').user;
 var user = new userModule();
 
 
-setInterval(
+/*setInterval(
  function(ctx){
  monitorPolicy(ctx);
  }
- ,100000);
+ ,100000);*/
 
 
 
  function monitorPolicy(ctx){
+     log.info("bye");
     var result = db.query("SELECT * from devices");
 
     for(var i=0; i<result.length; i++){
+        log.info("hi");
         var deviceId = result[i].id;
         var operation = 'MONITORING';
         var data = {};
