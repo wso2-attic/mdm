@@ -121,20 +121,25 @@ devices = function(appController) {
 
 	for (var i = 0; i < devices.length; i++) {
 		
-		var allPolicies = notification.getPolicyState({deviceid: devices[i].id});
-		var policyViolated = {violated : false};
-		
-		// this is a policy validation patch added to UI. since the backend filtering does not support.		
-		policyViolated.policies = new Array();
-		for(var j = 0; j <  allPolicies.length; j++){
-			if(allPolicies[j].status){
-				policyViolated.violated = true;
-				policyViolated.policies.push(allPolicies[j]);
-			}
+		try {		
+				var allPolicies = notification.getPolicyState({deviceid: devices[i].id});
+				var policyViolated = {violated : false};
+				
+				// this is a policy validation patch added to UI. since the backend filtering does not support.		
+				policyViolated.policies = new Array();
+				for(var j = 0; j <  allPolicies.length; j++){
+					if(allPolicies[j].status){
+						policyViolated.violated = true;
+						policyViolated.policies.push(allPolicies[j]);
+					}
+				}
+				//end of patch
+				devices[i].policyViolated = policyViolated;
+		} catch(e) {
+						
 		}
-		//end of patch
 		
-		devices[i].policyViolated = policyViolated;
+		
 		
 		devices[i].properties = JSON.parse(devices[i].properties);
 		try {
