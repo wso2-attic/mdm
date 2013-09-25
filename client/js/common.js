@@ -121,6 +121,7 @@ $.noty.defaults = {
 $('.selectpicker').selectpicker();
 $('.duallistbox').bootstrapDualListbox();
 
+
 $('.nav-tabs a').click(function(e) {
 	e.preventDefault();
 	$(this).tab('show');

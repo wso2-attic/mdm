@@ -58,8 +58,11 @@
 
 										<div class="block">
 											<div class="block-header-small">
-												<div class="pull-left">
+												<div class="pull-left">													
 													Device
+													{{#if policyViolated.violated}}
+													<span class="label label-important" data-toggle="tooltip" title="{{#policyViolated.policies}} {{name}}, {{/policyViolated.policies}} has been violated by this device">Policy violated</span>
+													{{/if}}
 												</div>
 												
 												<div class="pull-right button-block-refresh">

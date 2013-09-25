@@ -7,6 +7,9 @@ var group = new groupModule(db);
 var deviceModule = require('/modules/device.js').device;
 var device = new deviceModule(db);
 
+var notificationModule = require('/modules/notification.js').notification;
+var notification = new notificationModule(db);
+
 configuration = function(appController) {
 	context = appController.context();
 	
@@ -32,6 +35,8 @@ configuration = function(appController) {
 	}
 	return context;
 }
+
+
 add = function(appController) {
 	context = appController.context();
 
@@ -85,6 +90,8 @@ edit = function(appController) {
 
 }
 devices = function(appController) {
+	
+		
 	log.info("Test devices >>>>>>>>");
 	context = appController.context();
 	var userId = request.getParameter('user');
@@ -109,6 +116,22 @@ devices = function(appController) {
 	}
 
 	for (var i = 0; i < devices.length; i++) {
+		
+		var allPolicies = notification.getPolicyState({deviceId: devices[i].id});
+		var policyViolated = {violated : false};
+		
+		// this is a policy validation patch added to UI. since the backend filtering does not support.		
+		policyViolated.policies = new Array();
+		for(var j = 0; j <  allPolicies.length; j++){
+			if(allPolicies[j].status){
+				policyViolated.violated = true;
+				policyViolated.policies.push(allPolicies[j]);
+			}
+		}
+		//end of patch
+		
+		devices[i].policyViolated = policyViolated;
+		
 		devices[i].properties = JSON.parse(devices[i].properties);
 		try {
 			featureList = device.getFeaturesFromDevice({
