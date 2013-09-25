@@ -83,9 +83,12 @@ var notification = (function () {
             if(result == null || result == undefined ||result.length == 0) {
                 return {};
             }
-
-            var arrayFromDatabase = parse(result[result.length-1]);
             var newArray = new Array();
+
+            var arrayFromDatabase = parse(result[result.length-1].received_data);
+            log.info("result >>>>>>>"+stringify(result[result.length-1].received_data));
+            log.info(arrayFromDatabase[0]);
+
             for(var i = 0; i< arrayFromDatabase.length; i++){
                if(arrayFromDatabase[i].code == 'notrooted'){
                    var obj = {};
@@ -101,6 +104,7 @@ var notification = (function () {
                }
 
             }
+            log.info("Final result >>>>>>>>>>"+stringify(newArray));
             return newArray;
         }
     };
