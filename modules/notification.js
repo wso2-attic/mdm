@@ -76,6 +76,7 @@ var notification = (function () {
             return result[result.length-1];
         },
         getPolicyState: function(ctx){
+            log.info("Test Function :aaaaaaaaaaaaaaaaaaaaa"+ctx.deviceid);
 
             var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, '501P');
 
