@@ -76,8 +76,8 @@ var notification = (function () {
             return result[result.length-1];
         },
         getPolicyState: function(ctx){
-            log.info("Operation >>>>>>"+ctx.operation);
-            var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, ctx.operation);
+
+            var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, '501P');
 
             if(result == null || result == undefined ||result.length == 0) {
                 return {};
