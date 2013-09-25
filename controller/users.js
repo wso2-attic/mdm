@@ -128,7 +128,7 @@ devices = function(appController) {
 				// this is a policy validation patch added to UI. since the backend filtering does not support.		
 				policyViolated.policies = new Array();
 				for(var j = 0; j <  allPolicies.length; j++){
-					if(allPolicies[j].status){
+					if(!allPolicies[j].status){
 						policyViolated.violated = true;
 						policyViolated.policies.push(allPolicies[j]);
 					}
