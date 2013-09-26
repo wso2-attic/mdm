@@ -231,7 +231,10 @@ var device = (function () {
         constructor: module,
         isRegistered: function(ctx){
             var result = db.query("SELECT reg_id FROM devices WHERE reg_id = ? && deleted = 0", ctx.regid);
-            return (result != null && result != undefined && result[0] != null && result[0] != undefined);
+            log.info("IS Registered >>>>>>>>>>"+result[0]);
+            var state = (result != null && result != undefined && result[0] != null && result[0] != undefined);
+            log.info(state);
+            return state;
         },
         register: function(ctx){
             var log = new Log();

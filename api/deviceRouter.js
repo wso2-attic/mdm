@@ -8,14 +8,15 @@ var device = (function () {
 
 		router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);
-		    if(result!= null && result != undefined && result[0] != null && result[0] != undefined){
+            log.info(result);
+		    if(result){
                 log.info("Check isRegistered registered");
 		        print("registered");
 		        response.status = 200;
 		    }else{
                 log.info("Check isRegistered notregistered");
                 print("notregistered");
-		        //response.status = 404;
+		        response.status = 404;
 		    }
 		});
 
@@ -49,9 +50,9 @@ var device = (function () {
 		    var result = device.unRegister(ctx);
 		});
 
-		router.post('devices/isregistered', function(ctx){
+	/*	router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);
-		});
+		});*/
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
 
