@@ -145,7 +145,7 @@ var policy = (function () {
                     array[i] = element;
                 }
             }
-            log.info(array);
+
             return array;
         },
         enforcePolicy:function(ctx){

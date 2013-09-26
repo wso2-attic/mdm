@@ -77,13 +77,14 @@ var notification = (function () {
         },
         getPolicyState: function(ctx){
             log.info("Test Function :aaaaaaaaaaaaaaaaaaaaa"+ctx.deviceid);
-
             var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, '501P');
 
-            if(result == null || result == undefined ||result.length == 0) {
-                return {};
-            }
             var newArray = new Array();
+
+            if(result == null || result == undefined ||result.length == 0) {
+                return newArray;
+            }
+
 
             var arrayFromDatabase = parse(result[result.length-1].received_data);
             log.info("result >>>>>>>"+stringify(result[result.length-1].received_data));
