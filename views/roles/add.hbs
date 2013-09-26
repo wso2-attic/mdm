@@ -1,19 +1,18 @@
 <div class="container-fluid">
 
 	<div class="raw-fluid">
-		<div class="span12">
+		<ul class="breadcrumb">
+			<li>
+				<a href="configuration">Roles</a><span class="divider">/</span>
+			</li>
+			<li class="active">
+				Add
+			</li>
+		</ul>
+	</div>
 
-			<ul class="breadcrumb">
-				<li>
-					<a href="configuration">Roles</a><span class="divider">/</span>
-				</li>
-				<li class="active">
-					Add
-				</li>
-			</ul>
-
-		</div>
-
+	<div class="raw-fluid">
+		
 		<div class="span12">
 
 			<div class="raw-fluid">
@@ -32,7 +31,7 @@
 								<div class="controls">
 									<input type="text" id="inputName" class="input-xxlarge" data-required="true">
 								</div>
-							</div>							
+							</div>
 
 							<div class="control-group">
 								<label class="control-label" for="inputMobile">Users</label>
@@ -40,8 +39,8 @@
 									<div class="multiple-selectbox">
 										<select multiple="multiple" size="10" id="inputUsers" name="inputUsers" class='duallistbox'>
 											{{#data.users}}
-												<option value="{{username}}">{{firstName}} {{lastName}}</option>
-											{{/data.users}}											
+											<option value="{{username}}">{{firstName}} {{lastName}}</option>
+											{{/data.users}}
 										</select>
 									</div>
 

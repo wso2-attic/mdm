@@ -1,19 +1,17 @@
 <div class="container-fluid">
 
 	<div class="raw-fluid">
-		<div class="span12">
+		<ul class="breadcrumb">
+			<li>
+				<a href="configuration">Users</a><span class="divider">/</span>
+			</li>
+			<li class="active">
+				Add
+			</li>
+		</ul>
+	</div>
 
-			<ul class="breadcrumb">
-				<li>
-					<a href="configuration">Users</a><span class="divider">/</span>
-				</li>
-				<li class="active">
-					Add
-				</li>
-			</ul>
-
-		</div>
-
+	<div class="raw-fluid">
 		<div class="span12">
 
 			<div class="raw-fluid">
@@ -64,9 +62,9 @@
 									<div class="multiple-selectbox">
 										<select multiple="multiple" size="10" id="inputGroups" name="inputGroups" class='duallistbox'>
 											{{#data.groups}}
-												<option value="{{this}}">{{this}}</option>
-											{{/data.groups}}											
-											
+											<option value="{{this}}">{{this}}</option>
+											{{/data.groups}}
+
 										</select>
 									</div>
 
