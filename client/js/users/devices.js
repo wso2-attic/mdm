@@ -1,3 +1,8 @@
+var url = document.location.toString();
+if (url.match('#')) {
+    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+} 
+
 var selectedTab = null;
 var selectedDevice = null;
 
@@ -32,6 +37,11 @@ $('#devicesTab a').click(function(e) {
 	loadGeneralInformation(tabId, deviceId);
 	loadAppList(tabId, deviceId);
 
+});
+
+
+$('#devicesTab a').on('shown', function (e) {
+    window.location.hash = e.target.hash;
 });
 
 $(".btn-refresh").click(function() {
