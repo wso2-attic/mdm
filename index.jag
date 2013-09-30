@@ -163,7 +163,7 @@ router.get('dashboard/devices/ios/info', function(ctx){
     }
 });
 router.get('dashboard/policies/compliance', function(ctx){
-    var result = notification.getPolicyComplianceDevicesCount(ctx);
+    var result = notification.getPolicyComplianceDevicesCount(ctx); //should be move to dashborad.js
     if(result!= null && result != undefined){
         response.content = result;
         response.status = 200;

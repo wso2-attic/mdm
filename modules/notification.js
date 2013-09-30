@@ -158,7 +158,7 @@ var notification = (function () {
             array.push(obj1);
 
             var obj2 = {};
-            obj2.label = 'Not Compliance Devices';
+            obj2.label = 'Non Compliance Devices';
             obj2.data =  violatedDevicesCountAsPercentage;
 
             array.push(obj2);
