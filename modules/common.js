@@ -35,3 +35,19 @@ var getTenantID = function(){
 		return null;
 	}
 }
+
+var getCAPath = function () {
+	return "E://Mobile//iOS_MDM_Impl//keys//ca_cert.pem";
+}
+
+var getRAPath = function () {
+	return "E://Mobile//iOS_MDM_Impl//keys//ra_cert.pem";
+}
+
+var getCAPrivateKey = function () {
+	return "E://Mobile//iOS_MDM_Impl//keys//ca_private.pem";
+}
+
+var getRAPrivateKey = function () {
+	return "E://Mobile//iOS_MDM_Impl//keys//ra_private.pem";
+}
