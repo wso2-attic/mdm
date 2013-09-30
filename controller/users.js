@@ -41,18 +41,12 @@ add = function(appController) {
 	context = appController.context();
 
 	try {
-		var groups = group.getGroups({});
-	} catch(e) {
+		var groups = group.getGroups({type:context.contextData.user.role});		
+	} catch(e) {		
 		var groups = [];
 	}
 	
-	// Array Remove - By John Resig (MIT Licensed)
-	Array.prototype.remove = function(from, to) {
-	  var rest = this.slice((to || from) + 1 || this.length);
-	  this.length = from < 0 ? this.length + from : from;
-	  return this.push.apply(this, rest);
-	};
-
+	
 
 	context.title = context.title + " | Add User";
 	context.page = "configuration";
