@@ -51,6 +51,7 @@ var dashboard = (function () {
         
         
         
+        
          getAndroidDeviceCountByOwnership: function(ctx){
             
             var allDeviceCount = db.query("select count(id) as count from devices");

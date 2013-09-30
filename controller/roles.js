@@ -19,20 +19,13 @@ configuration = function(appController){
 	context = appController.context();
 	
 	try{
-		var groups = group.getGroupsByType({role:context.contextData.user.role});		
+		var groups = group.getGroupsByType({type:context.contextData.user.role});		
 	}catch(e){
 		
 		var groups = [];
 	}
 	
 	
-
-	for(var i =0; i < groups.length; i++){
-		if(groups[i] == 'masteradmin' | groups[i] == "admin"){
-			groups.splice(i, 1);
-		}
-	}
-
 	
 	context.title = context.title + " | Configuration";
 	context.page = "configuration";

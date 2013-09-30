@@ -13,6 +13,9 @@ var device = new deviceModule();
 var userModule = require('modules/user.js').user;
 var user = new userModule();
 
+var notificationModule = require('modules/notification.js').notification;
+var notification = new notificationModule();
+
 
 /*setInterval(
  function(ctx){
@@ -152,6 +155,15 @@ router.get('dashboard/devices/android/info', function(ctx){
 
 router.get('dashboard/devices/ios/info', function(ctx){
     var result = dashboard.getAlliOSDevices(ctx);
+    if(result!= null && result != undefined){
+        response.content = result;
+        response.status = 200;
+    }else{
+        response.status = 404;
+    }
+});
+router.get('dashboard/policies/compliance', function(ctx){
+    var result = notification.getPolicyComplianceDevicesCount(ctx); //should be move to dashborad.js
     if(result!= null && result != undefined){
         response.content = result;
         response.status = 200;
