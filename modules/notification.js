@@ -152,13 +152,13 @@ var notification = (function () {
             var violatedDevicesCountAsPercentage = (violatedDevicesCount/(totalDevicesCount))*100;
             var array = new Array();
             var obj1 = {};
-            obj1.label = 'Compliance Devices';
+            obj1.label = 'Compliance';
             obj1.data =  complianceDeviceCountAsPercentage;
 
             array.push(obj1);
 
             var obj2 = {};
-            obj2.label = 'Non Compliance Devices';
+            obj2.label = 'Non Compliance';
             obj2.data =  violatedDevicesCountAsPercentage;
 
             array.push(obj2);
