@@ -5,6 +5,7 @@ $(document).ready(function() {
 		var templateArea = $(this).attr("id");
 		var templateWidget = $(this).data("chart");
 		var serviceMethod = $(this).data("method");
+		var height = $(this).data("height");
 		var title = $(this).data("title");
 		
 		
@@ -25,7 +26,7 @@ $(document).ready(function() {
 						//alert(JSON.stringify(data));
 						chartData = data; 
 						 var template = Handlebars.compile(templateData);
-						  $('#' + templateArea).html(template({index:index, title: title}));	
+						  $('#' + templateArea).html(template({index:index, title: title, height:height}));	
 				    }
 
 				});					

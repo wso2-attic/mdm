@@ -108,8 +108,19 @@ router.post('store/users/apps', function(ctx){
 });
 
 
-router.get('dashboard/devices/all/info', function(ctx){
-    var result = dashboard.getAllDevices(ctx);
+router.get('dashboard/devices/all/percentage/byos', function(ctx){
+    var result = dashboard.getDeviceCountByOS(ctx);
+    if(result!= null && result != undefined){
+        response.content = result;
+        response.status = 200;
+    }else{
+        response.status = 404;
+    }
+});
+
+
+router.get('dashboard/devices/all/percentage/byownership', function(ctx){
+    var result = dashboard.getDeviceCountByOwnership(ctx);
     if(result!= null && result != undefined){
         response.content = result;
         response.status = 200;
