@@ -18,6 +18,11 @@ var app_server = new app_carbon.server.Server({
 application.put("SERVER", app_server);
 application.put(app_TENANT_CONFIGS, {});
 
+var androidConfig = require('android.json');
+
+var gcm = require('gcm').gcm;
+gcm.setApiKey(androidConfig.api_key);
+
 var policyModule = require('../modules/policy.js').policy;
 var policy = new policyModule(db);
 policy.monitoring({});
