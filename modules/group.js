@@ -66,6 +66,7 @@ var group = (function () {
     module.prototype = {
         constructor: module,
 		getGroups: function(ctx){
+            log.info( "Type >>>>>>>>>>>"+ctx.type);
         var type = ctx.type;
 
 			var um = userManager(common.getTenantID());
