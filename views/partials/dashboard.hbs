@@ -1,4 +1,4 @@
-<ul class="nav nav-tabs" id="myTab">
+<ul class="nav nav-tabs" id="dashboardTab">
 	<li class="active">
 		<a href="#home">All Devices</a>
 	</li>
@@ -10,19 +10,23 @@
 	</li>
 </ul>
 
-<div class="tab-content">
+<div class="tab-content" >
 	<div class="tab-pane active" id="home">
 
 		<div class="span4 widget" id="home_devices_by_os"
 		data-chart="devices_by_os" data-method="devices/all/percentage/byos"
-		data-title="Devices By OS" data-height="400px"></div>
+		data-title="Devices By OS" data-height="400px" data-width="100%"></div>
 
 		<div class="span4 widget" id="home_devices_by_ownership"
 		data-chart="devices_by_ownership" data-method="devices/all/percentage/byownership"
-		data-title="Devices By Ownership" data-height="400px"></div>
+		data-title="Devices By Ownership" data-height="400px" data-width="100%"></div>
 
 	</div>
 	<div class="tab-pane" id="android">
+		
+		<div class="span4 widget" id="home_android_devices_by_ownership"
+		data-chart="devices_by_ownership" data-method="devices/all/percentage/byownership"
+		data-title="Devices By Ownership" data-height="400px" data-width="100%"></div>
 
 	</div>
 	<div class="tab-pane" id="ios">

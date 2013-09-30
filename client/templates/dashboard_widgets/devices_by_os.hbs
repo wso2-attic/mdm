@@ -1,15 +1,4 @@
-<div class="block">
-	<div class="block-header">
-		<div class="block-header-title pull-left">
-			{{title}}
-		</div>
-	</div>
 
-	<div class="container-fluid raw-fluid block-body" >
-		<div id="chart-{{index}}" style="height: {{height}};"></div>
-	</div>
-
-</div>
 
 <script type="text/javascript">
 	var colors = {
@@ -35,3 +24,16 @@
 	});
 
 </script>
+
+<div class="block">
+	<div class="block-header">
+		<div class="block-header-title pull-left">
+			{{title}}
+		</div>
+	</div>
+
+	<div class="container-fluid raw-fluid block-body" >
+		<div id="chart-{{index}}" style="height: {{height}}; width:{{width}}"></div>
+	</div>
+
+</div>
