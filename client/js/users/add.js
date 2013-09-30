@@ -12,6 +12,7 @@ $("#btn-add").click(function() {
 
 	var firstname = $('#inputFirstName').val();
 	var lastname = $('#inputLastName').val();
+	var type = $('#inputType').val();
 	var username = $('#inputEmail').val();
 	var password = $('#inputPassword').val();
 	var mobileNo = $('#inputMobile').val();
@@ -30,6 +31,7 @@ $("#btn-add").click(function() {
 		"first_name" : firstname,
 		"last_name" : lastname,
 		"mobile_no" : mobileNo,
+		"type": type,
 		"groups" : userGroupsArray
 	};	
 	
