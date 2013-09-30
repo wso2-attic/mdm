@@ -154,13 +154,13 @@ var notification = (function () {
             var obj1 = {};
             obj1.label = 'Compliance Devices';
             obj1.data =  complianceDeviceCountAsPercentage;
-            obj1.color = '#4572A7';
+
             array.push(obj1);
 
             var obj2 = {};
             obj2.label = 'Not Compliance Devices';
             obj2.data =  violatedDevicesCountAsPercentage;
-            obj2.color = '#4572A7';
+
             array.push(obj2);
             return array;
         }
