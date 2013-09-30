@@ -355,7 +355,7 @@ var device = (function () {
             }
         },
         updateiOSTokens: function(ctx){
-            var result = db.query("SELECT properties FROM devices WHERE device_id= ?", ctx.deviceid);
+            var result = db.query("SELECT properties FROM devices WHERE id= ?", ctx.deviceid);
 
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
                 log.error(properties);
