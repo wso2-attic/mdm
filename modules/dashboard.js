@@ -47,6 +47,17 @@ var dashboard = (function () {
 	        var finalResult =  [{"label" : "Personal", "data" : allByodCount[0].count}, {"label" : "Corporate", "data" : allDeviceCount[0].count - allByodCount[0].count}];   
             return finalResult;            
       
+        },
+        
+        
+        
+         getAndroidDeviceCountByOwnership: function(ctx){
+            
+            var allDeviceCount = db.query("select count(id) as count from devices");
+	        var allByodCount = db.query("select count(id) as count from devices where byod=1");
+	        var finalResult =  [{"label" : "Personal", "data" : allByodCount[0].count}, {"label" : "Corporate", "data" : allDeviceCount[0].count - allByodCount[0].count}];   
+            return finalResult;            
+      
         }
         
         
