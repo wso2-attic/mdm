@@ -59,8 +59,8 @@
 							<div class="control-group">
 								<label class="control-label" for="inputFirstName">Type</label>
 								<div class="controls">
-									User <input type="radio" name="inputType" value="user" checked="checked"> &nbsp;
-									Admin <input type="radio" name="inputType" value="admin"> &nbsp;
+									User <input type="radio" class="radioUserType" data-groups="{{data.groups}}" name="inputType" value="user" checked="checked"> &nbsp;
+									Admin <input type="radio" class="radioUserType" data-groups="{{data.groups}}" name="inputType" value="administrator"> &nbsp;
 								</div>
 							</div>
 
@@ -70,7 +70,7 @@
 									<div class="multiple-selectbox">
 										<select multiple="multiple" size="10" id="inputGroups" name="inputGroups" class='duallistbox'>
 											{{#data.groups}}
-											<option value="{{this}}">{{this}}</option>
+											<option value="{{name}}" data-usertype="{{type}}">{{name}}</option>
 											{{/data.groups}}
 
 										</select>
