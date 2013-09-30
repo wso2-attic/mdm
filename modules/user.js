@@ -314,8 +314,8 @@ var user = (function () {
 			return users_list;
 		},
         getUsersByType:function(ctx){
-            var role = ctx.role;
-            if(role == 'admin'){
+            var type = ctx.type;
+            if(type == 'admin'){
                 var users = this.getUsers();
                 for(var i =0 ;i<users.length;i++){
                     log.info(users[i].username);
@@ -338,7 +338,7 @@ var user = (function () {
                     }
                 }
                 return users;
-            }else if (role == 'mdmadmin'){
+            }else if (type == 'mdmadmin'){
                 var users = this.getUsers();
                 var array = new Array();
                 for(var i =0 ;i<users.length;i++){

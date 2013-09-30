@@ -67,9 +67,8 @@ var notification = (function () {
             var features = db.query("SELECT * FROM features WHERE code= ?", ctx.operation);
             ctx.operation = String(features[0].name);
             ctx.data = "hi";
-            device.sendToDevice(ctx);
-            if(result == null || result == undefined ||
-                result.length == 0) {
+        //    device.sendToDevice(ctx);
+            if(result == null || result == undefined ||result.length == 0) {
                 return {};
             }
 
