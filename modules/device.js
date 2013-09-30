@@ -352,7 +352,7 @@ var device = (function () {
             }
         },
         updateiOSTokens: function(ctx){
-            var result = db.query("SELECT properties FROM devices WHERE device_id= ?", ctx.deviceid);
+            var result = db.query("SELECT properties FROM devices WHERE udid= ?", ctx.deviceid);
 
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
                 log.error(properties);
@@ -374,8 +374,8 @@ var device = (function () {
                 tokenProperties["unlockToken"] = ctx.unlockToken;
                 tokenProperties["magicToken"] = ctx.magicToken;
 
-                var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE device_id = ?", 
-                	stringify(properties), stringify(tokenProperties), devicesId);
+                var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?", 
+                	stringify(properties), stringify(tokenProperties), ctx.deviceid);
 
                 if(updateResult != null && updateResult != undefined && updateResult[0] != null
                     && updateResult[0] != undefined) {
