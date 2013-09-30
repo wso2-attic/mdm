@@ -53,13 +53,6 @@ add = function(appController) {
 	  return this.push.apply(this, rest);
 	};
 
-	if (context.contextData.user.role != 'masteradmin') {
-		for (var i = 0; i < groups.length; i++) {
-			if (groups[i] == 'masteradmin' | groups[i] == "admin") {
-				groups.remove(i);
-			}
-		}
-	}
 
 	context.title = context.title + " | Add User";
 	context.page = "configuration";
