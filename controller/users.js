@@ -41,11 +41,10 @@ add = function(appController) {
 	context = appController.context();
 
 	try {
-		var groups = group.getGroups({type:context.contextData.user.role});		
+		var groups = group.getGroupsByType({type:context.contextData.user.role});		
 	} catch(e) {		
 		var groups = [];
 	}
-	
 	
 
 	context.title = context.title + " | Add User";

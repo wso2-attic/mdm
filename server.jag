@@ -1,0 +1,10 @@
+<%
+	log.error("server >>>>>>>>>>>>>>>>>>>>>>>>");
+	
+	var iosMdmModule = require('/modules/iosmdm.js').iosmdm;
+	var iosMdm = new iosMdmModule();
+	var log = new Log();
+	
+	iosMdm.sendPushNotifications(request.getInputStream());
+	
+%>

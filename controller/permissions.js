@@ -10,7 +10,8 @@ configuration = function(appController){
 	
 	//var permissionGroup = [{id: 1, name: "test1", features: "Test|Test"}, { id: 2, name: "test1", features: "Test|Test"}];
 	
-
+	context = appController.context();
+	
 	
 	try{
 		var permissionGroup = JSON.parse(get(appController.getServiceURLs("permissionsCRUD", "")).data);	
@@ -19,12 +20,12 @@ configuration = function(appController){
 	}
 	
 	try{
-		var groups = group.getGroups({});
+		var groups = group.getGroupsByType({type:context.contextData.user.role});		
 	}catch(e){
 		var groups = [];
 	}
 	
-	context = appController.context();
+	
 	context.jsFile= "permissions/configuration.js";
 	context.title = context.title + " | Configuration";		
 	context.page = "configuration";

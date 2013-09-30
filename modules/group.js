@@ -67,46 +67,26 @@ var group = (function () {
         constructor: module,
 		getGroups: function(ctx){
             log.info( "Type >>>>>>>>>>>"+ctx.type);
-        var type = ctx.type;
+            var type = ctx.type;
 
 			var um = userManager(common.getTenantID());
 			var roles = um.allRoles();
             log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
-            if(type == 'admin'){
-                var arrRole = new Array();
-                for(var i = 0; i < roles.length; i++) {
-                    if(common.isMDMRoleWithAdmins(roles[i])) {
-                        var obj = {};
-                        if(roles[i] == 'admin'||roles[i] == 'mdmadmin'){
-                            obj.name = roles[i];
-                            obj.type = 'administrator';
-                        }else{
-                            obj.name = roles[i];
-                            obj.type = 'user';
-                        }
-                        arrRole.push(obj);
-                    }
+
+            var arrRole = new Array();
+            for(var i = 0; i < roles.length; i++) {
+                if(common.isMDMRole(roles[i])) {
+                    arrRole.push(roles[i]);
                 }
-                log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
-                return arrRole;
-            }else if (type == 'mdmadmin'){
-                var arrRole = new Array();
-                for(var i = 0; i < roles.length; i++) {
-                    if(common.isMDMRole(roles[i])) {
-                        var obj = {};
-                        obj.name = roles[i];
-                        obj.type = 'user';
-                        arrRole.push(obj);
-                    }
-                }
-                log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
-                return arrRole;
             }
+            log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
+            return arrRole;
+
 		},
         getGroupsByType: function(ctx){
-            var role = ctx.role;
+            var type = ctx.type;
 
-            if(role == 'admin'){
+            if(type == 'admin'){
                 var um = userManager(common.getTenantID());
                 var roles = um.allRoles();
                 log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
@@ -126,7 +106,7 @@ var group = (function () {
                 }
                 log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
                 return arrRole;
-            }else if(role == 'mdmadmin'){
+            }else if(type == 'mdmadmin'){
                 var um = userManager(common.getTenantID());
                 var roles = um.allRoles();
                 log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
