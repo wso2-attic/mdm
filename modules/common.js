@@ -51,3 +51,8 @@ var getCAPrivateKey = function () {
 var getRAPrivateKey = function () {
 	return "E://Mobile//iOS_MDM_Impl//keys//ra_private.pem";
 }
+
+//move this to a xml configuration file
+var getPushCertPassword = function () {
+	return "shan130474";
+}

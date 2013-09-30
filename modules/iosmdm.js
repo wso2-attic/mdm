@@ -122,6 +122,43 @@ var iosmdm = (function() {
 			} catch (e) {
 				log.error(e);
 			}
+		},
+		sendPushNotifications : function(inputStream) {
+
+			var writer = new Packages.java.io.StringWriter();
+			Packages.org.apache.commons.io.IOUtils.copy(inputStream, writer, "UTF-8");
+			var contentString = writer.toString();
+
+			try {
+				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();
+				var apnsStatus = plistExtractor.extractAPNSResponse(contentString);
+
+				if (("Acknowledged").equals(apnsStatus.getStatus())) {
+					return;
+				}
+				
+			} catch (e) {
+				log.error(e);
+			}
+		},
+		initAPNS : function(feature, data, pathPushCert, pushCertPassword, 
+			deviceToken, magicToken, unlockToken) {
+	
+			try {
+				var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender
+					(pathPushCert, pushCertPassword);
+	
+				var userData = new Packages.java.util.ArrayList();
+				var params = new Packages.java.util.HashMap();
+				params.put("devicetoken", deviceToken);
+				params.put("magictoken", magicToken);
+				userData.add(params);
+	
+				apnsInitiator.pushToAPNS(userData);
+	
+			} catch (e) {
+				log.error(e);
+			}
 		}
 	};
 
