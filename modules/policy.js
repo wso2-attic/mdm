@@ -63,6 +63,8 @@ var policy = (function () {
             obj.type = gpresult[0].type;
             obj.policies = jsonData;
             device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
+            device.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
+            device.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
         }
     }
 

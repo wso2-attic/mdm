@@ -66,18 +66,30 @@ var group = (function () {
     module.prototype = {
         constructor: module,
 		getGroups: function(ctx){
+        var type = ctx.type;
 
 			var um = userManager(common.getTenantID());
 			var roles = um.allRoles();
             log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
-			var arrRole = new Array();
-			for(var i = 0; i < roles.length; i++) {
-				if(common.isMDMRole(roles[i])) {
-					arrRole.push(roles[i]);
-				}
-			}
-            log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
-			return arrRole;
+            if(type == 'admin'){
+                var arrRole = new Array();
+                for(var i = 0; i < roles.length; i++) {
+                    if(common.isMDMRoleWithAdmins(roles[i])) {
+                        arrRole.push(roles[i]);
+                    }
+                }
+                log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
+                return arrRole;
+            }else if (type == 'mdmadmin'){
+                var arrRole = new Array();
+                for(var i = 0; i < roles.length; i++) {
+                    if(common.isMDMRole(roles[i])) {
+                        arrRole.push(roles[i]);
+                    }
+                }
+                log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
+                return arrRole;
+            }
 		},
         getGroupsByType: function(ctx){
             var role = ctx.role;
@@ -182,18 +194,15 @@ var group = (function () {
 						proxy_role.error = 'Role already exist in the system.';
                         proxy_role.status = "ALLREADY_EXIST";
 					} else {
-					    var permission = [
-					        'http://www.wso2mobile.org/projects/mdm/actions/get',
-					        'authorize'
-					    ];
+
 					    var arrPermission = {};
 					    var permission = [
 					        'http://www.wso2.org/projects/registry/actions/get',
 					        'http://www.wso2.org/projects/registry/actions/add',
 					        'http://www.wso2.org/projects/registry/actions/delete',
-					        'authorize'
+					        'authorize','login'
 					    ];
-					    arrPermission["0"] = permission;
+					    arrPermission[0] = permission;
                         log.info(ctx.name);
                         log.info(ctx.users);
 						um.addRole(ctx.name, ctx.users, arrPermission);
