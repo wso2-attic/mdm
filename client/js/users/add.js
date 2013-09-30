@@ -55,3 +55,16 @@ $("#btn-add").click(function() {
 
 });
 
+
+$( ".radioUserType" ).change(function() {
+	var value = $(this).val();	
+	$(".box1 .filter").val(value);	
+	$(".box1 .filter" ).change();
+});
+
+
+$( document ).ready(function() {
+	var value = 'user';	
+	$(".box1 .filter").val(value);	
+	$(".box1 .filter" ).change();
+});
