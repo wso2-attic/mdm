@@ -12,6 +12,7 @@ $("#btn-add").click(function() {
 
 	var firstname = $('#inputFirstName').val();
 	var lastname = $('#inputLastName').val();
+	var type = $('#inputType').val();
 	var username = $('#inputEmail').val();
 	var password = $('#inputPassword').val();
 	var mobileNo = $('#inputMobile').val();
@@ -30,6 +31,7 @@ $("#btn-add").click(function() {
 		"first_name" : firstname,
 		"last_name" : lastname,
 		"mobile_no" : mobileNo,
+		"type": type,
 		"groups" : userGroupsArray
 	};	
 	
@@ -51,4 +53,18 @@ $("#btn-add").click(function() {
 		window.location.assign("configuration");
 	});
 
+});
+
+
+$( ".radioUserType" ).change(function() {
+	var value = $(this).val();	
+	$(".box1 .filter").val(value);	
+	$(".box1 .filter" ).change();
+});
+
+
+$( document ).ready(function() {
+	var value = 'user';	
+	$(".box1 .filter").val(value);	
+	$(".box1 .filter" ).change();
 });

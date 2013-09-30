@@ -1,19 +1,17 @@
 <div class="container-fluid">
 
 	<div class="raw-fluid">
-		<div class="span12">
+		<ul class="breadcrumb">
+			<li>
+				<a href="configuration">Users</a><span class="divider">/</span>
+			</li>
+			<li class="active">
+				Add
+			</li>
+		</ul>
+	</div>
 
-			<ul class="breadcrumb">
-				<li>
-					<a href="configuration">Users</a><span class="divider">/</span>
-				</li>
-				<li class="active">
-					Add
-				</li>
-			</ul>
-
-		</div>
-
+	<div class="raw-fluid">
 		<div class="span12">
 
 			<div class="raw-fluid">
@@ -57,6 +55,14 @@
 									<input type="text" id="inputMobile"  data-trigger="change" data-type="phone" data-required="true">
 								</div>
 							</div>
+							
+							<div class="control-group">
+								<label class="control-label" for="inputFirstName">Type</label>
+								<div class="controls">
+									User <input type="radio" class="radioUserType"  name="inputType" value="user" checked="checked"> &nbsp;
+									Administrator <input type="radio" class="radioUserType"  name="inputType" value="administrator"> &nbsp;
+								</div>
+							</div>
 
 							<div class="control-group">
 								<label class="control-label" for="inputMobile">Group</label>
@@ -64,9 +70,9 @@
 									<div class="multiple-selectbox">
 										<select multiple="multiple" size="10" id="inputGroups" name="inputGroups" class='duallistbox'>
 											{{#data.groups}}
-												<option value="{{this}}">{{this}}</option>
-											{{/data.groups}}											
-											
+												<option value="{{name}}">{{name}} ({{type}})</option>
+											{{/data.groups}}
+
 										</select>
 									</div>
 

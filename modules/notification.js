@@ -67,24 +67,28 @@ var notification = (function () {
             var features = db.query("SELECT * FROM features WHERE code= ?", ctx.operation);
             ctx.operation = String(features[0].name);
             ctx.data = "hi";
-            device.sendToDevice(ctx);
-            if(result == null || result == undefined ||
-                result.length == 0) {
+        //    device.sendToDevice(ctx);
+            if(result == null || result == undefined ||result.length == 0) {
                 return {};
             }
 
             return result[result.length-1];
         },
         getPolicyState: function(ctx){
-
+            log.info("Test Function :aaaaaaaaaaaaaaaaaaaaa"+ctx.deviceid);
             var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, '501P');
 
+            var newArray = new Array();
+
             if(result == null || result == undefined ||result.length == 0) {
-                return {};
+                return newArray;
             }
 
-            var arrayFromDatabase = parse(result[result.length-1]);
-            var newArray = new Array();
+
+            var arrayFromDatabase = parse(result[result.length-1].received_data);
+            log.info("result >>>>>>>"+stringify(result[result.length-1].received_data));
+            log.info(arrayFromDatabase[0]);
+
             for(var i = 0; i< arrayFromDatabase.length; i++){
                if(arrayFromDatabase[i].code == 'notrooted'){
                    var obj = {};
@@ -100,8 +104,67 @@ var notification = (function () {
                }
 
             }
+            log.info("Final result >>>>>>>>>>"+stringify(newArray));
             return newArray;
+        },
+        getPolicyComplianceDevices:function(ctx){
+            var compliance = ctx.compliance;
+
+            var complianceDevices = new Array();
+            var violatedDevices = new Array();
+            var devices = db.query("SELECT * from devices");
+            for(var i=0;i<devices.length;i++){
+                var compliances =  this.getPolicyState({'deviceid':devices[i].id});
+                var flag = true;
+                for(var j=0;j<compliances.length;j++){
+                    if(compliances[j].status == false){
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag){
+                    var obj = {};
+                    obj.id =  devices[i].id;
+                    obj.properties = devices[i].properties;
+                    obj.username = devices[i].user_id;
+                    complianceDevices.push(obj);
+                }else{
+                    var obj = {};
+                    obj.id =  devices[i].id;
+                    obj.properties = devices[i].properties;
+                    obj.username = devices[i].user_id;
+                    violatedDevices.push(obj);
+                }
+
+            }
+
+            if(compliance){
+                return complianceDevices;
+            }else{
+                return violatedDevices;
+            }
+        },
+        getPolicyComplianceDevicesCount:function(ctx){
+            var complianceDeviceCount = this.getPolicyComplianceDevices({'compliance':true}).length;
+            var violatedDevicesCount = this.getPolicyComplianceDevices({'compliance':false}).length;
+            var totalDevicesCount =  complianceDeviceCount+violatedDevicesCount;
+            var complianceDeviceCountAsPercentage =  (complianceDeviceCount/(totalDevicesCount))*100;
+            var violatedDevicesCountAsPercentage = (violatedDevicesCount/(totalDevicesCount))*100;
+            var array = new Array();
+            var obj1 = {};
+            obj1.label = 'Compliance Devices';
+            obj1.data =  complianceDeviceCountAsPercentage;
+            obj1.color = '#4572A7';
+            array.push(obj1);
+
+            var obj2 = {};
+            obj2.label = 'Not Compliance Devices';
+            obj2.data =  violatedDevicesCountAsPercentage;
+            obj2.color = '#4572A7';
+            array.push(obj2);
+            return array;
         }
+
     };
     // return module
     return module;

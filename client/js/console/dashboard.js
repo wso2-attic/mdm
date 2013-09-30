@@ -1,10 +1,31 @@
 chartData = null;
-$(document).ready(function() {
 
+var url = document.location.toString();
+if (url.match('#')) {
+    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+} 
+
+
+$('#dashboardTab a').on('shown', function (e) {	
+    window.location.hash = e.target.hash;
+    renderView();
+});
+
+
+$(document).ready(function() {
+	renderView();
+	
+});
+
+
+function renderView(){
+	
 	$( ".widget" ).each(function( index ) {
 		var templateArea = $(this).attr("id");
 		var templateWidget = $(this).data("chart");
 		var serviceMethod = $(this).data("method");
+		var height = $(this).data("height");
+		var width = $(this).data("width");
 		var title = $(this).data("title");
 		
 		
@@ -25,7 +46,7 @@ $(document).ready(function() {
 						//alert(JSON.stringify(data));
 						chartData = data; 
 						 var template = Handlebars.compile(templateData);
-						  $('#' + templateArea).html(template({index:index, title: title}));	
+						  $('#' + templateArea).html(template({index:index, title: title, height:height, width: width}));	
 				    }
 
 				});					
@@ -41,4 +62,5 @@ $(document).ready(function() {
 
 		});
 	});
-});
+	
+}

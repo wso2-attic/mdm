@@ -81,9 +81,9 @@ navigation = function(role) {
             var configNavigation =	[
 //{name : "MDM Settings", link: "/mdm/console/configuration",  displayPage: "mdmsettings", icon: "icon-edit"},
                 {name : "Users", link: appInfo().server_url + "users/configuration", displayPage: "users", icon:"icon-user"},
-                {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-globe"},
+                {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-group"},
 //{name : "Permissions", link: appInfo().server_url + "permissions/configuration", displayPage: "permissions", icon:"icon-globe"},
-                {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-edit"},
+                {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-lock"},
             ];
         }else if(role == 'mdmadmin'){
             topNavigation = [
@@ -94,9 +94,9 @@ navigation = function(role) {
             var configNavigation =	[
 //{name : "MDM Settings", link: "/mdm/console/configuration",  displayPage: "mdmsettings", icon: "icon-edit"},
                 {name : "Users", link: appInfo().server_url + "users/configuration", displayPage: "users", icon:"icon-user"},
-                {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-globe"},
+                {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-group"},
 //{name : "Permissions", link: appInfo().server_url + "permissions/configuration", displayPage: "permissions", icon:"icon-globe"},
-                {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-edit"},
+                {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-lock"},
             ];
         }else{
             topNavigation = [

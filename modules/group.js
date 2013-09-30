@@ -66,23 +66,27 @@ var group = (function () {
     module.prototype = {
         constructor: module,
 		getGroups: function(ctx){
+            log.info( "Type >>>>>>>>>>>"+ctx.type);
+            var type = ctx.type;
 
 			var um = userManager(common.getTenantID());
 			var roles = um.allRoles();
             log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
-			var arrRole = new Array();
-			for(var i = 0; i < roles.length; i++) {
-				if(common.isMDMRole(roles[i])) {
-					arrRole.push(roles[i]);
-				}
-			}
+
+            var arrRole = new Array();
+            for(var i = 0; i < roles.length; i++) {
+                if(common.isMDMRole(roles[i])) {
+                    arrRole.push(roles[i]);
+                }
+            }
             log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
-			return arrRole;
+            return arrRole;
+
 		},
         getGroupsByType: function(ctx){
-            var role = ctx.role;
+            var type = ctx.type;
 
-            if(role == 'admin'){
+            if(type == 'admin'){
                 var um = userManager(common.getTenantID());
                 var roles = um.allRoles();
                 log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
@@ -102,7 +106,7 @@ var group = (function () {
                 }
                 log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
                 return arrRole;
-            }else if(role == 'mdmadmin'){
+            }else if(type == 'mdmadmin'){
                 var um = userManager(common.getTenantID());
                 var roles = um.allRoles();
                 log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
@@ -182,18 +186,15 @@ var group = (function () {
 						proxy_role.error = 'Role already exist in the system.';
                         proxy_role.status = "ALLREADY_EXIST";
 					} else {
-					    var permission = [
-					        'http://www.wso2mobile.org/projects/mdm/actions/get',
-					        'authorize'
-					    ];
+
 					    var arrPermission = {};
 					    var permission = [
 					        'http://www.wso2.org/projects/registry/actions/get',
 					        'http://www.wso2.org/projects/registry/actions/add',
 					        'http://www.wso2.org/projects/registry/actions/delete',
-					        'authorize'
+					        'authorize','login'
 					    ];
-					    arrPermission["0"] = permission;
+					    arrPermission[0] = permission;
                         log.info(ctx.name);
                         log.info(ctx.users);
 						um.addRole(ctx.name, ctx.users, arrPermission);

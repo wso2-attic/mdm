@@ -14,7 +14,7 @@ configuration = function(appController) {
 	context = appController.context();
 	
 	try {
-        var users = user.getUsersByType({role:context.contextData.user.role});
+        var users = user.getUsersByType({type:context.contextData.user.role});
 	} catch(e) {		
 		var users = [];
 	}
@@ -27,51 +27,39 @@ configuration = function(appController) {
 	
 	context.title = context.title + " | Configuration";
 	context.page = "configuration";
-	context.jsFile = "users/configuration.js"
+	context.jsFile = "users/configuration.js";
 	context.data = {
 		configOption : "users",
 		users : users,
 		groups : groups
-	}
+	};
 	return context;
-}
+};
 
 
 add = function(appController) {
 	context = appController.context();
 
 	try {
-		var groups = group.getGroups({});
-	} catch(e) {
+		var groups = group.getGroupsByType({type:context.contextData.user.role});		
+	} catch(e) {		
 		var groups = [];
 	}
 	
-	// Array Remove - By John Resig (MIT Licensed)
-	Array.prototype.remove = function(from, to) {
-	  var rest = this.slice((to || from) + 1 || this.length);
-	  this.length = from < 0 ? this.length + from : from;
-	  return this.push.apply(this, rest);
-	};
-
-	if (context.contextData.user.role != 'masteradmin') {
-		for (var i = 0; i < groups.length; i++) {
-			if (groups[i] == 'masteradmin' | groups[i] == "admin") {
-				groups.remove(i);
-			}
-		}
-	}
 
 	context.title = context.title + " | Add User";
 	context.page = "configuration";
-	context.jsFile = "users/add.js"
+	context.jsFile = "users/add.js";
 	context.data = {
 		configOption : "users",
 		groups : groups,
 		tenantId : session.get("mdmConsoleUser").tenantId
-	}
+	};
 	return context;
 
-}
+};
+
+
 edit = function(appController) {
 	try {
 		var groups = group.getGroups({});
@@ -81,14 +69,16 @@ edit = function(appController) {
 	context = appController.context();
 	context.title = context.title + " | Add User";
 	context.page = "configuration";
-	context.jsFile = "users/add.js"
+	context.jsFile = "users/add.js";
 	context.data = {
 		configOption : "users",
 		groups : groups
-	}
+	};
 	return context;
 
-}
+};
+
+
 devices = function(appController) {
 	
 		
@@ -98,7 +88,7 @@ devices = function(appController) {
 	if (!userId) {
 		userId = session.get('mdmConsoleSelectedUser');
 	}
-	session.put('mdmConsoleSelectedUser', userId)
+	session.put('mdmConsoleSelectedUser', userId);
 	try {
 		var objUser = user.getUser({
 			"userid" : userId
@@ -117,20 +107,27 @@ devices = function(appController) {
 
 	for (var i = 0; i < devices.length; i++) {
 		
-		var allPolicies = notification.getPolicyState({deviceId: devices[i].id});
-		var policyViolated = {violated : false};
-		
-		// this is a policy validation patch added to UI. since the backend filtering does not support.		
-		policyViolated.policies = new Array();
-		for(var j = 0; j <  allPolicies.length; j++){
-			if(allPolicies[j].status){
-				policyViolated.violated = true;
-				policyViolated.policies.push(allPolicies[j]);
-			}
+		try {		
+				var allPolicies = notification.getPolicyState({deviceid: devices[i].id});
+				if(!allPolicies.length > 0){
+					allPolicies = new Array();
+				}
+				var policies = {violated : false, policies: allPolicies};
+				
+				// this is a policy validation patch added to UI. since the backend filtering does not support.		
+				
+				for(var j = 0; j <  allPolicies.length; j++){
+					if(!allPolicies[j].status){
+						policies.violated = true;						
+					}
+				}
+				//end of patch
+				devices[i].policies = policies;
+		} catch(e) {
+				
 		}
-		//end of patch
 		
-		devices[i].policyViolated = policyViolated;
+	
 		
 		devices[i].properties = JSON.parse(devices[i].properties);
 		try {
@@ -146,16 +143,18 @@ devices = function(appController) {
 
 	context.title = context.title + " | Add User";
 	context.page = "management";
-	context.jsFile = "users/devices.js"
+	context.jsFile = "users/devices.js";
 	context.data = {
 		configOption : "users",
 		devices : devices,
 		user : objUser
-	}
+	};
 
 	return context;
 
-}
+};
+
+
 assign_groups = function(appController) {
 
 	var username = request.getParameter('user');
@@ -190,13 +189,13 @@ assign_groups = function(appController) {
 	
 	context.title = context.title + " | Assign Users to group";
 	context.page = "configuration";
-	context.jsFile = "users/assign_groups.js"
+	context.jsFile = "users/assign_groups.js";
 	context.data = {
 		configOption : "policies",
 		groups : groups,
 		tenantId : session.get("mdmConsoleUser").tenantId,
 		username : username
 
-	}
+	};
 	return context;
-}
+};

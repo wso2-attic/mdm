@@ -12,6 +12,7 @@ $("#btn-add").click(function() {
 	
 
 	var name = $('#inputName').val();
+	var type = $('#inputType').val();
 	var users = $('#inputUsers').val();
 	var tenantId = $('#tenantId').val();
 
@@ -23,6 +24,7 @@ $("#btn-add").click(function() {
 	jso = {
 		"tenant_id" : tenantId,
 		"name" : name,
+		"type" : type,
 		"users" : usersArray
 	};
 
@@ -47,3 +49,15 @@ $("#btn-add").click(function() {
 });
 
 
+$( ".radioGroupType" ).change(function() {
+	var value = $(this).val();	
+	$(".box1 .filter").val(value);	
+	$(".box1 .filter" ).change();
+});
+
+
+$( document ).ready(function() {
+	var value = 'user';	
+	$(".box1 .filter").val(value);	
+	$(".box1 .filter" ).change();
+});

@@ -13,6 +13,12 @@ body {
 	padding-bottom: 5px;
 }
 
+.span2-5 {
+	width: 230px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
 a, a:hover, a:focus {
 	color: #086F76;
 }
@@ -451,4 +457,9 @@ width:600px;
 
 .parsley-error-list{
     color: #b94a48 !important;     
+}
+
+
+.icon-defaultcolor{
+	color:#097880;
 }
