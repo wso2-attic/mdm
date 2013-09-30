@@ -104,9 +104,9 @@ var group = (function () {
             }
 		},
         getGroupsByType: function(ctx){
-            var role = ctx.role;
+            var type = ctx.type;
 
-            if(role == 'admin'){
+            if(type == 'admin'){
                 var um = userManager(common.getTenantID());
                 var roles = um.allRoles();
                 log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
@@ -126,7 +126,7 @@ var group = (function () {
                 }
                 log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
                 return arrRole;
-            }else if(role == 'mdmadmin'){
+            }else if(type == 'mdmadmin'){
                 var um = userManager(common.getTenantID());
                 var roles = um.allRoles();
                 log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
