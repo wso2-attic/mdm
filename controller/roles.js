@@ -125,14 +125,15 @@ users = function(appController){
 
 
 add = function(appController){
+	context = appController.context();
 	try{
-		var users = user.getUsers({});
+		var users = user.getUsersByType({type:context.contextData.user.role});
 	}catch(e){
 		var users = [];
 	}
 	log.info("sdfsd");
 	log.info(session.get("mdmConsoleUser"));
-	context = appController.context();
+	
 	context.title = context.title + " | Add Group";
 	context.page = "configuration";
 	context.jsFile= "roles/add.js"

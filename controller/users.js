@@ -46,7 +46,6 @@ add = function(appController) {
 		var groups = [];
 	}
 	
-	
 
 	context.title = context.title + " | Add User";
 	context.page = "configuration";
