@@ -1,0 +1,26 @@
+<%
+	var iosMdmModule = require('/modules/iosmdm.js').iosmdm;
+	var iosMdm = new iosMdmModule();
+	var log = new Log();
+	 
+	var username = request.getParameter("username");
+	var password = request.getParameter("password");
+	
+	//validate username and password
+	
+	//generate a token here and maintain it with the user
+	var token = "dilshan@wso2mobile.com";
+	session.put("token", token);
+	
+	var data = iosMdm.generateMobileConfigurations(token);
+	
+	if(data == null) {
+		response.sendRedirect("mdmerror.jag");
+	}
+
+	response.contentType = "application/x-apple-aspen-config";
+	
+	var byteArrayInputStream = new Packages.java.io.ByteArrayInputStream(data);
+	print(new Stream(byteArrayInputStream)); 
+	
+%>
