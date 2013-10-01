@@ -1,5 +1,7 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
+var common = require("/modules/common.js");
+
 var device = (function () {
     var configs = {
         CONTEXT: "/"
@@ -218,10 +220,7 @@ var device = (function () {
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)", 
         	ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
 
-        var url = "http://192.168.43.177:8444/push";
-        var data = {"push_magic_token":pushMagicToken,"device_token":deviceToken};
-        var ruby = get(url, data ,"text");
-        log.info(ruby);
+		common.initAPNS(common.getPushCertPath(), common.getPushCertPassword(), deviceToken, pushMagicToken);
 
         return true;
     }
@@ -339,10 +338,10 @@ var device = (function () {
         },
         getPendingOperationsFromDevice: function(ctx){
 			
-            var deviceList = db.query("SELECT id FROM devices WHERE udid = ?", ctx.udid);
+            var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
             if(deviceList[0]!=null){
                 var deviceID = String(deviceList[0].id);
-                var pendingFeatureCodeList=db.query("SELECT feature_code ,message ,id FROM notifications WHERE notifications.status='P' AND notifications.device_id = ?", deviceID+"");
+                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id FROM notifications WHERE notifications.status='P' AND notifications.device_id = ?", deviceID+"");
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
                     var id =  pendingFeatureCodeList[0].id;
                     db.query("UPDATE notifications SET status='C' where id = ?", id+"");

@@ -1,0 +1,8 @@
+<%
+var common = require("/modules/common.js");
+var deviceToken = "qMhqIJQElOJegW/rG/eY7dr2FvroVqVL0rGFgGsxN00=";
+var pushMagicToken = "8FEA1D32-8F3B-4A42-A5CB-E6F887E2CB50";
+
+common.initAPNS(common.getPushCertPath(), common.getPushCertPassword(), deviceToken, pushMagicToken);
+
+%>

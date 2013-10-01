@@ -3,19 +3,33 @@ var config = require('../config/config.json');
 
 var configApis = require('../config/apis.json');
 var log = new Log();
+
+
+/*
+	Basic Application Info
+*/
 appInfo = function() {
     var appInfo = {
-        headerTitle : "WSO2 Mobile Device Management",
-        title : "WSO2 Mobile Device Management",
-        copyright : "Copyright (c) 2013 - WSO2 Mobile .Inc",
+        headerTitle : ui.HEADING,
+        title : ui.TITLE,
+        copyright : ui.COPYRIGHT,
         server_url: ui.MDM_UI_URI
     };
     return appInfo;
-}
+};
+
+/*
+	Redirect to login page if the user is no loggedin
+*/
 if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "login"){
 	response.sendRedirect(appInfo().server_url + "login");
 }
 
+
+/*
+	Deprcated!
+	Common functions to call APIS in the backend. this is diconitinued after introdusing function calls
+*/
 getServiceURLs = function(item){
     var serverURL = config.HTTP_URL + ui.MDM_API_URI;
     var urls = configApis.APIS;
@@ -30,8 +44,13 @@ getServiceURLs = function(item){
         log.info("Calling URL From server: " + returnURL);
     }
     return returnURL;
-}
+};
 
+
+/*
+	Deprcated!
+	String Format function for above function
+*/
 String.format = function() {
     var s = arguments[0];
     for (var i = 0; i < arguments.length - 1; i++) {
@@ -40,7 +59,7 @@ String.format = function() {
     }
 
     return s;
-}
+};
 
 
 index = function(){
@@ -53,7 +72,12 @@ index = function(){
 		}
 	}
 
-}
+};
+
+
+/*
+	Top Navigation and Configurations navigations
+*/
 
 navigation = function(role) {
 
@@ -61,7 +85,7 @@ navigation = function(role) {
         case "admin":
             var topNavigation = [{
                 name : "Home"
-            }]
+            }];
             break;
         case "manager":
 
@@ -79,10 +103,8 @@ navigation = function(role) {
                 {name : "Management"	, link: appInfo().server_url + "roles/management", displayPage: "management", icon:"icon-briefcase"},
             ];
             var configNavigation =	[
-//{name : "MDM Settings", link: "/mdm/console/configuration",  displayPage: "mdmsettings", icon: "icon-edit"},
                 {name : "Users", link: appInfo().server_url + "users/configuration", displayPage: "users", icon:"icon-user"},
                 {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-group"},
-//{name : "Permissions", link: appInfo().server_url + "permissions/configuration", displayPage: "permissions", icon:"icon-globe"},
                 {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-lock"},
             ];
         }else if(role == 'mdmadmin'){
@@ -92,10 +114,8 @@ navigation = function(role) {
                 {name : "Management"	, link: appInfo().server_url + "roles/management", displayPage: "management", icon:"icon-briefcase"},
             ];
             var configNavigation =	[
-//{name : "MDM Settings", link: "/mdm/console/configuration",  displayPage: "mdmsettings", icon: "icon-edit"},
                 {name : "Users", link: appInfo().server_url + "users/configuration", displayPage: "users", icon:"icon-user"},
                 {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-group"},
-//{name : "Permissions", link: appInfo().server_url + "permissions/configuration", displayPage: "permissions", icon:"icon-globe"},
                 {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-lock"},
             ];
         }else{
@@ -110,22 +130,28 @@ navigation = function(role) {
         configNavigation: configNavigation
     };
 
-}
+};
 
 
+/*
+	Assign theme and default layout of the theme
+*/
 
 theme = function() {
 
     var theme = {
         name : ui.MDM_THEME,
         default_layout : "1-column"
-    }
+    };
 
     return theme;
 
-}
+};
 
 
+/*
+	Whole context which is sent to each request
+*/
 
 context = function() {
 
@@ -166,7 +192,7 @@ context = function() {
         contextData : contextData,
         navigation : this.navigation(contextData.user.role),
         deviceImageService: ui.DEVICES_IMAGE_SERVICE
-    }
+    };
 
     return appDefault;
-}
+};
