@@ -18,11 +18,18 @@ appInfo = function() {
     return appInfo;
 };
 
-
+/*
+	Redirect to login page if the user is no loggedin
+*/
 if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "login"){
 	response.sendRedirect(appInfo().server_url + "login");
 }
 
+
+/*
+	Deprcated!
+	Common functions to call APIS in the backend. this is diconitinued after introdusing function calls
+*/
 getServiceURLs = function(item){
     var serverURL = config.HTTP_URL + ui.MDM_API_URI;
     var urls = configApis.APIS;
@@ -39,6 +46,11 @@ getServiceURLs = function(item){
     return returnURL;
 };
 
+
+/*
+	Deprcated!
+	String Format function for above function
+*/
 String.format = function() {
     var s = arguments[0];
     for (var i = 0; i < arguments.length - 1; i++) {
@@ -61,6 +73,11 @@ index = function(){
 	}
 
 };
+
+
+/*
+	Top Navigation and Configurations navigations
+*/
 
 navigation = function(role) {
 
@@ -86,10 +103,8 @@ navigation = function(role) {
                 {name : "Management"	, link: appInfo().server_url + "roles/management", displayPage: "management", icon:"icon-briefcase"},
             ];
             var configNavigation =	[
-//{name : "MDM Settings", link: "/mdm/console/configuration",  displayPage: "mdmsettings", icon: "icon-edit"},
                 {name : "Users", link: appInfo().server_url + "users/configuration", displayPage: "users", icon:"icon-user"},
                 {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-group"},
-//{name : "Permissions", link: appInfo().server_url + "permissions/configuration", displayPage: "permissions", icon:"icon-globe"},
                 {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-lock"},
             ];
         }else if(role == 'mdmadmin'){
@@ -99,10 +114,8 @@ navigation = function(role) {
                 {name : "Management"	, link: appInfo().server_url + "roles/management", displayPage: "management", icon:"icon-briefcase"},
             ];
             var configNavigation =	[
-//{name : "MDM Settings", link: "/mdm/console/configuration",  displayPage: "mdmsettings", icon: "icon-edit"},
                 {name : "Users", link: appInfo().server_url + "users/configuration", displayPage: "users", icon:"icon-user"},
                 {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-group"},
-//{name : "Permissions", link: appInfo().server_url + "permissions/configuration", displayPage: "permissions", icon:"icon-globe"},
                 {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-lock"},
             ];
         }else{
@@ -120,6 +133,9 @@ navigation = function(role) {
 };
 
 
+/*
+	Assign theme and default layout of the theme
+*/
 
 theme = function() {
 
@@ -133,6 +149,9 @@ theme = function() {
 };
 
 
+/*
+	Whole context which is sent to each request
+*/
 
 context = function() {
 

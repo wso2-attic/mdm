@@ -136,9 +136,6 @@ var user = (function () {
             return array;
         },
 		getUserRoles: function(ctx){
-            var tenantUser = carbon.server.tenantUser(ctx.username);
-			log.info("tenantid>>>"+common.getTenantID());
-			log.info("username>>>"+tenantUser.username);
 			var um = userManager(common.getTenantID());
 		    var user = um.getUser(ctx.username);
 			return stringify(user.getRoles());
@@ -233,6 +230,7 @@ var user = (function () {
 		    sender.send();
 		},
 		addUser: function(ctx){
+            log.info("Mobile >>>>>>>>>>>"+ctx.mobile_no);
 			var claimMap = new java.util.HashMap();
 			claimMap.put(claimEmail, ctx.username);
 			claimMap.put(claimFirstName, ctx.first_name);
@@ -287,6 +285,7 @@ var user = (function () {
 			var tenantId = common.getTenantID();
 			var users_list = Array();
 			if(tenantId){
+                    log.info("Tenant ID >>>>>>"+common.getTenantID());
 					var um = userManager(common.getTenantID());
 					var arrUserName = parse(stringify(um.listUsers()));
 

@@ -18,13 +18,10 @@ var isMDMRoleWithAdmins = function(role) {
 	return true;
 }
 
-var isMDMUser = function(user) {
-	var otherUsers = new Array("wso2.anonymous.user");
-	for (var i = 0; i < otherUsers.length; i++) {
-		if (user == otherUsers[i]) {
-			return false;
-		}
-	}
+var isMDMUser = function (user) {
+	var otherUsers = new Array("wso2.anonymous.user","admin");
+	for(var i = 0; i < otherUsers.length; i++) {
+		if(user == otherUsers[i]) {
 	return true;
 }
 
