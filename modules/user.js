@@ -360,6 +360,7 @@ var user = (function () {
                         array.push(users[i]);
                     }
                 }
+               // log.info("User Array >>>>>>>>>>>>>"+array);
                 return array;
             }
         },
