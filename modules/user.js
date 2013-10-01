@@ -137,8 +137,10 @@ var user = (function () {
         },
 		getUserRoles: function(ctx){
             var tenantUser = carbon.server.tenantUser(ctx.username);
-			var um = userManager(tenantUser.tenantId);
-		    var user = um.getUser(tenantUser.username);
+			log.info("tenantid>>>"+common.getTenantID());
+			log.info("username>>>"+tenantUser.username);
+			var um = userManager(common.getTenantID());
+		    var user = um.getUser(ctx.username);
 			return stringify(user.getRoles());
 		},
         getRolesByUser:function(ctx){
@@ -360,6 +362,7 @@ var user = (function () {
                         array.push(users[i]);
                     }
                 }
+               // log.info("User Array >>>>>>>>>>>>>"+array);
                 return array;
             }
         },

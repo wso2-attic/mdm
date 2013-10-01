@@ -104,16 +104,11 @@ var goose = (function () {
 							jResult = request.getAllParameters('UTF-8');
 						}else{
 							jResult = request.getAllParameters('UTF-8');
+                            log.info(request.getContentType().indexOf('application/json') !== -1);
+                            log.info(request.getContentType().indexOf('UTF-8') !== -1);
 							if(request.getContentType().indexOf('application/json') !== -1){
-								if(request.getContentType().indexOf('UTF-8') !== -1){
-                                    log.info(request.getContentType());
-                                    log.info(request.getContent());
-                                    log.info(parse(request.getContent()));
-									mergeRecursive(jResult, parse(request.getContent()));
-								}else{
                                     log.info(">>>>>Result "+jResult);
 									mergeRecursive(jResult,request.getContent());
-								}
 							}
 						}
 						//log.info("--------Goose file parsing--------- ");
