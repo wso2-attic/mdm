@@ -3,7 +3,7 @@ var apiConfig = getApiConfig();
 var uiConfig = getUIConfig();
 
 function getAppConfig(){
-	var appConfig = loadTextFileAjaxSync("/mdm/config.json", "application/json");	
+	var appConfig = loadTextFileAjaxSync("/mdm/config/config.json", "application/json");	
 	return JSON.parse(appConfig);
 }
 
