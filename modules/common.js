@@ -79,12 +79,12 @@ var initAPNS = function(pathPushCert, pushCertPassword, deviceToken, magicToken)
 	}
 }
 
-var loadPayload = function(operationCode) {
+var loadPayload = function(operationCode, identifier) {
 	
 	var log = new Log();
 	var operation = "";
 	var paramMap = new Packages.java.util.HashMap();
-	paramMap.put("CommandUUID", Packages.java.util.UUID.randomUUID().toString());
+	paramMap.put("CommandUUID", identifier);
 	var isProfile = false;
 	
 	log.error("operationCode >>>>>>>>>>>>>>>>>> " + operationCode);	
