@@ -3,7 +3,8 @@ var selectedPermission = null;
 $(document).ready( function () {
 	oTable = $('#main-table').dataTable( {
 		"sDom": "<'row-fluid'<'tabel-filter-group span8'T><'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-		"iDisplayLength": 6,
+		"aaSorting": [[ 0, "desc" ]],
+		"iDisplayLength": 20,
 		 "bStateSave": false,
 		"oTableTools": {
 			"aButtons": [

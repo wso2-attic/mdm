@@ -3,15 +3,22 @@ var config = require('../config/config.json');
 
 var configApis = require('../config/apis.json');
 var log = new Log();
+
+
+/*
+	Basic Application Info
+*/
 appInfo = function() {
     var appInfo = {
-        headerTitle : "WSO2 Mobile Device Management",
-        title : "WSO2 Mobile Device Management",
-        copyright : "Copyright (c) 2013 - WSO2 Mobile .Inc",
+        headerTitle : ui.HEADING,
+        title : ui.TITLE,
+        copyright : ui.COPYRIGHT,
         server_url: ui.MDM_UI_URI
     };
     return appInfo;
-}
+};
+
+
 if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "login"){
 	response.sendRedirect(appInfo().server_url + "login");
 }
@@ -30,7 +37,7 @@ getServiceURLs = function(item){
         log.info("Calling URL From server: " + returnURL);
     }
     return returnURL;
-}
+};
 
 String.format = function() {
     var s = arguments[0];
@@ -40,7 +47,7 @@ String.format = function() {
     }
 
     return s;
-}
+};
 
 
 index = function(){
@@ -53,7 +60,7 @@ index = function(){
 		}
 	}
 
-}
+};
 
 navigation = function(role) {
 
@@ -61,7 +68,7 @@ navigation = function(role) {
         case "admin":
             var topNavigation = [{
                 name : "Home"
-            }]
+            }];
             break;
         case "manager":
 
@@ -110,7 +117,7 @@ navigation = function(role) {
         configNavigation: configNavigation
     };
 
-}
+};
 
 
 
@@ -119,11 +126,11 @@ theme = function() {
     var theme = {
         name : ui.MDM_THEME,
         default_layout : "1-column"
-    }
+    };
 
     return theme;
 
-}
+};
 
 
 
@@ -166,7 +173,7 @@ context = function() {
         contextData : contextData,
         navigation : this.navigation(contextData.user.role),
         deviceImageService: ui.DEVICES_IMAGE_SERVICE
-    }
+    };
 
     return appDefault;
-}
+};
