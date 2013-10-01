@@ -15,9 +15,8 @@ configuration = function(appController) {
 	
 	try {
         var users = user.getUsersByType({type:context.contextData.user.role});
-
 	} catch(e) {
-        print(user.getUsersByType({type:context.contextData.user.role}));
+		log.info(e);
 		var users = [];
 	}
 	try {
