@@ -2,8 +2,9 @@ var iosmdm = (function() {
 
 	var log = new Log();
 	var deviceModule = require('/modules/device.js').device;
-	var device = new deviceModule(db);
-
+	var device = new deviceModule(application.get('db'));
+	var common = require("/modules/common.js");
+	
 	var module = function() {
 
 	};
@@ -115,7 +116,8 @@ var iosmdm = (function() {
 				tokenProperties["token"] = tokenUpdate.getToken();
 				tokenProperties["unlockToken"] = tokenUpdate.getUnlockToken();
 				tokenProperties["magicToken"] = tokenUpdate.getPushMagic();
-				tokenProperties["deviceid"] = '5b2b244f6758ce764a337dce9966b440b19c0640';//tokenUpdate.getUdid();
+				tokenProperties["deviceid"] = '5b2b244f6758ce764a337dce9966b440b19c0640';
+				//tokenUpdate.getUdid();
 
 				device.updateiOSTokens(tokenProperties);
 
@@ -129,6 +131,8 @@ var iosmdm = (function() {
 			Packages.org.apache.commons.io.IOUtils.copy(inputStream, writer, "UTF-8");
 			var contentString = writer.toString();
 
+			log.error(contentString);
+
 			try {
 				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();
 				var apnsStatus = plistExtractor.extractAPNSResponse(contentString);
@@ -136,26 +140,34 @@ var iosmdm = (function() {
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
 					return;
 				}
+
+				var ctx = {};
+				ctx.udid = stringify(apnsStatus.getUdid());
+				var operation = device.getPendingOperationsFromDevice(ctx);
 				
+				if(operation != null) {
+					return common.loadPayload(operation.feature_code);
+				}
+				
+				return null;
+
 			} catch (e) {
 				log.error(e);
 			}
 		},
-		initAPNS : function(feature, data, pathPushCert, pushCertPassword, 
-			deviceToken, magicToken, unlockToken) {
-	
+		initAPNS : function(pathPushCert, pushCertPassword, deviceToken, magicToken) {
+
 			try {
-				var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender
-					(pathPushCert, pushCertPassword);
-	
+				var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender(pathPushCert, pushCertPassword);
+
 				var userData = new Packages.java.util.ArrayList();
 				var params = new Packages.java.util.HashMap();
 				params.put("devicetoken", deviceToken);
 				params.put("magictoken", magicToken);
 				userData.add(params);
-	
+
 				apnsInitiator.pushToAPNS(userData);
-	
+
 			} catch (e) {
 				log.error(e);
 			}
