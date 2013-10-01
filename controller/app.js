@@ -10,9 +10,9 @@ var log = new Log();
 */
 appInfo = function() {
     var appInfo = {
-        headerTitle : ui.MDM_TITLE,
-        title : ui.MDM_TITLE,
-        copyright : ui.HEADING,
+        headerTitle : ui.HEADING,
+        title : ui.TITLE,
+        copyright : ui.COPYRIGHT,
         server_url: ui.MDM_UI_URI
     };
     return appInfo;
