@@ -231,11 +231,6 @@ var user = (function () {
 		},
 		addUser: function(ctx){
             log.info("Mobile >>>>>>>>>>>"+ctx.mobile_no);
-            log.info("Mobile >>>>>>>>>>>"+ctx.username);
-            log.info("Mobile >>>>>>>>>>>"+ctx.password);
-            log.info("Mobile >>>>>>>>>>>"+ctx.groups);
-            log.info("Mobile >>>>>>>>>>>"+ctx.first_name);
-            log.info("Mobile >>>>>>>>>>>"+ctx.last_name);
 			var claimMap = new java.util.HashMap();
 			claimMap.put(claimEmail, ctx.username);
 			claimMap.put(claimFirstName, ctx.first_name);
