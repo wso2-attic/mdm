@@ -22,9 +22,10 @@ var isMDMUser = function (user) {
 	var otherUsers = new Array("wso2.anonymous.user","admin");
 	for(var i = 0; i < otherUsers.length; i++) {
 		if(user == otherUsers[i]) {
-			return true;
+			return false;
 		}
 	}	
+	return true;
 }
 
 var getTenantID = function() {
