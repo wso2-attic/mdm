@@ -117,6 +117,30 @@ var device = (function () {
         }
 
     }
+    
+	function invokeInitialFunctions(ctx) {
+		
+		var devices = db.query("SELECT * FROM devices WHERE udid = " + stringify(ctx.deviceid));
+        var deviceID = devices[0].id;
+
+        sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
+        sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
+
+		/**
+        var roles = this.getUserRoles({'userid':userId});
+        var roleList = parse(roles);
+        log.info(roleList[0]);
+        var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+        log.info("Policy Payload :"+gpresult[0].data);
+        var jsonData = parse(gpresult[0].data);
+        for(var i =0 ;i < jsonData.length; i++){
+            var code = jsonData[i].code;
+            var result = db.query("select name from features where code = ? ",code);
+            var featureName = result[0].name;
+            var data = jsonData[i].data;
+            sendMessageToIOSDevice({'deviceid':deviceID, 'operation':featureName, 'data': data});
+        }*/
+    }
 
 	function sendMessageToDevice(ctx){
 
@@ -191,18 +215,19 @@ var device = (function () {
         var regIdJsonObj = parse(regId);
 
         if(ctx.operation=="CLEARPASSWORD"){
-            var unlockToken = regIdJsonObj.unlock_token;
+            var unlockToken = regIdJsonObj.unlockToken;
             message = {};
             message.unlock_token = unlockToken;
             message = stringify(message);
             log.info("Messagee"+message);
         }
 
-        var pushMagicToken = regIdJsonObj.push_magic_token;
-        var deviceToken = regIdJsonObj.device_token;
+        var pushMagicToken = regIdJsonObj.magicToken;
+        var deviceToken = regIdJsonObj.token;
 
-        log.info(pushMagicToken);
-        log.info(deviceToken);
+		log.error("device id : "+ ctx.deviceid);
+		log.error("device token : "+ deviceToken);
+		log.error("magic token : "+ pushMagicToken);
 
         var users = db.query("SELECT user_id FROM devices WHERE id = ?", ctx.deviceid+"");
         var userId = users[0].user_id;
@@ -302,26 +327,6 @@ var device = (function () {
                 	tenantId, ctx.osversion, createdDate, ctx.properties, ctx.regid, userId, platformId, ctx.vendor, ctx.udid);
             }
 
-            var devices = db.query("SELECT * FROM devices WHERE udid = ?", ctx.udid);
-            var deviceID = devices[0].id;
-
-            sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
-            sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
-
-            var roles = this.getUserRoles({'userid':userId});
-            var roleList = parse(roles);
-            log.info(roleList[0]);
-            var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
-            log.info("Policy Payload :"+gpresult[0].data);
-            var jsonData = parse(gpresult[0].data);
-            for(var i =0 ;i < jsonData.length; i++){
-                var code = jsonData[i].code;
-                var result = db.query("select name from features where code = ? ",code);
-                var featureName = result[0].name;
-                var data = jsonData[i].data;
-                sendMessageToIOSDevice({'deviceid':deviceID, 'operation':featureName, 'data': data});
-            }
-
             return true;
         },
         sendToDevice: function(ctx){
@@ -355,7 +360,7 @@ var device = (function () {
         },
         updateiOSTokens: function(ctx){
 		
-			var result = db.query("SELECT properties FROM devices WHERE udid= ?", ctx.deviceid);
+			var result = db.query("SELECT properties FROM devices WHERE udid = " + stringify(ctx.deviceid));
 
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
                 log.error(properties);
@@ -380,8 +385,10 @@ var device = (function () {
                 var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?", 
                 	stringify(properties), stringify(tokenProperties), ctx.deviceid);
 
-                if(updateResult != null && updateResult != undefined && updateResult[0] != null
-                    && updateResult[0] != undefined) {
+                if(updateResult != null && updateResult != undefined && updateResult == 1) {
+                    	
+					setTimeout(function(){invokeInitialFunctions(ctx)}, 2000);
+                    	
                     return true;
                 }
             }
