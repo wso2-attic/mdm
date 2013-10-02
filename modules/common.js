@@ -1,5 +1,5 @@
 var isMDMRole = function(role) {
-	var otherRoles = new Array("everyone", "portal", "store", "wso2.anonymous.role", "publisher", "reviewer", "admin", "mdmadmin");
+	var otherRoles = new Array("Internal/everyone", "portal", "store", "wso2.anonymous.role", "publisher", "reviewer", "admin", "mdmadmin");
 	for (var i = 0; i < otherRoles.length; i++) {
 		if (role == otherRoles[i]) {
 			return false;
@@ -25,6 +25,7 @@ var isMDMUser = function (user) {
 			return false;
 		}
 	}
+
 	return true;
 }
 
