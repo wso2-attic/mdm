@@ -288,11 +288,14 @@ var user = (function () {
                     log.info("Tenant ID >>>>>>"+common.getTenantID());
 					var um = userManager(common.getTenantID());
 					var arrUserName = parse(stringify(um.listUsers()));
-
+                    log.info("Userssssssssss"+arrUserName);
 					for(var i = 0; i < arrUserName.length; i++) {
+                        log.info(common.isMDMUser(arrUserName[i]));
 						if(!common.isMDMUser(arrUserName[i])) {
+
 							continue;
 						}
+                        log.info("Test Admin"+arrUserName[i]);
 						var user = um.getUser(arrUserName[i]);
 						
 						var proxy_user = {};
@@ -311,13 +314,14 @@ var user = (function () {
 			}else{
 				print('Error in getting the tenantId from session');
 			}
-			log.info(users_list);
+			log.info("LLLLLLLLLLLLLLLLLLLL"+stringify(users_list));
 			return users_list;
 		},
         getUsersByType:function(ctx){
             var type = ctx.type;
             if(type == 'admin'){
                 var users = this.getUsers();
+                log.info("Userssssssssssssssssssssss"+stringify(users));
                 for(var i =0 ;i<users.length;i++){
                     log.info(users[i].username);
 
@@ -361,7 +365,7 @@ var user = (function () {
                         array.push(users[i]);
                     }
                 }
-               // log.info("User Array >>>>>>>>>>>>>"+array);
+                log.info("User Array >>>>>>>>>>>>>"+array);
                 return array;
             }
         },

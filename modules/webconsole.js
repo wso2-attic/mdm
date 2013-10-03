@@ -55,21 +55,19 @@ var webconsole = (function () {
     module.prototype = {
         constructor: module,
         getDevicesCountAndUserCountForAllGroups: function(ctx) {
+
         	var um = userManager(common.getTenantID());
         	var roles =  um.allRoles();
 			var arrRole = new Array();
 			for(var i = 0; i < roles.length; i++) {
-				
+                log.info("Current Role"+roles[i]);
 				if(!common.isMDMRole(roles[i])) {
 					continue;
 				}
-				
 				var objRole = {};
 				objRole.name =  String(roles[i]);
-				
 				var userList = um.getUserListOfRole(roles[i]);
 				objRole.no_of_users = userList.length;
-				
 				var deviceCountAll = 0;
 				
 				for(var j = 0; j < userList.length; j++) {
@@ -77,11 +75,10 @@ var webconsole = (function () {
 						String(userList[j]), common.getTenantID());
 					deviceCountAll += parseInt(resultDeviceCount[0].device_count);
 				}
-				objRole.no_of_devices = deviceCountAll;
 
+				objRole.no_of_devices = deviceCountAll;
 				arrRole.push(objRole);
 			}
-            log.info(arrRole);
             return arrRole;
         }
     };
