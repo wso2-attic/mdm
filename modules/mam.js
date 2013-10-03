@@ -55,7 +55,7 @@ var mam = (function () {
     module.prototype = {
         constructor: module,
 		getInstallAppList: function(ctx){
-            var array = [{'identity':'dummyidentity','type':'dumyvalue'}, {'identity':'dummyidentity','type':'dumyvalue'}, {'identity':'dummyidentity','type':'dumyvalue'}, {'identity':'dummyidentity','type':'dumyvalue'}];
+            var array = [{'identity':'dummyidentity','type':'dumyvalue','os':'dumyos'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos'}];
             return array;
 		}
     };
