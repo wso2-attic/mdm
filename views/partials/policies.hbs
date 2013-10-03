@@ -521,7 +521,7 @@
 		
 		<div class="accordion-group">
 			<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse11"> <i class="icon-mobile-phone"></i> Black List/ White List Apps</a>
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse11"> <i class="icon-mobile-phone"></i> Blacklist/ Whitelist Apps</a>
 			</div>
 			<div id="collapse11" class="accordion-body collapse">
 				<div class="accordion-inner">
@@ -545,10 +545,13 @@
 										</div>
 										<div class="modal-body">
 												<div class="raw">
-													<div>OS Type: </div><select id="modalBlackListType"><option value="android">Android</option><option value="iOS">iOS</option></select>
+													<div>OS Type: </div><select id="modalBlackListOS"><option value="android">Android</option><option value="iOS">iOS</option></select>
+												</div>
+												<div class="raw">
+													<div>Market Type: </div><select id="modalBlackListType"><option value="enterprise">Enterprise</option><option value="market">Market</option></select>
 												</div>
 												<div class="raw-fluid">
-													<div >Account Name:</div> <input type="text" id="modalBlackListPackageName">
+													<div >Package/ Bundle Name:</div> <input type="text" id="modalBlackListPackageName">
 												</div>											
 										</div>	
 										
@@ -559,7 +562,6 @@
 											<button  data-dismiss="modal" aria-hidden="true" id="modalBlackListAppButton" class="btn btn-orange" data-value="Enabled">Add</button>
 											
 										</div>				
-															
 
 							  </div>	
 							

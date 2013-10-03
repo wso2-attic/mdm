@@ -63,7 +63,7 @@ $("#btn-add").click(function() {
 	//policy data for blacklisted apps
 	var policyDataBlackList = new Array(); 
 	$('#inputBlackListApps > option').each(function() { 		
-    	policyDataBlackList.push({identity: $(this).text(), type: $(this).data('os')});
+    	policyDataBlackList.push({identity: $(this).text(), os: $(this).data('os'), type: $(this).data('type')});
 	});
 		
 	if(policyDataBlackList.length > 0){
@@ -90,7 +90,7 @@ $("#btn-add").click(function() {
 	});
 	
 	$( document ).ajaxComplete(function() {
-		window.location.assign("configuration");
+		//window.location.assign("configuration");
 	});
 	
 });
@@ -103,7 +103,7 @@ $("#btn-add").click(function() {
 
 
 $( "#modalBlackListAppButton" ).click(function() {
-		$("#inputBlackListApps").append('<option data-os="'+ $("#modalBlackListType").val() +'" value="'+ $("#modalBlackListPackageName").val()  +'">' + $("#modalBlackListPackageName").val()  + '</option>');
+		$("#inputBlackListApps").append('<option data-type="'+ $("#modalBlackListType").val() +'" data-os="'+ $("#modalBlackListOS").val() +'" value="'+ $("#modalBlackListPackageName").val()  +'">' + $("#modalBlackListPackageName").val()  + '</option>');
 });
 
 $( "#modalBlackListAppRemove" ).click(function() {
