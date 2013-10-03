@@ -65,7 +65,7 @@ var device = (function () {
         for(var n=0;n<jsonData.length;n++){
             if(jsonData[n].code == '509A'){
                 var blackListApps = jsonData[n].data.blacklist_apps;
-                var androidBlackListApps = new Array();
+                var osBlackListApps = new Array();
                 for(var k=0;k<blackListApps.length;k++){
                     if(blackListApps[k].type == 'android'){
                         androidBlackListApps.push(blackListApps[k]);
@@ -73,15 +73,15 @@ var device = (function () {
                 }
 
                 var installApps = jsonData[n].data.install_apps;
-                var androidInstallApps = new Array();
+                var osInstallApps = new Array();
                 for(var k=0;k<installApps.length;k++){
                     if(installApps[k].type == 'android'){
                         androidInstallApps.push(installApps[k]);
                     }
                 }
                 var obj1 = {};
-                obj1.blacklist_apps =
-                    obj1.install_apps =
+                obj1.blacklist_apps = osBlackListApps;
+                    obj1.install_apps = osInstallApps;
 
                 var obj2 = {};
                 obj2.code = '509A';
