@@ -1,6 +1,6 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
-var common = require("/modules/common.js");
+//var common = require("/modules/common.js");
 
 var device = (function () {
     var configs = {
