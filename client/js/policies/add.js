@@ -57,6 +57,21 @@ $("#btn-add").click(function() {
      	policyData.push({code: param, data: params[param]});
 	}
 
+
+
+
+	//policy data for blacklisted apps
+	var policyDataBlackList = new Array(); 
+	$('#inputBlackListApps > option').each(function() { 		
+    	policyDataBlackList.push({identity: $(this).text(), type: $(this).data('os')});
+	});
+		
+	if(policyDataBlackList.length > 0){
+		policyData.push({code: "509A", data: policyDataBlackList});
+	}
+	
+	
+	
 	
 		
 	jQuery.ajax({
@@ -79,3 +94,14 @@ $("#btn-add").click(function() {
 	});
 	
 });
+
+
+
+
+
+
+
+
+	$( "#modalBlackListAppButton" ).click(function() {
+				$("#inputBlackListApps").append('<option data-os="'+ $("#modalBlackListType").val() +'" value="'+ $("#modalBlackListPackageName").val()  +'">' + $("#modalBlackListPackageName").val()  + '</option>');
+	});

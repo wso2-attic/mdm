@@ -514,6 +514,60 @@
 				</div>
 			</div>
 		</div>
+		
+		
+		
+		
+		
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse11"> <i class="icon-mobile-phone"></i> Black List/ White List Apps</a>
+			</div>
+			<div id="collapse11" class="accordion-body collapse">
+				<div class="accordion-inner">
+					<!-- LDAP Configuration Start -->
+					
+					<div class="control-group">
+						<label class="control-label">Blacklisted Apps</label>
+						<div class="controls">
+							<select multiple id="inputBlackListApps">
+								  
+							</select>
+							<input type="button" class="btn btn-orange" data-toggle="modal" href="#modalBlackListApp"  value="Add an app"> 
+							
+							<div id="modalBlackListApp" class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
+								
+								<div class="modal-header">
+											<h4 id="myModalLabel">Add an Backlist App</h4>
+										</div>
+										<div class="modal-body">
+												<div class="raw">
+													<div>OS Type: </div><select id="modalBlackListType"><option value="android">Android</option><option value="iOS">iOS</option></select>
+												</div>
+												<div class="raw-fluid">
+													<div >Account Name:</div> <input type="text" id="modalBlackListPackageName">
+												</div>											
+										</div>	
+										
+										<div class="modal-footer">
+											<button class="btn btn-cancel"  data-dismiss="modal" aria-hidden="true">
+												Close
+											</button>
+											<button  data-dismiss="modal" aria-hidden="true" id="modalBlackListAppButton" class="btn btn-orange" data-value="Enabled">Add</button>
+										</div>				
+															
+
+							  </div>	
+							
+						</div>
+					</div>
+
+					
+				</div>
+			</div>
+		</div>
+		
+		
 
 	</div>
 </form>
