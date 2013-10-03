@@ -342,19 +342,24 @@ var user = (function () {
                     log.info(users[i].username);
 
                     var roles = parse(this.getUserRoles({'username':users[i].username}));
-                    var flag = false;
+                    var flag = 0;
                     for(var j=0 ;j<roles.length;j++){
                         log.info("Test iteration2"+roles[j]);
                         if(roles[j]=='admin'||roles[j]=='mdmadmin'){
-                            flag = true;
+                            flag = 1;
+                            break;
+                        }else if(roles[j]=='store'||roles[j]=='publisher'){
+                            flag = 2;
                             break;
                         }else{
-                            flag = false;
+                            flag = 0;
                         }
                     }
-                    if(flag == true){
+                    if(flag == 1){
                         users[i].type = 'administrator';
-                    }else {
+                    }else if(flag == 2) {
+                        users[i].type = 'mam';
+                    }else{
                         users[i].type = 'user';
                     }
                 }
