@@ -1,32 +1,40 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>WSO2Mobile MDM</title>
-</head>
-<body>
+	<head>
+		<meta charset=UTF-8" />
+		<title>WSO2Mobile MDM Registration</title>
+		</head>
+		<body style="font-family:Arial, Helvetica, sans-serif; font-size:small; margin:0px">
 
-<form method="POST" action="enroll" >
+		<div bgcolor="#F5F5F5" style="background-color:#F5F5F5; text-align:center; padding-bottom: 10px; padding-top: 10px" >
+		<span><b>WSO2Mobile MDM Registration</b></span>
 
-<table>
-	<tr>
-		<td>Username</td>
-		<td><input type="text" name="username" /></td>
-	</tr>
-	<tr>
-		<td>Password</td>
-		<td><input type="password" name="password" /></td>
-	</tr>
-	<tr>
-		<td><input type="reset" value="Reset" /></td>
-		<td><input type="submit" value="Submit" /></td>
-	</tr>
-</table>
+		</div>
+		<div style="height:40px" ></div>
 
-</form>
+		<form action="enroll" method="post">
+		<table align="center" width="90%" border="0" bordercolor="#0033CC">
+		<tr>
+		<td align="center"><input type="text" placeholder="Username" name="username" style="width:100%;" value="dilshan@wso2.com" /></td>
+		</tr>
+		<tr>
 
-<br/><br/>
-<a href="ca">Download self signed certificate</a>
-
-</body>
+		<td align="center">
+		<input type="password" placeholder="Password" name="password" style="width:100%;" value="123456" />
+		</td>
+		</tr>
+		<tr >
+			<td align="center">
+			<input type="submit" name="Enroll" value="Register" />
+			</td>
+		</tr>
+		</table>
+		</form>
+		<center>
+			<p>
+				* Make sure you download the root certificate
+			</p>
+			<a href="ca">Download</a>
+		</center>
+		</body>
 </html>

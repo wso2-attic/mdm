@@ -1,5 +1,4 @@
 <%
-	log.error("server >>>>>>>>>>>>>>>>>>>>>>>>");
 	
 	var iosMdmModule = require('/modules/iosmdm.js').iosmdm;
 	var iosMdm = new iosMdmModule();
