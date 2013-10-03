@@ -9,7 +9,7 @@
 	//validate username and password
 	
 	//generate a token here and maintain it with the user
-	var token = "dilshan@wso2mobile.com";
+	var token = "dilshan@wso2.com";
 	session.put("token", token);
 	
 	var data = iosMdm.generateMobileConfigurations(token);

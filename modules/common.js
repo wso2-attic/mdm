@@ -9,6 +9,7 @@ var isMDMRole = function(role) {
 }
 
 var isMDMRoleWithAdmins = function(role) {
+
 	var otherRoles = new Array("Internal/everyone", "portal", "store", "wso2.anonymous.role", "publisher", "reviewer");
 	for (var i = 0; i < otherRoles.length; i++) {
 		if (role == otherRoles[i]) {
@@ -22,6 +23,7 @@ var isMDMUser = function (user) {
 	var otherUsers = new Array("wso2.anonymous.user","admin");
 	for(var i = 0; i < otherUsers.length; i++) {
 		if(user == otherUsers[i]) {
+
 	        return false;
         }
     }
@@ -79,12 +81,12 @@ var initAPNS = function(pathPushCert, pushCertPassword, deviceToken, magicToken)
 	}
 }
 
-var loadPayload = function(operationCode) {
+var loadPayload = function(operationCode, identifier) {
 	
 	var log = new Log();
 	var operation = "";
 	var paramMap = new Packages.java.util.HashMap();
-	paramMap.put("CommandUUID", Packages.java.util.UUID.randomUUID().toString());
+	paramMap.put("CommandUUID", identifier);
 	var isProfile = false;
 	
 	log.error("operationCode >>>>>>>>>>>>>>>>>> " + operationCode);	

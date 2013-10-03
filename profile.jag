@@ -14,7 +14,7 @@
 		log.error("Cannot load CA private key pem. Check the configurations.");
 	}
 
-	var token = "dilshan@wso2mobile.com"; //session.get("token");
+	var token = "dilshan@wso2.com"; //session.get("token");
 	var signedData = iosMdm.handleProfileRequest(request.getInputStream(), caPath, caPrivateKeyPath, token);
 	
 	if(signedData == null) {

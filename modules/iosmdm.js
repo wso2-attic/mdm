@@ -2,9 +2,12 @@ var iosmdm = (function() {
 
 	var log = new Log();
 	var deviceModule = require('/modules/device.js').device;
-	var device = new deviceModule(application.get('db'));
+	var db = application.get('db');
+	var device = new deviceModule(db);
 	var common = require("/modules/common.js");
-	
+	var notificationModule = require('/modules/notification.js').notification;
+	var notification = new notificationModule(db);
+
 	var module = function() {
 
 	};
@@ -116,8 +119,7 @@ var iosmdm = (function() {
 				tokenProperties["token"] = tokenUpdate.getToken();
 				tokenProperties["unlockToken"] = tokenUpdate.getUnlockToken();
 				tokenProperties["magicToken"] = tokenUpdate.getPushMagic();
-				tokenProperties["deviceid"] = '5b2b244f6758ce764a337dce9966b440b19c0640';
-				//tokenUpdate.getUdid();
+				tokenProperties["deviceid"] = tokenUpdate.getUdid();
 
 				device.updateiOSTokens(tokenProperties);
 
@@ -138,17 +140,39 @@ var iosmdm = (function() {
 				var apnsStatus = plistExtractor.extractAPNSResponse(contentString);
 
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
+					log.error("Acknowledged >>>>>>>>>>>>>>>>");
+
+					var commandUUID = apnsStatus.getCommandUUID();
+					var responseData = "";
+
+					log.error(apnsStatus.getOperation());
+					log.error(apnsStatus.getResponseData());
+
+					if ("QueryResponses" == apnsStatus.getOperation()) {
+						responseData = apnsStatus.getResponseData();
+					} else if ("InstalledApplicationList" == apnsStatus.getOperation()) {
+						responseData = apnsStatus.getResponseData();
+					} else {
+
+					}
+
+					var ctx = {};
+					ctx.data = responseData;
+					ctx.msgID = commandUUID;
+
+					notification.addIosNotification(ctx);
+
 					return;
 				}
 
 				var ctx = {};
 				ctx.udid = stringify(apnsStatus.getUdid());
 				var operation = device.getPendingOperationsFromDevice(ctx);
-				
-				if(operation != null) {
-					return common.loadPayload(operation.feature_code);
+
+				if (operation != null) {
+					return common.loadPayload(operation.feature_code, new Packages.java.lang.String(operation.id));
 				}
-				
+
 				return null;
 
 			} catch (e) {
