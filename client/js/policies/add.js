@@ -57,6 +57,21 @@ $("#btn-add").click(function() {
      	policyData.push({code: param, data: params[param]});
 	}
 
+
+
+
+	//policy data for blacklisted apps
+	var policyDataBlackList = new Array(); 
+	$('#inputBlackListApps > option').each(function() { 		
+    	policyDataBlackList.push({identity: $(this).text(), os: $(this).data('os'), type: $(this).data('type')});
+	});
+		
+	if(policyDataBlackList.length > 0){
+		policyData.push({code: "509A", data: policyDataBlackList});
+	}
+	
+	
+	
 	
 		
 	jQuery.ajax({
@@ -75,7 +90,51 @@ $("#btn-add").click(function() {
 	});
 	
 	$( document ).ajaxComplete(function() {
-		window.location.assign("configuration");
+		//window.location.assign("configuration");
 	});
 	
+});
+
+
+
+
+
+
+
+
+$( "#modalBlackListAppButton" ).click(function() {
+		$("#inputBlackListApps").append('<option data-type="'+ $("#modalBlackListType").val() +'" data-os="'+ $("#modalBlackListOS").val() +'" value="'+ $("#modalBlackListPackageName").val()  +'">' + $("#modalBlackListPackageName").val()  + '</option>');
+});
+
+$( "#modalBlackListAppRemove" ).click(function() {
+	 $("#inputBlackListApps :selected").each(function() {
+    		$(this).remove();
+	});
+});
+
+
+
+
+$(document).ready(function() {
+	
+	jQuery.ajax({
+		url : getServiceURLs("getMAMApps"),
+		type : "GET",
+		dataType : "json",
+		success : function(apps) {			
+			
+			for(var i = 0; i < apps.length; i++){
+				$('select[name="inputInstallApps_helper1"]').append('<option>'+ apps.name + '</option>');
+			}
+
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+
+		}
+	});
+	
+	
+	
+	
+
 });

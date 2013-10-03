@@ -18,7 +18,8 @@
 		"userGroups": "users/{0}/groups",
 		"permissionsCRUD": "permissions",
 		"policiesCRUD": "policies/{0}",
-		"permissionFeatures": "features" 
+		"permissionFeatures": "features",
+		"getMAMApps": "mam/policy/installapps" 
     }
 
 }

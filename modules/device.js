@@ -61,6 +61,37 @@ var device = (function () {
         }
         return obj1;
     }
+    function policyByOsType(jsonData,os){
+        for(var n=0;n<jsonData.length;n++){
+            if(jsonData[n].code == '509A'){
+                var blackListApps = jsonData[n].data.blacklist_apps;
+                var osBlackListApps = new Array();
+                for(var k=0;k<blackListApps.length;k++){
+                    if(blackListApps[k].type == 'os'){
+                        androidBlackListApps.push(blackListApps[k]);
+                    }
+                }
+
+                var installApps = jsonData[n].data.install_apps;
+                var osInstallApps = new Array();
+                for(var k=0;k<installApps.length;k++){
+                    if(installApps[k].type == 'os'){
+                        androidInstallApps.push(installApps[k]);
+                    }
+                }
+                var obj1 = {};
+
+                obj1.blacklist_apps = osBlackListApps;
+                obj1.install_apps = osInstallApps;
+
+                var obj2 = {};
+                obj2.code = '509A';
+                obj2.data = obj1;
+                jsonData[n] = obj2;
+            }
+        }
+        return  jsonData;
+    }
     function checkPermission(role, deviceId, operationName, that){
 
         log.info("Device >>>"+deviceId);
@@ -295,9 +326,7 @@ var device = (function () {
                     var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
                     log.info("Policy Payload :"+gpresult[0].data);
                     var jsonData = parse(gpresult[0].data);
-                    /*var obj = {};
-                    obj.type = gpresult[0].type;
-                    obj.policies = jsonData;*/
+                    jsonData = this.policyByOsType(jsonData,'android');
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                     return true;
                 }else{

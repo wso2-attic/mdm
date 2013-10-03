@@ -45,7 +45,21 @@ var user = (function () {
 	        return um;
 	    }
 	    return configs(tenantId)[USER_MANAGER];
-	};			
+	};
+	
+	var createPrivateRolePerUser = function(username){
+		var um = userManager(common.getTenantID());
+		var indexUser = username.replace("@", ":");
+		var arrPermission = {};
+	    var permission = [
+	        'http://www.wso2.org/projects/registry/actions/get',
+	        'http://www.wso2.org/projects/registry/actions/add',
+	        'http://www.wso2.org/projects/registry/actions/delete',
+	        'authorize','login'
+	    ];
+	    arrPermission[0] = permission;
+		um.addRole("private_"+indexUser, [username], arrPermission);
+	}			
 	
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
@@ -70,6 +84,7 @@ var user = (function () {
 		authenticate: function(ctx){
 			log.info("username "+ctx.username);
 			var authStatus = server().authenticate(ctx.username, ctx.password);
+			log.info(">>auth "+authStatus);
 			if(!authStatus) {
 				return null;
 			}
@@ -87,10 +102,10 @@ var user = (function () {
 			return devices;
 		},
 		getUser: function(ctx){
-            log.info("User ID >>>>>>"+ctx.userid);
 			try {
 				var proxy_user = {};
 				var tenantUser = carbon.server.tenantUser(ctx.userid);
+				log.info("User ID >>>>>>"+ctx.userid);
 				var um = userManager(tenantUser.tenantId);
 			    var user = um.getUser(tenantUser.username);
 		    	var claims = [claimEmail, claimFirstName, claimLastName];
@@ -247,7 +262,8 @@ var user = (function () {
 						objResult.error = 'User already exist with the email address.';
 					} else {
 						um.addUser(ctx.username, ctx.password, 
-							ctx.groups, claimMap, null);					
+							ctx.groups, claimMap, null);	
+					    createPrivateRolePerUser(ctx.username);				
 					}
 				}
 				else{
@@ -326,19 +342,24 @@ var user = (function () {
                     log.info(users[i].username);
 
                     var roles = parse(this.getUserRoles({'username':users[i].username}));
-                    var flag = false;
+                    var flag = 0;
                     for(var j=0 ;j<roles.length;j++){
                         log.info("Test iteration2"+roles[j]);
                         if(roles[j]=='admin'||roles[j]=='mdmadmin'){
-                            flag = true;
+                            flag = 1;
+                            break;
+                        }else if(roles[j]=='store'||roles[j]=='publisher'){
+                            flag = 2;
                             break;
                         }else{
-                            flag = false;
+                            flag = 0;
                         }
                     }
-                    if(flag == true){
+                    if(flag == 1){
                         users[i].type = 'administrator';
-                    }else {
+                    }else if(flag == 2) {
+                        users[i].type = 'mam';
+                    }else{
                         users[i].type = 'user';
                     }
                 }

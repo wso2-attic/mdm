@@ -1,5 +1,5 @@
 var isMDMRole = function(role) {
-	var otherRoles = new Array("Internal/everyone", "portal", "store", "wso2.anonymous.role", "publisher", "reviewer", "admin", "mdmadmin");
+	var otherRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer", "admin", "mdmadmin");
 	for (var i = 0; i < otherRoles.length; i++) {
 		if (role == otherRoles[i]) {
 			return false;
@@ -10,7 +10,7 @@ var isMDMRole = function(role) {
 
 var isMDMRoleWithAdmins = function(role) {
 
-	var otherRoles = new Array("Internal/everyone", "portal", "store", "wso2.anonymous.role", "publisher", "reviewer");
+	var otherRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role","reviewer");
 	for (var i = 0; i < otherRoles.length; i++) {
 		if (role == otherRoles[i]) {
 			return false;

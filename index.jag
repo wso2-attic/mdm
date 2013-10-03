@@ -90,6 +90,9 @@ var feature = new featureModule(db);
 var storeModule = require('modules/store.js').store;
 var store = new storeModule(db);
 
+var mamModule = require('modules/mam.js').mam;
+var mam = new mamModule(db);
+
 var groupRouter = require('api/groupRouter.js').group;
 var groupRouterInstance = new groupRouter(db,router);
 
@@ -121,6 +124,15 @@ router.get('dashboard/devices/all/percentage/byos', function(ctx){
     }
 });
 
+router.get('mam/policy/installapps', function(ctx){
+    var result = mam.getInstallAppList({});
+    if(result!= null && result != undefined){
+        response.content = result;
+        response.status = 200;
+    }else{
+        response.status = 404;
+    }
+});
 
 router.get('dashboard/devices/all/percentage/byownership', function(ctx){
     var result = dashboard.getDeviceCountByOwnership(ctx);
