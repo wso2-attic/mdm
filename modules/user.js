@@ -45,7 +45,21 @@ var user = (function () {
 	        return um;
 	    }
 	    return configs(tenantId)[USER_MANAGER];
-	};			
+	};
+	
+	var createPrivateRolePerUser = function(username){
+		var um = userManager(common.getTenantID());
+		var indexUser = username.replace("@", ":");
+		var arrPermission = {};
+	    var permission = [
+	        'http://www.wso2.org/projects/registry/actions/get',
+	        'http://www.wso2.org/projects/registry/actions/add',
+	        'http://www.wso2.org/projects/registry/actions/delete',
+	        'authorize','login'
+	    ];
+	    arrPermission[0] = permission;
+		um.addRole("private_"+indexUser, [username], arrPermission);
+	}			
 	
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
@@ -70,6 +84,7 @@ var user = (function () {
 		authenticate: function(ctx){
 			log.info("username "+ctx.username);
 			var authStatus = server().authenticate(ctx.username, ctx.password);
+			log.info(">>auth "+authStatus);
 			if(!authStatus) {
 				return null;
 			}
@@ -87,10 +102,10 @@ var user = (function () {
 			return devices;
 		},
 		getUser: function(ctx){
-            log.info("User ID >>>>>>"+ctx.userid);
 			try {
 				var proxy_user = {};
 				var tenantUser = carbon.server.tenantUser(ctx.userid);
+				log.info("User ID >>>>>>"+ctx.userid);
 				var um = userManager(tenantUser.tenantId);
 			    var user = um.getUser(tenantUser.username);
 		    	var claims = [claimEmail, claimFirstName, claimLastName];
@@ -247,7 +262,8 @@ var user = (function () {
 						objResult.error = 'User already exist with the email address.';
 					} else {
 						um.addUser(ctx.username, ctx.password, 
-							ctx.groups, claimMap, null);					
+							ctx.groups, claimMap, null);	
+					    createPrivateRolePerUser(ctx.username);				
 					}
 				}
 				else{
