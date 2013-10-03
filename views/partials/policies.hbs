@@ -533,7 +533,10 @@
 							<select multiple id="inputBlackListApps">
 								  
 							</select>
-							<input type="button" class="btn btn-orange" data-toggle="modal" href="#modalBlackListApp"  value="Add an app"> 
+							<div class="raw">
+								<input type="button" class="btn btn-orange" data-toggle="modal" href="#modalBlackListApp"  value="Add an app"> 
+								<input type="button" class="btn btn-orange" id="modalBlackListAppRemove"   value="Remove app"> 
+							</div>
 							
 							<div id="modalBlackListApp" class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
 								
@@ -554,6 +557,7 @@
 												Close
 											</button>
 											<button  data-dismiss="modal" aria-hidden="true" id="modalBlackListAppButton" class="btn btn-orange" data-value="Enabled">Add</button>
+											
 										</div>				
 															
 
