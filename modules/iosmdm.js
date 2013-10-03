@@ -119,8 +119,7 @@ var iosmdm = (function() {
 				tokenProperties["token"] = tokenUpdate.getToken();
 				tokenProperties["unlockToken"] = tokenUpdate.getUnlockToken();
 				tokenProperties["magicToken"] = tokenUpdate.getPushMagic();
-				tokenProperties["deviceid"] = '5b2b244f6758ce764a337dce9966b440b19c0640';
-				//tokenUpdate.getUdid();
+				tokenProperties["deviceid"] = tokenUpdate.getUdid();
 
 				device.updateiOSTokens(tokenProperties);
 
