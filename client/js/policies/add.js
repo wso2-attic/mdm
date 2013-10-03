@@ -111,3 +111,30 @@ $( "#modalBlackListAppRemove" ).click(function() {
     		$(this).remove();
 	});
 });
+
+
+
+
+$(document).ready(function() {
+	
+	jQuery.ajax({
+		url : getServiceURLs("getMAMApps"),
+		type : "GET",
+		dataType : "json",
+		success : function(apps) {			
+			
+			for(var i = 0; i < apps.length; i++){
+				$('select[name="inputInstallApps_helper1"]').append('<option>'+ apps.name + '</option>');
+			}
+
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+
+		}
+	});
+	
+	
+	
+	
+
+});

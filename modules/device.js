@@ -80,8 +80,8 @@ var device = (function () {
                     }
                 }
                 var obj1 = {};
-                obj1.blacklist_apps =
-                    obj1.install_apps =
+               // obj1.blacklist_apps =
+                //    obj1.install_apps =
 
                 var obj2 = {};
                 obj2.code = '509A';
