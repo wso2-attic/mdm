@@ -170,7 +170,8 @@ var iosmdm = (function() {
 				var operation = device.getPendingOperationsFromDevice(ctx);
 
 				if (operation != null) {
-					return common.loadPayload(operation.feature_code, new Packages.java.lang.String(operation.id));
+					return common.loadPayload(new Packages.java.lang.String(operation.id), 
+						operation.feature_code, operation.message);
 				}
 
 				return null;
