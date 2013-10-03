@@ -1,6 +1,6 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
-//var common = require("/modules/common.js");
+var common = require("/modules/common.js");
 
 var device = (function () {
     var configs = {
@@ -409,8 +409,8 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
-             //   featureArr["enable"] = true;
+                //featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
+                featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
                 }else{
