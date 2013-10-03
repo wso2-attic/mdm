@@ -102,6 +102,12 @@ $("#btn-add").click(function() {
 
 
 
-	$( "#modalBlackListAppButton" ).click(function() {
-				$("#inputBlackListApps").append('<option data-os="'+ $("#modalBlackListType").val() +'" value="'+ $("#modalBlackListPackageName").val()  +'">' + $("#modalBlackListPackageName").val()  + '</option>');
+$( "#modalBlackListAppButton" ).click(function() {
+		$("#inputBlackListApps").append('<option data-os="'+ $("#modalBlackListType").val() +'" value="'+ $("#modalBlackListPackageName").val()  +'">' + $("#modalBlackListPackageName").val()  + '</option>');
+});
+
+$( "#modalBlackListAppRemove" ).click(function() {
+	 $("#inputBlackListApps :selected").each(function() {
+    		$(this).remove();
 	});
+});
