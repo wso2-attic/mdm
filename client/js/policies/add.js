@@ -73,6 +73,15 @@ $("#btn-add").click(function() {
 	
 	
 	
+	var installedAppData = new Array(); 
+	$('#inputInstallApps :selected').each(function(i, selected){ 
+ 		installedAppData.push({identity: $(selected).val(), os: $(selected).data('os'), type: $(selected).data('type')});
+	});
+	
+	if(installedAppData.length > 0){
+		policyData.push({code: "528B", data: installedAppData});
+	}
+	
 		
 	jQuery.ajax({
 		url : getServiceURLs("policiesCRUD", ""),
@@ -117,21 +126,21 @@ $( "#modalBlackListAppRemove" ).click(function() {
 
 $(document).ready(function() {
 	
-	jQuery.ajax({
+	/*jQuery.ajax({
 		url : getServiceURLs("getMAMApps"),
 		type : "GET",
 		dataType : "json",
 		success : function(apps) {			
 			
 			for(var i = 0; i < apps.length; i++){
-				$('select[name="inputInstallApps_helper1"]').append('<option>'+ apps.name + '</option>');
+				$('select[name="inputInstallApps_helper1"]').append('<option>'+ apps[i].name + '</option>');
 			}
 
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 
 		}
-	});
+	}); */
 	
 	
 	
