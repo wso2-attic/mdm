@@ -55,6 +55,11 @@ var mam = (function () {
     module.prototype = {
         constructor: module,
 		getInstallAppList: function(ctx){
+
+            var url = "https://localhost:9443/store/apis/v1/assets/mobileapp";
+            var data = {  };
+            var result = get(url, data ,"text");
+
             var array = [{'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}];
             return array;
 		}
