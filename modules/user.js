@@ -231,6 +231,7 @@ var user = (function () {
             um.updateRoleListOfUser(ctx.username, deletedRoles, newRoles);
         },
 		sendEmail: function(ctx){
+			//Fix 
 		    content = "Dear "+ ctx.first_name+", \nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \nLink - "+config.HTTPS_URL+"/mdm/api/device_enroll \n \nWSO2 MDM Team";
 		    subject = "MDM Enrollment";
 
