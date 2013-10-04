@@ -231,15 +231,14 @@ var user = (function () {
             um.updateRoleListOfUser(ctx.username, deletedRoles, newRoles);
         },
 		sendEmail: function(ctx){
-			//Fix 
-		    content = "Dear "+ ctx.first_name+", \nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \nLink - "+config.HTTPS_URL+"/mdm/api/device_enroll \n \nWSO2 MDM Team";
+		    content = "Dear "+ ctx.first_name+", "+config.email.emailTemplate+config.HTTPS_URL+"/mdm/api/device_enroll \n \n"+config.email.companyName;
 		    subject = "MDM Enrollment";
 
 		    var email = require('email');
-		    var sender = new email.Sender("smtp.gmail.com", "25", "dulitha@wso2mobile.com", "brainsteamer", "tls");
-		    sender.from = "mdm@wso2mobile.com";
+		    var sender = new email.Sender("smtp.gmail.com", "25", companyName.senderAddress, "brainsteamer", "tls");
+		    sender.from = companyName.senderAddress;
 
-		    log.info(ctx.username);
+		    log.info("Email sent to -> "+ctx.username);
 		    sender.to = ctx.username;
 		    sender.subject = subject;
 		    sender.text = content;
