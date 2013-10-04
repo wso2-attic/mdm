@@ -59,10 +59,18 @@ var mam = (function () {
             var url = "https://localhost:9443/store/apis/v1/assets/mobileapp";
             var data = {  };
           //  var result = get(url, data ,"text");
-          //  var result =
+            var result = [{"attributes": {"overview_name": "cxvxcv","overview_packagename": "com.mdm","overview_type": "Enterprise","overview_platform" : "android"}},{"attributes": {"overview_name": "First asset","overview_packagename":"com.wso2mobile.wso2phonedirectory","overview_type": "Enterprise","overview_platform" : "android"}}];
+              var newArray = new Array();
+              for(var i = 0; i<result.length; i++){
+                var obj = {};
+                obj.identity =result[i].attributes.overview_packagename;
+                obj.type =  result[i].attributes.overview_type;
+                obj.os = result[i].attributes.overview_platform;
+                obj.name =  result[i].attributes.overview_name;
+                newArray.push(obj);
+              }
 
-            var array = [{'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}];
-            return array;
+            return newArray;
 		}
     };
 
