@@ -56,6 +56,13 @@ var mam = (function () {
         constructor: module,
 		getInstallAppList: function(ctx){
             var array = [{'identity':'dummyidentity1','type':'dumyvalue1','os':'dumyos','name':'dumyname1'}, {'identity':'dummyidentity2','type':'dumyvalue2','os':'dumyos','name':'dumyname2'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}, {'identity':'dummyidentity','type':'dumyvalue','os':'dumyos','name':'dumyname'}];
+
+
+            var url = "https://localhost:9443/store/apis/v1/assets/mobileapp";
+            var data = {  };
+          //  var result = get(url, data ,"text");
+          //  var result =
+
             return array;
 		}
     };
