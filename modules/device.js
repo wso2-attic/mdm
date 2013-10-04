@@ -63,31 +63,18 @@ var device = (function () {
     }
     function policyByOsType(jsonData,os){
         for(var n=0;n<jsonData.length;n++){
-            if(jsonData[n].code == '509A'){
-                var blackListApps = jsonData[n].data.blacklist_apps;
-                var osBlackListApps = new Array();
-                for(var k=0;k<blackListApps.length;k++){
-                    if(blackListApps[k].type == 'os'){
-                        androidBlackListApps.push(blackListApps[k]);
-                    }
-                }
-
-                var installApps = jsonData[n].data.install_apps;
-                var osInstallApps = new Array();
-                for(var k=0;k<installApps.length;k++){
-                    if(installApps[k].type == 'os'){
-                        androidInstallApps.push(installApps[k]);
+            if(jsonData[n].code == '509B'||jsonData[n].code == '528B'){
+                var apps = jsonData[n].data;
+                var appsByOs = new Array();
+                for(var k=0;k<apps.length;k++){
+                    if(apps[k].os == os){
+                        appsByOs.push(apps[k]);
                     }
                 }
                 var obj1 = {};
-
-                obj1.blacklist_apps = osBlackListApps;
-                obj1.install_apps = osInstallApps;
-
-                var obj2 = {};
-                obj2.code = '509A';
-                obj2.data = obj1;
-                jsonData[n] = obj2;
+                obj1.code = jsonData[n].code;
+                obj1.data = appsByOs;
+                jsonData[n] = obj1;
             }
         }
         return  jsonData;
