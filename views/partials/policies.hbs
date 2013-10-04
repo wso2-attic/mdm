@@ -574,7 +574,9 @@
 								<div class="controls raw">
 									<div class="multiple-selectbox">
 										<select multiple="multiple" size="10" id="inputInstallApps" name="inputInstallApps" class='duallistbox'>
-										
+											{{#data.installedApps}}
+												<option value="{{identity}}" data-os="{{os}}" data-type="{{type}}">{{name}}</option>
+											{{/data.installedApps}}
 										</select>
 									</div>
 
