@@ -67,7 +67,7 @@ $("#btn-add").click(function() {
 	});
 		
 	if(policyDataBlackList.length > 0){
-		policyData.push({code: "509A", data: policyDataBlackList});
+		policyData.push({code: "509B", data: policyDataBlackList});
 	}
 	
 	
@@ -99,7 +99,7 @@ $("#btn-add").click(function() {
 	});
 	
 	$( document ).ajaxComplete(function() {
-		//window.location.assign("configuration");
+		window.location.assign("configuration");
 	});
 	
 });
