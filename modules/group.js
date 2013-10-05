@@ -7,6 +7,8 @@ var group = (function () {
 	var db;
 	var deviceModule = require('device.js').device;
 	var device = new deviceModule();
+    var userModule = require('user.js').user;
+    var user = new userModule();
 	var common = require('common.js');
     var claimEmail = "http://wso2.org/claims/emailaddress";
     var claimFirstName = "http://wso2.org/claims/givenname";
@@ -371,7 +373,13 @@ var group = (function () {
 	            return "Succeeded : "+succeeded;
 	        }
 
-		}
+		},
+        sendEmailToGroup: function(ctx){
+            var users = this.getUsers(ctx);
+            for(var i=0;i<users.length;i++){
+                user.sendEmail({'username':users[i].email});
+            }
+        }
     };
 
     // return module

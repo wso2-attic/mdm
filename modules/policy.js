@@ -48,7 +48,7 @@ var policy = (function () {
         var result = db.query("SELECT * from devices");
 
         for(var i=0; i<result.length; i++){
-            log.info("hi");
+            log.info("hiii");
             var deviceId = result[i].id;
             var operation = 'MONITORING';
             var data = {};
