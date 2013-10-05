@@ -335,7 +335,7 @@ var device = (function () {
             }
         },
         registerIOS: function(ctx){
-            var tenantUser = carbon.server.tenantUser(ctx.email);
+            var tenantUser = carbon.server.tenantUser(ctx.email+"@carbon.super");
 		    var userId = tenantUser.username;
 			var tenantId = tenantUser.tenantId;
 			
