@@ -19,6 +19,17 @@ var isMDMRoleWithAdmins = function(role) {
 	return true;
 }
 
+var isMDMRoleWithoutStorePublisher = function(role) {
+
+    var otherRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer", "admin", "mdmadmin","store","publisher");
+    for (var i = 0; i < otherRoles.length; i++) {
+        if (role == otherRoles[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 var isMDMUser = function (user) {
 	var otherUsers = new Array("wso2.anonymous.user","admin");
 	for(var i = 0; i < otherUsers.length; i++) {
