@@ -134,7 +134,7 @@ $(".btn-invite").click(function() {
 				$noty.close();
 				
 				jQuery.ajax({
-					url : getServiceURLs("usersInvite"),
+					url : getServiceURLs("groupsInvite"),
 					type : "PUT",					
 					data : {username: item},		
 					contentType : "application/json",
