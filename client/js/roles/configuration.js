@@ -131,7 +131,7 @@ $(".btn-invite").click(function() {
 			addClass : 'btn btn-orange',
 			text : 'Ok',
 			onClick : function($noty) {				
-				
+				$noty.close();
 				
 				jQuery.ajax({
 					url : getServiceURLs("usersInvite"),
@@ -142,13 +142,10 @@ $(".btn-invite").click(function() {
 			
 				});
 				
-				$(document).ajaxComplete(function() {
-					$noty.close();
-					noty({
-						text : 'Group is invited successfully!',
+				noty({
+						text : 'User is invited successfully!',
 						'layout' : 'center'
-					});					
-				});
+				});	
 				
 				
 				

@@ -71,7 +71,7 @@ $(".btn-item-remove").click(function() {
 			
 				}).done(function() {
 					$noty.close();
-					//window.location.reload(true);
+					window.location.reload(true);
 				});
 			}
 			
@@ -104,7 +104,7 @@ $(".btn-invite").click(function() {
 			text : 'Ok',
 			onClick : function($noty) {				
 				
-				
+				$noty.close();	
 				jQuery.ajax({
 					url : getServiceURLs("usersInvite"),
 					type : "PUT",					
@@ -112,15 +112,18 @@ $(".btn-invite").click(function() {
 					contentType : "application/json",
 			     	dataType : "json"
 			
+				}).done(function() {
+					$noty.close();
+					window.location.reload(true);
 				});
 				
-				$(document).ajaxComplete(function() {
-					$noty.close();
-					noty({
+								
+				noty({
 						text : 'User is invited successfully!',
 						'layout' : 'center'
-					});					
-				});
+				});	
+							
+			
 				
 				
 				
