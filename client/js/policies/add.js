@@ -67,7 +67,7 @@ $("#btn-add").click(function() {
 	});
 		
 	if(policyDataBlackList.length > 0){
-		policyData.push({code: "509B", data: policyDataBlackList});
+		policyData.push({code: "528B", data: policyDataBlackList});
 	}
 	
 	
@@ -79,7 +79,7 @@ $("#btn-add").click(function() {
 	});
 	
 	if(installedAppData.length > 0){
-		policyData.push({code: "528B", data: installedAppData});
+		policyData.push({code: "509B", data: installedAppData});
 	}
 	
 		
