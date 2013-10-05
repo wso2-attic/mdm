@@ -109,7 +109,7 @@ var device = (function () {
 		    var result = device.updateiOSTokens(ctx);
 		});
 
-     /*   router.get('devices/licens', function(ctx){
+     /*   router.get('devices/license', function(ctx){
             var result = device.updateiOSTokens(ctx);
         });
 
