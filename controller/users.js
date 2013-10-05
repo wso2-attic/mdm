@@ -109,6 +109,14 @@ devices = function(appController) {
 
 	for (var i = 0; i < devices.length; i++) {
 		
+		
+		try{
+			var appList = notification.getLastRecord({deviceid: devices[i].id , operation: "502A"}).received_data;
+			devices[i].appList = parse(appList);
+		}catch(e){
+			devices[i].appList = [];
+		}
+		
 		try {		
 				var allPolicies = notification.getPolicyState({deviceid: devices[i].id});
 				if(!allPolicies.length > 0){
@@ -124,7 +132,9 @@ devices = function(appController) {
 					}
 				}
 				//end of patch
-				devices[i].policies = policies;
+				devices[i].policies = policies;	
+				
+				
 		} catch(e) {
 				
 		}

@@ -129,6 +129,8 @@ $('.nav-tabs a').click(function(e) {
 
 $(".jtootip").tooltip();
 
+$(".als-container").als();
+
 
 Handlebars.registerHelper('elipsis', function(maxLength, context, options) {
   if(context.length > maxLength) {
