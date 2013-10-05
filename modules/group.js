@@ -70,7 +70,16 @@ var group = (function () {
             var type = ctx.type;
 
 			var um = userManager(common.getTenantID());
-			var roles = um.allRoles();
+            var roles = new Array();
+            var tempRoles = um.allRoles();
+            for(var i = 0; i<tempRoles.length; i++){
+                if(tempRoles[i].substring(0,8) == 'private_'){
+                    continue;
+                }else{
+                    roles.push(tempRoles[i]);
+                }
+            }
+
             log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
 
             var arrRole = new Array();
@@ -88,7 +97,15 @@ var group = (function () {
 
             if(type == 'admin'){
                 var um = userManager(common.getTenantID());
-                var roles = um.allRoles();
+                var roles = new Array();
+                var tempRoles = um.allRoles();
+                for(var i = 0; i<tempRoles.length; i++){
+                    if(tempRoles[i].substring(0,8) == 'private_'){
+                        continue;
+                    }else{
+                        roles.push(tempRoles[i]);
+                    }
+                }
                 log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
                 var arrRole = new Array();
                 for(var i = 0; i < roles.length; i++) {
@@ -108,7 +125,15 @@ var group = (function () {
                 return arrRole;
             }else if(type == 'mdmadmin'){
                 var um = userManager(common.getTenantID());
-                var roles = um.allRoles();
+                var roles = new Array();
+                var tempRoles = um.allRoles();
+                for(var i = 0; i<tempRoles.length; i++){
+                    if(tempRoles[i].substring(0,8) == 'private_'){
+                        continue;
+                    }else{
+                        roles.push(tempRoles[i]);
+                    }
+                }
                 log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
                 var arrRole = new Array();
                 for(var i = 0; i < roles.length; i++) {

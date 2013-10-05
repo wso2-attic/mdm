@@ -451,7 +451,17 @@ var device = (function () {
 
             log.info("User"+stringify(user));
 
-			return stringify(user.getRoles());
+            var tempRoles = user.getRoles();
+            var roles = new Array();
+
+            for(var i = 0; i<tempRoles.length; i++){
+                if(tempRoles[i].substring(0,8) == 'private_'){
+                    continue;
+                }else{
+                    roles.push(tempRoles[i]);
+                }
+            }
+            return stringify(roles);
         },
         unRegister:function(ctx){
             if(ctx.regid!=null){

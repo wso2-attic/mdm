@@ -153,7 +153,18 @@ var user = (function () {
 		getUserRoles: function(ctx){
 			var um = userManager(common.getTenantID());
 		    var user = um.getUser(ctx.username);
-			return stringify(user.getRoles());
+
+            var tempRoles = user.getRoles();
+            var roles = new Array();
+
+            for(var i = 0; i<tempRoles.length; i++){
+                if(tempRoles[i].substring(0,8) == 'private_'){
+                    continue;
+                }else{
+                    roles.push(tempRoles[i]);
+                }
+            }
+			return stringify(roles);
 		},
         getRolesByUser:function(ctx){
 
@@ -285,7 +296,15 @@ var user = (function () {
 
         getGroups: function(ctx){
             var um = userManager(common.getTenantID());
-            var roles = um.allRoles();
+            var roles = new Array();
+            var tempRoles = um.allRoles();
+            for(var i = 0; i<tempRoles.length; i++){
+                if(tempRoles[i].substring(0,8) == 'private_'){
+                    continue;
+                }else{
+                    roles.push(tempRoles[i]);
+                }
+            }
             log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
             var arrRole = new Array();
             for(var i = 0; i < roles.length; i++) {

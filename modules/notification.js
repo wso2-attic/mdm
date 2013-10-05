@@ -84,7 +84,6 @@ var notification = (function () {
                 return newArray;
             }
 
-
             var arrayFromDatabase = parse(result[result.length-1].received_data);
             log.info("result >>>>>>>"+stringify(result[result.length-1].received_data));
             log.info(arrayFromDatabase[0]);
