@@ -29,7 +29,7 @@ var device = (function () {
 		    if(android>0){
 		        response.sendRedirect(configs.HTTP_URL+"/mdm/mdm.apk");
 		    }else{
-		        response.sendRedirect(configs.RUBY_SERVER_URL);
+		        response.sendRedirect(configs.IOS_URL);
 		    }
 
 		});
