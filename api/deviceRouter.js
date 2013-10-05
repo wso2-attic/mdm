@@ -109,6 +109,12 @@ var device = (function () {
 		    var result = device.updateiOSTokens(ctx);
 		});
 
+     /*   router.get('devices/licens', function(ctx){
+            var result = device.updateiOSTokens(ctx);
+        });
+
+    */
+
 		router.get('pending/devices/{udid}/operations', function(ctx){
 		    var result = device.getPendingOperationsFromDevice(ctx);
 		    if(result!= null && result != undefined){

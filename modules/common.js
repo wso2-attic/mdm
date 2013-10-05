@@ -49,19 +49,19 @@ var getTenantID = function() {
 }
 
 var getCAPath = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ca_cert.pem";
+	return "E:/Mobile/iOS_MDM_Impl/keys/ca_cert.pem";
 }
 
 var getRAPath = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ra_cert.pem";
+	return "E:/Mobile/iOS_MDM_Impl/keys/ra_cert.pem";
 }
 
 var getCAPrivateKey = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ca_private.pem";
+	return "E:/Mobile/iOS_MDM_Impl/keys/ca_private.pem";
 }
 
 var getRAPrivateKey = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ra_private.pem";
+	return "E:/Mobile/iOS_MDM_Impl/keys/ra_private.pem";
 }
 
 //move this to a xml configuration file
@@ -70,7 +70,7 @@ var getPushCertPassword = function() {
 }
 
 var getPushCertPath = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/PlainCert.pfx";
+	return "E:/Mobile/iOS_MDM_Impl/keys/PlainCert.pfx";
 } 
 
 var initAPNS = function(pathPushCert, pushCertPassword, deviceToken, magicToken) {
@@ -218,6 +218,8 @@ var loadPayload = function(identifier , operationCode, data) {
 		paramMap.put("LDAPAccountPassword", data.password);
 		paramMap.put("LDAPAccountUseSSL", data.usedssl);
 		isProfile = true;
+	} else if(operationCode == "527A") {
+		return "ENTERPRISE_WIPE";
 	}
 	
 	if(isProfile) {

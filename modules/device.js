@@ -310,11 +310,20 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
                     var roles = this.getUserRoles({'username':userId});
                     var roleList = parse(roles);
-                    log.info(roleList[0]);
-                    var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+                    var role = '';
+                    for(var i=0;i<roleList.length;i++){
+                        if(roleList[i] == 'store' || roleList[i] == 'store' || roleList[i] == 'Internal/everyone'){
+                            continue;
+                        }else{
+                            role = roleList[i];
+                            break;
+                        }
+                    }
+                    log.info(role);
+                    var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role);
                     log.info("Policy Payload :"+gpresult[0].data);
                     var jsonData = parse(gpresult[0].data);
-                    jsonData = this.policyByOsType(jsonData,'android');
+                    jsonData = policyByOsType(jsonData,'android');
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                     return true;
                 }else{
@@ -441,22 +450,20 @@ var device = (function () {
             return obj;
         },
         getUserRoles: function(ctx){
-
-            var tenantUser = carbon.server.tenantUser(ctx.username);
-            log.info("Tenant ID"+tenantUser.tenantId);
-            log.info("Tenant Username"+tenantUser.username);
-
-			var um = userManager(tenantUser.tenantId);
-            log.info("getUser");
-		    var user = um.getUser(tenantUser.username);
-
-            log.info("User"+stringify(user));
+            var um = userManager(common.getTenantID());
+            var user = um.getUser(ctx.username);
 
             var tempRoles = user.getRoles();
             var roles = new Array();
 
             for(var i = 0; i<tempRoles.length; i++){
-                if(tempRoles[i].substring(0,8) == 'private_'){
+                var prefix = '';
+                try{
+                    prefix = tempRoles[i].substring(0,8);
+                }catch(e){
+
+                }
+                if(prefix == 'private_'){
                     continue;
                 }else{
                     roles.push(tempRoles[i]);

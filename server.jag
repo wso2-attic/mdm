@@ -7,9 +7,14 @@
 	var payload = iosMdm.sendPushNotifications(request.getInputStream());
 	
 	if(payload != null) {
-		response.contentType = "application/x-apple-aspen-config";
-		var byteArrayInputStream = new Packages.java.io.ByteArrayInputStream(payload.getBytes("UTF-8"));	
-		print(new Stream(byteArrayInputStream)); 
+		
+		if(payload == "ENTERPRISE_WIPE") {
+			response.status = 401;
+		} else {
+			response.contentType = "application/x-apple-aspen-config";
+			var byteArrayInputStream = new Packages.java.io.ByteArrayInputStream(payload.getBytes("UTF-8"));	
+			print(new Stream(byteArrayInputStream)); 	
+		}
 	}
 	
 %>
