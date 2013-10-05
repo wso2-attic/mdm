@@ -24,6 +24,14 @@ $("#btn-add").click(function() {
 	if (userGroups != null) {
 		userGroupsArray = userGroups.toString().split(",");
 	}
+	
+	var userMAMGroupsArray = []
+	if (userMAMGroups != null) {
+		userMAMGroupsArray = userMAMGroups.toString().split(",");
+	}
+	
+	userGroupsArray.concat(userMAMGroupsArray);
+	
 	// alert(JSON.stringify(userGroupsArray));
 	jso = {
 		"tenant_id" : tenantId,
@@ -33,8 +41,7 @@ $("#btn-add").click(function() {
 		"last_name" : lastname,
 		"mobile_no" : mobileNo,
 		"type": type,
-		"groups" : userGroupsArray,
-		"mam_groups" : userMAMGroups
+		"groups" : userGroupsArray	
 	};	
 	
 	noty({
@@ -52,7 +59,7 @@ $("#btn-add").click(function() {
 	});
 	
 	$( document ).ajaxComplete(function() {
-		window.location.assign("configuration");
+		//window.location.assign("configuration");
 	});
 
 });

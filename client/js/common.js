@@ -129,7 +129,17 @@ $('.nav-tabs a').click(function(e) {
 
 $(".jtootip").tooltip();
 
-$(".als-container").als();
+
+$(".als-container").als({
+	visible_items: 20,
+	scrolling_items: 2,
+	orientation: "horizontal",
+	circular: "yes",
+	autoscroll: "yes",
+	interval: 6000,
+	direction: "right",
+	start_from: 1
+});
 
 
 Handlebars.registerHelper('elipsis', function(maxLength, context, options) {
