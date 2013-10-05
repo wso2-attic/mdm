@@ -3,8 +3,8 @@
 <div class="container">
 
 	<div class="raw-fluid">
-	
-	{{#compare contextData.user.role 'admin'}}
+
+		{{#compare contextData.user.role 'admin'}}
 
 		<ul class="breadcrumb">
 			<li>
@@ -18,7 +18,7 @@
 			</li>
 		</ul>
 	</div>
-	
+
 	{{/compare}}
 
 	<div class="raw-fluid">
@@ -27,7 +27,7 @@
 				<div class="block-header">
 					<div class="block-header-title pull-left">
 						{{#data.user}}
-							{{firstName}} {{lastName}}'s Devices
+						{{firstName}} {{lastName}}'s Devices
 						{{/data.user}}
 					</div>
 
@@ -40,8 +40,8 @@
 						{{#data.devices}}
 
 						<li class="{{#compare @index 0}}active{{/compare}}">
-							<a id="device-tab-heading-{{@index}}" data-toggle="tab" href="#device-tab-{{id}}" data-tab-id="{{@index}}" data-device-id="{{id}}" >{{properties.model}} {{#if policies.violated}}<i class="icon-remove-sign" style="color:#B94A48" title="Policy Violated"></i> {{else}} <i class="icon-ok-sign" style="color:#468847" title="Policy Comply"></i>  {{/if}}</a>
-							
+							<a id="device-tab-heading-{{@index}}" data-toggle="tab" href="#device-tab-{{id}}" data-tab-id="{{@index}}" data-device-id="{{id}}" >{{properties.model}} {{#if policies.violated}}<i class="icon-remove-sign" style="color:#B94A48" title="Policy Violated"></i> {{else}} <i class="icon-ok-sign" style="color:#468847" title="Policy Comply"></i> {{/if}}</a>
+
 						</li>
 
 						{{/data.devices}}
@@ -61,10 +61,10 @@
 
 										<div class="block">
 											<div class="block-header-small">
-												<div class="pull-left">													
-													Device																										
+												<div class="pull-left">
+													Device
 												</div>
-												
+
 												<div class="pull-right button-block-refresh">
 													<a href="#" class="btn btn-small btn-refresh" data-command="genInfo"><i class="icon-refresh"> </i> </a>
 												</div>
@@ -73,9 +73,9 @@
 											<div class="block-body container-fluid raw-fluid well-small">
 												<div class="pull-left">
 													<img class="device-image"  data-tab-id="{{@index}}" data-device-id="{{id}}" src="{{../deviceImageService}}/{{properties.model}}.png" style="height: 300px; padding-left: 10px">
-												</div>												
+												</div>
 												<div class="pull-right" style="font-size: x-small" id="gen-info-{{@index}}">
-													
+
 												</div>
 											</div>
 
@@ -103,31 +103,27 @@
 								</div>
 
 								<div class="span7">
-									
+
 									<div class="raw">
 
 										<div class="block">
 											<div class="block-header-small">
 												<div class="pull-left">
 													Device Info
-												</div>												
+												</div>
 											</div>
 
 											<div class="block-body container-fluid raw-fluid well-small">
-															{{#eachkeys properties}}
-																<div class="span3" style="font-size: x-small">
-																	<b>{{this.key}}</b>: {{this.value}}
-																</div>
-															{{/eachkeys}}
+												{{#eachkeys properties}}
+												<div class="span3" style="font-size: x-small">
+													<b>{{this.key}}</b>: {{this.value}}
+												</div>
+												{{/eachkeys}}
 											</div>
 
 										</div>
 
-									</div>								
-									
-
-									
-									
+									</div>
 
 									<div class="raw">
 
@@ -141,44 +137,37 @@
 											<div class="block-body container-fluid raw-fluid">
 
 												{{#features}}
-												
+
 												{{#compare feature_type 'OPERATION'}}
-												
+
 												{{#if enable}}
-												
-												
-													<div class="features-device" data-feature="{{name}}"   data-template="{{template}}" style="cursor: pointer;">
-														<div title="{{description}}" class="span2" draggable="true">
-															<div class="raw text-center">
-																<img src="{{../../../../resourcePath}}features/{{name}}.png" class="features-role-image">
-															</div>
-															<div class="raw text-center"  style="font-size: x-small">
-																{{#elipsis 30 description}}{{/elipsis}}
-															</div>
+
+												<div class="features-device" data-feature="{{name}}"   data-template="{{template}}" style="cursor: pointer;">
+													<div title="{{description}}" class="span2" draggable="true">
+														<div class="raw text-center">
+															<img src="{{../../../../resourcePath}}features/{{name}}.png" class="features-role-image">
+														</div>
+														<div class="raw text-center"  style="font-size: x-small">
+															{{#elipsis 30 description}}{{/elipsis}}
 														</div>
 													</div>
-												
-												
+												</div>
+
 												{{else}}
-												
-													<div  data-feature="{{name}}"   data-template="{{template}}">
-														<div title="{{description}}" class="span2">
-															<div class="raw text-center">
-																<img src="{{../../../../resourcePath}}features/{{name}}.png" class="features-role-image" style="opacity: 0.3">
-															</div>
-															<div class="raw text-center"  style="font-size: x-small; opacity: 0.3" >
-																{{#elipsis 30 description}}{{/elipsis}}
-															</div>
+
+												<div  data-feature="{{name}}"   data-template="{{template}}">
+													<div title="{{description}}" class="span2">
+														<div class="raw text-center">
+															<img src="{{../../../../resourcePath}}features/{{name}}.png" class="features-role-image" style="opacity: 0.3">
+														</div>
+														<div class="raw text-center"  style="font-size: x-small; opacity: 0.3" >
+															{{#elipsis 30 description}}{{/elipsis}}
 														</div>
 													</div>
-												
-												
-												
+												</div>
+
 												{{/if}}
-												
-												
-												
-												
+
 												{{/compare}}
 
 												{{/features}}
@@ -188,8 +177,7 @@
 										</div>
 
 									</div>
-									
-									
+
 									<div class="raw">
 
 										<div class="block">
@@ -201,28 +189,26 @@
 													{{else}}
 													<span class="label label-success" data-toggle="tooltip">Comply</span>
 													{{/if}}
-												</div>												
+												</div>
 											</div>
 
 											<div class="block-body container-fluid raw-fluid well-small">
-													{{#policies.policies}}
-														<div class="span2">																									
-															<span style="font-size: x-small">{{name}}</span>
-															{{#if status}}
-																<i class="icon-ok-sign" style="color:#468847"></i>
-																{{else}}
-																<i class="icon-remove-sign" style="color:#B94A48"></i>																
-															{{/if}}															
-														</div>														
-													{{/policies.policies}}
+												{{#policies.policies}}
+												<div class="span2">
+													<span style="font-size: x-small">{{name}}</span>
+													{{#if status}}
+													<i class="icon-ok-sign" style="color:#468847"></i>
+													{{else}}
+													<i class="icon-remove-sign" style="color:#B94A48"></i>
+													{{/if}}
+												</div>
+												{{/policies.policies}}
 											</div>
 
 										</div>
 
 									</div>
-									
-																	
-									
+
 									<div class="raw">
 
 										<div class="block">
@@ -235,15 +221,31 @@
 												</div>
 											</div>
 
-											<div id="app-list-{{@index}}" class="block-body container-fluid raw-fluid well-small">
-													<span style="font-size: small;">No apps to display</span>
+											<div class="block-body container-fluid raw-fluid well-small">
+												<div class="als-container" id="applist">
+
+													<span class="als-prev"><img src="images/prev.png" alt="prev" title="previous" /></span>
+
+													<div class="als-viewport">
+
+														<ul class="als-wrapper">
+
+															{{#appList}}														
+															<li class="als-item"><img src="/mdm/themes/wso2sinine/img/appdefault.png" if()  />
+															</li>
+															{{/appList}}									
+
+														</ul>
+													</div>
+													<span class="als-next"><img src="images/next.png" alt="next" title="next" /></span><!-- "next" button -->
+												</div>
+												
+												
 											</div>
 
 										</div>
 
 									</div>
-
-									
 
 								</div>
 
@@ -262,12 +264,6 @@
 
 </div>
 
-
-
-
-
-
- 
 <!-- Modal Features -->
 <div id="featureModal" class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
 

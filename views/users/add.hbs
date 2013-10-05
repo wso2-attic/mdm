@@ -60,18 +60,19 @@
 								<label class="control-label" for="inputFirstName">Type</label>
 								<div class="controls">
 									User <input type="radio" class="radioUserType"  name="inputType" value="user" checked="checked"> &nbsp;
-									Administrator <input type="radio" class="radioUserType"  name="inputType" value="administrator"> &nbsp;
-									MAM <input type="radio" class="radioGroupType" name="inputType" value="mam"> &nbsp;
+									Administrator <input type="radio" class="radioUserType"  name="inputType" value="administrator"> &nbsp;									
 								</div>
 							</div>
 
 							<div class="control-group">
-								<label class="control-label" for="inputMobile">Group</label>
+								<label class="control-label" for="inputGroups">Roles</label>
 								<div class="controls raw">
-									<div class="multiple-selectbox">
+									<div class="multiple-selectbox inputGroupsSelect">
 										<select multiple="multiple" size="10" id="inputGroups" name="inputGroups" class='duallistbox'>
 											{{#data.groups}}
+												{{#compare type 'mam'}}{{else}}
 												<option value="{{name}}">{{name}} ({{type}})</option>
+												{{/compare}}
 											{{/data.groups}}
 
 										</select>
@@ -79,6 +80,28 @@
 
 								</div>
 							</div>
+							
+							
+							
+							<div class="control-group">
+								<label class="control-label" for="inputGroups">MAM Roles</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox inputMAMGroupsSelect">
+										<select multiple="multiple" size="10" id="inputMAMGroups" name="inputMAMGroups" class='duallistbox'>
+											{{#data.groups}}
+												{{#compare type 'mam'}}
+												<option value="{{name}}">{{name}} ({{type}})</option>
+												{{/compare}}
+											{{/data.groups}}
+
+										</select>
+									</div>
+
+								</div>
+							</div>
+							
+							
+							
 
 							<hr>
 							<div class="offset10">

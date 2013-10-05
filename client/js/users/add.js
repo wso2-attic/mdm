@@ -17,6 +17,7 @@ $("#btn-add").click(function() {
 	var password = $('#inputPassword').val();
 	var mobileNo = $('#inputMobile').val();
 	var userGroups = $('#inputGroups').val();
+	var userMAMGroups = $('#inputMAMGroups').val();
 	var tenantId = $('#tenantId').val();
 	
 	var userGroupsArray = []
@@ -32,7 +33,8 @@ $("#btn-add").click(function() {
 		"last_name" : lastname,
 		"mobile_no" : mobileNo,
 		"type": type,
-		"groups" : userGroupsArray
+		"groups" : userGroupsArray,
+		"mam_groups" : userMAMGroups
 	};	
 	
 	noty({
@@ -58,13 +60,13 @@ $("#btn-add").click(function() {
 
 $( ".radioUserType" ).change(function() {
 	var value = $(this).val();	
-	$(".box1 .filter").val(value);	
-	$(".box1 .filter" ).change();
+	$(".inputGroupsSelect .box1 .filter").val(value);	
+	$(".inputGroupsSelect .box1 .filter" ).change();
 });
 
 
 $( document ).ready(function() {
 	var value = 'user';	
-	$(".box1 .filter").val(value);	
-	$(".box1 .filter" ).change();
+	$(".inputGroupsSelect .box1 .filter").val(value);	
+	$(".inputGroupsSelect .box1 .filter" ).change();
 });
