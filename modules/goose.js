@@ -95,7 +95,7 @@ var goose = (function () {
 	                    var elements = uriMatcher.elements();
 	                    var ctx = elements;
 						// 	                    log.info("--------Goose Verb --------" + verb);
-						// 	                    log.info("--------Goose Route --------" + route);
+							                    log.info("--------Goose Route --------" + route);
 						// log.info("--------Goose Elements --------");
 						// log.info(elements);
 

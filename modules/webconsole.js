@@ -57,11 +57,25 @@ var webconsole = (function () {
         getDevicesCountAndUserCountForAllGroups: function(ctx) {
 
         	var um = userManager(common.getTenantID());
-        	var roles =  um.allRoles();
+            var roles = new Array();
+            var tempRoles = um.allRoles();
+            for(var i = 0; i<tempRoles.length; i++){
+                var prefix = '';
+                try{
+                    prefix = tempRoles[i].substring(0,8);
+                }catch(e){
+
+                }
+                if(prefix == 'private_'){
+                    continue;
+                }else{
+                    roles.push(tempRoles[i]);
+                }
+            }
 			var arrRole = new Array();
 			for(var i = 0; i < roles.length; i++) {
                 log.info("Current Role"+roles[i]);
-				if(!common.isMDMRole(roles[i])) {
+				if(!common.isMDMRoleWithoutStorePublisher(roles[i])) {
 					continue;
 				}
 				var objRole = {};

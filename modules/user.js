@@ -82,8 +82,9 @@ var user = (function () {
     module.prototype = {
         constructor: module,
 		authenticate: function(ctx){
+			ctx.username = ctx.username+"@carbon.super";
 			log.info("username "+ctx.username);
-			var authStatus = server().authenticate(ctx.username+"@carbon.super", ctx.password);
+			var authStatus = server().authenticate(ctx.username, ctx.password);
 			log.info(">>auth "+authStatus);
 			if(!authStatus) {
 				return null;
