@@ -126,6 +126,9 @@ var group = (function () {
                         if(roles[i] == 'admin'||roles[i] == 'mdmadmin'){
                             obj.name = roles[i];
                             obj.type = 'administrator';
+                        }else if(roles[i] == 'store'||roles[i] == 'publisher'){
+                            obj.name = roles[i];
+                            obj.type = 'mam';
                         }else{
                             obj.name = roles[i];
                             obj.type = 'user';
@@ -157,8 +160,13 @@ var group = (function () {
                 for(var i = 0; i < roles.length; i++) {
                     if(common.isMDMRole(roles[i])) {
                         var obj = {};
-                        obj.name = roles[i];
-                        obj.type = 'user';
+                        if(roles[i] == 'store'||roles[i] == 'publisher'){
+                                obj.name = roles[i];
+                                obj.type = 'mam';
+                        }else{
+                                obj.name = roles[i];
+                                obj.type = 'user';
+                        }
                         arrRole.push(obj);
                     }
                 }
