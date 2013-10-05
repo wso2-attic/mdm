@@ -19,7 +19,9 @@
 		"permissionsCRUD": "permissions",
 		"policiesCRUD": "policies/{0}",
 		"permissionFeatures": "features",
-		"getMAMApps": "mam/policy/installapps" 
+		"getMAMApps": "mam/policy/installapps",
+		"usersInvite": "users/invite",
+		"groupsInvite": "groups/invite" 
     }
 
 }

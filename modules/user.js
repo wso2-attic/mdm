@@ -115,6 +115,7 @@ var user = (function () {
 				proxy_user.firstName = claimResult.get(claimFirstName);
 				proxy_user.lastName = claimResult.get(claimLastName);
 				proxy_user.mobile = claimResult.get(claimMobile);
+                log.info("Mobillllllllllllllllllllllllllllllllllllllll"+claimResult.get(claimMobile));
 				proxy_user.username = tenantUser.username;
 				proxy_user.tenantId = tenantUser.tenantId;
 				proxy_user.roles = stringify(user.getRoles());
