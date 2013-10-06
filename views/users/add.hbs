@@ -90,7 +90,7 @@
 										<select multiple="multiple" size="10" id="inputMAMGroups" name="inputMAMGroups" class='duallistbox'>
 											{{#data.groups}}
 												{{#compare type 'mam'}}
-												<option value="{{name}}">{{name}} ({{type}})</option>
+												<option value="{{name}}">{{name}}</option>
 												{{/compare}}
 											{{/data.groups}}
 
@@ -119,3 +119,11 @@
 	</div>
 
 </div>
+
+
+<style>
+	.info-container{
+		display: none
+	}
+	
+</style>
