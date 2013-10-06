@@ -29,7 +29,7 @@ var device = (function () {
 		    if(android>0){
 		        response.sendRedirect(configs.HTTP_URL+"/mdm/mdm.apk");
 		    }else{
-		        response.sendRedirect(configs.RUBY_SERVER_URL);
+		        response.sendRedirect(configs.IOS_URL);
 		    }
 
 		});
@@ -109,11 +109,13 @@ var device = (function () {
 		    var result = device.updateiOSTokens(ctx);
 		});
 
-     /*   router.get('devices/licens', function(ctx){
-            var result = device.updateiOSTokens(ctx);
+        router.get('devices/license', function(ctx){
+            var result = device.getLicenseAgreement(ctx);
+            response.content = result;
+            response.status = 200;
         });
 
-    */
+
 
 		router.get('pending/devices/{udid}/operations', function(ctx){
 		    var result = device.getPendingOperationsFromDevice(ctx);

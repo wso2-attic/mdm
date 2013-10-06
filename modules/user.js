@@ -255,7 +255,7 @@ var user = (function () {
 
 		    var email = require('email');
 		    var sender = new email.Sender("smtp.gmail.com", "25", config.email.senderAddress, "brainsteamer", "tls");
-		    sender.from = companyName.senderAddress;
+		    sender.from = config.email.senderAddress;
 
 		    log.info("Email sent to -> "+ctx.username);
 		    sender.to = ctx.username;
