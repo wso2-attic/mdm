@@ -58,7 +58,13 @@ var user = (function () {
 	        'authorize','login'
 	    ];
 	    arrPermission[0] = permission;
-		um.addRole("private_"+indexUser, [username], arrPermission);
+		var p_role ="private_"+indexUser;
+		try{
+			um.addRole(p_role, [], arrPermission);
+		}catch(e){
+			log.debug(e);
+		}
+		return p_role;
 	}			
 	
     function mergeRecursive(obj1, obj2) {
@@ -280,9 +286,11 @@ var user = (function () {
 					if(um.userExists(ctx.username)) {
 						objResult.error = 'User already exist with the email address.';
 					} else {
+						var private_role = createPrivateRolePerUser(ctx.username);	
+						ctx.groups.push(private_role);
 						um.addUser(ctx.username, ctx.password, 
 							ctx.groups, claimMap, null);	
-					    createPrivateRolePerUser(ctx.username);				
+					   			
 					}
 				}
 				else{
