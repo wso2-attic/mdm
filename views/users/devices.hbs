@@ -222,23 +222,10 @@
 											</div>
 
 											<div class="block-body container-fluid raw-fluid well-small">
-												<div class="als-container" id="applist">
-																
-													<span class="als-prev"><img src="{{../resourcePath}}prev.png" alt="prev" title="previous" /></span>
-
-													<div class="als-viewport">
-
-														<ul class="als-wrapper">
-															
-															{{#appList}}														
-															<li class="als-item"><img src="{{../../resourcePath}}appdefault.png" style="width: 60px"  />
-															</li>
-															{{/appList}}									
-
-														</ul>
-													</div>
-													<span class="als-next"><img src="{{../resourcePath}}next.png" alt="next" title="next" /></span><!-- "next" button -->
-												</div>
+											
+											<div id="app-list-{{@index}}" class="block-body container-fluid raw-fluid well-small">
+													<span style="font-size: small;">No apps to display</span>
+											</div>
 												
 												
 											</div>

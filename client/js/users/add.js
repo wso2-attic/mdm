@@ -21,17 +21,20 @@ $("#btn-add").click(function() {
 	var userMAMGroups = $('#inputMAMGroups').val();
 	var tenantId = $('#tenantId').val();
 	
+	if(userGroups != null){
+		userGroups = userGroups + "," + userMAMGroups;
+	}else{
+		userGroups = userMAMGroups;
+	}
+	
+	
 	var userGroupsArray = []
 	if (userGroups != null) {
 		userGroupsArray = userGroups.toString().split(",");
 	}
 	
-	var userMAMGroupsArray = []
-	if (userMAMGroups != null) {
-		userMAMGroupsArray = userMAMGroups.toString().split(",");
-	}
 	
-	userGroupsArray.concat(userMAMGroupsArray);
+	alert(userGroupsArray);
 	
 	// alert(JSON.stringify(userGroupsArray));
 	jso = {
@@ -60,7 +63,7 @@ $("#btn-add").click(function() {
 	});
 	
 	$( document ).ajaxComplete(function() {
-		window.location.assign("configuration");
+		//window.location.assign("configuration");
 	});
 
 });

@@ -95,7 +95,7 @@ var user = (function () {
 			if(!authStatus) {
 				return null;
 			}
-			var user =  this.getUser({userid: ctx.username});
+			var user =  this.getUser({'userid': ctx.username});
 			var result = db.query("SELECT COUNT(id) AS record_count FROM tenantplatformfeatures WHERE tenant_id = ?",  stringify(user.tenantId));
 			if(result[0].record_count == 0) {
 				for(var i = 1; i < 13; i++) {

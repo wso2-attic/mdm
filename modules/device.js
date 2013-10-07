@@ -435,8 +435,8 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                //featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
-                featureArr["enable"] = true;
+                featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
+              //  featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
                 }else{
@@ -492,6 +492,16 @@ var device = (function () {
             var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
             log.info(gpresult[0]);
             sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
+        },
+        getLicenseAgreement: function(ctx){
+            var path = "/license/license.txt";
+            var file = new File(path);
+            file.open("r");
+            var message = "";
+            message = file.readAll();
+           // print(message);
+            file.close();
+            return message;
         }
     };
     // return module
