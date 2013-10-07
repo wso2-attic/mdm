@@ -435,8 +435,8 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                //featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
-                featureArr["enable"] = true;
+                featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
+              //  featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
                 }else{

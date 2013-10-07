@@ -5,7 +5,7 @@
       <AnyOf>
         <AllOf>
           <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
-            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(LOCK|WIPE|CLEARPASSWORD|LOCATION|INFO|WIFI|CAMERA|MUTE|ENCRYPT|APN|TRACKCALLS|TRACKSMS|DATAUSAGE|STATUS|WEBCLIP|PASSWORDPOLICY|EMAIL|GOOGLECALENDAR|VPN|LDAP|CALENDERSUBSCRIPTION|CHANGEPASSWORD|ENTERPRISEWIPE|APPLIST|INSTALLAPP|UNINSTALLAPP|NOTIFICATION)</AttributeValue>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(LOCK|WIPE|CLEARPASSWORD|LOCATION|CAMERA|MUTE|ENCRYPT|ENTERPRISEWIPE|POLICY)</AttributeValue>
             <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
           </Match>
           <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
