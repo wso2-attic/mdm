@@ -64,14 +64,31 @@
 								</div>
 							</div>
 
-							<div class="control-group">
+							<div class="control-group" id="userSeletBox">
 								<label class="control-label" for="inputGroups">Roles</label>
 								<div class="controls raw">
 									<div class="multiple-selectbox inputGroupsSelect">
 										<select multiple="multiple" size="10" id="inputGroups" name="inputGroups" class='duallistbox'>
 											{{#data.groups}}
-												{{#compare type 'mam'}}{{else}}
-												<option value="{{name}}">{{name}} ({{type}})</option>
+												{{#compare type 'user'}}
+												<option value="{{name}}">{{name}}</option>
+												{{/compare}}
+											{{/data.groups}}
+
+										</select>
+									</div>
+
+								</div>
+							</div>
+							
+							<div class="control-group" id="adminSeletBox">
+								<label class="control-label" for="inputGroupsAdmins">Roles</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox inputGroupsAdminSelect">
+										<select multiple="multiple" size="10" id="inputGroupsAdmins" name="inputGroupsAdmins" class='duallistbox'>
+											{{#data.groups}}
+												{{#compare type 'administrator'}}
+												<option value="{{name}}">{{name}}</option>
 												{{/compare}}
 											{{/data.groups}}
 
