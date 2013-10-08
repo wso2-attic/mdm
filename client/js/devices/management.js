@@ -18,10 +18,7 @@ oTable = $('#main-table').dataTable({
                       
                        null,
 
-                   ],
-		
-		
-		
+                   ],	
 		"sAjaxSource" : "/mdm/config/test/dummy_devices.json?",
 		"fnServerParams": function ( aoData ) {
           	var roles = $('#inputRoles').val();
@@ -41,5 +38,69 @@ oTable = $('#main-table').dataTable({
 
 $("#btn-find").click(function() {
 	oTable.fnDraw();
+});
+
+
+$( "#featureList" ).change(function() {
+	
+	var feature = $(this).val();
+	
+	var nFiltered = oTable.fnGetData();
+	
+	for(var i = 0; i < nFiltered.length; i++){
+		alert(nFiltered[i]);
+	}
+		
+	alert(nFiltered);
+	
+	noty({
+		text : 'Are you sure you want to perform this operation on selected devices?',
+		buttons : [{
+			addClass : 'btn btn-cancel',
+			text : 'Cancel',
+			onClick : function($noty) {
+				$noty.close();
+				$('#featureList').msDropDown().data('dd').setIndexByValue("");		
+			}
+			
+			
+		}, {
+			
+			addClass : 'btn btn-orange',
+			text : 'Ok',
+			onClick : function($noty) {
+
+				jQuery.ajax({
+					url : getServiceURLs("performGroupOperation", null, feature),
+					type : "POST",
+					async : "false",
+					data : JSON.stringify(params),
+					contentType : "application/json",
+					dataType : "json"
+
+				});
+
+				noty({
+					text : 'Operation is sent to the devices successfully!',
+					'layout' : 'center',
+					'modal': false
+					
+				});
+
+				$noty.close();
+
+			}
+			
+		}]
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
 });
 
