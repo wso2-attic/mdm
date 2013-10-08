@@ -120,6 +120,7 @@ $.noty.defaults = {
 
 $('.selectpicker').selectpicker();
 $('.duallistbox').bootstrapDualListbox();
+$(".dropdownimage").msDropDown();
 
 
 $('.nav-tabs a').click(function(e) {
