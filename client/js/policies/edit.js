@@ -103,12 +103,14 @@ $(document).ready( function () {
 					if($("#" + code + "-function").attr('type') == "checkbox"){
 						if($("#" + code + "-function").data("trueVal") == value){
 							$("#" + code + "-function").prop('checked', true);
+							$("#" + code + "-policy .icon-ok-sign").css("display", "inline");
 						}
 						
 					}
 					
-					if($("#" + code + "-" + key).attr('type') == "text"){
+					if($("#" + code + "-" + key).attr('type') == "text" || $("#" + code + "-" + key).attr('type') == "password" || $("#" + code + "-" + key).attr('type') == "select"){
 						$("#" + code + "-" + key).val(value);
+						$("#" + code + "-policy .icon-ok-sign").css("display", "inline");
 					}
 					
 				});
