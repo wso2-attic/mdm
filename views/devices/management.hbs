@@ -1,0 +1,94 @@
+<div class="container">
+
+	<div class="raw-fluid">
+		<div class="span12">
+
+			<div class="raw-fluid">
+				<div class="block">
+					<div class="block-header">
+						<div class="block-header-title pull-left">
+							Device Management
+						</div>
+
+					</div>
+
+					<div class="block-body block-body container-fluid raw-fluid">
+						<form class="form-horizontal" data-validate="parsley" action="">
+							<div class="control-group">
+								<label class="control-label" for="inputFirstName">Role</label>
+								<div class="controls">
+									<input type="text" id="inputRoles" class="input-xxlarge" data-required="true">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="inputLastName">Username</label>
+								<div class="controls">
+									<input type="text" id="inputUser" class="input-xxlarge" data-required="true">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="inputEmail">OS</label>
+								<div class="controls">
+									<select id="inputOS">
+										<option value="">--All--</option>
+										<option value="android">Android</option>
+										<option value="iso">iOS</option>
+									</select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="inputPassword" >Ownsership</label>
+								<div class="controls">
+									<select id="inputOwnership">
+										<option value="">--All--</option>
+										<option value="byod">BYOD</option>
+										<option value="cooperate">Cooperate</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="offset6">
+								<a class="btn btn-orange btn-large" id="btn-find" href="#" ><i class="icon-search icon-white"></i> Find</a>
+							</div>
+
+						</form>
+
+						<div class="span11">
+
+							<div class="raw pull-right">
+								<select name="featureList" id="featureList" class="dropdownimage" style="width:300px">
+									<option value="">-- Select an operation to Apply --</option>
+									{{#data.features}}{{#compare feature_type 'OPERATION'}}
+									<option value="{{name}}" data-image="https://localhost:9443/mdm/themes/wso2sinine/img/features/{{name}}.png">{{description}}</option>
+									{{/compare}}{{/data.features}}								
+								</select>
+
+							</div>
+
+							<table cellpadding="0" cellspacing="0" border="0"
+							class="table table-striped table-bordered" id="main-table">
+								<thead>
+									<tr>
+										<th>Id</th>
+										<th>Name</th>
+										<th>User</th>
+										<th>Role</th>
+									</tr>
+								</thead>
+								<tbody>
+									
+								</tbody>
+							</table>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+

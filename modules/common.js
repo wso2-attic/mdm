@@ -110,7 +110,7 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_LOCK;  //checked
 	} else if(operationCode == "505A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CLEAR_PASSCODE;
-		paramMap.put("UnlockToken", identifier);
+		paramMap.put("UnlockToken", data.unlock_token);
 	} else if(operationCode == "502A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APPLICATION_LIST;
 	} else if(operationCode == "500A") {

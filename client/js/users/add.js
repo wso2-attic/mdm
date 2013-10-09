@@ -16,10 +16,18 @@ $("#btn-add").click(function() {
 	var type = $('#inputType').val();
 	var username = $('#inputEmail').val();
 	var password = $('#inputPassword').val();
-	var mobileNo = $('#inputMobile').val();
-	var userGroups = $('#inputGroups').val();
+	var mobileNo = $('#inputMobile').val();	
+	
 	var userMAMGroups = $('#inputMAMGroups').val();
 	var tenantId = $('#tenantId').val();
+	
+	
+	if($(".radioUserType:checked").val() == 'user'){
+		var userGroups = $('#inputGroups').val();
+	}else{
+		var userGroups = $('#inputGroupsAdmins').val();
+	}
+	
 	
 	if(userGroups != null){
 		userGroups = userGroups + "," + userMAMGroups;
@@ -34,7 +42,7 @@ $("#btn-add").click(function() {
 	}
 	
 	
-	alert(userGroupsArray);
+	//alert(userGroupsArray);
 	
 	// alert(JSON.stringify(userGroupsArray));
 	jso = {
@@ -71,13 +79,24 @@ $("#btn-add").click(function() {
 
 $( ".radioUserType" ).change(function() {
 	var value = $(this).val();	
-	$(".inputGroupsSelect .box1 .filter").val(value);	
-	$(".inputGroupsSelect .box1 .filter" ).change();
+	//$(".inputGroupsSelect .box1 .filter").val(value);	
+	//$(".inputGroupsSelect .box1 .filter" ).change();
+	
+	if(value == 'user'){
+		$("#userSeletBox").css("display", "block");
+		$("#adminSeletBox").css("display", "none");
+	}else{
+		$("#userSeletBox").css("display", "none");
+		$("#adminSeletBox").css("display", "block");
+	}
 });
 
 
+
 $( document ).ready(function() {
-	var value = 'user';	
-	$(".inputGroupsSelect .box1 .filter").val(value);	
-	$(".inputGroupsSelect .box1 .filter" ).change();
+	//var value = 'user';	
+	//$(".inputGroupsSelect .box1 .filter").val(value);	
+	//$(".inputGroupsSelect .box1 .filter" ).change();
+	
+	$("#adminSeletBox").css("display", "none");
 });
