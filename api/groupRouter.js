@@ -7,7 +7,7 @@ var group = (function () {
         var user = new userModule(db);
 
 		router.get('groups/', function(ctx){
-			var groups= group.getGroups(ctx);
+			var groups= group.getAllGroups(ctx);
 		    if(groups[0]!=null){
 		        response.content = groups;
 		        response.status = 200;
