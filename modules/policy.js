@@ -10,6 +10,8 @@ var policy = (function () {
     var deviceModule = require('device.js').device;
     var device
 
+    var common = require("common.js");
+
 
     var configs = {
         CONTEXT: "/"
@@ -44,20 +46,17 @@ var policy = (function () {
     }
 
    function monitor(ctx){
-        log.info("bye");
+
         var result = db.query("SELECT * from devices");
 
         for(var i=0; i<result.length; i++){
-            log.info("hiii");
+
             var deviceId = result[i].id;
             var operation = 'MONITORING';
             var data = {};
             var userId = result[i].user_id;
-            var roles = user.getUserRoles({'username':userId});
-            var roleList = parse(roles);
-            log.info(roleList[0]);
+            var roleList = user.getUserRoles({'username':userId});
             var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
-            log.info("Policy Payload :"+gpresult[0].data);
             var jsonData = parse(gpresult[0].data);
             jsonData = deviceModule.policyByOsType(jsonData);
             var obj = {};
@@ -165,12 +164,19 @@ var policy = (function () {
         monitoring:function(ctx){
             setInterval(
                 function(ctx){
-                    monitor(ctx);
+                  /*  try{
+                        log.info("Getting Tenant ID"+common.getTenantID());   */
+
+                            monitor(ctx);
+
+                 /*   }catch(e){
+
+                        log.info("Error of Monitoring"+e);
+                    } */
                 }
-                ,100000);
+                ,10000);
 
         },
-
         removePolicyFromGroup:function(ctx){
         //    var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);
         //    return result;

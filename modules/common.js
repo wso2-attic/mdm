@@ -1,52 +1,50 @@
-var isMDMRole = function(role) {
-	var otherRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer", "admin", "mdmadmin");
-	for (var i = 0; i < otherRoles.length; i++) {
-		if (role == otherRoles[i]) {
-			return false;
-		}
-	}
-	return true;
-}
-
-var isMDMRoleWithAdmins = function(role) {
-
-	var otherRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role","reviewer");
-	for (var i = 0; i < otherRoles.length; i++) {
-		if (role == otherRoles[i]) {
-			return false;
-		}
-	}
-	return true;
-}
-
-var isMDMRoleWithoutStorePublisher = function(role) {
-
-    var otherRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer", "admin", "mdmadmin","store","publisher");
-    for (var i = 0; i < otherRoles.length; i++) {
-        if (role == otherRoles[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-var isMDMUser = function (user) {
-	var otherUsers = new Array("wso2.anonymous.user","admin");
-	for(var i = 0; i < otherUsers.length; i++) {
-		if(user == otherUsers[i]) {
-			return false;
-		}
-	}
-	return true;
-}
 
 var getTenantID = function() {
-	if (session.get("mdmConsoleUser")) {
-		return session.get("mdmConsoleUser")['tenantId'];
+   /* log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
+	if (Session["mdmConsoleUser"]) {
+		return Session["mdmConsoleUser"]['tenantId'];
 	} else {
 		return null;
-	}
+	} */
+    return "-1234";
 }
+
+var removePrivateRole = function(roleList){
+    var roles = new Array();
+
+    for(var i = 0; i<roleList.length; i++){
+        var prefix = '';
+        try{
+            prefix = roleList.substring(0,8);
+        }catch(e){
+
+        }
+        if(prefix == 'private_'){
+            continue;
+        }else{
+            roles.push(roleList[i]);
+        }
+    }
+    return roles;
+}
+
+var removeNecessaryElements = function(list,removeList){
+    var newList = Array();
+    for(var i=0; i< list.length; i++){
+        var flag = true;
+        for(var j=0; j<removeList.length; j++){
+            if(list[i]==removeList[j]){
+                flag = false;
+                break;
+            }
+        }
+        if(flag){
+            newList.push(list[i]);
+        }
+    }
+    return newList;
+}
+
 
 var getCAPath = function() {
 	return "E:/Mobile/iOS_MDM_Impl/keys/ca_cert.pem";
