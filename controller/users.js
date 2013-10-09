@@ -100,7 +100,7 @@ devices = function(appController) {
 	}
 
 	try {
-		var devices = user.devices({
+		var devices = user.getDevices({
 			"userid" : userId
 		});
 	} catch(e) {

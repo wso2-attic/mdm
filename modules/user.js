@@ -133,27 +133,20 @@ var user = (function () {
                 return error;
             }
         },
-        getUsers: function(ctx){
+        getAllUsers: function(ctx){
             var tenantId = common.getTenantID();
             var users_list = Array();
             if(tenantId){
-                log.info("Tenant ID >>>>>>"+common.getTenantID());
                 var um = userManager(common.getTenantID());
-                var arrUserName = parse(stringify(um.listUsers()));
-                log.info("Userssssssssss"+arrUserName);
-                for(var i = 0; i < arrUserName.length; i++) {
-                    log.info(common.isMDMUser(arrUserName[i]));
-                    if(!common.isMDMUser(arrUserName[i])) {
-
-                        continue;
-                    }
-                    log.info("Test Admin"+arrUserName[i]);
-                    var user = um.getUser(arrUserName[i]);
-
-                    var proxy_user = {};
-                    proxy_user.username = arrUserName[i];
+                var allUsers = um.listUsers();
+                var removeUsers = new Array("wso2.anonymous.user","admin");
+                var users = common.removeNecessaryElements(allUsers,removeUsers);
+                for(var i = 0; i < users.length; i++) {
+                    var user = um.getUser(users[i]);
                     var claims = [claimEmail, claimFirstName, claimLastName];
                     var claimResult = user.getClaimsForSet(claims,null);
+                    var proxy_user = {};
+                    proxy_user.username = users[i];
                     proxy_user.email = claimResult.get(claimEmail);
                     proxy_user.firstName = claimResult.get(claimFirstName);
                     proxy_user.lastName = claimResult.get(claimLastName);
@@ -227,7 +220,7 @@ var user = (function () {
         getUsersByType:function(ctx){//types are administrator,mam,user
             var type = ctx.type;
             var usersByType = new Array();
-            var users = this.getUsers();
+            var users = this.getAllUsers();
             for(var i =0 ;i<users.length;i++){
                 var roles = this.getUserRoles({'username':users[i].username});
                 var flag = 0;

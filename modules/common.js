@@ -1,4 +1,4 @@
-
+var log = new Log();
 var getTenantID = function() {
    /* log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
 	if (Session["mdmConsoleUser"]) {
@@ -15,9 +15,9 @@ var removePrivateRole = function(roleList){
     for(var i = 0; i<roleList.length; i++){
         var prefix = '';
         try{
-            prefix = roleList.substring(0,8);
+            prefix = roleList[i].substring(0,8);
         }catch(e){
-
+        //   log.info('error occured while removing private role');
         }
         if(prefix == 'private_'){
             continue;

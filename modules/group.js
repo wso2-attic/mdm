@@ -98,12 +98,12 @@ var group = (function () {
             }
             return proxy_role;
         },
-		getGroups: function(ctx){
+		getAllGroups: function(ctx){
             var type = ctx.type;
 			var um = userManager(common.getTenantID());
             var allRoles = common.removePrivateRole(um.allRoles());
             var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer");
-            var roles = common.removeNecessaryElements(allRoles, removeList);
+            var roles = common.removeNecessaryElements(allRoles, removeRoles);
             return roles;
 		},
         deleteGroup: function(ctx){
@@ -122,27 +122,28 @@ var group = (function () {
         getGroupsByType: function(ctx){
             var type = ctx.type;//this type attribute identify weather admin or mdmadmin
             var um = userManager(common.getTenantID());
-            var roles = new Array();
-            var roles = this.getGroups({});
+            var newRoles = new Array();
+            var roles = this.getAllGroups({});
             for(var i=0;i<roles.length;i++){
                     var obj = {};
                     if(roles[i] == 'admin'||roles[i] == 'mdmadmin'){
                         obj.name = roles[i];
                         obj.type = 'administrator';
                         if(type == 'admin'){
-                            roles.push(obj);
+                            newRoles.push(obj);
                         }
                     }else if(roles[i] == 'store'||roles[i] == 'publisher'){
                         obj.name = roles[i];
                         obj.type = 'mam';
-                        roles.push(obj);
+                        newRoles.push(obj);
                     }else{
                         obj.name = roles[i];
                         obj.type = 'user';
-                        roles.push(obj);
+                        newRoles.push(obj);
                     }
 
             }
+            return newRoles;
         },
 		getUsersOfGroup: function(ctx){
 			var tenantId = common.getTenantID();
@@ -151,20 +152,20 @@ var group = (function () {
 				var um = userManager(common.getTenantID());
 				var allUsers = um.getUserListOfRole(ctx.groupid);
                 var removeUsers = new Array("wso2.anonymous.user","admin");
-                var users = comman.removeNecessaryElements(allUsers,removeUsers);
+                var users = common.removeNecessaryElements(allUsers,removeUsers);
 				for(var i = 0; i < users.length; i++) {
-					var user = um.getUser(arrUserName[i]);
+					var user = um.getUser(users[i]);
 					var claims = [claimEmail, claimFirstName, claimLastName];
 					var claimResult = user.getClaimsForSet(claims,null);
                     var proxy_user = {};
-                    proxy_user.username = arrUserName[i];
+                    proxy_user.username = users[i];
 					proxy_user.email = claimResult.get(claimEmail);
 					proxy_user.firstName = claimResult.get(claimFirstName);
 					proxy_user.lastName = claimResult.get(claimLastName);
 					proxy_user.mobile = claimResult.get(claimMobile);
 					proxy_user.tenantId = tenantId;
-					proxy_user.roles = stringify(user.getRoles());
-					var resultDeviceCount = db.query("SELECT COUNT(id) AS device_count FROM devices WHERE user_id = ? AND tenant_id = ?", arrUserName[i], proxy_user.tenantId);
+					proxy_user.roles = user.getRoles();
+					var resultDeviceCount = db.query("SELECT COUNT(id) AS device_count FROM devices WHERE user_id = ? AND tenant_id = ?", users[i], proxy_user.tenantId);
 					proxy_user.no_of_devices = resultDeviceCount[0].device_count;
 					users_list.push(proxy_user);
 				}
