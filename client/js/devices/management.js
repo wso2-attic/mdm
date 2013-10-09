@@ -43,15 +43,19 @@ $("#btn-find").click(function() {
 
 $( "#featureList" ).change(function() {
 	
-	var feature = $(this).val();
+	var operation = $(this).val();
 	
 	var nFiltered = oTable.fnGetData();
 	
-	for(var i = 0; i < nFiltered.length; i++){
-		alert(nFiltered[i]);
+	var devices = new Array();
+	
+	for(var i = 0; i < nFiltered.length; i++){		
+		if (isNaN(nFiltered[i][0]) == false){
+			devices.push(nFiltered[i][0]);
+			
+		}
 	}
-		
-	alert(nFiltered);
+			
 	
 	noty({
 		text : 'Are you sure you want to perform this operation on selected devices?',
@@ -71,12 +75,12 @@ $( "#featureList" ).change(function() {
 			onClick : function($noty) {
 
 				jQuery.ajax({
-					url : getServiceURLs("performGroupOperation", null, feature),
+					url : getServiceURLs("performGroupsOperation"),
 					type : "POST",
 					async : "false",
-					data : JSON.stringify(params),
+					data : JSON.stringify({operation: operation, devices: devices}),
 					contentType : "application/json",
-					dataType : "json"
+					dataType : "json"					
 
 				});
 
