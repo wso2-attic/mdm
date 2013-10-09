@@ -6,8 +6,6 @@ var user = (function () {
 
 	var log = new Log();
 	var db;
-	var device;
-	var deviceModule = require('device.js').device;
 	var common = require("/modules/common.js");
 	var carbon = require('carbon');
 	var server = function(){
@@ -21,7 +19,6 @@ var user = (function () {
 	
     var module = function (dbs) {
 		db = dbs;
-        device = new deviceModule(db);
         //mergeRecursive(configs, conf);
     };
 
@@ -227,7 +224,7 @@ var user = (function () {
             var um = userManager(common.getTenantID());
             um.updateRoleListOfUser(ctx.username, deletedRoles, newRoles);
         },
-        getUsersByType:function(ctx){
+        getUsersByType:function(ctx){//types are administrator,mam,user
             var type = ctx.type;
             var usersByType = new Array();
             var users = this.getUsers();

@@ -5,10 +5,8 @@ var group = (function () {
     var routes = new Array();
 	var log = new Log();
 	var db;
-	var deviceModule = require('device.js').device;
-	var device = new deviceModule();
-    var userModule = require('user.js').user;
-    var user = new userModule();
+
+
 	var common = require('common.js');
     var claimEmail = "http://wso2.org/claims/emailaddress";
     var claimFirstName = "http://wso2.org/claims/givenname";
