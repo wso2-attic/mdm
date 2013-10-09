@@ -43,7 +43,14 @@ $("#btn-find").click(function() {
 
 $( "#featureList" ).change(function() {
 	
+	
+	var roles = $('#inputRoles').val();
+	var user = $('#inputUser').val();
+	var ownership = $('#inputOwnership').val();
+	var os = $('#inputOS').val();
+	
 	var operation = $(this).val();
+	var operationText = this.options[this.selectedIndex].innerHTML;
 	
 	var nFiltered = oTable.fnGetData();
 	
@@ -55,10 +62,21 @@ $( "#featureList" ).change(function() {
 			
 		}
 	}
+	
+	if(devices.length == 0){
+		noty({
+					text : 'No devices selected',
+					'layout' : 'center',
+					'modal': false,
+					'type': 'error'
+					
+		});
+		return;
+	}
 			
 	
 	noty({
-		text : 'Are you sure you want to perform this operation on selected devices?',
+		text : 'Are you sure you want to perform "'+operationText+'" operation on selected devices? ' + devices.length + " devices will be affected.",
 		buttons : [{
 			addClass : 'btn btn-cancel',
 			text : 'Cancel',
@@ -78,7 +96,7 @@ $( "#featureList" ).change(function() {
 					url : getServiceURLs("performGroupsOperation"),
 					type : "POST",
 					async : "false",
-					data : JSON.stringify({operation: operation, devices: devices}),
+					data : JSON.stringify({operation: operation, devices:devices, roles: roles, user: user, ownership: ownership, os:os}),
 					contentType : "application/json",
 					dataType : "json"					
 
@@ -92,6 +110,7 @@ $( "#featureList" ).change(function() {
 				});
 
 				$noty.close();
+				$('#featureList').msDropDown().data('dd').setIndexByValue("");		
 
 			}
 			
