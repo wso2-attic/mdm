@@ -36,6 +36,45 @@ oTable = $('#main-table').dataTable({
 
 
 
+jQuery.ajax({
+					url : getServiceURLs("groupsCRUD", ""),
+					type : "GET",
+					async : "false",					
+					contentType : "application/json",
+					dataType : "json",
+					success : function(roles) {
+						
+											 $('#inputRoles')
+					        .textext({
+					            plugins : 'autocomplete tags filter'
+					        })
+					        .bind('getSuggestions', function(e, data)
+					        {            
+					            var list = roles,
+					                textext = $(e.target).textext()[0],
+					                query = (data ? data.query : '') || ''
+					                ;
+					
+					            $(this).trigger(
+					                'setSuggestions',
+					                { result : textext.itemManager().filter(list, query) }
+					            );
+					        });
+
+						
+						
+						
+						
+						
+					}					
+
+});
+
+
+
+
+
+
 $("#btn-find").click(function() {
 	oTable.fnDraw();
 });
