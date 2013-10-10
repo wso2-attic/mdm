@@ -1,0 +1,36 @@
+{
+    "HTTPS_URL": "https://192.168.1.95:9443",
+    "HTTP_URL": "http://192.168.1.95:9763",
+	"IOS_URL": "http://192.168.1.95:9763/devicelogin.html",
+    "MDM_UI_URI": "/mdm/",
+    "MDM_API_URI": "/mdm/api/",
+    "MDM_THEME": "wso2sinine",
+    "tenanted": true,
+    "permissions": {
+        "login": {
+            "/permission/admin/login": [
+                "ui.execute"
+            ]
+        }
+    },
+    "ssoConfiguration": {
+        "enabled": true,
+        "issuer": "mdm",
+        "identityProviderURL": "%https.host%/sso/samlsso.jag",
+        "keyStorePassword": "wso2carbon",
+        "identityAlias": "wso2carbon",
+        "responseSigningEnabled": "true",
+        "storeAcs": "%https.host%/mdm/acs",
+        "keyStoreName": "/repository/resources/security/wso2carbon.jks"
+    },
+    "email": {
+        "companyName": "WSO2",
+        "senderAddress": "email",
+				"emailPassword": "password",
+        "emailTemplate": "\nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \n"
+    },
+    "device": {
+        "android_location": "",
+        "ios_location": ""
+    }
+}

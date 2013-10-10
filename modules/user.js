@@ -281,7 +281,7 @@ var user = (function () {
             subject = "MDM Enrollment";
 
             var email = require('email');
-            var sender = new email.Sender("smtp.gmail.com", "25", config.email.senderAddress, "brainsteamer", "tls");
+            var sender = new email.Sender("smtp.gmail.com", "25", config.email.senderAddress, config.email.emailPassword, "tls");
             sender.from = config.email.senderAddress;
 
             log.info("Email sent to -> "+ctx.username);
