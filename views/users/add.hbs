@@ -1,19 +1,17 @@
-<div class="container-fluid">
+<div class="container">
 
 	<div class="raw-fluid">
-		<div class="span12">
+		<ul class="breadcrumb">
+			<li>
+				<a href="configuration">Users</a><span class="divider">/</span>
+			</li>
+			<li class="active">
+				Add
+			</li>
+		</ul>
+	</div>
 
-			<ul class="breadcrumb">
-				<li>
-					<a href="configuration">Users</a><span class="divider">/</span>
-				</li>
-				<li class="active">
-					Add
-				</li>
-			</ul>
-
-		</div>
-
+	<div class="raw-fluid">
 		<div class="span12">
 
 			<div class="raw-fluid">
@@ -26,52 +24,101 @@
 					</div>
 
 					<div class="block-body">
-						<form class="form-horizontal">
+						<form class="form-horizontal" data-validate="parsley">
 							<div class="control-group">
 								<label class="control-label" for="inputFirstName">First Name</label>
 								<div class="controls">
-									<input type="text" id="inputFirstName" class="input-xxlarge">
+									<input type="text" id="inputFirstName" class="input-xxlarge" data-required="true">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputLastName">Last Name</label>
 								<div class="controls">
-									<input type="text" id="inputLastName" class="input-xxlarge">
+									<input type="text" id="inputLastName" class="input-xxlarge" data-required="true">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputEmail">Email</label>
 								<div class="controls">
-									<input type="text" id="inputEmail" class="input-xlarge">
+									<input type="text" id="inputEmail" class="input-xlarge" data-trigger="change" data-type="email" data-required="true">
 								</div>
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="inputPassword">Password</label>
+								<label class="control-label" for="inputPassword" >Password</label>
 								<div class="controls">
-									<input type="password" id="inputPassword">
+									<input type="password" id="inputPassword" data-required="true">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="inputMobile">Mobile</label>
 								<div class="controls">
-									<input type="text" id="inputMobile">
+									<input type="text" id="inputMobile"  data-trigger="change" data-type="phone" data-required="true">
+								</div>
+							</div>
+							
+							<div class="control-group">
+								<label class="control-label" for="inputFirstName">Type</label>
+								<div class="controls">
+									User <input type="radio" class="radioUserType"  name="inputType" value="user" checked="checked"> &nbsp;
+									Administrator <input type="radio" class="radioUserType"  name="inputType" value="administrator"> &nbsp;									
 								</div>
 							</div>
 
-							<div class="control-group">
-								<label class="control-label" for="inputMobile">Group</label>
+							<div class="control-group" id="userSeletBox">
+								<label class="control-label" for="inputGroups">Roles</label>
 								<div class="controls raw">
-									<div class="multiple-selectbox">
+									<div class="multiple-selectbox inputGroupsSelect">
 										<select multiple="multiple" size="10" id="inputGroups" name="inputGroups" class='duallistbox'>
 											{{#data.groups}}
-												<option value="{{this}}">{{this}}</option>
-											{{/data.groups}}											
-											
+												{{#compare type 'user'}}
+												<option value="{{name}}">{{name}}</option>
+												{{/compare}}
+											{{/data.groups}}
+
 										</select>
 									</div>
 
 								</div>
 							</div>
+							
+							<div class="control-group" id="adminSeletBox">
+								<label class="control-label" for="inputGroupsAdmins">Roles</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox inputGroupsAdminSelect">
+										<select multiple="multiple" size="10" id="inputGroupsAdmins" name="inputGroupsAdmins" class='duallistbox'>
+											{{#data.groups}}
+												{{#compare type 'administrator'}}
+												<option value="{{name}}">{{name}}</option>
+												{{/compare}}
+											{{/data.groups}}
+
+										</select>
+									</div>
+
+								</div>
+							</div>
+							
+							
+							
+							<div class="control-group">
+								<label class="control-label" for="inputGroups">MAM Roles</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox inputMAMGroupsSelect">
+										<select multiple="multiple" size="10" id="inputMAMGroups" name="inputMAMGroups" class='duallistbox'>
+											{{#data.groups}}
+												{{#compare type 'mam'}}
+												<option value="{{name}}">{{name}}</option>
+												{{/compare}}
+											{{/data.groups}}
+
+										</select>
+									</div>
+
+								</div>
+							</div>
+							
+							
+							
 
 							<hr>
 							<div class="offset10">
@@ -89,3 +136,11 @@
 	</div>
 
 </div>
+
+
+<style>
+	.info-container{
+		display: none
+	}
+	
+</style>

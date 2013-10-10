@@ -1,3 +1,8 @@
+var url = document.location.toString();
+if (url.match('#')) {
+    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+} 
+
 var selectedTab = null;
 var selectedDevice = null;
 
@@ -34,6 +39,11 @@ $('#devicesTab a').click(function(e) {
 
 });
 
+
+$('#devicesTab a').on('shown', function (e) {
+    window.location.hash = e.target.hash;
+});
+
 $(".btn-refresh").click(function() {
 	var command = $(this).data("command");
 	if (command == "genInfo") {
@@ -49,6 +59,8 @@ var selectedFeature = null;
 var selectedFeatureTemplate = null;
 var selectedDevice = null;
 
+
+/*drag and drop feature
 $('.features-device').draggable({
 	revert : true,
 	cursor : 'move',
@@ -62,6 +74,7 @@ $('.features-device').draggable({
 	}
 });
 
+
 $('.device-image').droppable({
 	tolerance : "pointer",
 	drop : function() {
@@ -69,6 +82,18 @@ $('.device-image').droppable({
 		prePerformOperation(selectedDevice, selectedFeature, selectedFeatureTemplate);
 	}
 });
+
+*/
+
+
+$(".features-device").click(function() {
+	selectedFeatureText = $(this).html();
+	selectedFeature = $(this).data('feature');
+	selectedFeatureTemplate = $(this).data('template');	
+	prePerformOperation(selectedDevice, selectedFeature, selectedFeatureTemplate);
+});
+
+
 
 function prePerformOperation(deviceId, feature, featureTemplate) {
 
@@ -200,8 +225,23 @@ function loadAppList(tabId, deviceId) {
 		type : "GET",
 		dataType : "json",
 		success : function(appList) {
-
+			
+			
 			appList.received_data = JSON.parse(appList.received_data);
+			
+			
+			//limit to 100
+			if(appList.received_data.length > 50){
+				appList.received_data.splice(50, appList.received_data.length - 50);
+			}
+			
+			for(var i = 0; i < appList.received_data.length; i++){
+				if(urlExists(context().appsImageService  + "/" +  appList.received_data[i].package + ".png")){
+					appList.received_data[i].image = context().appsImageService + "/" + appList.received_data[i].package + ".png";
+				}else{
+					appList.received_data[i].image = context().resourcePath + "appdefault.png";
+				}
+			}
 
 			$.get('../client/partials/users/applist.hbs', function(templateData) {
 				var template = Handlebars.compile(templateData);
@@ -209,14 +249,8 @@ function loadAppList(tabId, deviceId) {
 					appList : appList,
 					resourcePath : context().resourcePath,
 					appsImageService: context().appsImageService
-				}));
+			}));
 				
-				$( ".app-image" ).each(function( index ) {
-		var srcImage = $(this).attr("src");
-		if(!urlExists(srcImage)){			
-			 $(this).attr("src", context().resourcePath + "appdefault.png");			
-		}
-	});
 
 				$('.bxslider').bxSlider({
 					minSlides : 5,

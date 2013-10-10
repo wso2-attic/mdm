@@ -7,6 +7,12 @@ var policy = (function () {
     var groupModule = require('group.js').group;
     var group;
 
+    var deviceModule = require('device.js').device;
+    var device
+
+    var common = require("common.js");
+
+
     var configs = {
         CONTEXT: "/"
     };
@@ -18,6 +24,7 @@ var policy = (function () {
         db = dbs;
         user = new userModule(db);
         group = new groupModule(db);
+        device = new deviceModule(db);
         //mergeRecursive(configs, conf);
     };
 
@@ -38,12 +45,47 @@ var policy = (function () {
         return obj1;
     }
 
+   function monitor(ctx){
+
+        var result = db.query("SELECT * from devices");
+
+        for(var i=0; i<result.length; i++){
+
+            var deviceId = result[i].id;
+            var operation = 'MONITORING';
+            var data = {};
+            var userId = result[i].user_id;
+            var roleList = user.getUserRoles({'username':userId});
+            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+            var jsonData = parse(gpresult[0].data);
+            jsonData = deviceModule.policyByOsType(jsonData);
+            var obj = {};
+            obj.type = gpresult[0].type;
+            obj.policies = jsonData;
+            device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
+            device.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
+            device.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
+        }
+    }
+
     // prototype
     module.prototype = {
         constructor: module,
 
+        updatePolicy:function(ctx){
+            var result;
+            var policy = db.query("SELECT * FROM policies where name = ?",ctx.policyName);
+            if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
+                log.info("Content >>>>>"+stringify( ctx.policyData));
+                result = db.query("UPDATE policies SET content= ?,type = ? WHERE name = ?",ctx.policyData, ctx.policyType, ctx.policyName);
+                log.info("Result >>>>>>>"+result);
+            }else{
+                result = this.addPolicy(ctx);
+            }
+            return result;
+        },
         addPolicy: function(ctx){
-            var result = db.query("insert into policies (name,content) values (?,?)",ctx.policyName,ctx.policyData);
+            var result = db.query("insert into policies (name,content,type) values (?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType);
             log.info("Result >>>>>>>"+result);
             return result;
         },
@@ -53,7 +95,7 @@ var policy = (function () {
         },
         getPolicy:function(ctx){
             var result = db.query("SELECT * FROM policies where id = ?",ctx.policyid);
-            return result;
+            return result[0];
         },
         deletePolicy:function(ctx){
             var result = db.query("DELETE FROM policies where id = ?",ctx.policyid);
@@ -105,8 +147,35 @@ var policy = (function () {
                     array[i] = element;
                 }
             }
-            log.info(array);
+
             return array;
+        },
+        enforcePolicy:function(ctx){
+            var policies = db.query("SELECT * from group_policy_mapping where policy_id=?",ctx.policy_id);
+            var policyData = policies[0].content;
+
+            var result = db.query("SELECT * from group_policy_mapping where policy_id=?",ctx.policy_id);
+            var groupId = result[0].group_id;
+            var users = group.getUsers({'groupid':groupId});
+            for(var i=0;i<users.length;i++){
+                user.operation({'userid': users[i].username,'operation':'POLICY','data':parse(policyData)});
+            }
+        },
+        monitoring:function(ctx){
+            setInterval(
+                function(ctx){
+                  /*  try{
+                        log.info("Getting Tenant ID"+common.getTenantID());   */
+
+                            monitor(ctx);
+
+                 /*   }catch(e){
+
+                        log.info("Error of Monitoring"+e);
+                    } */
+                }
+                ,10000);
+
         },
         removePolicyFromGroup:function(ctx){
         //    var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);

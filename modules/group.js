@@ -5,8 +5,8 @@ var group = (function () {
     var routes = new Array();
 	var log = new Log();
 	var db;
-	var deviceModule = require('device.js').device;
-	var device = new deviceModule();
+
+
 	var common = require('common.js');
     var claimEmail = "http://wso2.org/claims/emailaddress";
     var claimFirstName = "http://wso2.org/claims/givenname";
@@ -65,104 +65,110 @@ var group = (function () {
     // prototype
     module.prototype = {
         constructor: module,
-		getGroups: function(ctx){
-
+        /*Group CRUD Operations (Create, Retrieve, Update, Delete)*/
+        addGroup: function(ctx){
+            var proxy_role = {};
+            var tenant_id = common.getTenantID();
+            if(tenant_id){
+                var um = userManager(tenant_id);
+                try{
+                    if(um.roleExists(ctx.name)) {
+                        proxy_role.error = 'Role already exist in the system.';
+                        proxy_role.status = "ALLREADY_EXIST";
+                    } else {
+                        var arrPermission = {};
+                        var permission = [
+                            'http://www.wso2.org/projects/registry/actions/get',
+                            'http://www.wso2.org/projects/registry/actions/add',
+                            'http://www.wso2.org/projects/registry/actions/delete',
+                            'authorize','login'
+                        ];
+                        arrPermission[0] = permission;
+                        um.addRole(ctx.name, ctx.users, arrPermission);
+                        proxy_role.success = 'Role added successfully.';
+                        proxy_role.status = "SUCCESSFULL";
+                    }
+                }catch(e){
+                    proxy_role.status = "BAD_REQUEST";
+                    log.error(e);
+                }
+            }else{
+                proxy_role.status = "SERVER_ERROR";
+                print('Error in getting the tenantId from session');
+            }
+            return proxy_role;
+        },
+		getAllGroups: function(ctx){
+            var type = ctx.type;
 			var um = userManager(common.getTenantID());
-			var roles = um.allRoles();
-            log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
-			var arrRole = new Array();
-			for(var i = 0; i < roles.length; i++) {
-				if(common.isMDMRole(roles[i])) {
-					arrRole.push(roles[i]);
-				}
-			}
-            log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
-			return arrRole;
+            var allRoles = common.removePrivateRole(um.allRoles());
+            var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer");
+            var roles = common.removeNecessaryElements(allRoles, removeRoles);
+            return roles;
 		},
-        getGroupsByType: function(ctx){
-            var role = ctx.role;
-
-            if(role == 'admin'){
-                var um = userManager(common.getTenantID());
-                var roles = um.allRoles();
-                log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
-                var arrRole = new Array();
-                for(var i = 0; i < roles.length; i++) {
-                    if(common.isMDMRoleWithAdmins(roles[i])) {
-                        var obj = {};
-                        if(roles[i] == 'admin'||roles[i] == 'mdmadmin'){
-                            obj.name = roles[i];
-                            obj.type = 'administrator';
-                        }else{
-                            obj.name = roles[i];
-                            obj.type = 'user';
-                        }
-                        arrRole.push(obj);
-                    }
-                }
-                log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
-                return arrRole;
-            }else if(role == 'mdmadmin'){
-                var um = userManager(common.getTenantID());
-                var roles = um.allRoles();
-                log.info("ALL Roles >>>>>>>>>>"+stringify(roles));
-                var arrRole = new Array();
-                for(var i = 0; i < roles.length; i++) {
-                    if(common.isMDMRole(roles[i])) {
-                        var obj = {};
-                        obj.name = roles[i];
-                        obj.type = 'user';
-                        arrRole.push(obj);
-                    }
-                }
-                log.info("ALL Roles >>>>>>>>>>"+stringify(arrRole));
-                return arrRole;
+        deleteGroup: function(ctx){
+            var um = userManager(common.getTenantID());
+            var result = um.removeRole(ctx.groupid);
+            if(result){
+                return true;
+            }else{
+                return false;
             }
         },
-		delete: function(ctx){
+
+        /*end of Group CRUD Operations (Create, Retrieve, Update, Delete)*/
+ /*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+       /*other group manager functions*/
+        getGroupsByType: function(ctx){
+            var type = ctx.type;//this type attribute identify weather admin or mdmadmin
             var um = userManager(common.getTenantID());
+            var newRoles = new Array();
+            var roles = this.getAllGroups({});
+            for(var i=0;i<roles.length;i++){
+                    var obj = {};
+                    if(roles[i] == 'admin'||roles[i] == 'mdmadmin'){
+                        obj.name = roles[i];
+                        obj.type = 'administrator';
+                        if(type == 'admin'){
+                            newRoles.push(obj);
+                        }
+                    }else if(roles[i] == 'store'||roles[i] == 'publisher'){
+                        obj.name = roles[i];
+                        obj.type = 'mam';
+                        newRoles.push(obj);
+                    }else{
+                        obj.name = roles[i];
+                        obj.type = 'user';
+                        newRoles.push(obj);
+                    }
 
-            var result = um.removeRole(ctx.groupid);
-
-            if(result){
-                response.status = 200;
-            }else{
-                response.status = 404;
             }
-		},
-		getUsers: function(ctx){
-            log.info("Group Name >>>>>"+ctx.groupid);
+            return newRoles;
+        },
+		getUsersOfGroup: function(ctx){
 			var tenantId = common.getTenantID();
 			var users_list = Array();
 			if(tenantId){
 				var um = userManager(common.getTenantID());
-				var arrUserName = um.getUserListOfRole(ctx.groupid);
-                log.info(arrUserName.length);
-				for(var i = 0; i < arrUserName.length; i++) {
-					if(!common.isMDMUser(arrUserName[i])) {
-						continue;
-					}
-
-					var user = um.getUser(arrUserName[i]);
-					var proxy_user = {};
-					proxy_user.username = arrUserName[i];
-
+				var allUsers = um.getUserListOfRole(ctx.groupid);
+                var removeUsers = new Array("wso2.anonymous.user","admin");
+                var users = common.removeNecessaryElements(allUsers,removeUsers);
+				for(var i = 0; i < users.length; i++) {
+					var user = um.getUser(users[i]);
 					var claims = [claimEmail, claimFirstName, claimLastName];
-
 					var claimResult = user.getClaimsForSet(claims,null);
+                    var proxy_user = {};
+                    proxy_user.username = users[i];
 					proxy_user.email = claimResult.get(claimEmail);
 					proxy_user.firstName = claimResult.get(claimFirstName);
 					proxy_user.lastName = claimResult.get(claimLastName);
 					proxy_user.mobile = claimResult.get(claimMobile);
 					proxy_user.tenantId = tenantId;
-					proxy_user.roles = stringify(user.getRoles());
-
-					var resultDeviceCount = db.query("SELECT COUNT(id) AS device_count FROM devices WHERE user_id = ? AND tenant_id = ?", arrUserName[i], proxy_user.tenantId);
+					proxy_user.roles = user.getRoles();
+					var resultDeviceCount = db.query("SELECT COUNT(id) AS device_count FROM devices WHERE user_id = ? AND tenant_id = ?", users[i], proxy_user.tenantId);
 					proxy_user.no_of_devices = resultDeviceCount[0].device_count;
-
 					users_list.push(proxy_user);
 				}
-
 			}else{
 				log.error('Error in getting the tenantId from session');
 				print('Error in getting the tenantId from session');
@@ -170,118 +176,45 @@ var group = (function () {
             log.info("Element >>>>>>"+stringify(users_list));
 			return users_list;
 		},
-		add: function(ctx){
-            log.info("Test function"+ctx.name);
-            log.info("Test function"+ctx.users);
-			var proxy_role = {};
-			var tenant_id = common.getTenantID();
-			if(tenant_id){
-				var um = userManager(tenant_id);
-				try{
-					if(um.roleExists(ctx.name)) {
-						proxy_role.error = 'Role already exist in the system.';
-                        proxy_role.status = "ALLREADY_EXIST";
-					} else {
-					    var permission = [
-					        'http://www.wso2mobile.org/projects/mdm/actions/get',
-					        'authorize'
-					    ];
-					    var arrPermission = {};
-					    var permission = [
-					        'http://www.wso2.org/projects/registry/actions/get',
-					        'http://www.wso2.org/projects/registry/actions/add',
-					        'http://www.wso2.org/projects/registry/actions/delete',
-					        'authorize'
-					    ];
-					    arrPermission["0"] = permission;
-                        log.info(ctx.name);
-                        log.info(ctx.users);
-						um.addRole(ctx.name, ctx.users, arrPermission);
-						proxy_role.success = 'Role added successfully.';
-                        proxy_role.status = "SUCCESSFULL";
-					}
-				}catch(e){
-                    log.info("Error");
-                    proxy_role.status = "BAD_REQUEST";
-					log.error(e);
-				}
-			}else{
-                proxy_role.status = "SERVER_ERROR";
-				print('Error in getting the tenantId from session');
-			}
-            log.info(proxy_role);
-			return proxy_role;
-		},
-        assignUsers: function(ctx){
-            log.info("Test Function");
-            var um = userManager(common.getTenantID());
-            um.updateUserListOfRole(ctx.groupid , ctx.removed_users, ctx.added_users);
+        updateUserListOfRole: function(ctx){
+            var existingUsers = this.getUsers(ctx);
+            var addedUsers = ctx.added_users;
+            var newUsers = new Array();
 
-        },
-        getUsersByGroup:function(ctx){
-            log.info("Test Function");
-            var users = this.getUsers(ctx);
-
-            log.info("Selected Users"+stringify(users));
-
-            var allUsers = user.getUsers(ctx);
-
-            log.info("All Users"+stringify(allUsers));
-            if(users.length==0){
-                for(var i=0;i<allUsers.length;i++){
-                    allUsers[i].available = false;
-                }
-            }else{
-                for(var i=0;i<allUsers.length;i++){
-                    for(var j=0;j<users.length;j++){
-                        if(allUsers[i].username==users[j].username){
-                            allUsers[i].available = true;
-                            break;
-                        }else{
-                            allUsers[i].available = false;
-                        }
+            for(var i=0;i<addedUsers.length;i++){
+                var flag = false;
+                for(var j=0;j<existingUsers.length;j++){
+                    if(addedUsers[i]== existingUsers[j].username){
+                        flag = true;
+                        break;
+                    }else{
+                        flag = false;
                     }
                 }
+                if(flag == false){
+                    newUsers.push(addedUsers[i]);
+                }
             }
-            log.info("Final Result :"+stringify(allUsers));
-            return allUsers;
-        },
-		operation: function(ctx){
-	        var succeeded="";
-	        var failed="";
 
+            var removedUsers = ctx.removed_users;
+            var deletedUsers = new Array();
+            for(var i=0;i<removedUsers.length;i++){
+                var flag = false;
+                for(var j=0;j<existingUsers.length;j++){
+                    if(removedUsers[i]== existingUsers[j]){
+                        flag = true;
+                        break;
+                    }else{
+                        flag = false;
+                    }
+                }
+                if(flag == true){
+                    deletedUsers.push(removedUsers[i]);
+                }
+            }
             var um = userManager(common.getTenantID());
-			var userList = um.getUserListOfRole(ctx.groupid);
-
-			var arrUsers = new Array();	
-
-			for(var i = 0; i < userList.length; i++) {
-				
-				var objUser = {};
-				
-				var result = db.query("SELECT id FROM devices WHERE user_id = ? AND tenant_id = ?", String(userList[i]), common.getTenantID());
-
-                log.info("Device Count >>>>>>>>>>"+stringify(result));
-
-				for(var j = 0; j < result.length; j++) {
-					
-					var status = device.sendToDevice({'deviceid':result[i].id, 'operation': ctx.operation, 'data' : ctx.data});
-		            if(status == true){
-		                succeeded += result[i].id+",";
-		            }else{
-		                failed += result[i].id+",";
-		            }
-				}
-			}
-			
-			if(succeeded != "" && failed != ""){
-
-	            return "Succeeded : "+succeeded+", Failed : "+failed;
-	        }else{
-	            return "Succeeded : "+succeeded;
-	        }
-
-		}
+            um.updateUserListOfRole(ctx.groupid , deletedUsers, newUsers);
+        }
     };
 
     // return module

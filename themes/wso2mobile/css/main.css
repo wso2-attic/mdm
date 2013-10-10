@@ -474,3 +474,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 .multiple-selectbox{
 width:600px;
 }
+
+.parsley-error-list{
+    color: #b94a48 !important;    
+}

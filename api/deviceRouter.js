@@ -8,14 +8,15 @@ var device = (function () {
 
 		router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);
-		    if(result!= null && result != undefined && result[0] != null && result[0] != undefined){
+            log.info(result);
+		    if(result){
                 log.info("Check isRegistered registered");
 		        print("registered");
 		        response.status = 200;
 		    }else{
                 log.info("Check isRegistered notregistered");
                 print("notregistered");
-		        //response.status = 404;
+		        response.status = 404;
 		    }
 		});
 
@@ -28,7 +29,7 @@ var device = (function () {
 		    if(android>0){
 		        response.sendRedirect(configs.HTTP_URL+"/mdm/mdm.apk");
 		    }else{
-		        response.sendRedirect(configs.RUBY_SERVER_URL);
+		        response.sendRedirect(configs.IOS_URL);
 		    }
 
 		});
@@ -49,9 +50,9 @@ var device = (function () {
 		    var result = device.unRegister(ctx);
 		});
 
-		router.post('devices/isregistered', function(ctx){
+	/*	router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);
-		});
+		});*/
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
 
@@ -107,6 +108,14 @@ var device = (function () {
 		router.post('devices/{deviceid}', function(ctx){
 		    var result = device.updateiOSTokens(ctx);
 		});
+
+        router.get('devices/license', function(ctx){
+            var result = device.getLicenseAgreement(ctx);
+            response.content = result;
+            response.status = 200;
+        });
+
+
 
 		router.get('pending/devices/{udid}/operations', function(ctx){
 		    var result = device.getPendingOperationsFromDevice(ctx);

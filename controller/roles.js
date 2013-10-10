@@ -19,20 +19,13 @@ configuration = function(appController){
 	context = appController.context();
 	
 	try{
-		var groups = group.getGroupsByType({role:context.contextData.user.role});		
+		var groups = group.getGroupsByType({type:context.contextData.user.role});		
 	}catch(e){
 		
 		var groups = [];
 	}
 	
 	
-
-	for(var i =0; i < groups.length; i++){
-		if(groups[i] == 'masteradmin' | groups[i] == "admin"){
-			groups.splice(i, 1);
-		}
-	}
-
 	
 	context.title = context.title + " | Configuration";
 	context.page = "configuration";
@@ -85,15 +78,15 @@ users = function(appController){
 	}
 	session.put('mdmConsoleSelectedRole', role)
 	try{
-		var users = group.getUsers({'groupid':role});
+		var users = group.getUsersOfGroup({'groupid':role});
 	}catch(e){
-        log.info(group.getUsers({'groupid':role}));
+        log.info(group.getUsersOfGroup({'groupid':role}));
 		var users = [];
 	}
 	for (var i = 0; i < users.length; i++) {
 
 		if(users[i].no_of_devices > 0){
-			var devices = user.devices({'userid':users[i].username});
+			var devices = user.getDevices({'userid':users[i].username});
 
 			for (var j = 0; j < devices.length; j++) {
 		  		devices[j].properties = JSON.parse(devices[j].properties);
@@ -125,14 +118,15 @@ users = function(appController){
 
 
 add = function(appController){
+	context = appController.context();
 	try{
-		var users = user.getUsers({});
+		var users = user.getUsersByType({type:context.contextData.user.role});
 	}catch(e){
 		var users = [];
 	}
 	log.info("sdfsd");
 	log.info(session.get("mdmConsoleUser"));
-	context = appController.context();
+	
 	context.title = context.title + " | Add Group";
 	context.page = "configuration";
 	context.jsFile= "roles/add.js"
@@ -200,12 +194,14 @@ view_users = function(appController){
 
 
 	try{
-		var users = group.getUsers({groupid: groupId});
+        log.info("Test Group ID"+groupId);
+		var users = group.getUsersOfGroup({groupid: groupId});
+        log.info("Test Result"+users);
 	}catch(e){
 		var users = [];
 	}
 	try{
-		var groups = group.getGroups({});
+		var groups = group.getAllGroups({});
 	}catch(e){
 		var groups = [];
 	}

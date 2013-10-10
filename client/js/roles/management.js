@@ -12,10 +12,19 @@ $('.features-role').draggable({
 		selectedFeatureTemplate = $(this).data('template');
 		var image = $(this).find("img").attr("src");
 		//$(this).html('<img src="' + image + '">');
+		
+		$( ".group-item" ).each(function( index ) {
+				//$(this).css("background-image",'url(' + '/mdm/themes/wso2sinine/img/dropmsg.png' + ')');
+				//$(this).css("background-size",'100%');
+		});
 	},
 
 	stop : function() {
 		$(this).html(selectedFeatureText);
+		
+		$( ".group-item" ).each(function( index ) {
+				//$(this).css("background-image",'none');
+		});
 
 	}
 });

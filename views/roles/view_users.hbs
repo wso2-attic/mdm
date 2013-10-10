@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container">
 
 	<div class="raw-fluid">
 		<div class="span12">
@@ -21,34 +21,7 @@
 
 						<div class="span11">
 
-							<table cellpadding="0" cellspacing="0" border="0"
-							class="table table-striped table-bordered" id="main-table">
-								<thead>
-									<tr>
-										<th>First Name</th>
-										<th>Last Name</th>
-										<th>e Mail</th>
-										<th>Mobile</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									{{#data.users}}
-									<tr>
-										<td>{{firstName}}</td>
-										<td>{{lastName}}</td>
-										<td>{{userid}}</td>
-										<td>{{mobile}}</td>
-										<td class="center">
-											<a href="assign_groups?user={{username}}"  data-toggle="modal" title="Assign Groups"
-												><i class="icon-user"> </i> Assign Roles</a> |
-											<a href="#"  class="btn-item-remove" data-item="{{username}}" title="Remove"
-												><i class="icon-remove"> </i> Remove</a>	
-										</td>
-									</tr>
-									{{/data.users}}
-								</tbody>
-							</table>
+						{{>users-table}}
 
 						</div>
 

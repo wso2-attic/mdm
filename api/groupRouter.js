@@ -7,7 +7,7 @@ var group = (function () {
         var user = new userModule(db);
 
 		router.get('groups/', function(ctx){
-			var groups= group.getGroups(ctx);
+			var groups= group.getAllGroups(ctx);
 		    if(groups[0]!=null){
 		        response.content = groups;
 		        response.status = 200;
@@ -15,6 +15,15 @@ var group = (function () {
 		        response.status = 404;
 		    }
 		});
+        router.get('groups/invite', function(ctx){
+            var groups= group.getGroups(ctx);
+            if(groups[0]!=null){
+                response.content = groups;
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
+        });
 		router.delete('groups/{groupid}', function(ctx){
             log.info("Test Delete Router");
 			group.delete(ctx);

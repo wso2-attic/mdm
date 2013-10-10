@@ -17,6 +17,18 @@ var policy = (function () {
             }
 
         });
+        router.put('policies/{policyid}', function(ctx){
+
+            log.info("check policy router POST");
+            log.info(ctx);
+            var result = policy.updatePolicy(ctx);
+            if(result == 1){
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
+
+        });
         router.delete('policies/{policyid}', function(ctx){
             log.info("Check Delete Router");
             var result = policy.deletePolicy(ctx);
@@ -43,7 +55,8 @@ var policy = (function () {
 
             var result = policy.getPolicy(ctx);
 
-            if(result != undefined && result != null && result[0] != undefined && result[0]!= null){
+            if(result != undefined && result != null){
+                log.info("Content "+stringify(result));
                 response.content = result;
                 response.status = 200;
             }else{

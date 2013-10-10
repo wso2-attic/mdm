@@ -1,6 +1,17 @@
 $("#btn-add").click(function() {
 	
+	$( 'form').parsley( 'validate' );	
+	if(!$('form').parsley('isValid')){
+		noty({
+				text : 'Input validation failed!',
+				'layout' : 'center',
+				'type' : 'error'
+		});		
+		return;
+	}
+	
 	var policyName = $('#policyName').val();
+	var policyType = $('#policyType').val();
 	params = {};
 	
 	$(".policy-input").each(function(index) {
@@ -46,13 +57,37 @@ $("#btn-add").click(function() {
      	policyData.push({code: param, data: params[param]});
 	}
 
+
+
+
+	//policy data for blacklisted apps
+	var policyDataBlackList = new Array(); 
+	$('#inputBlackListApps > option').each(function() { 		
+    	policyDataBlackList.push({identity: $(this).text(), os: $(this).data('os'), type: $(this).data('type')});
+	});
+		
+	if(policyDataBlackList.length > 0){
+		policyData.push({code: "528B", data: policyDataBlackList});
+	}
+	
+	
+	
+	
+	var installedAppData = new Array(); 
+	$('#inputInstallApps :selected').each(function(i, selected){ 
+ 		installedAppData.push({identity: $(selected).val(), os: $(selected).data('os'), type: $(selected).data('type')});
+	});
+	
+	if(installedAppData.length > 0){
+		policyData.push({code: "509B", data: installedAppData});
+	}
 	
 		
 	jQuery.ajax({
 		url : getServiceURLs("policiesCRUD", ""),
 		type : "POST",
 		async : "false",
-		data: JSON.stringify({policyData: policyData, policyName: policyName}),		
+		data: JSON.stringify({policyData: policyData, policyName: policyName, policyType: policyType}),		
 		contentType : "application/json",
      	dataType : "json"		
 	});
@@ -61,8 +96,69 @@ $("#btn-add").click(function() {
 		text : 'Policies added successfully!',
 		'layout' : 'center',
 		'modal': false
-	}).done(function() {
-			window.location.reload(true);
+	});
+	
+	$( document ).ajaxComplete(function() {
+		window.location.assign("configuration");
 	});
 	
 });
+
+
+
+$( "#modalBlackListAppButton" ).click(function() {
+		$("#inputBlackListApps").append('<option data-type="'+ $("#modalBlackListType").val() +'" data-os="'+ $("#modalBlackListOS").val() +'" value="'+ $("#modalBlackListPackageName").val()  +'">' + $("#modalBlackListPackageName").val()  + '</option>');
+});
+
+$( "#modalBlackListAppRemove" ).click(function() {
+	 $("#inputBlackListApps :selected").each(function() {
+    		$(this).remove();
+	});
+});
+
+
+
+
+$(document).ready( function () {
+	
+	policyId = getURLParameter("policy");	
+	
+	jQuery.ajax({
+		url : getServiceURLs("policiesCRUD", policyId),
+		type : "GET",
+		dataType : "json",
+		success : function(policyData) {
+			//policyData = policyData[0];			
+			$("#policyName").val(policyData.name);	
+			policyContent = JSON.parse(policyData.content);				
+			for( var i = 0; i < policyContent.length; i++){
+				var code = policyContent[i].code;
+				var data = policyContent[i].data;				
+				$.each( data, function( key, value ) {
+					if($("#" + code + "-function").attr('type') == "checkbox"){
+						if($("#" + code + "-function").data("trueVal") == value){
+							$("#" + code + "-function").prop('checked', true);
+							$("#" + code + "-policy .icon-ok-sign").css("display", "inline");
+						}
+						
+					}
+					
+					if($("#" + code + "-" + key).attr('type') == "text" || $("#" + code + "-" + key).attr('type') == "password" || $("#" + code + "-" + key).attr('type') == "select"){
+						$("#" + code + "-" + key).val(value);
+						$("#" + code + "-policy .icon-ok-sign").css("display", "inline");
+					}
+					
+				});
+				
+				
+			}
+			
+					
+		}
+	});
+
+		
+	
+	
+	
+} );

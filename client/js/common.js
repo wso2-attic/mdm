@@ -3,7 +3,7 @@ var apiConfig = getApiConfig();
 var uiConfig = getUIConfig();
 
 function getAppConfig(){
-	var appConfig = loadTextFileAjaxSync("/mdm/config.json", "application/json");	
+	var appConfig = loadTextFileAjaxSync("/mdm/config/config.json", "application/json");	
 	return JSON.parse(appConfig);
 }
 
@@ -120,6 +120,8 @@ $.noty.defaults = {
 
 $('.selectpicker').selectpicker();
 $('.duallistbox').bootstrapDualListbox();
+$(".dropdownimage").msDropDown();
+
 
 $('.nav-tabs a').click(function(e) {
 	e.preventDefault();
@@ -127,6 +129,18 @@ $('.nav-tabs a').click(function(e) {
 });
 
 $(".jtootip").tooltip();
+
+
+$(".als-container").als({
+	visible_items: 20,
+	scrolling_items: 2,
+	orientation: "horizontal",
+	circular: "yes",
+	autoscroll: "yes",
+	interval: 6000,
+	direction: "right",
+	start_from: 1
+});
 
 
 Handlebars.registerHelper('elipsis', function(maxLength, context, options) {
@@ -271,3 +285,9 @@ function urlExists(url)
     return http.status!=404;
 }
 
+
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}

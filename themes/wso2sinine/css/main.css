@@ -13,6 +13,12 @@ body {
 	padding-bottom: 5px;
 }
 
+.span2-5 {
+	width: 230px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
 a, a:hover, a:focus {
 	color: #086F76;
 }
@@ -446,4 +452,84 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 
 .multiple-selectbox{
 width:600px;
+}
+
+
+.parsley-error-list{
+    color: #b94a48 !important;     
+}
+
+
+.icon-defaultcolor{
+	color:#097880;
+}
+
+.span3-5 {
+    width: 350px;
+}
+
+
+
+
+
+
+
+
+
+
+
+/****************************************
+ * ALS
+ ***************************************/
+
+
+
+
+.als-container {
+	position: relative;
+	width: 100%;
+	margin: 0px auto;
+	z-index: 0;
+}
+
+/****************************************
+ * viewport styling
+ ***************************************/
+
+.als-viewport {
+	position: relative;
+	overflow: hidden;
+	margin: 0px auto;
+}
+
+/***************************************************
+ * wrapper styling
+ **************************************************/
+
+.als-wrapper {
+	position: relative;
+	/* if you are using a list with <ul> <li> */
+	list-style: none;
+}
+
+/*************************************
+ * item: single list element
+ ************************************/
+
+.als-item {
+	position: relative;
+	display: block;
+	text-align: center;
+	cursor: pointer;
+	float: left;
+}
+
+/***********************************************
+ * prev, next: buttons styling
+ **********************************************/
+ 
+.als-prev, .als-next {
+	position: absolute;
+	cursor: pointer;
+	clear: both;
 }

@@ -130,8 +130,8 @@ var user = (function () {
 		        response.status = 404;
 		    }
 		});
-        router.get('users/test/test',function(ctx){
-            user.getUsersWithoutMDMRoles(ctx);
+        router.get('users/invite',function(ctx){
+            user.sendEmail(ctx);
 
         });
 		router.post('users/{userid}/operations/{operation}',function(ctx){

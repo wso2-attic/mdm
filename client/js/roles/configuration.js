@@ -111,6 +111,53 @@ $(".btn-item-remove").click(function() {
 });
 
 
+$(".btn-invite").click(function() {
+	
+	var item = $(this).data("item");
+		
+	noty({
+		text : 'Are you sure you want invite this group?',
+		buttons : [{
+			addClass : 'btn btn-cancel',
+			text : 'Cancel',
+			onClick : function($noty) {
+				$noty.close();
+
+			}
+			
+			
+		}, {
+			
+			addClass : 'btn btn-orange',
+			text : 'Ok',
+			onClick : function($noty) {				
+				$noty.close();
+				
+				jQuery.ajax({
+					url : getServiceURLs("groupsInvite"),
+					type : "PUT",					
+					data : {username: item},		
+					contentType : "application/json",
+			     	dataType : "json"
+			
+				});
+				
+				noty({
+						text : 'User is invited successfully!',
+						'layout' : 'center'
+				});	
+				
+				
+				
+			}
+			
+		}]
+	});
+	
+	
+});
+
+
 $(document).ready( function () {
 	
 	jQuery.ajax({
@@ -164,7 +211,7 @@ $(document).ready( function () {
 	
 	oTable = $('#main-table').dataTable( {
 		"sDom": "<'row-fluid'<'tabel-filter-group span8'T><'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-		"iDisplayLength": 6,
+		"iDisplayLength": 20,
 		 "bStateSave": false,
 		"oTableTools": {
 			"aButtons": [

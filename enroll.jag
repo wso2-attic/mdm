@@ -1,0 +1,36 @@
+<%
+	var iosMdmModule = require('/modules/iosmdm.js').iosmdm;
+	var userModule = require('/modules/user.js').user;
+	var db = application.get('db');
+	var user = new userModule(db);
+	var iosMdm = new iosMdmModule();
+	var log = new Log();
+	 
+	var username = request.getParameter("username");
+	var password = request.getParameter("password");
+	
+	var ctx = {};
+	ctx.username = username;
+	ctx.password = password;
+	
+	var objUser = user.authenticate(ctx);
+	
+	if(objUser == null){
+		response.status=401;
+	    print("Authentication Failed");
+	} else {
+		session.put("token", username);
+		
+		var data = iosMdm.generateMobileConfigurations(username);
+		
+		if(data == null) {
+			response.sendRedirect("mdmerror.jag");
+		}
+	
+		response.contentType = "application/x-apple-aspen-config";
+		
+		var byteArrayInputStream = new Packages.java.io.ByteArrayInputStream(data);
+		print(new Stream(byteArrayInputStream)); 
+	}
+	
+%>
