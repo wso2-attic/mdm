@@ -13,6 +13,9 @@ var user = new userModule(db);
 var deviceModule = require('/modules/device.js').device;
 var device = new deviceModule(db);
 
+var user_groupModule = require('/modules/user_group.js').user_group;
+var user_group = new user_groupModule(db);
+
 
 configuration = function(appController){
 
@@ -78,15 +81,15 @@ users = function(appController){
 	}
 	session.put('mdmConsoleSelectedRole', role)
 	try{
-		var users = group.getUsers({'groupid':role});
+		var users = group.getUsersOfGroup({'groupid':role});
 	}catch(e){
-        log.info(group.getUsers({'groupid':role}));
+        log.info(group.getUsersOfGroup({'groupid':role}));
 		var users = [];
 	}
 	for (var i = 0; i < users.length; i++) {
 
 		if(users[i].no_of_devices > 0){
-			var devices = user.devices({'userid':users[i].username});
+			var devices = user.getDevices({'userid':users[i].username});
 
 			for (var j = 0; j < devices.length; j++) {
 		  		devices[j].properties = JSON.parse(devices[j].properties);
@@ -146,7 +149,7 @@ assign_users = function(appController){
 	var groupId = request.getParameter('group');
 
 	try{
-		var users = group.getUsersByGroup({groupid: groupId});
+		var users = user_group.getUsersOfRoleByAssignment({groupid: groupId});
 	}catch(e){
 		var users = [];
 	}
@@ -194,12 +197,14 @@ view_users = function(appController){
 
 
 	try{
-		var users = group.getUsers({groupid: groupId});
+        log.info("Test Group ID"+groupId);
+		var users = group.getUsersOfGroup({groupid: groupId});
+        log.info("Test Result"+users);
 	}catch(e){
 		var users = [];
 	}
 	try{
-		var groups = group.getGroups({});
+		var groups = group.getAllGroups({});
 	}catch(e){
 		var groups = [];
 	}

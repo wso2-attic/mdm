@@ -1,67 +1,65 @@
-var isMDMRole = function(role) {
-	var otherRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer", "admin", "mdmadmin");
-	for (var i = 0; i < otherRoles.length; i++) {
-		if (role == otherRoles[i]) {
-			return false;
-		}
-	}
-	return true;
-}
-
-var isMDMRoleWithAdmins = function(role) {
-
-	var otherRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role","reviewer");
-	for (var i = 0; i < otherRoles.length; i++) {
-		if (role == otherRoles[i]) {
-			return false;
-		}
-	}
-	return true;
-}
-
-var isMDMRoleWithoutStorePublisher = function(role) {
-
-    var otherRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer", "admin", "mdmadmin","store","publisher");
-    for (var i = 0; i < otherRoles.length; i++) {
-        if (role == otherRoles[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-var isMDMUser = function (user) {
-	var otherUsers = new Array("wso2.anonymous.user","admin");
-	for(var i = 0; i < otherUsers.length; i++) {
-		if(user == otherUsers[i]) {
-			return false;
-		}
-	}
-	return true;
-}
-
+var log = new Log();
 var getTenantID = function() {
-	if (session.get("mdmConsoleUser")) {
-		return session.get("mdmConsoleUser")['tenantId'];
+   /* log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
+	if (Session["mdmConsoleUser"]) {
+		return Session["mdmConsoleUser"]['tenantId'];
 	} else {
 		return null;
-	}
+	} */
+    return "-1234";
 }
 
+var removePrivateRole = function(roleList){
+    var roles = new Array();
+
+    for(var i = 0; i<roleList.length; i++){
+        var prefix = '';
+        try{
+            prefix = roleList[i].substring(0,8);
+        }catch(e){
+        //   log.info('error occured while removing private role');
+        }
+        if(prefix == 'private_'){
+            continue;
+        }else{
+            roles.push(roleList[i]);
+        }
+    }
+    return roles;
+}
+
+var removeNecessaryElements = function(list,removeList){
+    var newList = Array();
+    for(var i=0; i< list.length; i++){
+        var flag = true;
+        for(var j=0; j<removeList.length; j++){
+            if(list[i]==removeList[j]){
+                flag = false;
+                break;
+            }
+        }
+        if(flag){
+            newList.push(list[i]);
+        }
+    }
+    return newList;
+}
+
+
 var getCAPath = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/ca_cert.pem";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ca_cert.pem";
 }
 
 var getRAPath = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/ra_cert.pem";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ra_cert.pem";
 }
 
 var getCAPrivateKey = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/ca_private.pem";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ca_private.pem";
 }
 
 var getRAPrivateKey = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/ra_private.pem";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ra_private.pem";
 }
 
 //move this to a xml configuration file
@@ -70,7 +68,7 @@ var getPushCertPassword = function() {
 }
 
 var getPushCertPath = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/PlainCert.pfx";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/PlainCert.pfx";
 } 
 
 var initAPNS = function(pathPushCert, pushCertPassword, deviceToken, magicToken) {
@@ -112,7 +110,7 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_LOCK;  //checked
 	} else if(operationCode == "505A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CLEAR_PASSCODE;
-		paramMap.put("UnlockToken", identifier);
+		paramMap.put("UnlockToken", data.unlock_token);
 	} else if(operationCode == "502A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APPLICATION_LIST;
 	} else if(operationCode == "500A") {

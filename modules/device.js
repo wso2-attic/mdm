@@ -3,6 +3,12 @@ var USER_MANAGER = 'user.manager';
 var common = require("/modules/common.js");
 
 var device = (function () {
+
+    var userModule = require('user.js').user;
+    var user = '';
+    var groupModule = require('group.js').group;
+    var group = '';
+
     var configs = {
         CONTEXT: "/"
     };
@@ -43,6 +49,8 @@ var device = (function () {
     var db;
     var module = function (dbs) {
         db = dbs;
+        user = new userModule(db);
+        group = new groupModule(db);
     };
 
     function mergeRecursive(obj1, obj2) {
@@ -60,6 +68,35 @@ var device = (function () {
             }
         }
         return obj1;
+    }
+
+    function checkPermission(role, deviceId, operationName, that){
+
+        var policy = require('policy').policy;
+        var decision = null;
+        var action = 'POST';
+        if(role == 'admin'){
+            decision = policy.getDecision(operationName, action, role, "");
+        }else if(role == 'mdmadmin'){
+            decision = policy.policy.getDecision(operationName, action, role, "");
+        }else{
+            var result = db.query("select * from devices where id ="+deviceId);
+            var userId = result[0].user_id;
+            user.getUserRoles({'username':userId});
+            for(var i = 0;i<roleList.length;i++){
+                var decision = policy.getDecision(operationName,action,roleList[i],"");
+                if(decision=="Permit"){
+                    break;
+                }
+            }
+        }
+        if(decision=="Permit"){
+            return true;
+
+        }else{
+            return false;
+        }
+
     }
     function policyByOsType(jsonData,os){
         for(var n=0;n<jsonData.length;n++){
@@ -79,62 +116,7 @@ var device = (function () {
         }
         return  jsonData;
     }
-    function checkPermission(role, deviceId, operationName, that){
 
-        log.info("Device >>>"+deviceId);
-        log.info("Operation >>>"+operationName);
-
-        var policy = require('policy');
-        log.info(policy.policy.init());
-
-        var decision = null;
-        var action = 'POST';
-        if(role == 'admin'){
-            decision = policy.policy.getDecision(operationName, action, role, "");
-            log.info("Test Decision1 >>>>>>>>>>>>>>"+decision);
-        }else if(role == 'mdmadmin'){
-           decision = policy.policy.getDecision(operationName, action, role, "");
-            log.info("Test Decision2 >>>>>>>>>>>>>>"+decision);
-        }else{
-            var result = db.query("select * from devices where id ="+deviceId);
-            var userId = result[0].user_id;
-            log.info("Test1");
-            log.info("Role List1 >>>"+that.getUserRoles({'username':userId}));
-            log.info("Test2");
-            var roleList = parse(that.getUserRoles({'username':userId}));
-            log.info("Role List2 >>>"+roleList);
-            for(var i = 0;i<roleList.length;i++){
-                var decision = policy.policy.getDecision(operationName,action,roleList[i],"");
-                log.info("Test Decision3 >>>>>>>>>>>>>>"+decision);
-                if(decision=="Permit"){
-                    break;
-                }
-            }
-            log.info("Test Decision3 >>>>>>>>>>>>>>"+decision);
-        }
-        /*var roleList = parse(that.getUserRoles({'username':userId}));
-        for(var i = 0;i<roleList.length;i++){
-            var resource = roleList[i]+"/"+operationName;
-            var action = 'POST';
-            var subject = 'Admin';
-            log.info("Resource >>>>>>>"+resource);
-            log.info("Action >>>>>>>"+action);
-            log.info("Subject >>>>>>>"+subject);
-            var decision = policy.policy.getDecision(resource,action,subject,"");
-            log.info("Test Decision >>>>>>>>>>>>>>"+decision);
-            if(decision=="Permit"){
-                break;
-            }
-        }*/
-
-        if(decision=="Permit"){
-            return true;
-
-        }else{
-            return false;
-        }
-
-    }
     
 	function invokeInitialFunctions(ctx) {
 		

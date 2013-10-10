@@ -21,7 +21,7 @@ configuration = function(appController) {
 		var users = [];
 	}
 	try {
-		var groups = group.getGroups({});
+		var groups = group.getAllGroups({});
 	} catch(e) {
 		log.info(e);
 		var groups = [];
@@ -100,7 +100,7 @@ devices = function(appController) {
 	}
 
 	try {
-		var devices = user.devices({
+		var devices = user.getDevices({
 			"userid" : userId
 		});
 	} catch(e) {

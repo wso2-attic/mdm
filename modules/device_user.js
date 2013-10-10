@@ -1,24 +1,16 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
-var webconsole = (function () {
-
+var device_user = (function () {
     var groupModule = require('group.js').group;
     var group = '';
+    var deviceModule = require('device.js').device;
+    var device = '';
 
-    var routes = new Array();
-    var log = new Log();
-    var db;
-    var module = function (dbs) {
-        group = new groupModule();
-        db = dbs;
-        //mergeRecursive(configs, conf);
-    };
     var carbon = require('carbon');
+
     var server = function(){
         return application.get("SERVER");
     }
-	var common = require('common.js');
-
 
     var configs = function (tenantId) {
         var configg = application.get(TENANT_CONFIGS);
@@ -28,6 +20,11 @@ var webconsole = (function () {
         return configs[tenantId] || (configs[tenantId] = {});
     };
 
+    /**
+     * Returns the user manager of the given tenant.
+     * @param tenantId
+     * @return {*}
+     */
     var userManager = function (tenantId) {
         var config = configs(tenantId);
         if (!config || !config[USER_MANAGER]) {
@@ -36,6 +33,13 @@ var webconsole = (function () {
             return um;
         }
         return configs(tenantId)[USER_MANAGER];
+    };
+
+    var module = function (dbs) {
+        db = dbs;
+        group = new groupModule(db);
+        device = new deviceModule(db);
+
     };
 
     function mergeRecursive(obj1, obj2) {
@@ -58,26 +62,20 @@ var webconsole = (function () {
     // prototype
     module.prototype = {
         constructor: module,
-        getDevicesCountAndUserCountForAllGroups: function(ctx) {
-            log.info("Test function getDevicesCountAndUserCountForAllGroups");
-        	var um = userManager(common.getTenantID());
-            var arrRole = new Array();
-            var allGroups = group.getAllGroups({});
-            for(var i = 0; i < allGroups.length; i++) {
-                var objRole = {};
-                objRole.name = allGroups[i];
-                var userList = um.getUserListOfRole(allGroups[i]);
-                objRole.no_of_users = userList.length;
-                var deviceCountAll = 0;
-                for(var j = 0; j < userList.length; j++) {
-                    var resultDeviceCount = db.query("SELECT COUNT(id) AS device_count FROM devices WHERE user_id = ? AND tenant_id = ?",
-                        String(userList[j]), common.getTenantID());
-                    deviceCountAll += parseInt(resultDeviceCount[0].device_count);
+        /*Send GCM message to all devices of particular user*/
+        sendMsgToUser: function(ctx){
+            var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", ctx.userid);
+            var succeeded="";
+            var failed="";
+            for(var i=0; i<device_list.length; i++){
+                var status = device.sendToDevice({'deviceid':device_list[i].id, 'operation': ctx.operation, 'data' : ctx.data});
+                if(status == true){
+                    succeeded += device_list[i].id+",";
+                }else{
+                    failed += device_list[i].id+",";
                 }
-                objRole.no_of_devices = deviceCountAll;
-                arrRole.push(objRole);
             }
-            return arrRole;
+            return "Succeeded : "+succeeded+", Failed : "+failed;
         }
     };
     return module;
