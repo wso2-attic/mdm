@@ -8,7 +8,7 @@ var device = (function () {
     var user = '';
     var groupModule = require('group.js').group;
     var group = '';
-
+	
     var configs = {
         CONTEXT: "/"
     };
@@ -116,30 +116,28 @@ var device = (function () {
         }
         return  jsonData;
     }
-
     
 	function invokeInitialFunctions(ctx) {
 		
+		var db = application.get('db');
 		var devices = db.query("SELECT * FROM devices WHERE udid = " + stringify(ctx.deviceid));
         var deviceID = devices[0].id;
+        var userId = devices[0].user_id;
 
-        sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
-        sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
+        //sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
+        //sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
 
 		/**
-        var roles = this.getUserRoles({'userid':userId});
+        var roles = user.getUserRoles({'username':userId});
         var roleList = parse(roles);
         log.info(roleList[0]);
         var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+        */
+        
+        var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = 'Role Dilshan'");
         log.info("Policy Payload :"+gpresult[0].data);
         var jsonData = parse(gpresult[0].data);
-        for(var i =0 ;i < jsonData.length; i++){
-            var code = jsonData[i].code;
-            var result = db.query("select name from features where code = ? ",code);
-            var featureName = result[0].name;
-            var data = jsonData[i].data;
-            sendMessageToIOSDevice({'deviceid':deviceID, 'operation':featureName, 'data': data});
-        }*/
+        sendMessageToIOSDevice({'deviceid':deviceID, 'operation':'POLICY', 'data': jsonData});
     }
 
 	function sendMessageToDevice(ctx){
@@ -241,7 +239,7 @@ var device = (function () {
         var featureCode = features[0].code;
         var featureDescription = features[0].description;
 
-        db.query("UPDATE notifications SET status='D' where device_id = ? && feature_code = ? && status = 'P'", ctx.deviceid+"", featureCode);
+        //db.query("UPDATE notifications SET status='D' where device_id = ? && feature_code = ? && status = 'P'", ctx.deviceid+"", featureCode);
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)", 
         	ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
 
@@ -352,12 +350,70 @@ var device = (function () {
         getPendingOperationsFromDevice: function(ctx){
 			
             var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
+            
             if(deviceList[0]!=null){
                 var deviceID = String(deviceList[0].id);
-                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id FROM notifications WHERE notifications.status='P' AND notifications.device_id = ?", deviceID+"");
+                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE notifications.status='P' AND notifications.device_id = ?", deviceID+"");
+                
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
-                    var id =  pendingFeatureCodeList[0].id;
-                    db.query("UPDATE notifications SET status='C' where id = ?", id+"");
+                    var id = pendingFeatureCodeList[0].id;
+                    var feature_code = pendingFeatureCodeList[0].feature_code;
+                    log.error("feature_code >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + feature_code);
+                    if(feature_code == "500P") {
+						
+						var message = parse(pendingFeatureCodeList[0].message);
+						var received_data = pendingFeatureCodeList[0].received_data;
+						        			          	
+                    	if(received_data == null || received_data == '') {
+   
+		                    var arrEmptyReceivedData = new Array();
+		                    
+		                    for(var i = 0; i < message.length; i++) {
+		                    	var receivedObject = {};
+		                    	receivedObject.status = "pending";
+		                    	receivedObject.counter = "0";
+		                    	receivedObject.message = message[i];
+		                    	arrEmptyReceivedData.push(receivedObject);
+		                    }
+                    
+                    		db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(arrEmptyReceivedData), id+"");
+                    		
+                    		received_data = parse(stringify(arrEmptyReceivedData));
+                    	} else {
+                    		received_data = parse(received_data);
+                    	}
+                    	
+                		for(var i = 0; i < received_data.length; i++) {
+							
+							var counter = parseInt(received_data[i].counter);
+							
+	                    	if(received_data[i].status == "pending") {
+	                    		
+	                    		var objResponse = {};
+	                    		objResponse.feature_code = received_data[i].message.code + "";
+	                    		objResponse.message = stringify(received_data[i].message.data);
+	                    		objResponse.id = id + "-" + i;
+	                    		
+	                    		received_data[i].counter = ++counter + "";
+	                    		
+	                    		if(counter > 3) {
+	                    			received_data[i].status = "skipped";
+	                    		}
+	                    		
+	                    		db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(received_data), id+"");
+	                    		
+	                    		if(counter > 3) {
+	                    			continue;
+	                    		}
+	                    		
+	                    		return parse(stringify(objResponse));
+	                    	}
+	                    }
+             	
+                    } else {
+                    	db.query("UPDATE notifications SET status='C' WHERE id = ?", id+"");
+                    }
+
                     return pendingFeatureCodeList[0];
                 }else{
                     return null;
@@ -417,8 +473,8 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
-              //  featureArr["enable"] = true;
+                // featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
+              	featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
                 }else{
@@ -432,6 +488,7 @@ var device = (function () {
             return obj;
         },
         getUserRoles: function(ctx){
+  
             var um = userManager(common.getTenantID());
             var user = um.getUser(ctx.username);
 
