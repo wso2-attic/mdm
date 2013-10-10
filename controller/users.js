@@ -21,7 +21,7 @@ configuration = function(appController) {
 		var users = [];
 	}
 	try {
-		var groups = group.getGroups({});
+		var groups = group.getAllGroups({});
 	} catch(e) {
 		log.info(e);
 		var groups = [];
