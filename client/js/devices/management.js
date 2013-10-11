@@ -60,10 +60,6 @@ jQuery.ajax({
 					                { result : textext.itemManager().filter(list, query) }
 					            );
 					        });
-
-						
-						
-						
 						
 						
 					}					
