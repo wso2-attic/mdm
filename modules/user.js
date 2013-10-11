@@ -134,7 +134,8 @@ var user = (function () {
             }
         },
         getAllUsers: function(ctx){
-
+            var policy = new policyModule(db);
+            policy.monitoring({});
             var tenantId = common.getTenantID();
             var users_list = Array();
             if(tenantId){
