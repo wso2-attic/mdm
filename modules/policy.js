@@ -55,8 +55,9 @@ var policy = (function () {
             var operation = 'MONITORING';
             var data = {};
             var userId = result[i].user_id;
-            var roleList = user.getUserRoles({'username':'kasun@wso2mobile.com'});
-            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+         //   var roleList = user.getUserRoles({'username':'kasun@wso2mobile.com'});
+
+            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",Sales);
             var jsonData = parse(gpresult[0].data);
             jsonData = deviceModule.policyByOsType(jsonData);
             var obj = {};
@@ -102,6 +103,8 @@ var policy = (function () {
             return result;
         },
         assignGroupsToPolicy:function(ctx){
+            this.assignUsersToPolicy(ctx);
+            this.assignPlatformsToPolicy(ctx);
             var deletedGroups = ctx.removed_groups;
             var newGroups = ctx.added_groups;
             var policyId = ctx.policyid;
@@ -137,25 +140,7 @@ var policy = (function () {
                 }
             }
         },
-        assignUsersToPolicy:function(ctx){
-            var deletedUsers = ctx.removed_users;
-            var newUsers = ctx.added_users;
-            var policyId = ctx.policyid;
-
-            for(var i = 0; i< deletedUsers.length;i++){
-                var result = db.query("DELETE FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? && user_policy_mapping.group_id = ? ",policyId,deletedGroups[i]);
-                log.info("Result1 >>>>>"+result);
-            }
-            for(var i = 0; i< newGroups.length;i++){
-                try{
-                    var result =db.query(" INSERT INTO user_policy_mapping (user_id,policy_id) VALUES (?,?)",newUsers[i],policyId);
-                    log.info("Result2 >>>>>"+result);
-                }catch(e){
-                    log.info("ERROR Occured >>>>>");
-                }
-            }
-        },
-        assignPlatformToPolicy:function(ctx){
+        assignPlatformsToPolicy:function(ctx){
             var deletedPlatforms = ctx.removed_platforms;
             var newPlatforms = ctx.added_platforms;
             var policyId = ctx.policyid;
