@@ -324,7 +324,8 @@ var device = (function () {
                         }
                     }
                     log.info(role);
-                    var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",stringify(role));
+                    var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
+                    log.info(gpresult[0]);
                     if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
                         log.info("Policy Payload :"+gpresult[0].data);
                         var jsonData = parse(gpresult[0].data);

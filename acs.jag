@@ -77,8 +77,7 @@
 								userFeed.isAdmin = isAdmin;
 								session.put("mdmConsoleUserLogin", "true");
 								session.put("mdmConsoleUser", userFeed);
-                                /*var policy = new policyModule(db);
-                                policy.monitoring({});*/
+
 								var appController =require('/controller/app.js');
 								if(isAdmin){
 									response.sendRedirect('console/dashboard');

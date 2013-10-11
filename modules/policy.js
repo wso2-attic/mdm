@@ -55,7 +55,7 @@ var policy = (function () {
             var operation = 'MONITORING';
             var data = {};
             var userId = result[i].user_id;
-            var roleList = user.getUserRoles({'username':userId});
+            var roleList = user.getUserRoles({'username':'kasun@wso2mobile.com'});
             var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
             var jsonData = parse(gpresult[0].data);
             jsonData = deviceModule.policyByOsType(jsonData);
@@ -195,6 +195,68 @@ var policy = (function () {
                             break;
                         }else{
                             element.name = allGroups[i];
+                            element.available = false;
+                        }
+                    }
+                    array[i] = element;
+                }
+            }
+
+            return array;
+        },
+        getUsersByPolicy:function(ctx){
+            var allUsers = user.getAllUsers(ctx);
+            var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? ",ctx.userid);
+
+            var array = new Array();
+            if(result == undefined || result == null || result[0] == undefined || result[0] == null){
+                for(var i =0; i < allUsers.length;i++){
+                    var element = {};
+                    element.name = allUsers[i];
+                    element.available = false;
+                    array[i] = element;
+                }
+            }else{
+                for(var i =0; i < allUsers.length;i++){
+                    var element = {};
+                    for(var j=0 ;j< result.length;j++){
+                        if(allUsers[i]==result[j].user_id){
+                            element.name = allUsers[i];
+                            element.available = true;
+                            break;
+                        }else{
+                            element.name = allUsers[i];
+                            element.available = false;
+                        }
+                    }
+                    array[i] = element;
+                }
+            }
+
+            return array;
+        },
+        getPlatformsByPolicy:function(ctx){
+            var allPlatforms =new Array('android','ios');
+            var result = db.query("SELECT * FROM platform_policy_mapping WHERE platform_policy_mapping.policy_id = ? ",ctx.policyid);
+
+            var array = new Array();
+            if(result == undefined || result == null || result[0] == undefined || result[0] == null){
+                for(var i =0; i < allPlatforms.length;i++){
+                    var element = {};
+                    element.name = allPlatforms[i];
+                    element.available = false;
+                    array[i] = element;
+                }
+            }else{
+                for(var i =0; i < allPlatforms.length;i++){
+                    var element = {};
+                    for(var j=0 ;j< result.length;j++){
+                        if(allPlatforms[i]==result[j].platform_id){
+                            element.name = allPlatforms[i];
+                            element.available = true;
+                            break;
+                        }else{
+                            element.name = allPlatforms[i];
                             element.available = false;
                         }
                     }

@@ -134,6 +134,7 @@ var user = (function () {
             }
         },
         getAllUsers: function(ctx){
+
             var tenantId = common.getTenantID();
             var users_list = Array();
             if(tenantId){
