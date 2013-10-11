@@ -119,8 +119,62 @@ var policy = (function () {
                 }
             }
         },
+        assignUsersToPolicy:function(ctx){
+            var deletedUsers = ctx.removed_users;
+            var newUsers = ctx.added_users;
+            var policyId = ctx.policyid;
+
+            for(var i = 0; i< deletedUsers.length;i++){
+                var result = db.query("DELETE FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? && user_policy_mapping.group_id = ? ",policyId,deletedGroups[i]);
+                log.info("Result1 >>>>>"+result);
+            }
+            for(var i = 0; i< newGroups.length;i++){
+                try{
+                    var result =db.query(" INSERT INTO user_policy_mapping (user_id,policy_id) VALUES (?,?)",newUsers[i],policyId);
+                    log.info("Result2 >>>>>"+result);
+                }catch(e){
+                    log.info("ERROR Occured >>>>>");
+                }
+            }
+        },
+        assignUsersToPolicy:function(ctx){
+            var deletedUsers = ctx.removed_users;
+            var newUsers = ctx.added_users;
+            var policyId = ctx.policyid;
+
+            for(var i = 0; i< deletedUsers.length;i++){
+                var result = db.query("DELETE FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? && user_policy_mapping.group_id = ? ",policyId,deletedGroups[i]);
+                log.info("Result1 >>>>>"+result);
+            }
+            for(var i = 0; i< newGroups.length;i++){
+                try{
+                    var result =db.query(" INSERT INTO user_policy_mapping (user_id,policy_id) VALUES (?,?)",newUsers[i],policyId);
+                    log.info("Result2 >>>>>"+result);
+                }catch(e){
+                    log.info("ERROR Occured >>>>>");
+                }
+            }
+        },
+        assignPlatformToPolicy:function(ctx){
+            var deletedPlatforms = ctx.removed_platforms;
+            var newPlatforms = ctx.added_platforms;
+            var policyId = ctx.policyid;
+
+            for(var i = 0; i< deletedPlatforms.length;i++){
+                var result = db.query("DELETE FROM platform_policy_mapping WHERE platform_policy_mapping.policy_id = ? && platform_policy_mapping.platform_id = ? ",policyId,deletedPlatform[i]);
+                log.info("Result1 >>>>>"+result);
+            }
+            for(var i = 0; i< newPlatforms.length;i++){
+                try{
+                    var result =db.query(" INSERT INTO platform_policy_mapping (platform_id,policy_id) VALUES (?,?)",newPlatforms[i],policyId);
+                    log.info("Result2 >>>>>"+result);
+                }catch(e){
+                    log.info("ERROR Occured >>>>>");
+                }
+            }
+        },
         getGroupsByPolicy:function(ctx){
-            var allGroups = group.getGroups(ctx);
+            var allGroups = group.getAllGroups(ctx);
             var result = db.query("SELECT * FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? ",ctx.policyid);
 
             var array = new Array();

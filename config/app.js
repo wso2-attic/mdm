@@ -26,8 +26,8 @@ gcm.setApiKey(androidConfig.api_key);
 var policyModule = require('../modules/policy.js').policy;
 var policy = new policyModule(db);
 //policy.monitoring({});
-var policy = require('policy');
-log.info(policy.policy.init());
+//var policy = require('policy');
+//log.info(policy.policy.init());
 //policy.entitlement.login();
 log.info("Test Init Script");
 
