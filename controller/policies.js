@@ -10,6 +10,9 @@ var policy = new policyModule(db);
 var mamModule = require('/modules/mam.js').mam;
 var mam = new mamModule(db);
 
+var userModule = require('/modules/user.js').user;
+var user = new userModule(db);
+
 
 
 configuration = function(appController){	
@@ -49,8 +52,29 @@ assign_groups = function(appController){
 	try{
 		var groups = policy.getGroupsByPolicy({policyid: policyId});		
 	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var groups = [];
 	}
+	
+	//print(groups);
+	
+	try{
+		var users = policy.getUsersByPolicy({policyid: policyId});		
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var users = [];
+	}
+	
+	
+	try{
+		var platforms = policy.getPlatformsByPolicy({policyid: policyId});		
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var platforms = [];
+	}
+	
+	
+	print(users);
 	
 				
 	context = appController.context();

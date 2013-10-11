@@ -44,6 +44,36 @@
 
 								</div>
 							</div>
+							
+							
+							<div class="control-group">
+								<label class="control-label" >Users</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox">
+										<select multiple="multiple" size="10" id="inputUsers" name="inputUsers" class='duallistbox'>
+											{{#data.users}}
+												<option {{#if available}}selected{{/if}} value="{{name}}">{{name}}</option>
+											{{/data.users}}											
+										</select>
+									</div>
+
+								</div>
+							</div>
+							
+							
+								<div class="control-group">
+								<label class="control-label" >Platforms</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox">
+										<select multiple="multiple" size="10" id="inputPlatforms" name="inputUsers" class='duallistbox'>
+											{{#data.platforms}}
+												<option {{#if available}}selected{{/if}} value="{{name}}">{{name}}</option>
+											{{/data.platforms}}											
+										</select>
+									</div>
+
+								</div>
+							</div>
 
 							<hr>
 							<div class="offset10">
