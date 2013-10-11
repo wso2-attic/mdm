@@ -20,7 +20,7 @@
 				<div class="block">
 					<div class="block-header">
 						<div class="block-header-title pull-left">
-							Assign roles to {{data.policyName}} policy
+							Assign resources to {{data.policyName}} policy
 						</div>
 
 					</div>
@@ -39,6 +39,36 @@
 											{{#data.groups}}
 												<option {{#if available}}selected{{/if}} value="{{name}}">{{name}}</option>
 											{{/data.groups}}											
+										</select>
+									</div>
+
+								</div>
+							</div>
+							
+							
+							<div class="control-group">
+								<label class="control-label" >Users</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox">
+										<select multiple="multiple" size="10" id="inputUsers" name="inputUsers" class='duallistbox'>
+											{{#data.users}}
+												<option {{#if available}}selected{{/if}} value="{{name}}">{{name}}</option>
+											{{/data.users}}											
+										</select>
+									</div>
+
+								</div>
+							</div>
+							
+							
+								<div class="control-group">
+								<label class="control-label" >Platforms</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox">
+										<select multiple="multiple" size="10" id="inputPlatforms" name="inputUsers" class='duallistbox'>
+											{{#data.platforms}}
+												<option {{#if available}}selected{{/if}} value="{{name}}">{{name}}</option>
+											{{/data.platforms}}											
 										</select>
 									</div>
 

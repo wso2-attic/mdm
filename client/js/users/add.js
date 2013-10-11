@@ -30,9 +30,14 @@ $("#btn-add").click(function() {
 	
 	
 	if(userGroups != null){
-		userGroups = userGroups + "," + userMAMGroups;
+		if(userMAMGroups != null){
+			userGroups = userGroups + "," + userMAMGroups;
+		}
+		
 	}else{
-		userGroups = userMAMGroups;
+		if(userMAMGroups != null){
+			userGroups = userMAMGroups;
+		}		
 	}
 	
 	
@@ -71,7 +76,7 @@ $("#btn-add").click(function() {
 	});
 	
 	$( document ).ajaxComplete(function() {
-		//window.location.assign("configuration");
+		window.location.assign("configuration");
 	});
 
 });

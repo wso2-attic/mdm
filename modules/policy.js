@@ -55,8 +55,9 @@ var policy = (function () {
             var operation = 'MONITORING';
             var data = {};
             var userId = result[i].user_id;
-            var roleList = user.getUserRoles({'username':userId});
-            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+         //   var roleList = user.getUserRoles({'username':'kasun@wso2mobile.com'});
+
+            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",Sales);
             var jsonData = parse(gpresult[0].data);
             jsonData = deviceModule.policyByOsType(jsonData);
             var obj = {};
@@ -102,6 +103,8 @@ var policy = (function () {
             return result;
         },
         assignGroupsToPolicy:function(ctx){
+            this.assignUsersToPolicy(ctx);
+            this.assignPlatformsToPolicy(ctx);
             var deletedGroups = ctx.removed_groups;
             var newGroups = ctx.added_groups;
             var policyId = ctx.policyid;
@@ -119,8 +122,44 @@ var policy = (function () {
                 }
             }
         },
+        assignUsersToPolicy:function(ctx){
+            var deletedUsers = ctx.removed_users;
+            var newUsers = ctx.added_users;
+            var policyId = ctx.policyid;
+
+            for(var i = 0; i< deletedUsers.length;i++){
+                var result = db.query("DELETE FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? && user_policy_mapping.group_id = ? ",policyId,deletedGroups[i]);
+                log.info("Result1 >>>>>"+result);
+            }
+            for(var i = 0; i< newGroups.length;i++){
+                try{
+                    var result =db.query(" INSERT INTO user_policy_mapping (user_id,policy_id) VALUES (?,?)",newUsers[i],policyId);
+                    log.info("Result2 >>>>>"+result);
+                }catch(e){
+                    log.info("ERROR Occured >>>>>");
+                }
+            }
+        },
+        assignPlatformsToPolicy:function(ctx){
+            var deletedPlatforms = ctx.removed_platforms;
+            var newPlatforms = ctx.added_platforms;
+            var policyId = ctx.policyid;
+
+            for(var i = 0; i< deletedPlatforms.length;i++){
+                var result = db.query("DELETE FROM platform_policy_mapping WHERE platform_policy_mapping.policy_id = ? && platform_policy_mapping.platform_id = ? ",policyId,deletedPlatform[i]);
+                log.info("Result1 >>>>>"+result);
+            }
+            for(var i = 0; i< newPlatforms.length;i++){
+                try{
+                    var result =db.query(" INSERT INTO platform_policy_mapping (platform_id,policy_id) VALUES (?,?)",newPlatforms[i],policyId);
+                    log.info("Result2 >>>>>"+result);
+                }catch(e){
+                    log.info("ERROR Occured >>>>>");
+                }
+            }
+        },
         getGroupsByPolicy:function(ctx){
-            var allGroups = group.getGroups(ctx);
+            var allGroups = group.getAllGroups(ctx);
             var result = db.query("SELECT * FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? ",ctx.policyid);
 
             var array = new Array();
@@ -141,6 +180,68 @@ var policy = (function () {
                             break;
                         }else{
                             element.name = allGroups[i];
+                            element.available = false;
+                        }
+                    }
+                    array[i] = element;
+                }
+            }
+
+            return array;
+        },
+        getUsersByPolicy:function(ctx){
+            var allUsers = user.getAllUsers(ctx);
+            var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? ",ctx.policyid);
+
+            var array = new Array();
+            if(result == undefined || result == null || result[0] == undefined || result[0] == null){
+                for(var i =0; i < allUsers.length;i++){
+                    var element = {};
+                    element.name = allUsers[i].username;
+                    element.available = false;
+                    array[i] = element;
+                }
+            }else{
+                for(var i =0; i < allUsers.length;i++){
+                    var element = {};
+                    for(var j=0 ;j< result.length;j++){
+                        if(allUsers[i]==result[j].user_id){
+                            element.name = allUsers[i].username;
+                            element.available = true;
+                            break;
+                        }else{
+                            element.name = allUsers[i].username;
+                            element.available = false;
+                        }
+                    }
+                    array[i] = element;
+                }
+            }
+
+            return array;
+        },
+        getPlatformsByPolicy:function(ctx){
+            var allPlatforms =new Array('android','ios');
+            var result = db.query("SELECT * FROM platform_policy_mapping WHERE platform_policy_mapping.policy_id = ? ",ctx.policyid);
+
+            var array = new Array();
+            if(result == undefined || result == null || result[0] == undefined || result[0] == null){
+                for(var i =0; i < allPlatforms.length;i++){
+                    var element = {};
+                    element.name = allPlatforms[i];
+                    element.available = false;
+                    array[i] = element;
+                }
+            }else{
+                for(var i =0; i < allPlatforms.length;i++){
+                    var element = {};
+                    for(var j=0 ;j< result.length;j++){
+                        if(allPlatforms[i]==result[j].platform_id){
+                            element.name = allPlatforms[i];
+                            element.available = true;
+                            break;
+                        }else{
+                            element.name = allPlatforms[i];
                             element.available = false;
                         }
                     }
