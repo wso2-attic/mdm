@@ -2,23 +2,48 @@ $("#btn-add").click(function() {
 
 	var id = $('#inputId').val();
 	var groups = $('#inputGroups').val();
+	var users = $('#inputUsers').val();
+	var platforms = $('#inputPlatforms').val();
 	
 	var tenantId = $('#tenantId').val();
 	
 	
 	
-	var groupsArray = []
+	var groupsArray = [];
 	if (groups != null) {
 		groupsArray = groups.toString().split(",");
 	}
 	
+	var usersArray = [];
+	if (users != null) {
+		usersArray = users.toString().split(",");
+	}
+	
+	var platformsArray = [];
+	if (platforms != null) {
+		platformsArray = platforms.toString().split(",");
+	}
+	
+	
 
 	var removedGroups = Array();
-	
-	//this is not a good thing to have it in the UI, but backend logic need it badly
 	$("#inputGroups option").each(function(){ 
 		if(groupsArray.indexOf($(this).val()) < 0){
 				 removedGroups.push($(this).val());
+		}  		
+	});
+	
+	var removedUsers = Array();
+	$("#inputUsers option").each(function(){ 
+		if(usersArray.indexOf($(this).val()) < 0){
+				 removedUsers.push($(this).val());
+		}  		
+	});
+	
+	var removedPlatforms = Array();
+	$("#inputPlatforms option").each(function(){ 
+		if(platformsArray.indexOf($(this).val()) < 0){
+				 removedPlatforms.push($(this).val());
 		}  		
 	});
 	
@@ -27,7 +52,12 @@ $("#btn-add").click(function() {
 		"tenant_id" : tenantId,
 		"id" : id,
 		"added_groups" : groupsArray,
-		"removed_groups" : removedGroups
+		"added_users" : usersArray,
+		"added_platforms" : platformsArray,
+		"removed_groups" : removedGroups,
+		"removed_users" : removedUsers,
+		"removed_platforms" : removedPlatforms,
+		
 	};
 
 	
@@ -42,7 +72,7 @@ $("#btn-add").click(function() {
 	});
 	
 	$( document ).ajaxComplete(function() {
-		window.location.assign("configuration");
+		//window.location.assign("configuration");
 	});
 	
 	noty({

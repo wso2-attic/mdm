@@ -73,10 +73,7 @@ assign_groups = function(appController){
 		var platforms = [];
 	}
 	
-	
-	print(users);
-	
-				
+					
 	context = appController.context();
 	context.title = context.title + " | Assign Users to group";	
 	context.page = "configuration";	
@@ -86,6 +83,8 @@ assign_groups = function(appController){
 		groups: groups,
 		tenantId:session.get("mdmConsoleUser").tenantId,
 		policyId: policyId,
+		platforms: platforms,
+		users: users,
 		policyName: policyName
 	}
 	return context;
