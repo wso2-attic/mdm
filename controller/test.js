@@ -15,15 +15,15 @@ var user = new userModule(db);
 
 
 
-test = function(appController){
+index = function(appController){
 
 	context = appController.context();	
 	
-	
-	var testData = group.getGroupsByType({type:context.contextData.user.role});
-	
+	var testData = group.getGroupsByType({type:context.contextData.user.role});	
 	
 	print(testData);
+	
+	return {};
 	
 
 };

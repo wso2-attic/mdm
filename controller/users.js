@@ -93,7 +93,7 @@ devices = function(appController) {
 	session.put('mdmConsoleSelectedUser', userId);
 	try {
 		var objUser = user.getUser({
-			"userid" : userId+"@carbon.super"
+			"userid" : userId
 		});
 	} catch(e) {
 		var objUser = {};
