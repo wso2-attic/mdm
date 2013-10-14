@@ -94,6 +94,7 @@ var device = (function () {
 		});
 
         router.post('devices/operations/{operation}', function(ctx){
+            log.info("test devie router");
             device.sendToDevices(ctx);
             response.status = 200;
             response.content = "success";
