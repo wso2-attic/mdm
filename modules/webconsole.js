@@ -95,8 +95,14 @@ var webconsole = (function () {
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
+                if(totalDisplayRecords > totalRecords ){
+                    lowerBound = 0;
+                }
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
+                    if(totalRecords - 1 < i){
+                        break;
+                    }
                     var device = [];
                     device.push( result[i].id);
                     device.push( result[i].properties.imei);
@@ -118,8 +124,14 @@ var webconsole = (function () {
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
+                if(totalDisplayRecords > totalRecords ){
+                    lowerBound = 0;
+                }
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
+                    if(totalRecords - 1 < i){
+                        break;
+                    }
                     var device = [];
                     device.push( result[i].id);
                     device.push( result[i].properties.imei);
@@ -141,8 +153,14 @@ var webconsole = (function () {
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
+                if(totalDisplayRecords > totalRecords ){
+                    lowerBound = 0;
+                }
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
+                    if(totalRecords - 1 < i){
+                        break;
+                    }
                     var device = [];
                     device.push( result[i].id);
                     device.push( result[i].properties.imei);
@@ -168,19 +186,17 @@ var webconsole = (function () {
                     lowerBound = 0;
                 }
                 var dataArray = new Array();
-
-
                 for(var i = lowerBound ;i < upperBound; i++){
                     if(totalRecords - 1 < i){
                         break;
                     }
                     var device = [];
                     device.push( result[i].id);
-                    device.push( result[i].properties.imei);
+                    device.push( parse(result[i].properties).imei);
                     device.push( result[i].user_id);
                     device.push( result[i].platform_id);
                     device.push( result[i].os_version);
-                    device.push( result[i].properties.device);
+                    device.push( parse(result[i].properties).device);
                     device.push( result[i].created_date);
                     dataArray.push(device);
                 }
