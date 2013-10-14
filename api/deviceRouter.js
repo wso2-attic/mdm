@@ -93,6 +93,13 @@ var device = (function () {
 
 		});
 
+        router.post('devices/operations/{operation}', function(ctx){
+            device.sendToDevices(ctx);
+            response.status = 200;
+            response.content = "success";
+
+        });
+
 		router.get('devices/{deviceid}/features', function(ctx){
 
 		    var result = device.getFeaturesFromDevice(ctx);

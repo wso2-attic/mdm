@@ -95,9 +95,7 @@ var webconsole = (function () {
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
-                if(totalDisplayRecords > totalRecords ){
-                    lowerBound = 0;
-                }
+
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
                     if(totalRecords - 1 < i){
@@ -124,9 +122,7 @@ var webconsole = (function () {
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
-                if(totalDisplayRecords > totalRecords ){
-                    lowerBound = 0;
-                }
+
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
                     if(totalRecords - 1 < i){
@@ -153,9 +149,6 @@ var webconsole = (function () {
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
-                if(totalDisplayRecords > totalRecords ){
-                    lowerBound = 0;
-                }
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
                     if(totalRecords - 1 < i){
@@ -178,13 +171,10 @@ var webconsole = (function () {
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else{
-                result = db.query("select * from devices where user_id like '%"+userId+"%'");
+                result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%'");
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
-                if(totalDisplayRecords > totalRecords ){
-                    lowerBound = 0;
-                }
                 var dataArray = new Array();
                 for(var i = lowerBound ;i < upperBound; i++){
                     if(totalRecords - 1 < i){
@@ -194,7 +184,7 @@ var webconsole = (function () {
                     device.push( result[i].id);
                     device.push( parse(result[i].properties).imei);
                     device.push( result[i].user_id);
-                    device.push( result[i].platform_id);
+                    device.push( result[i].name);
                     device.push( result[i].os_version);
                     device.push( parse(result[i].properties).device);
                     device.push( result[i].created_date);
