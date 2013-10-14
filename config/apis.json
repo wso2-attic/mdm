@@ -22,7 +22,8 @@
 		"getMAMApps": "mam/policy/installapps",
 		"usersInvite": "users/invite",
 		"groupsInvite": "groups/invite",
-		"performGroupsOperation": "devices/operations"  
+		"performGroupsOperation": "devices/operations",
+		"performDevicesOperation": "devices/operations/{0}"   
     }
 
 }

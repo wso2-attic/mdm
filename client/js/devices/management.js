@@ -131,7 +131,7 @@ $( "#featureList" ).change(function() {
 			onClick : function($noty) {
 
 				jQuery.ajax({
-					url : getServiceURLs("performGroupsOperation"),
+					url : getServiceURLs("performDevicesOperation", operation),
 					type : "POST",
 					async : "false",
 					data : JSON.stringify({operation: operation, devices:devices, roles: roles, user: user, ownership: ownership, os:os}),
