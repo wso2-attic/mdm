@@ -195,6 +195,11 @@ router.get('webconsole/devices', function(ctx){
 	response.content = result;
 });
 
+router.get('webconsole/listDevices', function(ctx){
+    var result = webconsole.getDevices(ctx);
+    response.content = result;
+});
+
 
 router.get('features', function(ctx){
     var result = feature.getAllFeatures(ctx);
