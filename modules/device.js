@@ -48,7 +48,6 @@ var device = (function () {
 
     var db;
     var module = function (dbs) {
-        log.info("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
         db = dbs;
 
         user = new userModule(db);

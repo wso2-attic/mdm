@@ -91,7 +91,7 @@ var webconsole = (function () {
             var totalDisplayRecords = 10;
 
             if(byod!= undefined && byod != null && platformId!= undefined && platformId != null ){
-                result = db.query("select * from devices where user_id like '%"+userId+"%' && byod ="+byod+" && platform_id = "+platformId);
+                result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && byod ="+byod+" && platform_id = "+platformId);
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
@@ -105,7 +105,7 @@ var webconsole = (function () {
                     device.push( result[i].id);
                     device.push( result[i].properties.imei);
                     device.push( result[i].user_id);
-                    device.push( result[i].platform_id);
+                    device.push( result[i].name);
                     device.push( result[i].os_version);
                     device.push( result[i].properties.device);
                     device.push( result[i].created_date);
@@ -118,7 +118,7 @@ var webconsole = (function () {
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else if(byod!= undefined && byod != null ){
-                result = db.query("select * from devices where user_id like '%"+userId+"%' && byod ="+byod);
+                result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && byod ="+byod);
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
@@ -132,7 +132,7 @@ var webconsole = (function () {
                     device.push( result[i].id);
                     device.push( result[i].properties.imei);
                     device.push( result[i].user_id);
-                    device.push( result[i].platform_id);
+                    device.push( result[i].name);
                     device.push( result[i].os_version);
                     device.push( result[i].properties.device);
                     device.push( result[i].created_date);
@@ -145,7 +145,7 @@ var webconsole = (function () {
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else if(platformId!= undefined && platformId != null ){
-                result = db.query("select * from devices where user_id like '%"+userId+"%' && platform_id = "+platformId);
+                result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && platform_id = "+platformId);
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
@@ -158,7 +158,7 @@ var webconsole = (function () {
                     device.push( result[i].id);
                     device.push( result[i].properties.imei);
                     device.push( result[i].user_id);
-                    device.push( result[i].platform_id);
+                    device.push( result[i].name);
                     device.push( result[i].os_version);
                     device.push( result[i].properties.device);
                     device.push( result[i].created_date);
