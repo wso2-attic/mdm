@@ -78,6 +78,21 @@ var webconsole = (function () {
                 arrRole.push(objRole);
             }
             return arrRole;
+        },
+        getDevices:function(ctx){//return device information
+            var userId = ctx.username;
+            var platformId = ctx.platform_id;
+            var byod = ctx.byod;
+            var result = '';
+            if(byod!= undefined && byod != null && platformId!= undefined && platformId != null ){
+                result = db.query("select * from devices where user_id like '%"+userId+"%' && byod ="+byod+" && platform_id = "+platformId);
+            }else if(byod!= undefined && byod != null ){
+                result = db.query("select * from devices where user_id like '%"+userId+"%' && byod ="+byod);
+            }else if(platformId!= undefined && platformId != null ){
+                result = db.query("select * from devices where user_id like '%"+userId+"%' && platform_id = "+platformId);
+            }else{
+                result = db.query("select * from devices where user_id like '%"+userId+"%'");
+            }
         }
     };
     return module;

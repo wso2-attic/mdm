@@ -2,24 +2,25 @@ var log = new Log();
 var getTenantID = function() {
     log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
 	if (Session["mdmConsoleUser"]) {
-		return Session["mdmConsoleUser"]['tenantId'];
+	//	return Session["mdmConsoleUser"]['tenantId'];
+        return "-1234";
 	} else {
-		return null;
+	//	return null;
+        return "-1234";
 	}
-   // return "-1234";
+
 }
 
 var removePrivateRole = function(roleList){
     var roles = new Array();
-
     for(var i = 0; i<roleList.length; i++){
         var prefix = '';
         try{
-            prefix = roleList[i].substring(0,8);
+            prefix = roleList[i].substring(0,17);
         }catch(e){
         //   log.info('error occured while removing private role');
         }
-        if(prefix == 'private_'){
+        if(prefix == 'Internal/private_'){
             continue;
         }else{
             roles.push(roleList[i]);

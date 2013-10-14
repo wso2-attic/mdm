@@ -145,6 +145,13 @@ var group = (function () {
             }
             return newRoles;
         },
+        getUserRoles: function(ctx){
+            log.info("User Name >>>>>>>>>"+ctx.username);
+            var um = userManager(common.getTenantID());
+            var roles = um.getRoleListOfUser(ctx.username);
+            var roleList = common.removePrivateRole(roles);
+            return roleList;
+        },
 		getUsersOfGroup: function(ctx){
 			var tenantId = common.getTenantID();
 			var users_list = Array();

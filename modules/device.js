@@ -48,9 +48,12 @@ var device = (function () {
 
     var db;
     var module = function (dbs) {
+        log.info("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
         db = dbs;
+
         user = new userModule(db);
         group = new groupModule(db);
+
     };
 
     function mergeRecursive(obj1, obj2) {
@@ -71,7 +74,7 @@ var device = (function () {
     }
 
     function monitor(ctx){
-
+        var that = application.get("that");
         var result = db.query("SELECT * from devices");
 
         for(var i=0; i<result.length; i++){
@@ -86,15 +89,15 @@ var device = (function () {
             var operation = 'MONITORING';
             var data = {};
             var userId = result[i].user_id;
-            device.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
-            device.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
+            that.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
+            that.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
 
             var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
             if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                 log.info("Policy Payload :"+gpresult[0].data);
                 var jsonData = parse(gpresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
-                device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
+                that.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
                 continue;
             }
 
@@ -103,31 +106,31 @@ var device = (function () {
                 log.info("Policy Payload :"+ppresult[0].data);
                 var jsonData = parse(ppresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
-                device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
+                that.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
                 continue;
             }
             log.info("UUUUUUUUUUUUUUUU"+userId);
 
-            user.getUserRoles({'username':userId});
-            // var roleList = user.getUserRoles({'username':userId});
-            /* var role = '';
+            var roleList = that.getUserRoles({'username':userId});
+
+             var role = '';
              for(var i=0;i<roleList.length;i++){
-             if(roleList[i] == 'store' || roleList[i] == 'store' || roleList[i] == 'Internal/everyone'){
-             continue;
-             }else{
-             role = roleList[i];
-             break;
-             }
+                 if(roleList[i] == 'store' || roleList[i] == 'store' || roleList[i] == 'Internal/everyone'){
+                    continue;
+                 }else{
+                    role = roleList[i];
+                 break;
+                 }
              }
              log.info(role);
              var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
              log.info(gpresult[0]);
              if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
-             log.info("Policy Payload :"+gpresult[0].data);
-             var jsonData = parse(gpresult[0].data);
-             jsonData = policyByOsType(jsonData,'android');
-             device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
-             }*/
+                log.info("Policy Payload :"+gpresult[0].data);
+                var jsonData = parse(gpresult[0].data);
+                jsonData = policyByOsType(jsonData,'android');
+                device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
+             }
 
         }
     }
@@ -441,6 +444,9 @@ var device = (function () {
                 return sendMessageToIOSDevice(ctx);
             }
         },
+        sendToDevices:function(ctx){
+            ctx.device_ids;
+        },
         getPendingOperationsFromDevice: function(ctx){
 			
             var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
@@ -578,23 +584,20 @@ var device = (function () {
             return message;
         },
         monitoring:function(ctx){
+            var that = this;
+            application.put("that",that);
             setInterval(
                 function(ctx){
-                    /*  try{
-                     log.info("Getting Tenant ID"+common.getTenantID());   */
-
+                    log.info("Test monitoring");
                     monitor(ctx);
-
-                    /*   }catch(e){
-
-                     log.info("Error of Monitoring"+e);
-                     } */
                 }
                 ,10000);
 
+        },getUserRoles:function(ctx){
+            return group.getUserRoles(ctx);
         }
     };
-    // return module
+
     return module;
 })();
 

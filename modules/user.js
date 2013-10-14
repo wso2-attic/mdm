@@ -135,7 +135,6 @@ var user = (function () {
             }
         },
         getAllUsers: function(ctx){
-
             var tenantId = common.getTenantID();
             var users_list = Array();
             if(tenantId){
@@ -179,8 +178,8 @@ var user = (function () {
         getUserRoles: function(ctx){
             log.info("User Name >>>>>>>>>"+ctx.username);
             var um = userManager(common.getTenantID());
-            var user = um.getUser(ctx.username);
-            var roleList = common.removePrivateRole(user.getRoles());
+            var roles = um.getRoleListOfUser(ctx.username);
+            var roleList = common.removePrivateRole(roles);
             return roleList;
         },
         updateRoleListOfUser:function(ctx){
@@ -251,6 +250,7 @@ var user = (function () {
                     users[i].type = 'user';
                     usersByType.push( users[i]);
                 }
+                //print(stringify(users[i]));
             }
             return usersByType;
         },
