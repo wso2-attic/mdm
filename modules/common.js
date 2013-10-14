@@ -2,11 +2,13 @@ var log = new Log();
 var getTenantID = function() {
     log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
 	if (Session["mdmConsoleUser"]) {
-		return Session["mdmConsoleUser"]['tenantId'];
+		//return Session["mdmConsoleUser"]['tenantId'];
+		 return "-1234";
 	} else {
-		return null;
+		//return null;
+		 return "-1234";
 	}
-   // return "-1234";
+   return "-1234";
 }
 
 var removePrivateRole = function(roleList){
