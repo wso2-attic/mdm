@@ -362,6 +362,7 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
+
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                         log.info("Policy Payload :"+gpresult[0].data);
@@ -380,17 +381,19 @@ var device = (function () {
                         return true;
                     }
 
+                    log.info("User IDDDD"+userId);
                     var roleList = user.getUserRoles({'username':userId});
+                    log.info(stringify(roleList));
                     var role = '';
                     for(var i=0;i<roleList.length;i++){
-                        if(roleList[i] == 'store' || roleList[i] == 'store' || roleList[i] == 'Internal/everyone'){
+                        if(roleList[i] == 'store' || roleList[i] == 'private_kasun:wso2mobile.com' || roleList[i] == 'Internal/everyone'){
                             continue;
                         }else{
                             role = roleList[i];
                             break;
                         }
                     }
-                    log.info(role);
+                    log.info("Roleeeeee"+role);
                     var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
                     log.info(gpresult[0]);
                     if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
@@ -450,7 +453,7 @@ var device = (function () {
             log.info(ctx.devices[0]);
            var devices =  ctx.devices;
            for(var i=0;i<devices.length;i++){
-                this.sendToDevice({'deviceid':devices[i]});
+                this.sendToDevice({'deviceid':devices[i],'operation':ctx.operation});
            }
         },
         getPendingOperationsFromDevice: function(ctx){
@@ -656,7 +659,7 @@ var device = (function () {
                     log.info("Test monitoring");
                     monitor(ctx);
                 }
-                ,10000);
+                ,100000);
 
         },getUserRoles:function(ctx){
             return group.getUserRoles(ctx);

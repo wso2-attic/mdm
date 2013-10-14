@@ -184,7 +184,7 @@ var group = (function () {
 			return users_list;
 		},
         updateUserListOfRole: function(ctx){
-            var existingUsers = this.getUsers(ctx);
+            var existingUsers = this.getUsersOfGroup(ctx);
             var addedUsers = ctx.added_users;
             var newUsers = new Array();
 
