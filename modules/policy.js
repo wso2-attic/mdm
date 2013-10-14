@@ -49,7 +49,7 @@ var policy = (function () {
 
         var result = db.query("SELECT * from devices");
 
-        for(var i=0; i<result.length; i++){
+       /* for(var i=0; i<result.length; i++){
 
             var deviceId = result[i].id;
             var operation = 'MONITORING';
@@ -66,7 +66,7 @@ var policy = (function () {
             device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
             device.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
             device.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
-        }
+        }*/
     }
 
     // prototype
