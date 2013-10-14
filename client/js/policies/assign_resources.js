@@ -1,6 +1,7 @@
 $("#btn-add").click(function() {
 
 	var id = $('#inputId').val();
+	var policies = $('#inputPolicies').val();
 	var groups = $('#inputGroups').val();
 	var users = $('#inputUsers').val();
 	var platforms = $('#inputPlatforms').val();
@@ -51,6 +52,7 @@ $("#btn-add").click(function() {
 	jso = {
 		"tenant_id" : tenantId,
 		"id" : id,
+		"policies" :policies,
 		"added_groups" : groupsArray,
 		"added_users" : usersArray,
 		"added_platforms" : platformsArray,

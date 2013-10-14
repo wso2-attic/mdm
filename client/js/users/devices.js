@@ -297,7 +297,19 @@ function loadGeneralInformation(tabId, deviceId) {
 	                   // $('#map_canvas').gmap('openInfoWindow', { 'content': 'Location' }, this);
 	                	$('#map_canvas').gmap('openInfoWindow', { }, this);
 	                });
-	            });
+	           });
+	            
+	            
+	            
+	          
+				
+								
+				
+
+
+	            
+	            
+	            
 				
 				
 				
