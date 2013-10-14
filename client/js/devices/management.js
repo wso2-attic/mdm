@@ -96,7 +96,7 @@ $( "#featureList" ).change(function() {
 	
 	for(var i = 0; i < nFiltered.length; i++){		
 		if (isNaN(nFiltered[i][0]) == false){
-			devices.push(nFiltered[i][0]);
+			devices.push(nFiltered[i][0].toString() );
 			
 		}
 	}
