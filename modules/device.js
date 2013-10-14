@@ -430,21 +430,27 @@ var device = (function () {
             return true;
         },
         sendToDevice: function(ctx){
+            log.info("test sendToDevice");
 
             var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
+            log.info(stringify(devices));
             var platformID = devices[0].platform_id;
+
             if(platformID==1){
                 log.info("platformID"+platformID);
                 return sendMessageToDevice(ctx);
             }else{
                 log.info("platformID"+platformID);
-                return sendMessageToIOSDevice(ctx);
+                return sendMessageToDevice(ctx);
+               // return sendMessageToIOSDevice(ctx);
             }
         },
         sendToDevices:function(ctx){
-           var devices =  ctx.device_ids;
+            log.info("test sendToDevices");
+            log.info(ctx.devices[0]);
+           var devices =  ctx.devices;
            for(var i=0;i<devices.length;i++){
-                this. sendToDevice({'deviceid':devices[i]});
+                this.sendToDevice({'deviceid':devices[i]});
            }
         },
         getPendingOperationsFromDevice: function(ctx){

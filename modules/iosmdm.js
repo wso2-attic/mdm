@@ -140,7 +140,7 @@ var iosmdm = (function() {
 				var apnsStatus = plistExtractor.extractAPNSResponse(contentString);
 
 				var commandUUID = apnsStatus.getCommandUUID();
-				
+			
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
 					log.error("Acknowledged >>>>>>>>>>>>>>>>");
 
