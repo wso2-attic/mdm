@@ -1,19 +1,7 @@
 <div class="container">
 
 	<div class="raw-fluid">
-		<div class="span12">
-
-			<ul class="breadcrumb">
-				<li>
-					<a href="configuration">Policies</a><span class="divider">/</span>
-				</li>
-				<li class="active">
-					Assign
-				</li>
-			</ul>
-
-		</div>
-
+		
 		<div class="span12">
 
 			<div class="raw-fluid">
@@ -42,21 +30,42 @@
 									</div>
 							</div>
 							
-							<hr>
 							
 							<div class="control-group">
-									<label class="control-label" for="inputFirstName">Role</label>
+									<label class="control-label" for="inputAssignTo">Assign To</label>
 									<div class="controls">
-										<select class="multiselect" multiple="multiple" id="inputRoles" >
-											{{#data.groups}}
-												<option value="{{name}}">{{name}}</option>
-											{{/data.groups}}
-									 </select>
+										<select id="inputAssignTo" >											
+												<option value="roles">Roles</option>
+												<option value="users">Users</option>
+												<option value="platforms">Platform</option>
+									   </select>
 									</div>
 							</div>
 							
 							
-							<div class="control-group">
+							
+							
+							<hr>
+							
+							
+							
+							<div class="control-group" id="roles-box">
+								<label class="control-label" >Roles</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox">
+										<select multiple="multiple" size="10" id="inputUsers" name="inputUsers" class='duallistbox'>
+											{{#data.groups}}
+												<option value="{{name}}">{{name}}</option>
+											{{/data.groups}}									
+										</select>
+									</div>
+
+								</div>
+							</div>
+							
+							
+							
+							<div class="control-group" id="users-box" style="display: none">
 								<label class="control-label" >Users</label>
 								<div class="controls raw">
 									<div class="multiple-selectbox">
@@ -71,8 +80,24 @@
 							</div>
 							
 							
-							<div class="control-group">
-									<label class="control-label" for="inputFirstName">Platform</label>
+							<div class="control-group" id="platforms-box" style="display: none">
+								<label class="control-label" >Platforms</label>
+								<div class="controls raw">
+									<div class="multiple-selectbox">
+										<select multiple="multiple" size="10" id="inputUsers" name="inputUsers" class='duallistbox'>
+											<option value="android">Android</option>
+												<option value="ios">iOS</option>											
+										</select>
+									</div>
+
+								</div>
+							</div>
+							
+							
+							
+							
+							<div class="control-group" id="platforms-box" style="display: none">
+									<label class="control-label">Platform</label>
 									<div class="controls">
 										<select class="multiselect" multiple="multiple" id="inputPlatforms" >											
 												<option value="android">Android</option>
