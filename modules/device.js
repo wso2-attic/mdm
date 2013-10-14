@@ -431,7 +431,9 @@ var device = (function () {
         },
         sendToDevice: function(ctx){
             log.info("test sendToDevice");
+
             var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
+            log.info(stringify(devices));
             var platformID = devices[0].platform_id;
 
             if(platformID==1){
