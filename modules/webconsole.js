@@ -80,13 +80,15 @@ var webconsole = (function () {
             return arrRole;
         },
         getDevices:function(ctx){//return device information
-
+            log.info("User name :"+ctx.username);
+            log.info("platform :"+ctx.platform_id);
+            log.info("byod :"+ctx.byod);
             var userId = '';
             if(ctx.username != undefined && ctx.username != null){
                 userId = ctx.username;
             }
             var platformId = ctx.platform_id;
-            log.info("test platform"+platformId);
+
             var byod = ctx.byod;
             var result = '';
 
@@ -147,7 +149,7 @@ var webconsole = (function () {
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else if(platformId!= undefined && platformId != null ){
-
+                log.info("test platform"+platformId);
                 result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && platform_id = "+platformId);
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
