@@ -92,6 +92,56 @@ assign_groups = function(appController){
 
 
 
+assign_resources = function(appController){	
+	
+	
+	var policyId = request.getParameter('policy');
+	var policyName = request.getParameter('policyName');
+		
+	try{
+		var groups = policy.getGroupsByPolicy({policyid: policyId});		
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var groups = [];
+	}
+	
+	//print(groups);
+	
+	try{
+		var users = policy.getUsersByPolicy({policyid: policyId});		
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var users = [];
+	}
+	
+	
+	try{
+		var platforms = policy.getPlatformsByPolicy({policyid: policyId});		
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var platforms = [];
+	}
+	
+					
+	context = appController.context();
+	context.title = context.title + " | Assign Users to group";	
+	context.page = "policies";	
+	context.jsFile= "policies/assign_resources.js"
+	context.data = {
+		configOption : "policies",
+		groups: groups,
+		tenantId:session.get("mdmConsoleUser").tenantId,
+		policyId: policyId,
+		platforms: platforms,
+		users: users,
+		policyName: policyName
+	}
+	return context;
+}
+
+
+
+
 add = function(appController){	
 	
 	context = appController.context();

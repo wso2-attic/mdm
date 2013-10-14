@@ -121,6 +121,12 @@ $.noty.defaults = {
 $('.selectpicker').selectpicker();
 $('.duallistbox').bootstrapDualListbox();
 $(".dropdownimage").msDropDown();
+$('.multiselect').multiselect({
+			        	includeSelectAllOption: true,
+			        	enableFiltering: 1,
+			        	maxHeight: 150,
+			        	buttonWidth: "215px"
+});
 
 
 $('.nav-tabs a').click(function(e) {

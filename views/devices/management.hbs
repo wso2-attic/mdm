@@ -32,7 +32,11 @@
 								<div class="control-group">
 									<label class="control-label" for="inputFirstName">Role</label>
 									<div class="controls">
-										<input type="text" id="inputRoles" class="input" data-required="true">
+										<select class="multiselect" multiple="multiple" id="inputRoles" >
+											{{#data.groups}}
+												<option value="{{name}}">{{name}}</option>
+											{{/data.groups}}
+									 </select>
 									</div>
 								</div>
 							</div>
@@ -50,7 +54,7 @@
 								<div class="control-group">
 									<label class="control-label" for="inputEmail">OS</label>
 									<div class="controls">
-										<select id="inputOS" >
+										<select id="inputOS"  >
 											<option value="">--All--</option>
 											<option value="android">Android</option>
 											<option value="iso">iOS</option>
