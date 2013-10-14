@@ -106,6 +106,37 @@ var notification = (function () {
 						db.query("UPDATE notifications SET status='R' WHERE id = ?", notificationId);
 					}
 					
+				} if(featureCode == "501P") {
+					
+					var parsedReceivedData = parse(parse(stringify(ctx.data)));
+					var formattedData = {};
+					formattedData.status = 200;
+					formattedData.data = new Array();
+					
+					for(var i = 0; i < parsedReceivedData.length; i++) {
+                    	var receivedObject = parsedReceivedData[i];
+                    	var payloadIdentifier = receivedObject.PayloadIdentifier;             
+                    	
+                    	var featureName = common.getValueByFeatureIdentifier(payloadIdentifier);
+                    	
+                    	if(featureName == null) {
+                    		continue;
+                    	}
+                    	
+                    	var featureCodes = db.query("SELECT code FROM features WHERE name = ?", featureName);
+                    	
+                    	if(featureCodes == null || featureCodes[0] == null || featureCodes[0].code == null) {
+                    		continue;
+                    	}
+                    	
+                    	var innerResponse = {};
+                    	innerResponse.status = true;
+                    	innerResponse.code = featureCodes[0].code;
+                    	formattedData.data.push(innerResponse);
+                    }
+                    
+                    db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", stringify(formattedData) +"", recivedDate+"", identifier);
+					
 				} else {
             		db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", ctx.data+"", recivedDate+"", identifier);	
 				}
