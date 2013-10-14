@@ -55,7 +55,7 @@ var user = (function () {
 	        'authorize','login'
 	    ];
 	    arrPermission[0] = permission;
-		um.addRole("private_"+indexUser, [username], arrPermission);
+		um.addRole("Internal/private_"+indexUser, [username], arrPermission);
 	}			
 	
     function mergeRecursive(obj1, obj2) {
@@ -94,8 +94,9 @@ var user = (function () {
                 if(tenantId){
                     var um = userManager(common.getTenantID());
                     if(um.userExists(ctx.username)) {
-                        objResult.error = 'User already exist with the email address.';
+                        proxy_user.error = 'User already exist with the email address.';
                     } else {
+						log.info(ctx.groups);
                         um.addUser(ctx.username, ctx.password,
                             ctx.groups, claimMap, null);
                         createPrivateRolePerUser(ctx.username);
@@ -134,8 +135,7 @@ var user = (function () {
             }
         },
         getAllUsers: function(ctx){
-            var policy = new policyModule(db);
-            policy.monitoring({});
+
             var tenantId = common.getTenantID();
             var users_list = Array();
             if(tenantId){
@@ -177,6 +177,7 @@ var user = (function () {
 
         /*Get list of roles belongs to particular user*/
         getUserRoles: function(ctx){
+            log.info("User Name >>>>>>>>>"+ctx.username);
             var um = userManager(common.getTenantID());
             var user = um.getUser(ctx.username);
             var roleList = common.removePrivateRole(user.getRoles());
