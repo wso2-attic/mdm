@@ -17,9 +17,12 @@ oTable = $('#main-table').dataTable({
                       },
                       
                        null,
+                       null,
+                       null,
+                       null,  
 
                    ],	
-		"sAjaxSource" : "/mdm/config/test/dummy_devices.json?",
+		"sAjaxSource" : "/mdm/api/webconsole/listDevices?",
 		"fnServerParams": function ( aoData ) {
           	var roles = $('#inputRoles').val();
 			var user = $('#inputUser').val();
@@ -27,9 +30,9 @@ oTable = $('#main-table').dataTable({
 			var os = $('#inputOS').val();
 			
             aoData.push( { "name": "role", "value": roles } );
-            aoData.push( { "name": "user", "value": user } );
-            aoData.push( { "name": "ownership", "value": ownership } );
-            aoData.push( { "name": "os", "value": os } );
+            aoData.push( { "name": "username", "value": user } );
+            aoData.push( { "name": "byod", "value": ownership } );
+            aoData.push( { "name": "platform_id", "value": os } );
         }
 		
 	});
@@ -93,7 +96,7 @@ $( "#featureList" ).change(function() {
 	
 	for(var i = 0; i < nFiltered.length; i++){		
 		if (isNaN(nFiltered[i][0]) == false){
-			devices.push(nFiltered[i][0]);
+			devices.push(nFiltered[i][0].toString() );
 			
 		}
 	}
@@ -128,7 +131,7 @@ $( "#featureList" ).change(function() {
 			onClick : function($noty) {
 
 				jQuery.ajax({
-					url : getServiceURLs("performGroupsOperation"),
+					url : getServiceURLs("performDevicesOperation", operation),
 					type : "POST",
 					async : "false",
 					data : JSON.stringify({operation: operation, devices:devices, roles: roles, user: user, ownership: ownership, os:os}),

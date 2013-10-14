@@ -56,8 +56,8 @@
 									<div class="controls">
 										<select id="inputOS"  >
 											<option value="">--All--</option>
-											<option value="android">Android</option>
-											<option value="iso">iOS</option>
+											<option value="1">Android</option>
+											<option value="2">iOS</option>
 										</select>
 									</div>
 								</div>
@@ -65,12 +65,12 @@
 
 							<div class="span2 operation-filter">
 								<div class="control-group">
-									<label class="control-label" for="inputPassword" >Ownsership</label>
+									<label class="control-label" for="inputOwnership" >Ownsership</label>
 									<div class="controls">
 										<select id="inputOwnership">
 											<option value="">--All--</option>
-											<option value="byod">BYOD</option>
-											<option value="cope">Cope</option>
+											<option value="1">BYOD</option>
+											<option value="0">Cope</option>
 										</select>
 									</div>
 								</div>
@@ -99,9 +99,12 @@
 									<thead>
 										<tr>
 											<th>Id</th>
+											<th>IMEI</th>
+											<th>Username</th>
+											<th>Platform</th>
+											<th>OS version</th>
 											<th>Name</th>
-											<th>User</th>
-											<th>Role</th>
+											<th>Date</th>
 										</tr>
 									</thead>
 									<tbody>
