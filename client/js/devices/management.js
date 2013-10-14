@@ -1,5 +1,5 @@
 oTable = $('#main-table').dataTable({
-		"sDom" : "<'row-fluid'<'tabel-filter-group span8'T><'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+		"sDom" : "<'row-fluid'<'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
 		"bProcessing" : true,
 		"bServerSide" : true,
 		"bFilter" : false,
@@ -44,7 +44,7 @@ jQuery.ajax({
 					dataType : "json",
 					success : function(roles) {
 						
-											 $('#inputRoles')
+						/*					 $('#inputRoles')
 					        .textext({
 					            plugins : 'autocomplete tags filter'
 					        })
@@ -59,11 +59,7 @@ jQuery.ajax({
 					                'setSuggestions',
 					                { result : textext.itemManager().filter(list, query) }
 					            );
-					        });
-
-						
-						
-						
+					        });*/
 						
 						
 					}					

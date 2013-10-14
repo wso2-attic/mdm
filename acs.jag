@@ -59,6 +59,7 @@
 								userFeed.mobile = objUser["mobile"];
 	                            log.info("TestTTTTTTTTTT"+objUser["roles"]);
 								var parsedRoles = parse(objUser["roles"]);
+								userFeed.roles = parsedRoles;
 								var isMDMAdmin = false;
 								var isAdmin = false;
 								for (var i = 0; i < parsedRoles.length; i++) {
@@ -76,6 +77,7 @@
 								userFeed.isAdmin = isAdmin;
 								session.put("mdmConsoleUserLogin", "true");
 								session.put("mdmConsoleUser", userFeed);
+
 								var appController =require('/controller/app.js');
 								if(isAdmin){
 									response.sendRedirect('console/dashboard');

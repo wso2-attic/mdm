@@ -1,25 +1,27 @@
 var log = new Log();
 var getTenantID = function() {
-   /* log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
+    log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
 	if (Session["mdmConsoleUser"]) {
-		return Session["mdmConsoleUser"]['tenantId'];
+
+	//	return Session["mdmConsoleUser"]['tenantId'];
+        return "-1234";
 	} else {
-		return null;
-	} */
-    return "-1234";
+	//	return null;
+        return "-1234";
+	}
+
 }
 
 var removePrivateRole = function(roleList){
     var roles = new Array();
-
     for(var i = 0; i<roleList.length; i++){
         var prefix = '';
         try{
-            prefix = roleList[i].substring(0,8);
+            prefix = roleList[i].substring(0,17);
         }catch(e){
         //   log.info('error occured while removing private role');
         }
-        if(prefix == 'private_'){
+        if(prefix == 'Internal/private_'){
             continue;
         }else{
             roles.push(roleList[i]);
@@ -47,19 +49,19 @@ var removeNecessaryElements = function(list,removeList){
 
 
 var getCAPath = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/ca_cert.pem";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ca_cert.pem";
 }
 
 var getRAPath = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/ra_cert.pem";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ra_cert.pem";
 }
 
 var getCAPrivateKey = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/ca_private.pem";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ca_private.pem";
 }
 
 var getRAPrivateKey = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/ra_private.pem";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ra_private.pem";
 }
 
 //move this to a xml configuration file
@@ -68,7 +70,7 @@ var getPushCertPassword = function() {
 }
 
 var getPushCertPath = function() {
-	return "E:/Mobile/iOS_MDM_Impl/keys/PlainCert.pfx";
+	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/PlainCert.pfx";
 } 
 
 var initAPNS = function(pathPushCert, pushCertPassword, deviceToken, magicToken) {

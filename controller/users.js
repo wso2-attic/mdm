@@ -21,7 +21,7 @@ configuration = function(appController) {
 		var users = [];
 	}
 	try {
-		var groups = group.getGroups({});
+		var groups = group.getAllGroups({});
 	} catch(e) {
 		log.info(e);
 		var groups = [];
@@ -93,7 +93,7 @@ devices = function(appController) {
 	session.put('mdmConsoleSelectedUser', userId);
 	try {
 		var objUser = user.getUser({
-			"userid" : userId+"@carbon.super"
+			"userid" : userId
 		});
 	} catch(e) {
 		var objUser = {};

@@ -1,0 +1,8 @@
+{
+	"/mdm/api/users/{userid}/sendmail":{
+		'GET':['everyone']
+	},
+	"/mdm/api/users/{userid}":{
+		'GET': ['everyone']
+	}
+}

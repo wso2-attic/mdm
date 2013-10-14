@@ -1,7 +1,12 @@
 <%
+var current_user = session.get('mdmConsoleUser');
+var current_user_roles =undefined;
+if(current_user!=undefined){
+	current_user_roles = current_user.roles;
+}
 var absolute = require ('modules/absolute.js').mvc;
 var goose = require('modules/goose.js').goose;
-var router = new goose({CONTEXT: "/mdm/api/"});
+var router = new goose({CONTEXT: "/mdm/api/", AUTH_SUPPORT: true, AUTH_USER_ROLES:current_user_roles});
 var log =new Log();
 var configs = require('config/config.json');
 var db = application.get('db');
@@ -26,7 +31,7 @@ var notification = new notificationModule();
 
 
  function monitorPolicy(ctx){
-     log.info("bye");
+   /*  log.info("bye");
     var result = db.query("SELECT * from devices");
 
     for(var i=0; i<result.length; i++){
@@ -45,7 +50,7 @@ var notification = new notificationModule();
         obj.type = gpresult[0].type;
         obj.policies = jsonData;
         device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
-    }
+    } */
  }
 
 
@@ -190,6 +195,11 @@ router.get('webconsole/devices', function(ctx){
 	response.content = result;
 });
 
+router.get('webconsole/listDevices', function(ctx){
+    var result = webconsole.getDevices(ctx);
+    response.content = result;
+});
+
 
 router.get('features', function(ctx){
     var result = feature.getAllFeatures(ctx);
@@ -200,7 +210,8 @@ router.get('features', function(ctx){
         response.status = 404;
     }
 });
-
+//Setting up the authorization roles
+router.setupRules(require('/config/route.json'));
 
 mvc.registerHelper('showActive', function(currentPage, page, options) {
   if(currentPage == page){

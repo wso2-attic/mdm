@@ -38,7 +38,7 @@ var mvc = (function () {
 		var f = new File(filename);
 		return f.isExists();
 	}
-	function isImage(mime){
+	function isBinaryResource(mime){
 		switch (mime) {
 	        case 'image/png':
 	            return true;
@@ -50,7 +50,7 @@ var mvc = (function () {
 	            return true;
 			case 'application/vnd.android.package-archive':
 				return true;
-			case 'application/octet-stream' :	
+			case 'application/octet-stream':
 				return true;
 	    }
 	}
@@ -58,26 +58,27 @@ var mvc = (function () {
 		//log.info("Resource URL"+resourceURL);
 		var m = mime(resourceURL);
 		response.addHeader('Content-Type', m);
-		if(isImage(m)){
+		if(isBinaryResource(m)){
 			var f = new File(resourceURL);
 			f.open('r');
 		    print(f.getStream());
+			f.close();
 		}else{
 			print(getResource(resourceURL));
 		}
 	}
 	//Register all the partials in the views/partial directory
-    function registerPartials(){
-        var f = new File("/views/partials");
-        var partials = f.listFiles();
-        for (var i=0; i<partials.length; i++){
-            var partial = partials[i];
-            partial.open('r');
-            Handle.registerPartial(partial.getName().split('.')[0], partial.readAll());
-            partial.close();
-// log.info("Handle registered template -"+partial.getName().split('.')[0]);
-        }
-    }
+	function registerPartials(){
+		var f = new File("/views/partials");
+		var partials = f.listFiles();
+		for (var i=0; i<partials.length; i++){
+			var partial = partials[i];
+			partial.open('r');
+			Handle.registerPartial(partial.getName().split('.')[0], partial.readAll());
+			log.debug("Handle registered template -"+partial.getName().split('.')[0]);
+			partial.close();
+		}
+	}
 	
 	//If the path has a . return true
 	function isAsset(path){
@@ -103,17 +104,21 @@ var mvc = (function () {
 	            return 'image/jpg';
 	        case 'apk':
 	            return 'application/vnd.android.package-archive';
-	        case 'woff':
+			case 'ipa':
+				return 'application/octet-stream';
+			case 'plist':
+				return 'text/xml';
+			case 'woff':
 	            return 'application/octet-stream';    
 	        case 'ttf':
-	            return 'application/octet-stream';    
+	            return 'application/octet-stream'; 
 			default:
 				return 'text/plain';
 	    }
 	}
 	//Call
 	function callAPI(request){
-		//log.info("Router process ");
+		log.debug("Router process ");
 		configs.ROUTER.process(request);
 	}
 	//Check if API route is provided and 
@@ -122,9 +127,23 @@ var mvc = (function () {
 		if(configs.API==undefined){
 			return false;
 		}
-		// log.info("K "+pageParams[0]);
+		log.debug("K "+pageParams[0]);
 		return pageParams[0]== configs.API;
 	}
+	
+	function isArrayOverlap(array1, array2){
+		for (var i = array1.length - 1; i >= 0; i--){
+			var array1Element = array1[i];
+			for (var j = array2.length - 1; j >= 0; j--){
+				var array2Element = array2[j];
+				if(array1Element==array2Element){
+					return true;
+				}
+			};
+		};
+		return false;
+	}
+	
 	// prototype
     module.prototype = {
         constructor: module,
@@ -139,8 +158,8 @@ var mvc = (function () {
 				} 
 			};
 			
-			// log.info("Request url: "+reqURL);
-			// log.info("Page url: "+pageURL);
+			log.debug("Request url: "+reqURL);
+			log.debug("Page url: "+pageURL);
 			
 			var pageParams = pageURL.split('/');
 			
@@ -162,7 +181,7 @@ var mvc = (function () {
 			}
 			var viewName = view;
 			view = view+"."+configs.ENGINE;
-			//log.info("View "+ view);
+			log.debug("View "+ view);
 			
 			//App controller
 			var appController;
@@ -186,11 +205,21 @@ var mvc = (function () {
 			}
 			if(isExists('/controller/'+controller+".js") && require('/controller/'+controller+".js")[viewName] !=undefined){
 				context = require('/controller/'+controller+".js")[viewName](appController);
-				//log.info("Current context "+context);
+				log.debug("Current context "+context);
 			}		
 			//Extracting the layout from the controller
 			var layout;
 			if(context!=undefined && context.layout!=undefined){
+				if(configs.AUTH_SUPPORT){
+					if(context.auth_roles!=undefined && context.auth_roles.length>0){
+						var authState = isArrayOverlap(configs.AUTH_USER_ROLES, context.auth_roles);
+						if(!authState){
+							 log.debug("--------Goose Auth Error (User roles doesn't match with route roles)--------");
+							 response.sendError(403);
+							 return;
+						}
+					}
+				}
 				layout = Handle.compile(getResource("/pages/"+context.layout+".hbs"));
 			}
 			//If we can't find a controller as well as a view we are sending a 404 error
@@ -201,13 +230,15 @@ var mvc = (function () {
 					new Log().debug(e);
 				}
 			}else{
-				var b = template(context);
-				if(layout==undefined){
-					//If the controller hasn't specified a layout
-					print(b);
-				}else{
-					//Now mixing the controller context with generated body template
-					print(layout(mergeRecursive({body:b}, context)));
+				if(template!=undefined){
+						var b = template(context);
+						if(layout==undefined){
+							//If the controller hasn't specified a layout
+							print(b);
+						}else{
+							//Now mixing the controller context with generated body template
+							print(layout(mergeRecursive({body:b}, context)));
+						}
 				}
 			}
         },
@@ -216,6 +247,10 @@ var mvc = (function () {
 		},
 		registerPartial: function(partialName, partial){
 			Handle.registerPartial(partialName,partial);
+		},
+		compileTemplate: function(templatePath, context){
+			var template = Handle.compile(getResource(templatePath));
+			return template(context);
 		}
     };
 // return module

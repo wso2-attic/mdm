@@ -48,7 +48,7 @@ var group = (function () {
         });
 		router.post('groups', function(ctx){
             log.info("Test Groups >>>>>>>>>>");
-			var returnMsg = group.add(ctx);
+			var returnMsg = group.addGroup(ctx);
             if(returnMsg.status == 'ALLREADY_EXIST'){
                 response.status = 409;
                 response.content = "Already Exist";
