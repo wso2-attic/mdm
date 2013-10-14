@@ -94,12 +94,13 @@ assign_groups = function(appController){
 
 assign_resources = function(appController){	
 	
+	context = appController.context();
 	
 	var policyId = request.getParameter('policy');
 	var policyName = request.getParameter('policyName');
 		
 	try{
-		var groups = policy.getGroupsByPolicy({policyid: policyId});		
+		var groups = group.getGroupsByType({type:context.contextData.user.role});		
 	}catch(e){
 		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var groups = [];
@@ -122,8 +123,15 @@ assign_resources = function(appController){
 		var platforms = [];
 	}
 	
+	
+	try{
+		var policies = policy.getAllPolicies({});
+	}catch(e){
+		var policies = [];
+	}
+	
 					
-	context = appController.context();
+	
 	context.title = context.title + " | Assign Users to group";	
 	context.page = "policies";	
 	context.jsFile= "policies/assign_resources.js"
@@ -134,7 +142,8 @@ assign_resources = function(appController){
 		policyId: policyId,
 		platforms: platforms,
 		users: users,
-		policyName: policyName
+		policyName: policyName,
+		policies: policies
 	}
 	return context;
 }
