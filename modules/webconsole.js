@@ -94,7 +94,7 @@ var webconsole = (function () {
 
             var totalDisplayRecords = 10;
 
-            if(byod!= undefined && byod != null && platformId!= undefined && platformId != null && && platformId != ''){
+            if(byod!= undefined && byod != null && platformId!= undefined && platformId != null && platformId != ''){
                 result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && byod ="+byod+" && platform_id = "+platformId);
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
@@ -151,6 +151,7 @@ var webconsole = (function () {
             }else if(platformId!= undefined && platformId != null && platformId != ''){
                 log.info("test platform"+platformId);
                 result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && platform_id = "+platformId);
+
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
