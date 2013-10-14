@@ -17,9 +17,12 @@ oTable = $('#main-table').dataTable({
                       },
                       
                        null,
+                       null,
+                       null,
+                       null,  
 
                    ],	
-		"sAjaxSource" : "/mdm/config/test/dummy_devices.json?",
+		"sAjaxSource" : "/mdm/api/webconsole/listDevices?",
 		"fnServerParams": function ( aoData ) {
           	var roles = $('#inputRoles').val();
 			var user = $('#inputUser').val();
