@@ -97,7 +97,7 @@ var webconsole = (function () {
             if(byod!= undefined && byod != null && platformId!= undefined && platformId != null && platformId != ''){
                 result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && byod ="+byod+" && platform_id = "+platformId);
                 var totalRecords = result.length;
-                var upperBound = ctx.sEcho *totalDisplayRecords;
+                var upperBound = (ctx.iDisplayStart+1)*totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
 
                 var dataArray = new Array();
@@ -124,7 +124,7 @@ var webconsole = (function () {
             }else if(byod!= undefined && byod != null ){
                 result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && byod ="+byod);
                 var totalRecords = result.length;
-                var upperBound = ctx.sEcho *totalDisplayRecords;
+                var upperBound = (ctx.iDisplayStart+1) *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
 
                 var dataArray = new Array();
@@ -153,10 +153,15 @@ var webconsole = (function () {
                 result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && platform_id = "+platformId);
 
                 var totalRecords = result.length;
-                var upperBound = ctx.sEcho *totalDisplayRecords;
+                log.info("totalDisplayRecords"+totalDisplayRecords);
+                log.info("iDisplayStart  :"+ctx.iDisplayStart);
+                var upperBound = (ctx.iDisplayStart+1) *totalDisplayRecords;
+                log.info("upperBound"+upperBound);
                 var lowerBound =  upperBound - totalDisplayRecords;
+                log.info("lowerBound"+lowerBound);
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
+                    log.info(stringify(result[i]));
                     if(totalRecords - 1 < i){
                         break;
                     }
@@ -179,7 +184,7 @@ var webconsole = (function () {
             }else{
                 result = db.query("select * from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%'");
                 var totalRecords = result.length;
-                var upperBound = ctx.sEcho *totalDisplayRecords;
+                var upperBound = (ctx.iDisplayStart+1)*totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
                 var dataArray = new Array();
                 for(var i = lowerBound ;i < upperBound; i++){
