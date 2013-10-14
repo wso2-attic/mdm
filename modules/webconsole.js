@@ -80,7 +80,10 @@ var webconsole = (function () {
             return arrRole;
         },
         getDevices:function(ctx){//return device information
-            var userId = ctx.username;
+            var userId = '';
+            if(ctx.username != undefined && ctx.username != null){
+                userId = ctx.username;
+            }
             var platformId = ctx.platform_id;
             var byod = ctx.byod;
             var result = '';
@@ -161,8 +164,16 @@ var webconsole = (function () {
                 var totalRecords = result.length;
                 var upperBound = ctx.sEcho *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
+                if(totalDisplayRecords > totalRecords ){
+                    lowerBound = 0;
+                }
                 var dataArray = new Array();
-                for(var i = lowerBound; i < upperBound; i++){
+
+
+                for(var i = lowerBound ;i < upperBound; i++){
+                    if(totalRecords - 1 < i){
+                        break;
+                    }
                     var device = [];
                     device.push( result[i].id);
                     device.push( result[i].properties.imei);
