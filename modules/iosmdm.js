@@ -150,6 +150,9 @@ var iosmdm = (function() {
 						responseData = apnsStatus.getResponseData();
 					} else if ("InstalledApplicationList" == apnsStatus.getOperation()) {
 						responseData = apnsStatus.getResponseData();
+					} else if ("ProfileList" == apnsStatus.getOperation()) {
+						responseData = apnsStatus.getResponseData();
+						log.error("responseData >>>>>>>>>>>>>>>>>>>>>>>>>> " + responseData);
 					} 
 
 					var ctx = {};

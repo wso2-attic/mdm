@@ -216,6 +216,8 @@ var loadPayload = function(identifier , operationCode, data) {
 		paramMap.put("LDAPAccountPassword", data.password);
 		paramMap.put("LDAPAccountUseSSL", data.usedssl);
 		isProfile = true;
+	} else if(operationCode == "501P") {
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.PROFILE_LIST;
 	} else if(operationCode == "527A") {
 		return "ENTERPRISE_WIPE";
 	}
