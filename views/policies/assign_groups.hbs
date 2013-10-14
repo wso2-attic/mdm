@@ -31,7 +31,29 @@
 							<input type="hidden" id="inputId" value="{{data.policyId}}" class="input-xxlarge">
 							
 							
+							
 							<div class="control-group">
+									<label class="control-label" for="inputAssignTo">Assign To</label>
+									<div class="controls">
+										<select id="inputAssignTo" >											
+												<option value="roles">Roles</option>
+												<option value="users">Users</option>
+												<option value="platforms">Platform</option>
+									   </select>
+									</div>
+							</div>
+							
+							
+							
+							
+							<hr>
+							
+							
+							
+							
+							
+							
+							<div class="control-group" id="roles-box">
 								<label class="control-label" >Roles</label>
 								<div class="controls raw">
 									<div class="multiple-selectbox">
@@ -46,7 +68,7 @@
 							</div>
 							
 							
-							<div class="control-group">
+							<div class="control-group" id="users-box" style="display: none">
 								<label class="control-label" >Users</label>
 								<div class="controls raw">
 									<div class="multiple-selectbox">
@@ -61,7 +83,7 @@
 							</div>
 							
 							
-								<div class="control-group">
+								<div class="control-group" id="platforms-box" style="display: none">
 								<label class="control-label" >Platforms</label>
 								<div class="controls raw">
 									<div class="multiple-selectbox">

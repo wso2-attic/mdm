@@ -84,3 +84,18 @@ $("#btn-add").click(function() {
 });
 
 
+$( "#inputAssignTo" ).change(function() {
+	$("#roles-box").css("display", "none");
+	$("#users-box").css("display", "none");
+	$("#platforms-box").css("display", "none");
+	
+	if( $(this).val() == "roles"){
+		$("#roles-box").css("display", "block");		
+	}
+	if( $(this).val() == "users"){
+		$("#users-box").css("display", "block");
+	}
+	if( $(this).val() == "platforms"){
+		$("#platforms-box").css("display", "block");
+	}
+});
