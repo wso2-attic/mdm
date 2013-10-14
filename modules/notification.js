@@ -5,7 +5,7 @@ var notification = (function () {
     var routes = new Array();
     var log = new Log();
     var db;
-
+	var common = require("/modules/common.js");
     var deviceModule = require('device.js').device;
     var device;
     var module = function (dbs) {
@@ -49,10 +49,67 @@ var notification = (function () {
         },
         addIosNotification: function(ctx){
 			log.info("IOS Notification >>>>>"+stringify(ctx));
-            var currentdate = new Date();
+			
+			var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
+			var notifications = db.query("SELECT feature_code FROM notifications WHERE id = ?", identifier);
+			
+			var currentdate = new Date();
             var recivedDate =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
+            		
+			if(notifications != null) {
+				var featureCode = notifications[0].feature_code;
+				
+				if(featureCode == "500P") {
+					
+					var notificationId = identifier.split("-")[0];
+					var policySequence = identifier.split("-")[1];
+					
+					var pendingFeatureCodeList = db.query("SELECT received_data, device_id FROM notifications WHERE id = ?", notificationId + "");
+					var received_data = pendingFeatureCodeList[0].received_data;
+					var device_id = pendingFeatureCodeList[0].device_id;
+					var targetOperationData = (parse(received_data))[parseInt(policySequence)];
+					var targetOperationId = targetOperationData.message.code;
+					var pendingExist = false;
+					var parsedReceivedData = (parse(received_data));
+					
+					for(var i = 0; i < parsedReceivedData.length; i++) {
+                    	var receivedObject = parsedReceivedData[i];
+                    	
+                    	if(receivedObject.message.code == targetOperationId) {
+                    		if(ctx.error == "Error") {
+                    			receivedObject.status = "error";
+                    		} else {
+                    			receivedObject.status = "received";	
+                    		}
+                    	}
+                    	
+                    	if(receivedObject.status == "pending") {
+                    		pendingExist = true;
+                    	}
 
-            db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", ctx.data+"", recivedDate+"", ctx.msgID.replace("\"", "").replace("\"","")+"");
+                    	parsedReceivedData[i] = receivedObject;
+                    }
+					
+					db.query("UPDATE notifications SET received_data= ? , received_date = ? WHERE id = ?", stringify(parsedReceivedData) + "", recivedDate + "", notificationId);
+					
+					if(pendingExist) {
+						
+						var message = stringify(ctx.data);
+				        var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", device_id + "");
+				        var regId = devices[0].reg_id;
+				        var regIdJsonObj = parse(regId);
+				        var pushMagicToken = regIdJsonObj.magicToken;
+				        var deviceToken = regIdJsonObj.token;
+						
+						common.initAPNS(common.getPushCertPath(), common.getPushCertPassword(), deviceToken, pushMagicToken);
+					} else {
+						db.query("UPDATE notifications SET status='R' WHERE id = ?", notificationId);
+					}
+					
+				} else {
+            		db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", ctx.data+"", recivedDate+"", identifier);	
+				}
+			}
         },
         addNotification: function(ctx){
 			log.info("Android Notification >>>>>"+stringify(ctx));
