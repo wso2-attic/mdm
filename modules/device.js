@@ -445,7 +445,10 @@ var device = (function () {
             }
         },
         sendToDevices:function(ctx){
-            ctx.device_ids;
+           var devices =  ctx.device_ids;
+           for(var i=0;i<devices.length;i++){
+                this. sendToDevice({'deviceid':devices[i]});
+           }
         },
         getPendingOperationsFromDevice: function(ctx){
 			
