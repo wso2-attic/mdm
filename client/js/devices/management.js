@@ -30,8 +30,8 @@ oTable = $('#main-table').dataTable({
 			var os = $('#inputOS').val();
 			
             aoData.push( { "name": "role", "value": roles } );
-            aoData.push( { "name": "user", "value": user } );
-            aoData.push( { "name": "ownership", "value": ownership } );
+            aoData.push( { "name": "username", "value": user } );
+            aoData.push( { "name": "byod", "value": ownership } );
             aoData.push( { "name": "platform_id", "value": os } );
         }
 		
