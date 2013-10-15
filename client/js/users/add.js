@@ -14,8 +14,7 @@ $("#btn-add").click(function() {
 	var firstname = $('#inputFirstName').val();
 	var lastname = $('#inputLastName').val();
 	var type = $('#inputType').val();
-	var username = $('#inputEmail').val();
-	var password = $('#inputPassword').val();
+	var username = $('#inputEmail').val();	
 	var mobileNo = $('#inputMobile').val();	
 	
 	var userMAMGroups = $('#inputMAMGroups').val();
@@ -52,8 +51,7 @@ $("#btn-add").click(function() {
 	// alert(JSON.stringify(userGroupsArray));
 	jso = {
 		"tenant_id" : tenantId,
-		"username" : username,
-		"password" : password,
+		"username" : username,		
 		"first_name" : firstname,
 		"last_name" : lastname,
 		"mobile_no" : mobileNo,
