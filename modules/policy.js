@@ -1,8 +1,11 @@
 
 var policy = (function () {
 
-    var userModule = require('user_group.js').user_group;
+    var userModule = require('user.js').user;
     var user;
+
+    var usergModule = require('user_group.js').user_group;
+    var userg
 
     var groupModule = require('group.js').group;
     var group;
@@ -23,6 +26,7 @@ var policy = (function () {
     var module = function (dbs) {
         db = dbs;
         user = new userModule(db);
+        userg = new usergModule(db);
         group = new groupModule(db);
         device = new deviceModule(db);
         //mergeRecursive(configs, conf);
@@ -254,7 +258,7 @@ var policy = (function () {
         },
         getUsersByPolicy:function(ctx){
             var allUsers = user.getAllUsers(ctx);
-            var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? ",ctx.policyid);
+            var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? ",stringify(ctx.policyid));
 
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
@@ -322,7 +326,7 @@ var policy = (function () {
             var groupId = result[0].group_id;
             var users = group.getUsersOfGroup({'groupid':groupId});
             for(var i=0;i<users.length;i++){
-                user.sendMsgToUser({'userid': users[i].username,'operation':'POLICY','data':parse(policyData)});
+                userg.sendMsgToUser({'userid': users[i].username,'operation':'POLICY','data':parse(policyData)});
             }
         },
         monitoring:function(ctx){

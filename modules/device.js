@@ -262,6 +262,7 @@ var device = (function () {
             jsonStringData = stringify(msg.toSource());
             log.info(jsonStringData);
             log.info("Data fromat"+message);
+            log.info("Code :"+feature[0].code);
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, feature[0].code, token, message, 3);
             log.info(gcmMSG);
             return true;
@@ -446,7 +447,7 @@ var device = (function () {
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
                     var id = pendingFeatureCodeList[0].id;
                     var feature_code = pendingFeatureCodeList[0].feature_code;
-                    log.error("feature_code >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + feature_code);
+                    
                     if(feature_code == "500P") {
 						
 						var message = parse(pendingFeatureCodeList[0].message);

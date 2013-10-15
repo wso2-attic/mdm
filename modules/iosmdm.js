@@ -140,7 +140,7 @@ var iosmdm = (function() {
 				var apnsStatus = plistExtractor.extractAPNSResponse(contentString);
 
 				var commandUUID = apnsStatus.getCommandUUID();
-			
+
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
 					log.error("Acknowledged >>>>>>>>>>>>>>>>");
 
@@ -153,23 +153,23 @@ var iosmdm = (function() {
 					} else if ("ProfileList" == apnsStatus.getOperation()) {
 						responseData = apnsStatus.getResponseData();
 						log.error("responseData >>>>>>>>>>>>>>>>>>>>>>>>>> " + responseData);
-					} 
+					}
 
 					var ctx = {};
 					ctx.data = responseData;
 					ctx.msgID = commandUUID;
-					
+
 					notification.addIosNotification(ctx);
 
 					return;
 				} else if (("Error").equals(apnsStatus.getStatus())) {
-					log.error("Error >>>>>>>>>>>>>>>>");
-					
+					log.error("Error >>>>>>>>>>>>>>>> " + apnsStatus.getError());
+
 					var ctx = {};
 					ctx.error = "Error";
-					ctx.data = "";
+					ctx.data = apnsStatus.getError();
 					ctx.msgID = commandUUID;
-					
+
 					notification.addIosNotification(ctx);
 				}
 
@@ -177,14 +177,12 @@ var iosmdm = (function() {
 				ctx.udid = stringify(apnsStatus.getUdid());
 				var operation = device.getPendingOperationsFromDevice(ctx);
 
-				if(operation != null && operation.feature_code.indexOf("-") > 0) {
+				if (operation != null && operation.feature_code.indexOf("-") > 0) {
 					var featureCode = operation.feature_code.split("-")[0];
-					
-					return common.loadPayload(new Packages.java.lang.String(operation.id), 
-						featureCode, operation.message);
+
+					return common.loadPayload(new Packages.java.lang.String(operation.id), featureCode, operation.message);
 				} else if (operation != null) {
-					return common.loadPayload(new Packages.java.lang.String(operation.id), 
-						operation.feature_code, operation.message);
+					return common.loadPayload(new Packages.java.lang.String(operation.id), operation.feature_code, operation.message);
 				}
 
 				return null;
