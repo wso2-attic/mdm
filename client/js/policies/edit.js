@@ -33,7 +33,7 @@ $("#btn-add").click(function() {
 				if(checkVal !== ""){
 					
 					if($(this).data("notfunction") == true){
-						alert($(this).data("notfunction"));
+						//alert($(this).data("notfunction"));
 						params[prefix][suffix] = checkVal;
 					}else{
 						params[prefix]["function"] = checkVal;
