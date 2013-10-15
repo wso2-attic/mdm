@@ -99,6 +99,8 @@ var getPayloadIdentifierMap = function() {
 	identifierMap["EMAIL"] = "com.wso2.email.conf";
 	identifierMap["VPN"] = "com.wso2.vpn";
 	identifierMap["LDAP"] = "com.wso2.ldap";
+	identifierMap["GOOGLECALENDAR"] = "com.wso2.calendar";
+	identifierMap["WEBCLIP"] = "com.wso2.webclip";
 
 	return identifierMap;
 }
@@ -147,7 +149,6 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else if(operationCode == "508A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS; //checked
 		paramMap.put("PayloadIdentifier", payloadIdentifier["CAMERA"]);
-		log.error("CAMERA >>>>>>>>>>>>>>>>>>>>>> " + payloadIdentifier["CAMERA"]);
 		if(data.function == "Disable") {
 			paramMap.put("AllowCamera", false);
 		} else {
@@ -157,14 +158,14 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else if(operationCode == "507A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS; //checked
 		paramMap.put("PayloadIdentifier", payloadIdentifier["WIFI"]);
-		paramMap.put("PayloadDisplayName", "WIFI Payload");
+		paramMap.put("PayloadDisplayName", "WIFI Configurations");
 		paramMap.put("Password", data.password);
 		paramMap.put("SSID", data.ssid);
 		isProfile = true;
 	} else if(operationCode == "512A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APN_SETTINGS; //checked - not working
 		paramMap.put("PayloadIdentifier", payloadIdentifier["APN"]);
-		paramMap.put("PayloadDisplayName", "VPN Payload");
+		paramMap.put("PayloadDisplayName", "VPN Configurations");
 		paramMap.put("APN", data.carrier);
 		paramMap.put("Username", data.user_name);
 		paramMap.put("Password", data.password);
@@ -173,6 +174,11 @@ var loadPayload = function(identifier , operationCode, data) {
 		isProfile = true;
 	} else if(operationCode == "518A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WEBCLIP;
+		paramMap.put("PayloadIdentifier", payloadIdentifier["WEBCLIP"]);
+		paramMap.put("PayloadDisplayName", "Web Clip");
+		paramMap.put("URL", data.url);
+		paramMap.put("Label", data.label);
+		isProfile = true;
 	} else if(operationCode == "519A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.PASSCODE_POLICY; //checked
 		paramMap.put("PayloadIdentifier", payloadIdentifier["PASSWORDPOLICY"]);
@@ -223,22 +229,27 @@ var loadPayload = function(identifier , operationCode, data) {
 		
 		isProfile = true;
 	} else if(operationCode == "521A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAL_DAV;
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CALENDAR_SUBSCRIPTION; //checked
+		paramMap.put("PayloadIdentifier", payloadIdentifier["GOOGLECALENDAR"]);
+		paramMap.put("PayloadDisplayName", "Calendar Subscription");
+		paramMap.put("SubCalAccountUsername", data.username);
+		paramMap.put("SubCalAccountPassword", data.password);
+		isProfile = true;
 	} else if(operationCode == "525A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAL_SUBSCRIPTION;
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAL_DAV;
 	} else if(operationCode == "") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.VPN_CERT;
 	} else if(operationCode == "513A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.VPN_SECRET;
 		paramMap.put("PayloadIdentifier", payloadIdentifier["VPN"]);
-		paramMap.put("PayloadDisplayName", "VPN Payload");
+		paramMap.put("PayloadDisplayName", "VPN Configurations");
 		paramMap.put("AuthenticationMethod", data.type);
 		paramMap.put("SharedSecret", data.sharedsecret);
 		isProfile = true;
 	} else if(operationCode == "524A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.LDAP; //checked
 		paramMap.put("PayloadIdentifier", payloadIdentifier["LDAP"]);
-		paramMap.put("PayloadDisplayName", "LDAP Payload");
+		paramMap.put("PayloadDisplayName", "LDAP Configurations");
 		paramMap.put("LDAPAccountDescription", data.ldapdesc);
 		paramMap.put("LDAPAccountHostName", data.hostname);
 		paramMap.put("LDAPAccountUserName", data.username);
@@ -256,6 +267,11 @@ var loadPayload = function(identifier , operationCode, data) {
 			operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.INSTALL_APPSTORE_APPLICATION;
 			paramMap.put("iTunesStoreID", data.identity);
 		}
+		
+	} else if(operationCode == "510A") {
+		
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_APPLICATION;
+		paramMap.put("Identifier", data.identifier);
 		
 	} else if(operationCode == "527A") {
 		return "ENTERPRISE_WIPE";

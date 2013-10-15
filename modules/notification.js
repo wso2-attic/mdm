@@ -106,7 +106,7 @@ var notification = (function () {
 						db.query("UPDATE notifications SET status='R' WHERE id = ?", notificationId);
 					}
 					
-				} if(featureCode == "501P") {
+				} else if(featureCode == "501P") {
 					
 					var parsedReceivedData = parse(parse(stringify(ctx.data)));
 					var formattedData = {};
@@ -140,7 +140,7 @@ var notification = (function () {
 				} else {
 					var policySeperator = identifier.indexOf("-");
 		
-				    if(policySeperator == 0) {
+				    if(policySeperator == -1) {
 				    	db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", ctx.data+"", recivedDate+"", identifier);
 				    }	
 				}
