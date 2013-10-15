@@ -50,8 +50,13 @@
 		<script src="../assets/jqueryext/dropdown/js/msdropdown/jquery.dd.min.js"></script>	
 		<script src="../assets/boostrapext/multiselect/js/bootstrap-multiselect.js"></script>			
 		
-		 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-		<script src="../assets/maps/jquery-maps.js"></script>
+		
+		{{#if googleMaps}}
+			 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+			<script src="../assets/maps/jquery-maps.js"></script>
+		{{/if}}	
+		
+		
 					
 
 		<script src="../client/js/common.js"></script>					
