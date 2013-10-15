@@ -80,12 +80,12 @@ var user = (function () {
 		});
 		router.put('users/', function(ctx){
 			var result = user.addUser(ctx);
-			
 		    if(result.error != null && result.error != undefined){
 		    	response.status = 400;
 		        print(result.error);
 		    }else{
 				response.status = 201;
+				ctx.generatedPassword = result.generatedPassword;
 				user.sendEmail(ctx);
 		        print("User added Successful");
 		    }

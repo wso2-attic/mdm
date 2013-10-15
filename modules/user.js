@@ -75,6 +75,15 @@ var user = (function () {
         return obj1;
     }
 	
+	function generatePassword() {
+	    var length = 6,
+	        charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+	        retVal = "";
+	    for (var i = 0, n = charset.length; i < length; ++i) {
+	        retVal += charset.charAt(Math.floor(Math.random() * n));
+	    }
+	    return retVal;
+	}
     // prototype
     module.prototype = {
         constructor: module,
@@ -96,10 +105,11 @@ var user = (function () {
                     if(um.userExists(ctx.username)) {
                         proxy_user.error = 'User already exist with the email address.';
                     } else {
-						log.info(ctx.groups);
-                        um.addUser(ctx.username, ctx.password,
+						var generated_password =  generatePassword();
+                        um.addUser(ctx.username, generated_password,
                             ctx.groups, claimMap, null);
                         createPrivateRolePerUser(ctx.username);
+						proxy_user.generatedPassword = generated_password;
                     }
                 }
                 else{
@@ -165,9 +175,9 @@ var user = (function () {
         },
         deleteUser: function(ctx){
             var um = userManager(common.getTenantID());
-
             um.removeUser(ctx.userid);
-
+			var private_role = ctx.userid.replace("@", ":");
+			um.removeRole("Internal/private_"+private_role);
         },
 
         /*End of User CRUD Operations (Create, Retrieve, Update, Delete)*/
@@ -280,7 +290,11 @@ var user = (function () {
 
         /*send email to particular user*/
         sendEmail: function(ctx){
-            content = "Dear "+ ctx.first_name+", "+config.email.emailTemplate+config.HTTPS_URL+"/mdm/api/device_enroll \n \n"+config.email.companyName;
+			var password_text = "";
+			if(ctx.generatedPassword){
+				password_text = "Your password to your login : "+ctx.generatedPassword;
+			}
+            content = "Dear "+ ctx.first_name+", "+config.email.emailTemplate+config.HTTPS_URL+"/mdm/api/device_enroll \n "+password_text+" \n"+config.email.companyName;
             subject = "MDM Enrollment";
 
             var email = require('email');
