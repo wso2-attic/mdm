@@ -53,6 +53,75 @@
 						{{#data.devices}}
 
 						<div class="tab-pane {{#compare @index 0}}active{{/compare}}" id="device-tab-{{id}}">
+							
+							
+							<div class="raw">
+								<div class="span11">
+									
+									<div class="raw">
+
+										<div class="block" style="padding-right:5px;">
+											<div class="block-header-small">
+												<div class="pull-left">
+													Operations
+												</div>
+											</div>
+
+											<div class="block-body container-fluid raw-fluid">
+
+												{{#features}}
+
+												{{#compare feature_type 'OPERATION'}}
+
+												{{#if enable}}
+
+												<div class="features-device" data-feature="{{name}}"   data-template="{{template}}" style="cursor: pointer;">
+													<div title="{{description}}" class="span1" draggable="true">
+														<div class="raw text-center">
+															<img src="{{../../../../resourcePath}}features/{{name}}.png" class="features-role-image">
+														</div>
+														<div class="raw text-center"  style="font-size: x-small">
+															{{#elipsis 30 description}}{{/elipsis}}
+														</div>
+													</div>
+												</div>
+
+												{{else}}
+
+												<div  data-feature="{{name}}"   data-template="{{template}}">
+													<div title="{{description}}" class="span2">
+														<div class="raw text-center">
+															<img src="{{../../../../resourcePath}}features/{{name}}.png" class="features-role-image" style="opacity: 0.3">
+														</div>
+														<div class="raw text-center"  style="font-size: x-small; opacity: 0.3" >
+															{{#elipsis 30 description}}{{/elipsis}}
+														</div>
+													</div>
+												</div>
+
+												{{/if}}
+
+												{{/compare}}
+
+												{{/features}}
+
+											</div>
+
+										</div>
+
+									</div>
+									
+									
+									
+									
+									
+								</div>
+								
+							</div>
+							
+							
+							
+							
 							<div class="raw">
 
 								<div class="span4">
@@ -187,7 +256,7 @@
 									
 									
 
-									<div class="raw">
+									<div class="raw" style="display: none">
 
 										<div class="block">
 											<div class="block-header-small">
