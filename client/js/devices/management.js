@@ -19,7 +19,7 @@ oTable = $('#main-table').dataTable({
                        null,
                        null,
                        null,
-                       null,  
+                       
 
                    ],	
 		"sAjaxSource" : "/mdm/api/webconsole/listDevices?",
