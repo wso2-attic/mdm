@@ -138,7 +138,11 @@ var notification = (function () {
                     db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", stringify(formattedData) +"", recivedDate+"", identifier);
 					
 				} else {
-            		db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", ctx.data+"", recivedDate+"", identifier);	
+					var policySeperator = identifier.indexOf("-");
+		
+				    if(policySeperator == 0) {
+				    	db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", ctx.data+"", recivedDate+"", identifier);
+				    }	
 				}
 			}
         },
