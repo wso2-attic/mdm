@@ -17,7 +17,7 @@ $("#btn-add").click(function() {
 	$(".policy-input").each(function(index) {
 		
 		var prefix = $(this).attr("id").split('-')[0];
-		var suffix = $(this).attr("id").split('-')[1];		
+		var suffix = $(this).attr("id").split('-')[1];	 	
 		
 				
 		if(!params[prefix]){
