@@ -1,0 +1,1 @@
+{'server':'jdbc:mysql://localhost:3306/mdmdb', 'username':'root', 'password': ''}

@@ -262,6 +262,7 @@ var device = (function () {
             jsonStringData = stringify(msg.toSource());
             log.info(jsonStringData);
             log.info("Data fromat"+message);
+            log.info("Code :"+feature[0].code);
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, feature[0].code, token, message, 3);
             log.info(gcmMSG);
             return true;

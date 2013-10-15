@@ -19,7 +19,7 @@ index = function(appController){
 
 	context = appController.context();	
 	
-	var testData = group.getGroupsByType({type:context.contextData.user.role});	
+	var testData =  policy.getUsersByPolicy({policyid: 35});
 	
 	print(testData);
 	

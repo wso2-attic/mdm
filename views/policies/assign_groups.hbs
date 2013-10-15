@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container">
 
 	<div class="raw-fluid">
 		<div class="span12">
@@ -8,7 +8,7 @@
 					<a href="configuration">Policies</a><span class="divider">/</span>
 				</li>
 				<li class="active">
-					Add
+					Assign Resources
 				</li>
 			</ul>
 
@@ -20,7 +20,7 @@
 				<div class="block">
 					<div class="block-header">
 						<div class="block-header-title pull-left">
-							Assign resources to {{data.policyName}} policy
+							Policy Name: {{data.policyName}}
 						</div>
 
 					</div>
@@ -98,8 +98,8 @@
 							</div>
 
 							<hr>
-							<div class="offset10">
-								<a class="btn btn-orange btn-large" id="btn-add" href="#" >Assign</a>
+							<div class="offset1-5">
+								<a class="btn btn-orange" id="btn-add" href="#" ><i class="icon-plus icon-edit"></i> Assign</a>
 							</div>
 
 							<input type="hidden" id="tenantId" value="{{data.tenantId}}" />
