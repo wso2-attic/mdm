@@ -140,9 +140,12 @@
 				<div class="accordion-inner">
 					<!-- eMail Configurations Start -->
 					<div class="control-group">
-						<label class="control-label">Account Description</label>
-						<div class="controls">
-							<input type="text" id="520A-emaildesc" class="policy-input">
+						<label class="control-label">Authentication Type</label>
+						<div class="controls">							
+							<select i id="520A-displayname" class="policy-input">
+								<option value="GMAIL">GMAIL</option><option value="YAHOO">YAHOO</option><option value="HOTMAIL">HOTMAIL</option>
+							</select>
+							
 						</div>
 					</div>
 
@@ -153,93 +156,23 @@
 						</div>
 					</div>
 
-					<div class="control-group">
-						<label class="control-label">Account Type</label>
-						<div class="controls">
-							<select id="520A-emailtype" class="policy-input">
-								<option value="EmailTypeIMAP">IMAP</option><option value="EmailTypePOP">POP</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Email Address</label>
-						<div class="controls">
-							<input type="text" id="520A-emailid" class="policy-input" data-type="email">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Incoming Host</label>
-						<div class="controls">
-							<input type="text" id="520A-incoming_hostname" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Incoming Port</label>
-						<div class="controls">
-							<input type="text" id="520A-incoming_portnumber" class="policy-input">
-						</div>
-					</div>
+					
 
 					<div class="control-group">
 						<label class="control-label">Username</label>
 						<div class="controls">
-							<input type="text" id="520A-incoming_username" class="policy-input">
+							<input type="text" id="520A-username" class="policy-input">
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Password</label>
 						<div class="controls">
-							<input type="password" id="520A-incoming_password" class="policy-input">
+							<input type="password" id="520A-password" class="policy-input">
 						</div>
 					</div>
 
-					<br />
-					<div class="control-group">
-						<label class="control-label">Use SSL</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="520A-incoming_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Outgoing Host</label>
-						<div class="controls">
-							<input type="text" id="520A-outgoing_hostname" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Outgoing Port</label>
-						<div class="controls">
-							<input type="text" id="520A-outgoing_portnumber" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Username</label>
-						<div class="controls">
-							<input type="text" id="520A-outgoing_username" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Password</label>
-						<div class="controls">
-							<input type="password" id="520A-outgoing_password" class="policy-input">
-						</div>
-					</div>
-
-					<br />
-					<div class="control-group">
-						<label class="control-label">Use SSL</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="520A-outgoing_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
-						</div>
-					</div>
+					<br />					
 
 					<!-- eMail Configurations End -->
 				</div>
