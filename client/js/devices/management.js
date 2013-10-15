@@ -1,5 +1,16 @@
+var selectbox = '<select name="featureList" id="featureList" class="dropdownimage" style="width:300px">';
+selectbox +=										'<option value="">-- Select an operation to Apply --</option>';
+selectbox +=											"{{#data.features}}{{#compare feature_type 'OPERATION'}}";
+selectbox +=											'<option value="{{name}}" data-image="https://localhost:9443/mdm/themes/wso2sinine/img/features/{{name}}.png">{{description}}</option>';
+selectbox +=											'{{/compare}}{{/data.features}}';
+selectbox +=											'</select>';
+
+
 oTable = $('#main-table').dataTable({
-		"sDom" : "<'row-fluid'<'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+	
+			
+	
+		"sDom" : "<'row-fluid'<'span6'><'span6'p>r>t<'row-fluid'>",
 		"bProcessing" : true,
 		"bServerSide" : true,
 		"bFilter" : false,
@@ -19,7 +30,7 @@ oTable = $('#main-table').dataTable({
                        null,
                        null,
                        null,
-                       null,  
+                       
 
                    ],	
 		"sAjaxSource" : "/mdm/api/webconsole/listDevices?",
@@ -36,6 +47,9 @@ oTable = $('#main-table').dataTable({
         }
 		
 	});
+	
+
+	
 
 
 

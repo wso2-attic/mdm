@@ -42,6 +42,7 @@ $('#devicesTab a').click(function(e) {
 
 $('#devicesTab a').on('shown', function (e) {
     window.location.hash = e.target.hash;
+    loadGeneralInformation(selectedTab, selectedDevice);
 });
 
 $(".btn-refresh").click(function() {
@@ -292,12 +293,33 @@ function loadGeneralInformation(tabId, deviceId) {
 				//receivedData.location_obj.latitude = "6.9123661";
 				//receivedData.location_obj.longitude = "79.8525739";
 				
-				$('#map_canvas').gmap({'zoom':17, 'center': receivedData.location_obj.latitude + "," + receivedData.location_obj.longitude }).bind('init', function(ev, map) {
-	                $('#map_canvas').gmap('addMarker', { 'position': map.getCenter(), 'bounds': false}).click(function() {
+				//$('#map_canvas').gmap({'zoom':17, 'center': receivedData.location_obj.latitude + "," + receivedData.location_obj.longitude }).bind('init', function(ev, map) {
+	           //     $('#map_canvas').gmap('addMarker', { 'position': map.getCenter(), 'bounds': false}).click(function() {
 	                   // $('#map_canvas').gmap('openInfoWindow', { 'content': 'Location' }, this);
-	                	$('#map_canvas').gmap('openInfoWindow', { }, this);
-	                });
-	            });
+	           //     	$('#map_canvas').gmap('openInfoWindow', { }, this);
+	           //     });
+	          // });
+	          //alert(receivedData.location_obj.latitude);
+	         	            
+	        
+	         
+	         if(receivedData.location_obj){	
+	         	
+	         	$('#location-map-canvas-block-'+ deviceId).css("display", "block");
+			    $('#location-map-canvas-'+ deviceId).gmap({'zoom':17, 'center': receivedData.location_obj.latitude + "," + receivedData.location_obj.longitude }).bind('init', function(ev, map) {
+						$('#location-map-canvas-'+ deviceId).gmap('addMarker', { 'position': map.getCenter(), 'bounds': false}).click(function() {
+							$('#location-map-canvas-'+ deviceId).gmap('openInfoWindow', {'content': 'Location of the device'}, this);
+					});				
+				});    
+	         	
+	         	
+	         }
+	         
+	            
+	            
+			
+	            
+	            
 				
 				
 				
@@ -345,3 +367,16 @@ function loadNotifications(tabId, deviceId) {
 	});
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

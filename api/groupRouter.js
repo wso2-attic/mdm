@@ -42,7 +42,7 @@ var group = (function () {
         });
         router.put('groups/{groupid}/users', function(ctx){
             log.info("Test Request PUTTTTT"+ctx);
-             var result = group.assignUsers(ctx);
+             var result = group.updateUserListOfRole(ctx);
              response.content = result;
              response.status = 200;
         });

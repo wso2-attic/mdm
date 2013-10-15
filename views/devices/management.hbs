@@ -11,12 +11,7 @@
 						</div>
 						
 							<div class="pull-right">
-									<select name="featureList" id="featureList" class="dropdownimage" style="width:300px">
-										<option value="">-- Select an operation to Apply --</option>
-										{{#data.features}}{{#compare feature_type 'OPERATION'}}
-										<option value="{{name}}" data-image="https://localhost:9443/mdm/themes/wso2sinine/img/features/{{name}}.png">{{description}}</option>
-										{{/compare}}{{/data.features}}
-									</select>
+									
 
 								</div>
 
@@ -27,9 +22,9 @@
 
 					<div class="block-body block-body container-fluid raw-fluid">
 
-						<div class="raw-fluid">
-							<div class="span2 operation-filter">
-								<div class="control-group">
+						<div class="raw-fluid" style="margin-left: -25px">
+							<div class="span2 operation-filter" style="display: none">
+								<div class="control-group" >
 									<label class="control-label" for="inputFirstName">Role</label>
 									<div class="controls">
 										<select class="multiselect" multiple="multiple" id="inputRoles" >
@@ -103,14 +98,22 @@
 											<th>Username</th>
 											<th>Platform</th>
 											<th>OS version</th>
-											<th>Name</th>
-											<th>Date</th>
+											<th>Name</th>											
 										</tr>
 									</thead>
 									<tbody>
 
-									</tbody>
+									</tbody>									
 								</table>
+								
+								<div class="raw">
+									<select name="featureList" id="featureList" class="dropdownimage" style="width:300px">
+										<option value="">-- Select an operation to Apply --</option>
+										{{#data.features}}{{#compare feature_type 'OPERATION'}}
+										<option value="{{name}}" data-image="https://localhost:9443/mdm/themes/wso2sinine/img/features/{{name}}.png">{{description}}</option>
+										{{/compare}}{{/data.features}}
+									</select>
+								</div>
 
 							</div>
 						</div>

@@ -100,8 +100,7 @@ navigation = function(role) {
             topNavigation = [
                 {name : "Dashboard"	, link: appInfo().server_url + "console/dashboard", displayPage: "dashboard", icon: "icon-th-large"},
                 {name : "Configurations", link: appInfo().server_url + "users/configuration", displayPage: "configuration", icon:"icon-wrench"},
-                {name : "Management"	, link: appInfo().server_url + "devices/management", displayPage: "management", icon:"icon-briefcase"},
-                {name : "Policies"	, link: appInfo().server_url + "policies/assign_resources", displayPage: "policies", icon:"icon-thumbs-up"},
+                {name : "Management"	, link: appInfo().server_url + "devices/management", displayPage: "management", icon:"icon-briefcase"}               
             ];
             var configNavigation =	[
                 {name : "Users", link: appInfo().server_url + "users/configuration", displayPage: "users", icon:"icon-user"},

@@ -4,7 +4,7 @@ $(document).ready( function () {
 	oTable = $('#main-table').dataTable( {
 		"sDom": "<'row-fluid'<'tabel-filter-group span8'T><'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
 		"aaSorting": [[ 0, "desc" ]],
-		"iDisplayLength": 20,
+		"iDisplayLength": 10,
 		 "bStateSave": false,
 		"oTableTools": {
 			"aButtons": [
