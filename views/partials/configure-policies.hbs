@@ -114,16 +114,22 @@
 					<br />
 					<div class="control-group">
 						<label class="control-label">Allow Simple</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="519A-allowSimple" class="policy-input" data-true-val="true" data-false-val="false" >
+						<div class="controls">							
+							<select data-group="policies" class="policy-input" id="519A-allowSimple">
+								<option value="true">True</option>
+								<option value="false">False</option>
+							</select>
 						</div>
 					</div>
 
 					<br />
 					<div class="control-group">
 						<label class="control-label">Require Alphanumeric</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="519A-requireAlphanumeric" class="policy-input" data-true-val="true" data-false-val="false" >
+						<div class="controls">						
+							<select data-group="policies" class="policy-input" id="519A-requireAlphanumeric">
+								<option value="true">True</option>
+								<option value="false">False</option>
+							</select>
 						</div>
 					</div>
 
@@ -142,7 +148,7 @@
 					<div class="control-group">
 						<label class="control-label">Authentication Type</label>
 						<div class="controls">							
-							<select i id="520A-type" class="policy-input">
+							<select  id="520A-type" class="policy-input">
 								<option value="GMAIL">GMAIL</option><option value="YAHOO">YAHOO</option><option value="HOTMAIL">HOTMAIL</option>
 							</select>
 							
