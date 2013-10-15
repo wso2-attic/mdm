@@ -196,15 +196,8 @@ var device = (function () {
         var deviceID = devices[0].id;
         var userId = devices[0].user_id;
 
-        //sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
-        //sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
-
-		/**
-        var roles = user.getUserRoles({'username':userId});
-        var roleList = parse(roles);
-        log.info(roleList[0]);
-        var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
-        */
+        sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
+        sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
         
         var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = 'Role Dilshan'");
         log.info("Policy Payload :"+gpresult[0].data);
@@ -279,7 +272,7 @@ var device = (function () {
     }
     
     function sendMessageToIOSDevice(ctx){
-		//log.info("CTX >>>>>"+stringify(ctx));
+		log.info("CTX >>>>>"+stringify(ctx));
         var message = stringify(ctx.data);
         var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
         var regId = devices[0].reg_id;
@@ -312,7 +305,6 @@ var device = (function () {
         var featureCode = features[0].code;
         var featureDescription = features[0].description;
 
-        //db.query("UPDATE notifications SET status='D' where device_id = ? && feature_code = ? && status = 'P'", ctx.deviceid+"", featureCode);
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)", 
         	ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
 
@@ -433,7 +425,6 @@ var device = (function () {
                 return sendMessageToDevice(ctx);
             }else{
                 log.info("platformID"+platformID);
-              //  return sendMessageToDevice(ctx);
                 return sendMessageToIOSDevice(ctx);
             }
         },
@@ -571,8 +562,8 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                 featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
-              //	featureArr["enable"] = true;
+                //featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
+                featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
                 }else{

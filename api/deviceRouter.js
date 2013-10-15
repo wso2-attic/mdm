@@ -27,9 +27,9 @@ var device = (function () {
 		    var android = userAgent.indexOf("Android");
 
 		    if(android>0){
-		        response.sendRedirect(configs.HTTP_URL+"/mdm/mdm.apk");
+		        response.sendRedirect(configs.device.android_location);
 		    }else{
-		        response.sendRedirect(configs.IOS_URL);
+		        response.sendRedirect(configs.device.ios_location);
 		    }
 
 		});
