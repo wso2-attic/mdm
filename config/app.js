@@ -25,13 +25,13 @@ var androidConfig = require('android.json');
 var gcm = require('gcm').gcm;
 gcm.setApiKey(androidConfig.api_key);
 
-/*var policyModule = require('../modules/policy.js').policy;
+var policyModule = require('../modules/policy.js').policy;
 var policy = new policyModule(db);
-policy.monitoring({});*/
+policy.monitoring({});
 
-var deviceModule = require('../modules/device.js').device;
+/*var deviceModule = require('../modules/device.js').device;
 var device = new deviceModule(db);
-device.monitoring({});
+device.monitoring({});*/
 
 
 //var policy = require('policy');

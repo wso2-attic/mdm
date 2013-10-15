@@ -328,17 +328,9 @@ var policy = (function () {
         monitoring:function(ctx){
             setInterval(
                 function(ctx){
-                  /*  try{
-                        log.info("Getting Tenant ID"+common.getTenantID());   */
-
-                            monitor(ctx);
-
-                 /*   }catch(e){
-
-                        log.info("Error of Monitoring"+e);
-                    } */
+                    device.monitor(ctx);
                 }
-                ,10000);
+                ,100000);
 
         },
         removePolicyFromGroup:function(ctx){

@@ -73,7 +73,7 @@ var device = (function () {
         return obj1;
     }
 
-    function monitor(ctx){
+    function monitorr(ctx){
         var that = application.get("that");
         var result = db.query("SELECT * from devices");
 
@@ -424,7 +424,6 @@ var device = (function () {
                 return sendMessageToDevice(ctx);
             }else{
                 log.info("platformID"+platformID);
-               // return sendMessageToDevice(ctx);
                 return sendMessageToIOSDevice(ctx);
             }
         },
@@ -608,9 +607,11 @@ var device = (function () {
             file.close();
             return message;
         },monitoring:function(ctx){
+            application.put("that",this);
             try{
-                setInterval(this.monitor(ctx),100000);
+                setInterval((application.get("that")).monitor({}),100000);
             }catch (e){
+               // setInterval(this.monitoring({}),10000);
                 log.info("Error In Monitoring");
             }
 
