@@ -139,37 +139,50 @@ var iosmdm = (function() {
 				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();
 				var apnsStatus = plistExtractor.extractAPNSResponse(contentString);
 
+				var commandUUID = apnsStatus.getCommandUUID();
+			
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
 					log.error("Acknowledged >>>>>>>>>>>>>>>>");
 
-					var commandUUID = apnsStatus.getCommandUUID();
 					var responseData = "";
-
-					log.error(apnsStatus.getOperation());
-					log.error(apnsStatus.getResponseData());
 
 					if ("QueryResponses" == apnsStatus.getOperation()) {
 						responseData = apnsStatus.getResponseData();
 					} else if ("InstalledApplicationList" == apnsStatus.getOperation()) {
 						responseData = apnsStatus.getResponseData();
-					} else {
-
-					}
+					} else if ("ProfileList" == apnsStatus.getOperation()) {
+						responseData = apnsStatus.getResponseData();
+						log.error("responseData >>>>>>>>>>>>>>>>>>>>>>>>>> " + responseData);
+					} 
 
 					var ctx = {};
 					ctx.data = responseData;
 					ctx.msgID = commandUUID;
-
+					
 					notification.addIosNotification(ctx);
 
 					return;
+				} else if (("Error").equals(apnsStatus.getStatus())) {
+					log.error("Error >>>>>>>>>>>>>>>>");
+					
+					var ctx = {};
+					ctx.error = "Error";
+					ctx.data = "";
+					ctx.msgID = commandUUID;
+					
+					notification.addIosNotification(ctx);
 				}
 
 				var ctx = {};
 				ctx.udid = stringify(apnsStatus.getUdid());
 				var operation = device.getPendingOperationsFromDevice(ctx);
 
-				if (operation != null) {
+				if(operation != null && operation.feature_code.indexOf("-") > 0) {
+					var featureCode = operation.feature_code.split("-")[0];
+					
+					return common.loadPayload(new Packages.java.lang.String(operation.id), 
+						featureCode, operation.message);
+				} else if (operation != null) {
 					return common.loadPayload(new Packages.java.lang.String(operation.id), 
 						operation.feature_code, operation.message);
 				}

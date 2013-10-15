@@ -1,25 +1,27 @@
 var log = new Log();
 var getTenantID = function() {
-   /* log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
+    log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
 	if (Session["mdmConsoleUser"]) {
-		return Session["mdmConsoleUser"]['tenantId'];
+
+	//	return Session["mdmConsoleUser"]['tenantId'];
+        return "-1234";
 	} else {
-		return null;
-	} */
-    return "-1234";
+	//	return null;
+        return "-1234";
+	}
+
 }
 
 var removePrivateRole = function(roleList){
     var roles = new Array();
-
     for(var i = 0; i<roleList.length; i++){
         var prefix = '';
         try{
-            prefix = roleList[i].substring(0,8);
+            prefix = roleList[i].substring(0,17);
         }catch(e){
         //   log.info('error occured while removing private role');
         }
-        if(prefix == 'private_'){
+        if(prefix == 'Internal/private_'){
             continue;
         }else{
             roles.push(roleList[i]);
@@ -45,21 +47,20 @@ var removeNecessaryElements = function(list,removeList){
     return newList;
 }
 
-
 var getCAPath = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ca_cert.pem";
+	return "E:/Mobile/ios-mdm-setup-resources/keys/ca_cert.pem";
 }
 
 var getRAPath = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ra_cert.pem";
+	return "E:/Mobile/ios-mdm-setup-resources/keys/ra_cert.pem";
 }
 
 var getCAPrivateKey = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ca_private.pem";
+	return "E:/Mobile/ios-mdm-setup-resources/keys/ca_private.pem";
 }
 
 var getRAPrivateKey = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/ra_private.pem";
+	return "E:/Mobile/ios-mdm-setup-resources/keys/ra_private.pem";
 }
 
 //move this to a xml configuration file
@@ -68,7 +69,7 @@ var getPushCertPassword = function() {
 }
 
 var getPushCertPath = function() {
-	return "/Users/dulitharasangawijewantha/Documents/Development/WSO2/ios-mdm-setup-resources/keys/PlainCert.pfx";
+	return "E:/Mobile/ios-mdm-setup-resources/keys/PlainCert.pfx";
 } 
 
 var initAPNS = function(pathPushCert, pushCertPassword, deviceToken, magicToken) {
@@ -89,6 +90,34 @@ var initAPNS = function(pathPushCert, pushCertPassword, deviceToken, magicToken)
 	}
 }
 
+var getPayloadIdentifierMap = function() {
+	
+	var identifierMap = {};
+	identifierMap["CAMERA"] = "com.wso2.camera";
+	identifierMap["WIFI"] = "com.wso2.wifi";
+	identifierMap["APN"] = "com.wso2.apn";
+	identifierMap["PASSWORDPOLICY"] = "com.wso2.passcode.policy";
+	identifierMap["EMAIL"] = "com.wso2.email.conf";
+	identifierMap["VPN"] = "com.wso2.vpn";
+	identifierMap["LDAP"] = "com.wso2.ldap";
+
+	return identifierMap;
+}
+
+var getValueByFeatureIdentifier = function(identifier) {
+	
+	var identifierMap = getPayloadIdentifierMap();
+	
+	for(var key in identifierMap) {
+		if(identifierMap[key] == identifier) {
+			return key;
+		}
+	}
+	
+	return null;
+	
+}
+
 var loadPayload = function(identifier , operationCode, data) {
 	
 	if(data == null) {
@@ -100,6 +129,7 @@ var loadPayload = function(identifier , operationCode, data) {
 	var log = new Log();
 	var operation = "";
 	var paramMap = new Packages.java.util.HashMap();
+	var payloadIdentifier = getPayloadIdentifierMap();
 	paramMap.put("PayloadOrganization", "WSO2");
 		
 	var isProfile = false;
@@ -117,8 +147,8 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_INFORMATION; //checked
 	} else if(operationCode == "508A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS; //checked
-		paramMap.put("PayloadIdentifier", "com.wso2.camera");
-		
+		paramMap.put("PayloadIdentifier", payloadIdentifier["CAMERA"]);
+		log.error("CAMERA >>>>>>>>>>>>>>>>>>>>>> " + payloadIdentifier["CAMERA"]);
 		if(data.function == "Disable") {
 			paramMap.put("AllowCamera", false);
 		} else {
@@ -127,14 +157,14 @@ var loadPayload = function(identifier , operationCode, data) {
 		isProfile = true;
 	} else if(operationCode == "507A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS; //checked
-		paramMap.put("PayloadIdentifier", "com.wso2.wifi");
+		paramMap.put("PayloadIdentifier", payloadIdentifier["WIFI"]);
 		paramMap.put("PayloadDisplayName", "WIFI Payload");
 		paramMap.put("Password", data.password);
 		paramMap.put("SSID", data.ssid);
 		isProfile = true;
 	} else if(operationCode == "512A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APN_SETTINGS; //checked - not working
-		paramMap.put("PayloadIdentifier", "com.wso2.vpn");
+		paramMap.put("PayloadIdentifier", payloadIdentifier["APN"]);
 		paramMap.put("PayloadDisplayName", "VPN Payload");
 		paramMap.put("APN", data.carrier);
 		paramMap.put("Username", data.user_name);
@@ -146,7 +176,7 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WEBCLIP;
 	} else if(operationCode == "519A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.PASSCODE_POLICY; //checked
-		paramMap.put("PayloadIdentifier", "com.wso2.passcode.policy");
+		paramMap.put("PayloadIdentifier", payloadIdentifier["PASSWORDPOLICY"]);
 		paramMap.put("PayloadDisplayName", "Passcode Policy");
 		paramMap.put("MaxFailedAttempts", data.maxFailedAttempts);
 		paramMap.put("MinLength", data.minLength);
@@ -158,7 +188,7 @@ var loadPayload = function(identifier , operationCode, data) {
 		isProfile = true;
 	} else if(operationCode == "520A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.EMAIL_CONFIGURATIONS; //checked
-		paramMap.put("PayloadIdentifier", "com.wso2.email.conf");
+		paramMap.put("PayloadIdentifier", payloadIdentifier["EMAIL"]);
 		paramMap.put("PayloadDisplayName", "Email Configurations");
 		paramMap.put("EmailAccountName", data.displayname);
 		paramMap.put("IncomingMailServerUsername", data.username);
@@ -201,14 +231,14 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.VPN_CERT;
 	} else if(operationCode == "513A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.VPN_SECRET;
-		paramMap.put("PayloadIdentifier", "com.wso2.vpn");
+		paramMap.put("PayloadIdentifier", payloadIdentifier["VPN"]);
 		paramMap.put("PayloadDisplayName", "VPN Payload");
 		paramMap.put("AuthenticationMethod", data.type);
 		paramMap.put("SharedSecret", data.sharedsecret);
 		isProfile = true;
 	} else if(operationCode == "524A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.LDAP; //checked
-		paramMap.put("PayloadIdentifier", "com.wso2.ldap");
+		paramMap.put("PayloadIdentifier", payloadIdentifier["LDAP"]);
 		paramMap.put("PayloadDisplayName", "LDAP Payload");
 		paramMap.put("LDAPAccountDescription", data.ldapdesc);
 		paramMap.put("LDAPAccountHostName", data.hostname);
@@ -216,15 +246,14 @@ var loadPayload = function(identifier , operationCode, data) {
 		paramMap.put("LDAPAccountPassword", data.password);
 		paramMap.put("LDAPAccountUseSSL", data.usedssl);
 		isProfile = true;
+	} else if(operationCode == "501P") {
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.PROFILE_LIST;
 	} else if(operationCode == "527A") {
 		return "ENTERPRISE_WIPE";
 	}
-	
-	if(isProfile) {
-		paramMap.put("PayloadUUID", identifier);
-	} else {
-		paramMap.put("CommandUUID", identifier);
-	}
+
+	paramMap.put("PayloadUUID", identifier);
+	paramMap.put("CommandUUID", identifier);
 	
 	try {
 		var payloadLoader = new Packages.com.wso2mobile.ios.mdm.payload.PayloadLoader();

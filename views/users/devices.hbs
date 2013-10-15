@@ -103,6 +103,32 @@
 								</div>
 
 								<div class="span7">
+									
+									
+									
+									<div class="raw" id="location-map-canvas-block-{{id}}" style="display: none">
+
+										<div class="block">
+											<div class="block-header-small">
+												<div class="pull-left">
+													Location
+												</div>
+											</div>
+
+											<div class="block-body container-fluid raw-fluid well-small">
+												<div id="location-map-canvas-{{id}}" style="width: 96%; height: 200px; margin-left: auto; margin-right: auto">
+													
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+									
+									
+									
+									
+									
 
 									<div class="raw">
 
@@ -124,6 +150,42 @@
 										</div>
 
 									</div>
+									
+									
+									
+									<div class="raw">
+
+										<div class="block">
+											<div class="block-header-small">
+												<div class="pull-left">
+													Policy
+													{{#if policies.violated}}
+													<span class="label label-important" data-toggle="tooltip">Violated</span>
+													{{else}}
+													<span class="label label-success" data-toggle="tooltip">Comply</span>
+													{{/if}}
+												</div>
+											</div>
+
+											<div class="block-body container-fluid raw-fluid well-small">
+												{{#policies.policies}}
+												<div class="span2">
+													<span style="font-size: x-small">{{name}}</span>
+													{{#if status}}
+													<i class="icon-ok-sign" style="color:#468847"></i>
+													{{else}}
+													<i class="icon-remove-sign" style="color:#B94A48"></i>
+													{{/if}}
+												</div>
+												{{/policies.policies}}
+											</div>
+
+										</div>
+
+									</div>
+									
+									
+									
 
 									<div class="raw">
 
@@ -178,36 +240,7 @@
 
 									</div>
 
-									<div class="raw">
-
-										<div class="block">
-											<div class="block-header-small">
-												<div class="pull-left">
-													Policy
-													{{#if policies.violated}}
-													<span class="label label-important" data-toggle="tooltip">Violated</span>
-													{{else}}
-													<span class="label label-success" data-toggle="tooltip">Comply</span>
-													{{/if}}
-												</div>
-											</div>
-
-											<div class="block-body container-fluid raw-fluid well-small">
-												{{#policies.policies}}
-												<div class="span2">
-													<span style="font-size: x-small">{{name}}</span>
-													{{#if status}}
-													<i class="icon-ok-sign" style="color:#468847"></i>
-													{{else}}
-													<i class="icon-remove-sign" style="color:#B94A48"></i>
-													{{/if}}
-												</div>
-												{{/policies.policies}}
-											</div>
-
-										</div>
-
-									</div>
+									
 
 									<div class="raw">
 
@@ -255,3 +288,4 @@
 <div id="featureModal" class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
 
 </div>
+

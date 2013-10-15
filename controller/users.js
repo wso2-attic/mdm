@@ -156,6 +156,7 @@ devices = function(appController) {
 	context.title = context.title + " | Add User";
 	context.page = "management";
 	context.jsFile = "users/devices.js";
+	context.googleMaps = true;
 	context.data = {
 		configOption : "users",
 		devices : devices,

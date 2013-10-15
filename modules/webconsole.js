@@ -78,6 +78,138 @@ var webconsole = (function () {
                 arrRole.push(objRole);
             }
             return arrRole;
+        },
+        getDevices:function(ctx){//return device information
+            log.info("User name :"+ctx.username);
+            log.info("platform :"+ctx.platform_id);
+            log.info("byod :"+ctx.byod);
+            var userId = '';
+            if(ctx.username != undefined && ctx.username != null){
+                userId = ctx.username;
+            }
+            var platformId = ctx.platform_id;
+
+            var byod = ctx.byod;
+            var result = '';
+
+            var totalDisplayRecords = 10;
+
+            if(byod!= undefined && byod != null && byod != '' && platformId!= undefined && platformId != null && platformId != ''){
+                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices, platforms  where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && byod ="+byod+" && platform_id = "+platformId);
+                log.info("TTT"+stringify(result[0].d));
+                var totalRecords = result.length;
+                var upperBound = (ctx.iDisplayStart+1)*totalDisplayRecords;
+                var lowerBound =  upperBound - totalDisplayRecords;
+
+                var dataArray = new Array();
+                for(var i = lowerBound; i < upperBound; i++){
+                    if(totalRecords - 1 < i){
+                        break;
+                    }
+                    var device = [];
+                    log.info(result[i].id);
+                    device.push( result[i].id);
+                    device.push( parse(result[i].properties).imei);
+                    device.push( result[i].user_id);
+                    device.push( result[i].name);
+                    device.push( result[i].os_version);
+                    device.push( parse(result[i].properties).device);
+                    device.push( result[i].created_date);
+                    dataArray.push(device);
+                }
+                var finalObj = {};
+                finalObj.sEcho = ctx.sEcho;
+                finalObj.iTotalRecords = totalRecords
+                finalObj.iTotalDisplayRecords = totalDisplayRecords;
+                finalObj.aaData = dataArray;
+                return finalObj;
+            }else if(byod!= undefined && byod != null && byod != '' ){
+                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && byod ="+byod);
+                var totalRecords = result.length;
+                var upperBound = (ctx.iDisplayStart+1) *totalDisplayRecords;
+                var lowerBound =  upperBound - totalDisplayRecords;
+
+                var dataArray = new Array();
+                for(var i = lowerBound; i < upperBound; i++){
+                    if(totalRecords - 1 < i){
+                        break;
+                    }
+                    var device = [];
+                    device.push( result[i].id);
+                    device.push( parse(result[i].properties).imei);
+                    device.push( result[i].user_id);
+                    device.push( result[i].name);
+                    device.push( result[i].os_version);
+                    device.push( parse(result[i].properties).device);
+                    device.push( result[i].created_date);
+                    dataArray.push(device);
+                }
+                var finalObj = {};
+                finalObj.sEcho = ctx.sEcho;
+                finalObj.iTotalRecords = totalRecords
+                finalObj.iTotalDisplayRecords = totalDisplayRecords;
+                finalObj.aaData = dataArray;
+                return finalObj;
+            }else if(platformId!= undefined && platformId != null && platformId != ''){
+                log.info("test platform"+platformId);
+                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && platform_id = "+platformId);
+
+                var totalRecords = result.length;
+                log.info("totalDisplayRecords"+totalDisplayRecords);
+                log.info("iDisplayStart  :"+ctx.iDisplayStart);
+                var upperBound = (ctx.iDisplayStart+1) *totalDisplayRecords;
+                log.info("upperBound"+upperBound);
+                var lowerBound =  upperBound - totalDisplayRecords;
+                log.info("lowerBound"+lowerBound);
+                var dataArray = new Array();
+                for(var i = lowerBound; i < upperBound; i++){
+                    log.info(stringify(result[i]));
+                    if(totalRecords - 1 < i){
+                        break;
+                    }
+                    var device = [];
+                    device.push( result[i].id);
+                    device.push( parse(result[i].properties).imei);
+                    device.push( result[i].user_id);
+                    device.push( result[i].name);
+                    device.push( result[i].os_version);
+                    device.push( parse(result[i].properties).device);
+                    device.push( result[i].created_date);
+                    dataArray.push(device);
+                }
+                var finalObj = {};
+                finalObj.sEcho = ctx.sEcho;
+                finalObj.iTotalRecords = totalRecords
+                finalObj.iTotalDisplayRecords = totalDisplayRecords;
+                finalObj.aaData = dataArray;
+                return finalObj;
+            }else{
+                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date   from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%'");
+                var totalRecords = result.length;
+                var upperBound = (ctx.iDisplayStart+1)*totalDisplayRecords;
+                var lowerBound =  upperBound - totalDisplayRecords;
+                var dataArray = new Array();
+                for(var i = lowerBound ;i < upperBound; i++){
+                    if(totalRecords - 1 < i){
+                        break;
+                    }
+                    var device = [];
+                    device.push( result[i].id);
+                    device.push( parse(result[i].properties).imei);
+                    device.push( result[i].user_id);
+                    device.push( result[i].name);
+                    device.push( result[i].os_version);
+                    device.push( parse(result[i].properties).device);
+                    device.push( result[i].created_date);
+                    dataArray.push(device);
+                }
+                var finalObj = {};
+                finalObj.sEcho = ctx.sEcho;
+                finalObj.iTotalRecords = totalRecords
+                finalObj.iTotalDisplayRecords = totalDisplayRecords;
+                finalObj.aaData = dataArray;
+                return finalObj;
+            }
         }
     };
     return module;

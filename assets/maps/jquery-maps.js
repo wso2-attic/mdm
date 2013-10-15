@@ -1,2 +1,371 @@
-/*! jquery-ui-map rc1 | Johan Säll Larsson */
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)d[e(c)]=k[c]||e(c);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('(3(d){d.a=3(a,b){j c=a.w(".")[0],a=a.w(".")[1];d[c]=d[c]||{};d[c][a]=3(a,b){K.I&&2.16(a,b)};d[c][a].J=d.n({1A:c,1z:a},b);d.S[a]=3(b){j g="1y"===1D b,f=H.J.12.15(K,1),i=2;l(g&&"1C"===b.1B(0,1))9 i;2.13(3(){j h=d.Z(2,a);h||(h=d.Z(2,a,k d[c][a](b,2)));l(g&&(h=h[b].10(h,f),"4"===b||o!=h))i=h});9 i}};d.a("1x.1t",{r:{1s:"1r",1w:5},1v:3(a,b){l(b)2.r[a]=b,2.4("8").B(a,b);P 9 2.r[a]},16:3(a,b){2.C=b;a=a||{};m.n(2.r,a,{1e:2.D(a.1e)});2.1c();2.1j&&2.1j()},1c:3(){j a=2;2.q={8:k 6.7.1u(a.C,a.r),L:[],t:[],u:[]};6.7.s.1N(a.q.8,"1M",3(){d(a.C).19("1L",a.q.8)});a.F(a.r.1Q,a.q.8)},1d:3(a){j b=2.4("1i",k 6.7.1P);b.n(2.D(a));2.4("8").1O(b)},1K:3(a){j b=2.4("8").1G();9 b?b.1F(a.18()):!1},1E:3(a,b){2.4("8").1J[b].O(2.z(a))},1I:3(a,b){a.8=2.4("8");a.Y=2.D(a.Y);j c=k(a.1H||6.7.1k)(a),e=2.4("L");c.V?e[c.V]=c:e.O(c);c.1i&&2.1d(c.18());2.F(b,a.8,c);9 d(c)},y:3(a){2.G(2.4(a));2.B(a,[])},G:3(a){A(j b R a)a.U(b)&&(a[b]p 6.7.T?(6.7.s.X(a[b]),a[b].x&&a[b].x(o)):a[b]p H&&2.G(a[b]),a[b]=o)},1p:3(a,b,c){a=2.4(a);b.v=d.1l(b.v)?b.v:[b.v];A(j e R a)l(a.U(e)){j g=!1,f;A(f R b.v)l(-1<d.1n(b.v[f],a[e][b.1q]))g=!0;P l(b.11&&"1m"===b.11){g=!1;1o}c(a[e],g)}},4:3(a,b){j c=2.q;l(!c[a]){l(-1<a.2i(">")){A(j e=a.14(/ /g,"").w(">"),d=0;d<e.I;d++){l(!c[e[d]])l(b)c[e[d]]=d+1<e.I?[]:b;P 9 o;c=c[e[d]]}9 c}b&&!c[a]&&2.B(a,b)}9 c[a]},2h:3(a,b,c){j d=2.4("Q",a.2j||k 6.7.2l);d.M(a);d.2k(2.4("8"),2.z(b));2.F(c,d)},2d:3(){o!=2.4("Q")&&2.4("Q").2c()},B:3(a,b){2.q[a]=b},2e:3(){j a=2.4("8"),b=a.2g();d(a).17("2f");a.2m(b)},2r:3(){2.y("L");2.y("u");2.y("t");2.G(2.q);m.2s(2.C,2.2t)},F:3(a){a&&d.2o(a)&&a.10(2,H.J.12.15(K,1))},D:3(a){l(!a)9 k 6.7.N(0,0);l(a p 6.7.N)9 a;a=a.14(/ /g,"").w(",");9 k 6.7.N(a[0],a[1])},z:3(a){9!a?o:a p m?a[0]:a p 2n?a:d("#"+a)[0]},2q:3(a,b){j c=k 6.7[a](m.n({8:2.4("8")},b));2.4("t > "+a,[]).O(c);9 d(c)},2p:3(a,b){(!b?2.4("t > E",k 6.7.E):2.4("t > E",k 6.7.E(b,a))).M(m.n({8:2.4("8")},a))},2b:3(a,b,c){2.4("t > "+a,k 6.7.1X(b,m.n({8:2.4("8")},c)))},1W:3(a,b,c){j d=2,g=2.4("u > 1f",k 6.7.1f),f=2.4("u > 1g",k 6.7.1g);b&&f.M(b);g.1Y(a,3(a,b){"20"===b?(f.1Z(a),f.x(d.4("8"))):f.x(o);c(a,b)})},1S:3(a,b){2.4("8").1R(2.4("u > 1a",k 6.7.1a(2.z(a),b)))},1T:3(a,b){2.4("u > 1b",k 6.7.1b).1V(a,b)}});m.S.n({17:3(a){6.7.s.19(2[0],a);9 2},W:3(a,b,c){6.7&&2[0]p 6.7.T?6.7.s.1U(2[0],a,b):c?2.1h(a,b,c):2.1h(a,b);9 2},27:3(a){6.7&&2[0]p 6.7.T?a?6.7.s.26(2[0],a):6.7.s.X(2[0]):2.28(a);9 2}});m.13("2a 29 22 21 23 25 24".w(" "),3(a,b){m.S[b]=3(a,d){9 2.W(b,a,d)}})})(m);',62,154,'||this|function|get||google|maps|map|return||||||||||var|new|if|jQuery|extend|null|instanceof|instance|options|event|overlays|services|value|split|setMap|clear|_unwrap|for|set|el|_latLng|FusionTablesLayer|_call|_c|Array|length|prototype|arguments|markers|setOptions|LatLng|push|else|iw|in|fn|MVCObject|hasOwnProperty|id|addEventListener|clearInstanceListeners|position|data|apply|operator|slice|each|replace|call|_setup|triggerEvent|getPosition|trigger|StreetViewPanorama|Geocoder|_create|addBounds|center|DirectionsService|DirectionsRenderer|bind|bounds|_init|Marker|isArray|AND|inArray|break|find|property|roadmap|mapTypeId|gmap|Map|option|zoom|ui|string|pluginName|namespace|substring|_|typeof|addControl|contains|getBounds|marker|addMarker|controls|inViewport|init|bounds_changed|addListenerOnce|fitBounds|LatLngBounds|callback|setStreetView|displayStreetView|search|addListener|geocode|displayDirections|KmlLayer|route|setDirections|OK|mouseover|dblclick|mouseout|dragend|drag|clearListeners|removeEventListener|unbind|rightclick|click|loadKML|close|closeInfoWindow|refresh|resize|getCenter|openInfoWindow|indexOf|infoWindow|open|InfoWindow|setCenter|Object|isFunction|loadFusion|addShape|destroy|removeData|name'.split('|'),0,{}))
+ /*!
+ * jQuery FN Google Map 3.0-rc
+ * http://code.google.com/p/jquery-ui-map/
+ * Copyright (c) 2010 - 2012 Johan Säll Larsson
+ * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+ */
+( function($) {
+	
+	/**
+	 * @param name:string
+	 * @param prototype:object
+	 */
+	$.a = function(name, prototype) {
+		
+		var namespace = name.split('.')[0];
+        name = name.split('.')[1];
+		
+		$[namespace] = $[namespace] || {};
+		$[namespace][name] = function(options, element) {
+			if ( arguments.length ) {
+				this._setup(options, element);
+			}
+		};
+		
+		$[namespace][name].prototype = $.extend({
+			'namespace': namespace,
+			'pluginName': name
+        }, prototype);
+		
+		$.fn[name] = function(options) {
+			
+			var isMethodCall = typeof options === "string",
+				args = Array.prototype.slice.call(arguments, 1),
+				returnValue = this;
+			
+			if ( isMethodCall && options.substring(0, 1) === '_' ) { 
+				return returnValue; 
+			}
+
+			this.each(function() {
+				var instance = $.data(this, name);
+				if (!instance) {
+					instance = $.data(this, name, new $[namespace][name](options, this));
+				}
+				if (isMethodCall) {
+					var value = instance[options].apply(instance, args);
+					if ( options === 'get' || value != null ) {
+						returnValue = value;
+					}
+				}
+			});
+			
+			return returnValue; 
+			
+		};
+		
+	};
+	
+	$.a('ui.gmap', {
+		
+		/**
+		 * Map options
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions
+		 */
+		options: {
+			mapTypeId: 'roadmap',
+			zoom: 5	
+		},
+		
+		/**
+		 * Get or set options
+		 * @param key:string
+		 * @param options:object
+		 * @return object
+		 */
+		option: function(key, options) {
+			if (options) {
+				this.options[key] = options;
+				this.get('map').set(key, options);
+				return;
+			}
+			return this.options[key];
+		},
+		
+		/**
+		 * Setup plugin basics, 
+		 * @param options:object
+		 * @param element:node
+		 */
+		_setup: function(options, element) {
+			this.el = element;
+			options = options || {};
+			jQuery.extend(this.options, options, { 'center': this._latLng(options.center) });
+			this._create();
+			if ( this._init ) { this._init(); }
+		},
+		
+		/**
+		 * Instanciate the Google Maps object
+		 */
+		_create: function() {
+			var self = this;
+			this.instance = { 'map': new google.maps.Map(self.el, self.options), 'markers': [], 'overlays': [], 'services': [] };
+			google.maps.event.addListenerOnce(self.instance.map, 'bounds_changed', function() { $(self.el).trigger('init', self.instance.map); });
+			self._call(self.options.callback, self.instance.map);
+		},
+		
+		/**
+		 * Adds a latitude longitude pair to the bounds.
+		 * @param position:google.maps.LatLng/string
+		 */
+		addBounds: function(position) {
+			var bounds = this.get('bounds', new google.maps.LatLngBounds());
+			bounds.extend(this._latLng(position));
+			this.get('map').fitBounds(bounds);
+		},
+		
+		/**
+		 * Helper function to check if a LatLng is within the viewport
+		 * @param marker:google.maps.Marker
+		 */
+		inViewport: function(marker) {
+			var bounds = this.get('map').getBounds();
+			return (bounds) ? bounds.contains(marker.getPosition()) : false;
+		},
+		
+		/**
+		 * Adds a custom control to the map
+		 * @param panel:jquery/node/string	
+		 * @param position:google.maps.ControlPosition	 
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
+		 */
+		addControl: function(panel, position) {
+			this.get('map').controls[position].push(this._unwrap(panel));
+		},
+		
+		/**
+		 * Adds a Marker to the map
+		 * @param markerOptions:google.maps.MarkerOptions
+		 * @param callback:function(map:google.maps.Map, marker:google.maps.Marker) (optional)
+		 * @return $(google.maps.Marker)
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
+		 */
+		addMarker: function(markerOptions, callback) {
+			markerOptions.map = this.get('map');
+			markerOptions.position = this._latLng(markerOptions.position);
+			var marker = new (markerOptions.marker || google.maps.Marker)(markerOptions);
+			var markers = this.get('markers');
+			if ( marker.id ) {
+				markers[marker.id] = marker;
+			} else {
+				markers.push(marker);
+			}
+			if ( marker.bounds ) {
+				this.addBounds(marker.getPosition());
+			}
+			this._call(callback, markerOptions.map, marker);
+			return $(marker);
+		},
+		
+		/**
+		 * Clears by type
+		 * @param ctx:string	e.g. 'markers', 'overlays', 'services'
+		 */
+		clear: function(ctx) {
+			this._c(this.get(ctx));
+			this.set(ctx, []);
+		},
+		
+		_c: function(obj) {
+			for ( var property in obj ) {
+				if ( obj.hasOwnProperty(property) ) {
+					if ( obj[property] instanceof google.maps.MVCObject ) {
+						google.maps.event.clearInstanceListeners(obj[property]);
+						if ( obj[property].setMap ) {
+							obj[property].setMap(null);
+						}
+					} else if ( obj[property] instanceof Array ) {
+						this._c(obj[property]);
+					}
+					obj[property] = null;
+				}
+			}
+		},
+		
+		/**
+		 * Returns the objects with a specific property and value, e.g. 'category', 'tags'
+		 * @param ctx:string	in what context, e.g. 'markers' 
+		 * @param options:object	property:string	the property to search within, value:string, operator:string (optional) (AND/OR)
+		 * @param callback:function(marker:google.maps.Marker, isFound:boolean)
+		 */
+		find: function(ctx, options, callback) {
+			var obj = this.get(ctx);
+			options.value = $.isArray(options.value) ? options.value : [options.value];
+			for ( var property in obj ) {
+				if ( obj.hasOwnProperty(property) ) {
+					var isFound = false;
+					for ( var value in options.value ) {
+						if ( $.inArray(options.value[value], obj[property][options.property]) > -1 ) {
+							isFound = true;
+						} else {
+							if ( options.operator && options.operator === 'AND' ) {
+								isFound = false;
+								break;
+							}
+						}
+					}
+					callback(obj[property], isFound);
+				}
+			}
+		},
+		
+		/**
+		 * Returns an instance property by key. Has the ability to set an object if the property does not exist
+		 * @param key:string
+		 * @param value:object(optional)
+		 */
+		get: function(key, value) {
+			var instance = this.instance;
+			if ( !instance[key] ) {
+				if ( key.indexOf('>') > -1 ) {
+					var e = key.replace(/ /g, '').split('>');
+					for ( var i = 0; i < e.length; i++ ) {
+						if ( !instance[e[i]] ) {
+							if (value) {
+								instance[e[i]] = ( (i + 1) < e.length ) ? [] : value;
+							} else {
+								return null;
+							}
+						}
+						instance = instance[e[i]];
+					}
+					return instance;
+				} else if ( value && !instance[key] ) {
+					this.set(key, value);
+				}
+			}
+			return instance[key];
+		},
+		
+		/**
+		 * Triggers an InfoWindow to open
+		 * @param infoWindowOptions:google.maps.InfoWindowOptions
+		 * @param marker:google.maps.Marker (optional)
+		 * @param callback:function (optional)
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
+		 */
+		openInfoWindow: function(infoWindowOptions, marker, callback) {
+			var iw = this.get('iw', infoWindowOptions.infoWindow || new google.maps.InfoWindow);
+			iw.setOptions(infoWindowOptions);
+			iw.open(this.get('map'), this._unwrap(marker)); 
+			this._call(callback, iw);
+		},
+		
+		/**
+		 * Triggers an InfoWindow to close
+		 */
+		closeInfoWindow: function() {
+			if ( this.get('iw') != null ) {
+				this.get('iw').close();
+			}
+		},
+				
+		/**
+		 * Sets an instance property
+		 * @param key:string
+		 * @param value:object
+		 */
+		set: function(key, value) {
+			this.instance[key] = value;
+		},
+		
+		/**
+		 * Refreshes the map
+		 */
+		refresh: function() {
+			var map = this.get('map');
+			var latLng = map.getCenter();
+			$(map).triggerEvent('resize');
+			map.setCenter(latLng);
+		},
+		
+		/**
+		 * Destroys the plugin.
+		 */
+		destroy: function() {
+			this.clear('markers');
+			this.clear('services')
+			this.clear('overlays')
+			this._c(this.instance);
+			jQuery.removeData(this.el, this.name);
+		},
+		
+		/**
+		 * Helper method for calling a function
+		 * @param callback
+		 */
+		_call: function(callback) {
+			if ( callback && $.isFunction(callback) ) {
+				callback.apply(this, Array.prototype.slice.call(arguments, 1));
+			}
+		},
+		
+		/**
+		 * Helper method for google.maps.Latlng
+		 * @param latLng:string/google.maps.LatLng
+		 */
+		_latLng: function(latLng) {
+			if ( !latLng ) {
+				return new google.maps.LatLng(0.0, 0.0);
+			}
+			if ( latLng instanceof google.maps.LatLng ) {
+				return latLng;
+			} else {
+				latLng = latLng.replace(/ /g,'').split(',');
+				return new google.maps.LatLng(latLng[0], latLng[1]);
+			}
+		},
+		
+		/**
+		 * Helper method for unwrapping jQuery/DOM/string elements
+		 * @param obj:string/node/jQuery
+		 */
+		_unwrap: function(obj) {
+			return (!obj) ? null : ( (obj instanceof jQuery) ? obj[0] : ((obj instanceof Object) ? obj : $('#'+obj)[0]) )
+		}
+		
+	});
+	
+	jQuery.fn.extend( {
+		
+		triggerEvent: function(eventType) {
+			google.maps.event.trigger(this[0], eventType);
+			return this;
+		},
+		
+		addEventListener: function(eventType, eventDataOrCallback, eventCallback) {
+			if ( google.maps && this[0] instanceof google.maps.MVCObject ) {
+				google.maps.event.addListener(this[0], eventType, eventDataOrCallback);
+			} else {
+				if (eventCallback) {
+					this.bind(eventType, eventDataOrCallback, eventCallback);
+				} else {
+					this.bind(eventType, eventDataOrCallback);
+				} 
+			}
+			return this;
+		},
+		  
+		removeEventListener: function(eventType) {
+			if ( google.maps && this[0] instanceof google.maps.MVCObject ) {
+				if (eventType) {
+					google.maps.event.clearListeners(this[0], eventType);
+				} else {
+					google.maps.event.clearInstanceListeners(this[0]);
+				}
+			} else {
+				this.unbind(eventType);
+			}
+			return this;
+		}
+		
+	});
+	
+	jQuery.each(('click rightclick dblclick mouseover mouseout drag dragend').split(' '), function(i, name) {
+		jQuery.fn[name] = function(a, b) {
+			return this.addEventListener(name, a, b);
+		}
+	});
+	
+} (jQuery) );
