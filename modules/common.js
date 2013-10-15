@@ -1,6 +1,5 @@
 var log = new Log();
 var getTenantID = function() {
-    log.info("Console Userrrrrrrrrrrrrr"+Session["mdmConsoleUser"]);
 	if (Session["mdmConsoleUser"]) {
 
 	//	return Session["mdmConsoleUser"]['tenantId'];

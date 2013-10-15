@@ -59,7 +59,8 @@ assign_groups = function(appController){
 	//print(groups);
 	
 	try{
-		var users = policy.getUsersByPolicy({policyid: policyId});		
+		var users = policy.getUsersByPolicy({policyid: policyId});
+        log.info("Userssss"+users);
 	}catch(e){
 		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var users = [];
