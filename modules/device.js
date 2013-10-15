@@ -446,7 +446,7 @@ var device = (function () {
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
                     var id = pendingFeatureCodeList[0].id;
                     var feature_code = pendingFeatureCodeList[0].feature_code;
-                    log.error("feature_code >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + feature_code);
+                    
                     if(feature_code == "500P") {
 						
 						var message = parse(pendingFeatureCodeList[0].message);

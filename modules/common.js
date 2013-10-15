@@ -120,7 +120,7 @@ var getValueByFeatureIdentifier = function(identifier) {
 }
 
 var loadPayload = function(identifier , operationCode, data) {
-	operationCode="510A";data='{"type" : "Market", "identifier" : "424733624"}';
+	
 	if(data == null) {
 		data = {};
 	} else {
