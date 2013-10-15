@@ -247,6 +247,16 @@ var loadPayload = function(identifier , operationCode, data) {
 		isProfile = true;
 	} else if(operationCode == "501P") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.PROFILE_LIST;
+	} else if(operationCode == "509A") {
+		
+		if(data.type == "Enterprise") {
+			operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.INSTALL_ENTERPRISE_APPLICATION;
+			paramMap.put("ManifestURL", data.identity);
+		} else if(data.type == "Market") {
+			operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.INSTALL_APPSTORE_APPLICATION;
+			paramMap.put("iTunesStoreID", data.identity);
+		}
+		
 	} else if(operationCode == "527A") {
 		return "ENTERPRISE_WIPE";
 	}
