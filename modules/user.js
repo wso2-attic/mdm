@@ -179,7 +179,6 @@ var user = (function () {
             log.info("User Name >>>>>>>>>"+ctx.username);
             var um = userManager(common.getTenantID());
             var roles = um.getRoleListOfUser(ctx.username);
-            log.info("TTTT"+roles[0]);
             var roleList = common.removePrivateRole(roles);
             return roleList;
         },
