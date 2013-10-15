@@ -167,6 +167,7 @@ var policy = (function () {
         },
         deletePolicy:function(ctx){
             var result = db.query("DELETE FROM policies where id = ?",ctx.policyid);
+            db.query("DELETE FROM policy_group_mapping where policy_id = ?",ctx.policyid);
             return result;
         },
         assignGroupsToPolicy:function(ctx){
