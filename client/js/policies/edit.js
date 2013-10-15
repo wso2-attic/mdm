@@ -17,7 +17,7 @@ $("#btn-add").click(function() {
 	$(".policy-input").each(function(index) {
 		
 		var prefix = $(this).attr("id").split('-')[0];
-		var suffix = $(this).attr("id").split('-')[1];		
+		var suffix = $(this).attr("id").split('-')[1];	 	
 		
 				
 		if(!params[prefix]){
@@ -31,12 +31,24 @@ $("#btn-add").click(function() {
 			if($(this).is(':checked')){
 				var checkVal = $(this).data("trueVal");
 				if(checkVal !== ""){
-					params[prefix]["function"] = checkVal;
+					
+					if($(this).data("notfunction") == true){
+						//alert($(this).data("notfunction"));
+						params[prefix][suffix] = checkVal;
+					}else{
+						params[prefix]["function"] = checkVal;
+					}
+					
 				}
 			}else{
 				var checkVal = $(this).data("falseVal");
 				if(checkVal !== ""){
-					params[prefix]["function"] = checkVal;
+					if($(this).data("notfunction") == true){
+						params[prefix][suffix] = checkVal;
+					}else{
+						params[prefix]["function"] = checkVal;
+					}
+					
 				}
 			}	
 				
@@ -103,6 +115,7 @@ $("#btn-add").click(function() {
 	});
 	
 });
+
 
 
 
