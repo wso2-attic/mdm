@@ -64,8 +64,14 @@ var policy = (function () {
     }
 
    function monitor(ctx){
+       var db = application.get('db');
+       var deviceModule1 = require('device.js').device;
+       var device1 = new deviceModule1(db);
 
-        var result = db.query("SELECT * from devices");
+       var userModule1 = require('user.js').user;
+       var user1 = new userModule1(db);
+
+       /* var result = db.query("SELECT * from devices");
 
         for(var i=0; i<result.length; i++){
 
@@ -79,15 +85,15 @@ var policy = (function () {
             var operation = 'MONITORING';
             var data = {};
             var userId = result[i].user_id;
-            device.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
-            device.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
+            device1.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
+            device1.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
 
             var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
             if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                 log.info("Policy Payload :"+gpresult[0].data);
                 var jsonData = parse(gpresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
-                device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
+                device1.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                 continue;
             }
 
@@ -96,12 +102,13 @@ var policy = (function () {
                 log.info("Policy Payload :"+ppresult[0].data);
                 var jsonData = parse(ppresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
-                device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
+                device1.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                 continue;
             }
-            log.info("UUUUUUUUUUUUUUUU"+userId);
+            log.info("UUUUUUUUUUUUUUUU"+userId); */
 
-            user.getUserRoles({'username':userId});
+            var roless = user1.getUserRoles({'username':'kasun@wso2mobile.com'});
+            log.info(roles[0]);
            // var roleList = user.getUserRoles({'username':userId});
            /* var role = '';
             for(var i=0;i<roleList.length;i++){
@@ -122,8 +129,8 @@ var policy = (function () {
                 device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
             }*/
 
-        }
     }
+
 
     // prototype
     module.prototype = {
@@ -313,9 +320,9 @@ var policy = (function () {
 
             var result = db.query("SELECT * from group_policy_mapping where policy_id=?",ctx.policy_id);
             var groupId = result[0].group_id;
-            var users = group.getAllUsers({'groupid':groupId});
+            var users = group.getUsersOfGroup({'groupid':groupId});
             for(var i=0;i<users.length;i++){
-                user.operation({'userid': users[i].username,'operation':'POLICY','data':parse(policyData)});
+                user.sendMsgToUser({'userid': users[i].username,'operation':'POLICY','data':parse(policyData)});
             }
         },
         monitoring:function(ctx){
