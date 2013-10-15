@@ -114,16 +114,16 @@
 					<br />
 					<div class="control-group">
 						<label class="control-label">Allow Simple</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="519A-allowSimple" class="policy-input" data-true-val="true" data-false-val="false" >
+						<div class="controls">								
+							<input type="checkbox" data-group="policies" id="519A-allowSimple" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 
 					<br />
 					<div class="control-group">
 						<label class="control-label">Require Alphanumeric</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="519A-requireAlphanumeric" class="policy-input" data-true-val="true" data-false-val="false" >
+						<div class="controls">						
+							<input type="checkbox" data-group="policies" id="519A-requireAlphanumeric" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 
@@ -142,7 +142,7 @@
 					<div class="control-group">
 						<label class="control-label">Authentication Type</label>
 						<div class="controls">							
-							<select i id="520A-displayname" class="policy-input">
+							<select  id="520A-type" class="policy-input"><option value="">--Select--</option>
 								<option value="GMAIL">GMAIL</option><option value="YAHOO">YAHOO</option><option value="HOTMAIL">HOTMAIL</option>
 							</select>
 							
@@ -152,7 +152,7 @@
 					<div class="control-group">
 						<label class="control-label">Account Name</label>
 						<div class="controls">
-							<input type="text" id="520A-emailname" class="policy-input">
+							<input type="text" id="520A-displayname" class="policy-input">
 						</div>
 					</div>
 
@@ -197,6 +197,7 @@
 						<label class="control-label">Authentication Method</label>
 						<div class="controls">
 							<select id="523A-type" class="policy-input">
+								<option value="">--Select--</option>
 								<option value="SharedSecret">Shared Secret</option><option value="Certificate">Certificate</option>
 							</select>
 						</div>
@@ -254,14 +255,14 @@
 					<div class="control-group">
 						<label class="control-label">Username</label>
 						<div class="controls">
-							<input type="text" id="525A-username" class="policy-input">
+							<input type="text" id="521A-username" class="policy-input">
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Password</label>
 						<div class="controls">
-							<input type="password" id="525A-password" class="policy-input">
+							<input type="password" id="521A-password" class="policy-input">
 						</div>
 					</div>
 				
@@ -358,6 +359,14 @@
 						<label class="control-label">Password</label>
 						<div class="controls">
 							<input type="password" id="524A-password" class="policy-input">
+						</div>
+					</div>
+					
+					
+					<div class="control-group">
+						<label class="control-label">Use SSL</label>
+						<div class="controls">															
+							<input type="checkbox" data-group="policies" id="524A-usedssl" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 
