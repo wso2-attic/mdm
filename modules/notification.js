@@ -184,9 +184,10 @@ var notification = (function () {
                    obj.status = arrayFromDatabase[i].status;
                    newArray.push(obj);
                }else{
+                   var featureCode = arrayFromDatabase[i].code;
                    try{
                        var obj = {};
-                       var features = db.query("SELECT * FROM features WHERE code= ?", stringify(arrayFromDatabase[i].code));
+                       var features = db.query("SELECT * FROM features WHERE code= '"+featureCode+"'");
                        obj.name = features[0].description;
                        obj.status = arrayFromDatabase[i].status;
                        newArray.push(obj);
