@@ -17,7 +17,7 @@ oTable = $('#main-table').dataTable({
 		
 		aoColumns: [
                       
-                      null,
+                      {"bVisible":    false },
                       null,
 
                       {                         
