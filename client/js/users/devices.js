@@ -242,6 +242,19 @@ function loadAppList(tabId, deviceId) {
 				}else{
 					appList.received_data[i].image = context().resourcePath + "appdefault.png";
 				}
+				
+				
+				//patch for ios
+					if(appList.received_data[i].Identifier){
+						appList.received_data[i].package = appList.received_data[i].Identifier;
+					}					
+					if(appList.received_data[i].Name){
+						appList.received_data[i].name = appList.received_data[i].Name;
+					}				
+				//patch for ios
+				
+				
+				
 			}
 
 			$.get('../client/partials/users/applist.hbs', function(templateData) {
