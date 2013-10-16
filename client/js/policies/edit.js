@@ -167,7 +167,8 @@ $(document).ready( function () {
 					
 					
 					if(code == '528B'){
-						for(var j = 0; j < data.length; j++){							
+						for(var j = 0; j < data.length; j++){
+							$("#applist .icon-ok-sign").css("display", "inline");							
 							$('#inputBlackListApps').append('<option value="'+ data[j].identity + '" data-os="'+ data[j].os + '" data-type="'+ data[j].type + '">'+ data[j].identity + '</option>');
 						}
 					}
