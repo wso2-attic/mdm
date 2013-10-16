@@ -184,11 +184,15 @@ var notification = (function () {
                    obj.status = arrayFromDatabase[i].status;
                    newArray.push(obj);
                }else{
-                   var obj = {};
-                   var features = db.query("SELECT * FROM features WHERE code= ?", arrayFromDatabase[i].code);
-                   obj.name = features[0].description;
-                   obj.status = arrayFromDatabase[i].status;
-                   newArray.push(obj);
+                   try{
+                       var obj = {};
+                       var features = db.query("SELECT * FROM features WHERE code= ?", stringify(arrayFromDatabase[i].code));
+                       obj.name = features[0].description;
+                       obj.status = arrayFromDatabase[i].status;
+                       newArray.push(obj);
+                   }catch(e){
+                       log.info("error");
+                   }
                }
 
             }
