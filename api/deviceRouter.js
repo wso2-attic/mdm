@@ -120,7 +120,7 @@ var device = (function () {
 
         router.get('devices/license', function(ctx){
             var result = device.getLicenseAgreement(ctx);
-            response.content = result;
+           	print(result);
             response.status = 200;
         });
 
