@@ -273,7 +273,7 @@ var user = (function () {
 
         /*authentication for devices only*/
         authenticate: function(ctx){
-			ctx.username = ctx.username+"@carbon.super";
+			ctx.username = ctx.username;
 			log.info("username "+ctx.username);
 			var authStatus = server().authenticate(ctx.username, ctx.password);
 			log.info(">>auth "+authStatus);
