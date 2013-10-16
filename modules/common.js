@@ -205,26 +205,20 @@ var loadPayload = function(identifier , operationCode, data) {
 		paramMap.put("OutgoingPasswordSameAsIncomingPassword", true);
 		
 		if (data.type == "GMAIL") {
-			
 			paramMap.put("IncomingMailServerHostName", "imap.gmail.com");
 			paramMap.put("IncomingMailServerPortNumber", 993);
 			paramMap.put("OutgoingMailServerHostName", "smtp.gmail.com");
 			paramMap.put("OutgoingMailServerPortNumber", 587);
-
         } else if (data.type == "YAHOO") {
-        	
         	paramMap.put("IncomingMailServerHostName", "pop.mail.yahoo.com");
 			paramMap.put("IncomingMailServerPortNumber", 110);
 			paramMap.put("OutgoingMailServerHostName", "smtp.mail.yahoo.com");
 			paramMap.put("OutgoingMailServerPortNumber", 25);
-
 	    } else if (data.type == "HOTMAIL") {
-	    	
 	    	paramMap.put("IncomingMailServerHostName", "pop3.live.com");
 			paramMap.put("IncomingMailServerPortNumber", 995);
 			paramMap.put("OutgoingMailServerHostName", "smtp.live.com");
 			paramMap.put("OutgoingMailServerPortNumber", 587);
-
         }
 		
 		isProfile = true;
@@ -239,7 +233,7 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAL_DAV;
 	} else if(operationCode == "") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.VPN_CERT;
-	} else if(operationCode == "513A") {
+	} else if(operationCode == "523A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.VPN_SECRET;
 		paramMap.put("PayloadIdentifier", payloadIdentifier["VPN"]);
 		paramMap.put("PayloadDisplayName", "VPN Configurations");
@@ -275,6 +269,8 @@ var loadPayload = function(identifier , operationCode, data) {
 		
 	} else if(operationCode == "527A") {
 		return "ENTERPRISE_WIPE";
+	} else {
+		return "";
 	}
 
 	paramMap.put("PayloadUUID", identifier);
