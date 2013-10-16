@@ -129,6 +129,10 @@ $( "#modalBlackListAppRemove" ).click(function() {
 	});
 });
 
+$( "#modalBlackListAppCreate" ).click(function() {
+	 $("#modalBlackListPackageName").val("");
+});
+
 
 
 
@@ -142,7 +146,7 @@ $(document).ready( function () {
 		dataType : "json",
 		success : function(policyData) {
 			//policyData = policyData[0];			
-			$("#policyName").val(policyData.name);	
+			$("#policyName").val(policyData.name);			
 			policyContent = JSON.parse(policyData.content);				
 			for( var i = 0; i < policyContent.length; i++){
 				var code = policyContent[i].code;
@@ -159,6 +163,17 @@ $(document).ready( function () {
 					if($("#" + code + "-" + key).attr('type') == "text" || $("#" + code + "-" + key).attr('type') == "password" || $("#" + code + "-" + key).attr('type') == "select"){
 						$("#" + code + "-" + key).val(value);
 						$("#" + code + "-policy .icon-ok-sign").css("display", "inline");
+					}
+					
+					
+					
+					
+					
+					if(code == '528B'){
+						for(var j = 0; j < data.length; j++){
+							$("#applist .icon-ok-sign").css("display", "inline");							
+							$('#inputBlackListApps').append('<option value="'+ data[j].identity + '" data-os="'+ data[j].os + '" data-type="'+ data[j].type + '">'+ data[j].identity + '</option>');
+						}
 					}
 					
 				});

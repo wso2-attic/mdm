@@ -15,7 +15,7 @@ $("#btn-add").click(function() {
 	var lastname = $('#inputLastName').val();
 	var type = $('#inputType').val();
 	var username = $('#inputEmail').val();	
-	var mobileNo = $('#inputMobile').val();	
+	
 	
 	var userMAMGroups = $('#inputMAMGroups').val();
 	var tenantId = $('#tenantId').val();
@@ -54,7 +54,6 @@ $("#btn-add").click(function() {
 		"username" : username,		
 		"first_name" : firstname,
 		"last_name" : lastname,
-		"mobile_no" : mobileNo,
 		"type": type,
 		"groups" : userGroupsArray	
 	};	

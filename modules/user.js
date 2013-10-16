@@ -55,7 +55,9 @@ var user = (function () {
 	        'authorize','login'
 	    ];
 	    arrPermission[0] = permission;
-		um.addRole("Internal/private_"+indexUser, [username], arrPermission);
+		if(!um.roleExists("Internal/private_"+indexUser)){
+			um.addRole("Internal/private_"+indexUser, [username], arrPermission);
+		}
 	}			
 	
     function mergeRecursive(obj1, obj2) {
