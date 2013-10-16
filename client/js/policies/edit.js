@@ -166,6 +166,9 @@ $(document).ready( function () {
 					}
 					
 					
+					
+					
+					
 					if(code == '528B'){
 						for(var j = 0; j < data.length; j++){
 							$("#applist .icon-ok-sign").css("display", "inline");							
