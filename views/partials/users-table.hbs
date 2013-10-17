@@ -4,8 +4,7 @@ class="table table-striped table-bordered" id="main-table">
 		<tr>
 			<th>First Name</th>
 			<th>Last Name</th>
-			<th>e Mail</th>
-			<th>Mobile</th>
+			<th>e Mail</th>			
 			<th>Type</th>
 			<th>Action</th>
 		</tr>
@@ -15,10 +14,11 @@ class="table table-striped table-bordered" id="main-table">
 		<tr>
 			<td>{{firstName}}</td>
 			<td>{{lastName}}</td>
-			<td>{{email}}</td>
-			<td>{{mobile}}</td>
+			<td>{{email}}</td>			
 			<td>{{type}}</td>
 			<td class="center">
+				
+			<a href="assign_groups?user={{username}}"  class="btn-assign-roles" data-item="{{username}}" title="Assign Roles"><i class="icon-edit"> </i> Assign Roles</a>&nbsp; 	
 				 
 			<a href="#"  class="btn-invite" data-item="{{username}}" title="Invite"><i class="icon-envelope"> </i> Invite</a>&nbsp; 
 			

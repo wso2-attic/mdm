@@ -10,7 +10,7 @@
                 sso_sessions = application.get('sso_sessions'),
                 sessionId = session.getId(),
                 encodedSAMLLogoutRequest = sso.client.getEncodedSAMLLogoutRequest(user, sso_sessions[session.getId()], config.ssoConfiguration.issuer),
-                relayState = '/store',
+                relayState = '/mdm',
                 postUrl = "https://" + process.getProperty('carbon.local.ip') + ":" + process.getProperty('https.port');
 
         var log = new Log();

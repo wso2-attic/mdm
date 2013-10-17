@@ -42,13 +42,13 @@ var group = (function () {
         });
         router.put('groups/{groupid}/users', function(ctx){
             log.info("Test Request PUTTTTT"+ctx);
-             var result = group.assignUsers(ctx);
+             var result = group.updateUserListOfRole(ctx);
              response.content = result;
              response.status = 200;
         });
 		router.post('groups', function(ctx){
             log.info("Test Groups >>>>>>>>>>");
-			var returnMsg = group.add(ctx);
+			var returnMsg = group.addGroup(ctx);
             if(returnMsg.status == 'ALLREADY_EXIST'){
                 response.status = 409;
                 response.content = "Already Exist";

@@ -230,13 +230,15 @@ var mvc = (function () {
 					new Log().debug(e);
 				}
 			}else{
-				var b = template(context);
-				if(layout==undefined){
-					//If the controller hasn't specified a layout
-					print(b);
-				}else{
-					//Now mixing the controller context with generated body template
-					print(layout(mergeRecursive({body:b}, context)));
+				if(template!=undefined){
+						var b = template(context);
+						if(layout==undefined){
+							//If the controller hasn't specified a layout
+							print(b);
+						}else{
+							//Now mixing the controller context with generated body template
+							print(layout(mergeRecursive({body:b}, context)));
+						}
 				}
 			}
         },

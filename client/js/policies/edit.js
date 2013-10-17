@@ -17,7 +17,7 @@ $("#btn-add").click(function() {
 	$(".policy-input").each(function(index) {
 		
 		var prefix = $(this).attr("id").split('-')[0];
-		var suffix = $(this).attr("id").split('-')[1];		
+		var suffix = $(this).attr("id").split('-')[1];	 	
 		
 				
 		if(!params[prefix]){
@@ -31,12 +31,24 @@ $("#btn-add").click(function() {
 			if($(this).is(':checked')){
 				var checkVal = $(this).data("trueVal");
 				if(checkVal !== ""){
-					params[prefix]["function"] = checkVal;
+					
+					if($(this).data("notfunction") == true){
+						//alert($(this).data("notfunction"));
+						params[prefix][suffix] = checkVal;
+					}else{
+						params[prefix]["function"] = checkVal;
+					}
+					
 				}
 			}else{
 				var checkVal = $(this).data("falseVal");
 				if(checkVal !== ""){
-					params[prefix]["function"] = checkVal;
+					if($(this).data("notfunction") == true){
+						params[prefix][suffix] = checkVal;
+					}else{
+						params[prefix]["function"] = checkVal;
+					}
+					
 				}
 			}	
 				
@@ -106,6 +118,7 @@ $("#btn-add").click(function() {
 
 
 
+
 $( "#modalBlackListAppButton" ).click(function() {
 		$("#inputBlackListApps").append('<option data-type="'+ $("#modalBlackListType").val() +'" data-os="'+ $("#modalBlackListOS").val() +'" value="'+ $("#modalBlackListPackageName").val()  +'">' + $("#modalBlackListPackageName").val()  + '</option>');
 });
@@ -114,6 +127,10 @@ $( "#modalBlackListAppRemove" ).click(function() {
 	 $("#inputBlackListApps :selected").each(function() {
     		$(this).remove();
 	});
+});
+
+$( "#modalBlackListAppCreate" ).click(function() {
+	 $("#modalBlackListPackageName").val("");
 });
 
 
@@ -129,7 +146,7 @@ $(document).ready( function () {
 		dataType : "json",
 		success : function(policyData) {
 			//policyData = policyData[0];			
-			$("#policyName").val(policyData.name);	
+			$("#policyName").val(policyData.name);			
 			policyContent = JSON.parse(policyData.content);				
 			for( var i = 0; i < policyContent.length; i++){
 				var code = policyContent[i].code;
@@ -146,6 +163,17 @@ $(document).ready( function () {
 					if($("#" + code + "-" + key).attr('type') == "text" || $("#" + code + "-" + key).attr('type') == "password" || $("#" + code + "-" + key).attr('type') == "select"){
 						$("#" + code + "-" + key).val(value);
 						$("#" + code + "-policy .icon-ok-sign").css("display", "inline");
+					}
+					
+					
+					
+					
+					
+					if(code == '528B'){
+						for(var j = 0; j < data.length; j++){
+							$("#applist .icon-ok-sign").css("display", "inline");							
+							$('#inputBlackListApps').append('<option value="'+ data[j].identity + '" data-os="'+ data[j].os + '" data-type="'+ data[j].type + '">'+ data[j].identity + '</option>');
+						}
 					}
 					
 				});

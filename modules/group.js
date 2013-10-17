@@ -145,6 +145,13 @@ var group = (function () {
             }
             return newRoles;
         },
+        getUserRoles: function(ctx){
+            log.info("User Name >>>>>>>>>"+ctx.username);
+            var um = userManager(common.getTenantID());
+            var roles = um.getRoleListOfUser(ctx.username);
+            var roleList = common.removePrivateRole(roles);
+            return roleList;
+        },
 		getUsersOfGroup: function(ctx){
 			var tenantId = common.getTenantID();
 			var users_list = Array();
@@ -177,7 +184,7 @@ var group = (function () {
 			return users_list;
 		},
         updateUserListOfRole: function(ctx){
-            var existingUsers = this.getUsers(ctx);
+            var existingUsers = this.getUsersOfGroup(ctx);
             var addedUsers = ctx.added_users;
             var newUsers = new Array();
 

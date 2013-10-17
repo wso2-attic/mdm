@@ -3,20 +3,22 @@
 	var common = require('/modules/common.js');
 	var iosMdm = new iosMdmModule();
 	var log = new Log();
-	  
+	log.info('inside');
 	var caPath = common.getCAPath();
 	var caPrivateKeyPath = common.getCAPrivateKey();
 
 	if(caPath == null) {
 		log.error("Cannot load CA pem. Check the configurations.");
-	}
+	}
+
 	if(caPrivateKeyPath == null) {
 		log.error("Cannot load CA private key pem. Check the configurations.");
 	}
 
-	var token = "dilshan@wso2.com"; //session.get("token");
+	var token = 'admin@admin.com'; //session.get("token");
+
 	var signedData = iosMdm.handleProfileRequest(request.getInputStream(), caPath, caPrivateKeyPath, token);
-	
+		log.info('>>');
 	if(signedData == null) {
 		response.sendRedirect("mdmerror.jag");
 		log.error("Invalid signed data");	

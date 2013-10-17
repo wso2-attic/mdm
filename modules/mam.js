@@ -60,8 +60,10 @@ var mam = (function () {
 
             var url = "https://localhost:9443/store/apis/v1/assets/mobileapp";
             var data = {  };
-          //  var result = get(url, data ,"text");
-            var result = [{"attributes": {"overview_name": "cxvxcv","overview_packagename": "com.mdm","overview_type": "Enterprise","overview_platform" : "android"}},{"attributes": {"overview_name": "First asset","overview_packagename":"com.wso2mobile.wso2phonedirectory","overview_type": "Enterprise","overview_platform" : "android"}}];
+          	var configs = require('/config/config.json');
+			var url  = configs.mam.store_location+"apis/assets/mobileapp";
+			var data = get(url, {} ,"json");
+            var result = data.data;
               var newArray = new Array();
               for(var i = 0; i<result.length; i++){
                 var obj = {};

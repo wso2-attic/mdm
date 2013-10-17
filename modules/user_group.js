@@ -67,7 +67,10 @@ var user_group = (function () {
          * This function return all roles belong to particular user. Also return other roles as well with a flag. Consume by role assignment for user.
          *
          * */
-        getRolesOfUserByAssignment:function(ctx){
+         getUserRoles:function(ctx){
+           return  user.getUserRoles(ctx);
+         },
+         getRolesOfUserByAssignment:function(ctx){
             var allRoles = group.getGroups(ctx);
             var userRoles = user.getUserRoles(ctx);
             var array = new Array();
@@ -98,7 +101,7 @@ var user_group = (function () {
         },
         getUsersOfRoleByAssignment :function(ctx){
             var usersOfGroup = group.getUsersOfGroup(ctx);
-            var allUsers = user.getUsers(ctx);
+            var allUsers = user.getAllUsers(ctx);
             if(usersOfGroup.length==0){
                 for(var i=0;i<allUsers.length;i++){
                     allUsers[i].available = false;

@@ -13,6 +13,9 @@ var user = new userModule(db);
 var deviceModule = require('/modules/device.js').device;
 var device = new deviceModule(db);
 
+var user_groupModule = require('/modules/user_group.js').user_group;
+var user_group = new user_groupModule(db);
+
 
 configuration = function(appController){
 
@@ -146,7 +149,7 @@ assign_users = function(appController){
 	var groupId = request.getParameter('group');
 
 	try{
-		var users = group.getUsersByGroup({groupid: groupId});
+		var users = user_group.getUsersOfRoleByAssignment({groupid: groupId});
 	}catch(e){
 		var users = [];
 	}

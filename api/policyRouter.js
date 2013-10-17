@@ -71,6 +71,20 @@ var policy = (function () {
 
 
         });
+        router.put('policies/{policyid}/users', function(ctx){
+            log.info("check policy router PUT");
+            log.info(ctx);
+            policy.assignUsersToPolicy(ctx);
+
+
+        });
+        router.put('policies/{policyid}/platforms', function(ctx){
+            log.info("check policy router PUT");
+            log.info(ctx);
+            policy.assignPlatformsToPolicy(ctx);
+
+
+        });
         router.get('policies/{policyid}/groups', function(ctx){
 
             var result = policy.getGroupsByPolicy(ctx);

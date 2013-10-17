@@ -10,6 +10,9 @@ var policy = new policyModule(db);
 var mamModule = require('/modules/mam.js').mam;
 var mam = new mamModule(db);
 
+var userModule = require('/modules/user.js').user;
+var user = new userModule(db);
+
 
 
 configuration = function(appController){	
@@ -49,10 +52,29 @@ assign_groups = function(appController){
 	try{
 		var groups = policy.getGroupsByPolicy({policyid: policyId});		
 	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var groups = [];
 	}
 	
-				
+	//print(groups);
+	
+	try{
+		var users = policy.getUsersByPolicy({policyid: policyId});
+        log.info("Userssss"+users);
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var users = [];
+	}
+	
+	
+	try{
+		var platforms = policy.getPlatformsByPolicy({policyid: policyId});		
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var platforms = [];
+	}
+	
+					
 	context = appController.context();
 	context.title = context.title + " | Assign Users to group";	
 	context.page = "configuration";	
@@ -62,10 +84,71 @@ assign_groups = function(appController){
 		groups: groups,
 		tenantId:session.get("mdmConsoleUser").tenantId,
 		policyId: policyId,
+		platforms: platforms,
+		users: users,
 		policyName: policyName
 	}
 	return context;
 }
+
+
+
+assign_resources = function(appController){	
+	
+	context = appController.context();
+	
+	var policyId = request.getParameter('policy');
+	var policyName = request.getParameter('policyName');
+		
+	try{
+		var groups = group.getGroupsByType({type:context.contextData.user.role});		
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var groups = [];
+	}
+	
+	//print(groups);
+	
+	try{
+		var users = policy.getUsersByPolicy({policyid: policyId});		
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var users = [];
+	}
+	
+	
+	try{
+		var platforms = policy.getPlatformsByPolicy({policyid: policyId});		
+	}catch(e){
+		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		var platforms = [];
+	}
+	
+	
+	try{
+		var policies = policy.getAllPolicies({});
+	}catch(e){
+		var policies = [];
+	}
+	
+					
+	
+	context.title = context.title + " | Assign Users to group";	
+	context.page = "policies";	
+	context.jsFile= "policies/assign_resources.js"
+	context.data = {
+		configOption : "policies",
+		groups: groups,
+		tenantId:session.get("mdmConsoleUser").tenantId,
+		policyId: policyId,
+		platforms: platforms,
+		users: users,
+		policyName: policyName,
+		policies: policies
+	}
+	return context;
+}
+
 
 
 

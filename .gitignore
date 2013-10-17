@@ -1,5 +1,5 @@
-db.json
-config.json
+/config/db.json
+/config/config.json
 
 #################
 ## Eclipse

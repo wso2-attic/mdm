@@ -27,9 +27,9 @@ var device = (function () {
 		    var android = userAgent.indexOf("Android");
 
 		    if(android>0){
-		        response.sendRedirect(configs.HTTP_URL+"/mdm/mdm.apk");
+		        response.sendRedirect(configs.HTTP_URL+configs.device.android_location);
 		    }else{
-		        response.sendRedirect(configs.IOS_URL);
+		        response.sendRedirect(configs.device.ios_location);
 		    }
 
 		});
@@ -93,6 +93,15 @@ var device = (function () {
 
 		});
 
+        router.post('devices/operations/{operation}', function(ctx){
+            log.info("test devie router");
+            log.info(stringify(ctx));
+            device.sendToDevices(ctx);
+            response.status = 200;
+            response.content = "success";
+
+        });
+
 		router.get('devices/{deviceid}/features', function(ctx){
 
 		    var result = device.getFeaturesFromDevice(ctx);
@@ -111,7 +120,7 @@ var device = (function () {
 
         router.get('devices/license', function(ctx){
             var result = device.getLicenseAgreement(ctx);
-            response.content = result;
+           	print(result);
             response.status = 200;
         });
 

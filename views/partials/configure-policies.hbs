@@ -79,51 +79,51 @@
 					<div class="control-group">
 						<label class="control-label">Maximum failed attempts</label>
 						<div class="controls">
-							<input type="text" id="519A-maxFailedAttempts" class="policy-input" data-max="10">
+							<input type="text" id="519A-maxFailedAttempts" class="policy-input">
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Minimum length</label>
 						<div class="controls">
-							<input type="text" id="519A-minLength" class="policy-input" data-rangelength="[2,20]">
+							<input type="text" id="519A-minLength" class="policy-input">
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Days of Expiration</label>
 						<div class="controls">
-							<input type="text" id="519A-maxPINAgeInDays" class="policy-input" data-max="30">
+							<input type="text" id="519A-maxPINAgeInDays" class="policy-input">
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Minimum complex characters</label>
 						<div class="controls">
-							<input type="text" id="519A-minComplexChars" class="policy-input" data-max="5">
+							<input type="text" id="519A-minComplexChars" class="policy-input">
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Password History Length</label>
 						<div class="controls">
-							<input type="text" id="519A-pinHistory" class="policy-input" data-rangelength="[2,20]">
+							<input type="text" id="519A-pinHistory" class="policy-input">
 						</div>
 					</div>
 
 					<br />
 					<div class="control-group">
 						<label class="control-label">Allow Simple</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="519A-allowSimple" class="policy-input" data-true-val="true" data-false-val="false" >
+						<div class="controls">								
+							<input type="checkbox" data-group="policies" id="519A-allowSimple" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 
 					<br />
 					<div class="control-group">
 						<label class="control-label">Require Alphanumeric</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="519A-requireAlphanumeric" class="policy-input" data-true-val="true" data-false-val="false" >
+						<div class="controls">						
+							<input type="checkbox" data-group="policies" id="519A-requireAlphanumeric" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 
@@ -134,112 +134,45 @@
 
 		<div class="accordion-group">
 			<div class="accordion-heading">
-				<a class="accordion-toggle" id="520A-policy" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse5"> <i class="icon-envelope"></i> eMail Configurations <i class="icon-ok-sign" style="color:green; display: none"> </i></a>
+				<a class="accordion-toggle" id="520A-policy" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse5"> <i class="icon-envelope"></i> E-Mail Configurations <i class="icon-ok-sign" style="color:green; display: none"> </i></a>
 			</div>
 			<div id="collapse5" class="accordion-body collapse">
 				<div class="accordion-inner">
 					<!-- eMail Configurations Start -->
 					<div class="control-group">
-						<label class="control-label">Account Description</label>
-						<div class="controls">
-							<input type="text" id="520A-emaildesc" class="policy-input">
+						<label class="control-label">Authentication Type</label>
+						<div class="controls">							
+							<select  id="520A-type" class="policy-input"><option value="">--Select--</option>
+								<option value="GMAIL">GMAIL</option><option value="YAHOO">YAHOO</option><option value="HOTMAIL">HOTMAIL</option>
+							</select>
+							
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Account Name</label>
 						<div class="controls">
-							<input type="text" id="520A-emailname" class="policy-input">
+							<input type="text" id="520A-displayname" class="policy-input">
 						</div>
 					</div>
 
-					<div class="control-group">
-						<label class="control-label">Account Type</label>
-						<div class="controls">
-							<select id="520A-emailtype" class="policy-input">
-								<option value="EmailTypeIMAP">IMAP</option><option value="EmailTypePOP">POP</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Email Address</label>
-						<div class="controls">
-							<input type="text" id="520A-emailid" class="policy-input" data-type="email">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Incoming Host</label>
-						<div class="controls">
-							<input type="text" id="520A-incoming_hostname" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Incoming Port</label>
-						<div class="controls">
-							<input type="text" id="520A-incoming_portnumber" class="policy-input">
-						</div>
-					</div>
+					
 
 					<div class="control-group">
 						<label class="control-label">Username</label>
 						<div class="controls">
-							<input type="text" id="520A-incoming_username" class="policy-input">
+							<input type="text" id="520A-username" class="policy-input">
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Password</label>
 						<div class="controls">
-							<input type="password" id="520A-incoming_password" class="policy-input">
+							<input type="password" id="520A-password" class="policy-input">
 						</div>
 					</div>
 
-					<br />
-					<div class="control-group">
-						<label class="control-label">Use SSL</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="520A-incoming_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Outgoing Host</label>
-						<div class="controls">
-							<input type="text" id="520A-outgoing_hostname" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Outgoing Port</label>
-						<div class="controls">
-							<input type="text" id="520A-outgoing_portnumber" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Username</label>
-						<div class="controls">
-							<input type="text" id="520A-outgoing_username" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Password</label>
-						<div class="controls">
-							<input type="password" id="520A-outgoing_password" class="policy-input">
-						</div>
-					</div>
-
-					<br />
-					<div class="control-group">
-						<label class="control-label">Use SSL</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="520A-outgoing_usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
-						</div>
-					</div>
+					<br />					
 
 					<!-- eMail Configurations End -->
 				</div>
@@ -264,6 +197,7 @@
 						<label class="control-label">Authentication Method</label>
 						<div class="controls">
 							<select id="523A-type" class="policy-input">
+								<option value="">--Select--</option>
 								<option value="SharedSecret">Shared Secret</option><option value="Certificate">Certificate</option>
 							</select>
 						</div>
@@ -321,52 +255,17 @@
 					<div class="control-group">
 						<label class="control-label">Username</label>
 						<div class="controls">
-							<input type="text" id="525A-username" class="policy-input">
+							<input type="text" id="521A-username" class="policy-input">
 						</div>
 					</div>
 
 					<div class="control-group">
 						<label class="control-label">Password</label>
 						<div class="controls">
-							<input type="password" id="525A-password" class="policy-input">
+							<input type="password" id="521A-password" class="policy-input">
 						</div>
 					</div>
-
-					<div class="control-group">
-						<label class="control-label">Hostname</label>
-						<div class="controls">
-							<input type="text" id="525A-hostname" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Port</label>
-						<div class="controls">
-							<input type="text" id="525A-portnumber" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Description</label>
-						<div class="controls">
-							<input type="text" id="525A-caldavdesc" class="policy-input">
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Principal Url(optional)</label>
-						<div class="controls">
-							<input type="text" id="525A-principalUrl" class="policy-input">
-						</div>
-					</div>
-
-					<br />
-					<div class="control-group">
-						<label class="control-label">Use SSL</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="525A-usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
-						</div>
-					</div>
+				
 
 					<!-- Google Calendar Configuration End -->
 				</div>
@@ -462,6 +361,14 @@
 							<input type="password" id="524A-password" class="policy-input">
 						</div>
 					</div>
+					
+					
+					<div class="control-group">
+						<label class="control-label">Use SSL</label>
+						<div class="controls">															
+							<input type="checkbox" data-group="policies" id="524A-usedssl" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
+						</div>
+					</div>
 
 					<!-- LDAP Configuration End -->
 				</div>
@@ -521,7 +428,7 @@
 		
 		<div class="accordion-group">
 			<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionPolicies" href="#collapse11"> <i class="icon-mobile-phone"></i> Apps <i class="icon-ok-sign" style="color:green; display: none"> </i></a>
+				<a class="accordion-toggle" data-toggle="collapse" id="applist" data-parent="#accordionPolicies" href="#collapse11"> <i class="icon-mobile-phone"></i> Apps <i class="icon-ok-sign" style="color:green; display: none"> </i></a>
 			</div>
 			<div id="collapse11" class="accordion-body collapse">
 				<div class="accordion-inner">
@@ -534,7 +441,7 @@
 								  
 							</select>
 							<div class="raw">
-								<input type="button" class="btn btn-orange" data-toggle="modal" href="#modalBlackListApp"  value="Add an app"> 
+								<input type="button" class="btn btn-orange" id="modalBlackListAppCreate" data-toggle="modal" href="#modalBlackListApp"  value="Add an app"> 
 								<input type="button" class="btn btn-orange" id="modalBlackListAppRemove"   value="Remove app"> 
 							</div>
 							

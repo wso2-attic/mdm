@@ -21,7 +21,7 @@ configuration = function(appController) {
 		var users = [];
 	}
 	try {
-		var groups = group.getGroups({});
+		var groups = group.getAllGroups({});
 	} catch(e) {
 		log.info(e);
 		var groups = [];
@@ -93,7 +93,7 @@ devices = function(appController) {
 	session.put('mdmConsoleSelectedUser', userId);
 	try {
 		var objUser = user.getUser({
-			"userid" : userId+"@carbon.super"
+			"userid" : userId
 		});
 	} catch(e) {
 		var objUser = {};
@@ -156,6 +156,7 @@ devices = function(appController) {
 	context.title = context.title + " | Add User";
 	context.page = "management";
 	context.jsFile = "users/devices.js";
+	context.googleMaps = true;
 	context.data = {
 		configOption : "users",
 		devices : devices,

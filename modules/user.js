@@ -55,7 +55,9 @@ var user = (function () {
 	        'authorize','login'
 	    ];
 	    arrPermission[0] = permission;
-		um.addRole("private_"+indexUser, [username], arrPermission);
+		if(!um.roleExists("Internal/private_"+indexUser)){
+			um.addRole("Internal/private_"+indexUser, [username], arrPermission);
+		}
 	}			
 	
     function mergeRecursive(obj1, obj2) {
@@ -75,6 +77,15 @@ var user = (function () {
         return obj1;
     }
 	
+	function generatePassword() {
+	    var length = 6,
+	        charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+	        retVal = "";
+	    for (var i = 0, n = charset.length; i < length; ++i) {
+	        retVal += charset.charAt(Math.floor(Math.random() * n));
+	    }
+	    return retVal;
+	}
     // prototype
     module.prototype = {
         constructor: module,
@@ -94,11 +105,13 @@ var user = (function () {
                 if(tenantId){
                     var um = userManager(common.getTenantID());
                     if(um.userExists(ctx.username)) {
-                        objResult.error = 'User already exist with the email address.';
+                        proxy_user.error = 'User already exist with the email address.';
                     } else {
-                        um.addUser(ctx.username, ctx.password,
+						var generated_password =  generatePassword();
+                        um.addUser(ctx.username, generated_password,
                             ctx.groups, claimMap, null);
                         createPrivateRolePerUser(ctx.username);
+						proxy_user.generatedPassword = generated_password;
                     }
                 }
                 else{
@@ -164,9 +177,9 @@ var user = (function () {
         },
         deleteUser: function(ctx){
             var um = userManager(common.getTenantID());
-
             um.removeUser(ctx.userid);
-
+			var private_role = ctx.userid.replace("@", ":");
+			um.removeRole("Internal/private_"+private_role);
         },
 
         /*End of User CRUD Operations (Create, Retrieve, Update, Delete)*/
@@ -175,9 +188,10 @@ var user = (function () {
 
         /*Get list of roles belongs to particular user*/
         getUserRoles: function(ctx){
+            log.info("User Name >>>>>>>>>"+ctx.username);
             var um = userManager(common.getTenantID());
-            var user = um.getUser(ctx.username);
-            var roleList = common.removePrivateRole(user.getRoles());
+            var roles = um.getRoleListOfUser(ctx.username);
+            var roleList = common.removePrivateRole(roles);
             return roleList;
         },
         updateRoleListOfUser:function(ctx){
@@ -248,6 +262,7 @@ var user = (function () {
                     users[i].type = 'user';
                     usersByType.push( users[i]);
                 }
+                //print(stringify(users[i]));
             }
             return usersByType;
         },
@@ -258,7 +273,7 @@ var user = (function () {
 
         /*authentication for devices only*/
         authenticate: function(ctx){
-			ctx.username = ctx.username+"@carbon.super";
+			ctx.username = ctx.username;
 			log.info("username "+ctx.username);
 			var authStatus = server().authenticate(ctx.username, ctx.password);
 			log.info(">>auth "+authStatus);
@@ -277,7 +292,11 @@ var user = (function () {
 
         /*send email to particular user*/
         sendEmail: function(ctx){
-            content = "Dear "+ ctx.first_name+", "+config.email.emailTemplate+config.HTTPS_URL+"/mdm/api/device_enroll \n \n"+config.email.companyName;
+			var password_text = "";
+			if(ctx.generatedPassword){
+				password_text = "Your password to your login : "+ctx.generatedPassword;
+			}
+            content = "Dear "+ ctx.first_name+", "+config.email.emailTemplate+config.HTTPS_URL+"/mdm/api/device_enroll \n "+password_text+" \n"+config.email.companyName;
             subject = "MDM Enrollment";
 
             var email = require('email');
