@@ -47,19 +47,19 @@ var removeNecessaryElements = function(list,removeList){
 }
 
 var getCAPath = function() {
-	return "E:/Mobile/ios-mdm-setup-resources/keys/ca_cert.pem";
+	return "/Users/dulitharasangawijewantha/Development/WSO2/ios-mdm-setup-resources/keys/ca_cert.pem";
 }
 
 var getRAPath = function() {
-	return "E:/Mobile/ios-mdm-setup-resources/keys/ra_cert.pem";
+	return "/Users/dulitharasangawijewantha/Development/WSO2/ios-mdm-setup-resources/keys/ra_cert.pem";
 }
 
 var getCAPrivateKey = function() {
-	return "E:/Mobile/ios-mdm-setup-resources/keys/ca_private.pem";
+	return "/Users/dulitharasangawijewantha/Development/WSO2/ios-mdm-setup-resources/keys/ca_private.pem";
 }
 
 var getRAPrivateKey = function() {
-	return "E:/Mobile/ios-mdm-setup-resources/keys/ra_private.pem";
+	return "/Users/dulitharasangawijewantha/Development/WSO2/ios-mdm-setup-resources/keys/ra_private.pem";
 }
 
 //move this to a xml configuration file
@@ -68,7 +68,7 @@ var getPushCertPassword = function() {
 }
 
 var getPushCertPath = function() {
-	return "E:/Mobile/ios-mdm-setup-resources/keys/PlainCert.pfx";
+	return "/Users/dulitharasangawijewantha/Development/WSO2/ios-mdm-setup-resources/keys/PlainCert.pfx";
 } 
 
 var initAPNS = function(pathPushCert, pushCertPassword, deviceToken, magicToken) {

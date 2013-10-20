@@ -562,8 +562,8 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                //featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
-                featureArr["enable"] = true;
+                featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
+                //featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
                 }else{
@@ -575,6 +575,48 @@ var device = (function () {
          //   log.info(obj);
 
             return obj;
+        },
+        sendMsgToUserDevices: function(ctx){
+            var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", ctx.userid);
+            var succeeded="";
+            var failed="";
+            for(var i=0; i<device_list.length; i++){
+                var status = this.sendToDevice({'deviceid':device_list[i].id, 'operation': ctx.operation, 'data' : ctx.data});
+                if(status == true){
+                    succeeded += device_list[i].id+",";
+                }else{
+                    failed += device_list[i].id+",";
+                }
+            }
+            return "Succeeded : "+succeeded+", Failed : "+failed;
+        },
+        sendMsgToGroupDevices :function(ctx){
+            var succeeded="";
+            var failed="";
+
+            var userList = group.getUsersOfGroup();
+
+            for(var i = 0; i < userList.length; i++) {
+
+                var objUser = {};
+
+                var result = db.query("SELECT id FROM devices WHERE user_id = ? AND tenant_id = ?", String(userList[i].email), common.getTenantID());
+
+                for(var j = 0; j < result.length; j++) {
+
+                    var status = this.sendToDevice({'deviceid':result[i].id, 'operation': ctx.operation, 'data' : ctx.data});
+                    if(status == true){
+                        succeeded += result[i].id+",";
+                    }else{
+                        failed += result[i].id+",";
+                    }
+                }
+            }
+            if(succeeded != "" && failed != ""){
+                return "Succeeded : "+succeeded+", Failed : "+failed;
+            }else{
+                return "Succeeded : "+succeeded;
+            }
         },
         unRegister:function(ctx){
             if(ctx.regid!=null){
