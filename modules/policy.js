@@ -332,11 +332,10 @@ var policy = (function () {
         },
         monitoring:function(ctx){
             setInterval(
-                function(ctx){
-                    device.monitor(ctx);
-                }
-                ,100000);
-
+           	 function(ctx){
+	                device.monitor(ctx);
+	            }
+            ,100000);
         },
         removePolicyFromGroup:function(ctx){
         //    var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);

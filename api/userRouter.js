@@ -130,9 +130,17 @@ var user = (function () {
 		        response.status = 404;
 		    }
 		});
-        router.get('users/invite',function(ctx){
-            user.sendEmail(ctx);
-
+        router.put('users/invite',function(ctx){
+            log.info('email sending to user');
+			var u = user.getUser(ctx);
+			if(u!=null){
+				log.info(u)
+				user.sendEmail({'username':String(u.username), 'first_name': String(u.firstName)});
+				log.info('Email sent to user with id '+u.username);
+				return;
+			}
+			response.status = 404;
+		    print("User not found");
         });
 		router.post('users/{userid}/operations/{operation}',function(ctx){
 			device.sendMsgToUserDevices(ctx);

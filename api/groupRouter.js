@@ -26,7 +26,7 @@ var group = (function () {
         });
 		router.delete('groups/{groupid}', function(ctx){
             log.info("Test Delete Router");
-			group.delete(ctx);
+			group.deleteGroup(ctx);
 		    response.status = 201;
 		});
 		router.get('groups/{groupid}/users/device_count', function(ctx){
@@ -41,7 +41,7 @@ var group = (function () {
             response.status = 200;
         });
         router.put('groups/{groupid}/users', function(ctx){
-            log.info("Test Request PUTTTTT"+ctx);
+            log.info("Test Request PUTTTTT"+stringify(ctx));
              var result = group.updateUserListOfRole(ctx);
              response.content = result;
              response.status = 200;

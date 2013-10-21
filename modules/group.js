@@ -180,7 +180,6 @@ var group = (function () {
 				log.error('Error in getting the tenantId from session');
 				print('Error in getting the tenantId from session');
 			}
-            log.info("Element >>>>>>"+stringify(users_list));
 			return users_list;
 		},
         updateUserListOfRole: function(ctx){
@@ -208,7 +207,7 @@ var group = (function () {
             for(var i=0;i<removedUsers.length;i++){
                 var flag = false;
                 for(var j=0;j<existingUsers.length;j++){
-                    if(removedUsers[i]== existingUsers[j]){
+                    if(removedUsers[i]== existingUsers[j].username){
                         flag = true;
                         break;
                     }else{

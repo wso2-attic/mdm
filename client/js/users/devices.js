@@ -6,9 +6,19 @@ if (url.match('#')) {
 var selectedTab = null;
 var selectedDevice = null;
 
+
+
 $(document).ready(function() {
 	var tabId = $('#device-tab-heading-0').data("tabId");
 	var deviceId = $('#device-tab-heading-0').data("deviceId");
+	
+	var selDevice = window.location.hash;
+	selDevice = selDevice.replace("#device-tab-",""); 
+	
+	if(selDevice){
+		deviceId = selDevice;
+	}
+	
 
 	selectedTab = tabId;
 	selectedDevice = deviceId;
@@ -22,7 +32,7 @@ $(document).ready(function() {
 		if(!urlExists(srcImage)){			
 			 $(this).attr("src", context().resourcePath + "none.png");			
 		}
-	});	
+	});		
 	
 
 });
@@ -240,7 +250,7 @@ function loadAppList(tabId, deviceId) {
 				if(urlExists(context().appsImageService  + "/" +  appList.received_data[i].package + ".png")){
 					appList.received_data[i].image = context().appsImageService + "/" + appList.received_data[i].package + ".png";
 				}else{
-					appList.received_data[i].image = context().resourcePath + "appdefault.png";
+					appList.received_data[i].image = context().resourcePath + "os/default-icon.png";
 				}
 				
 				
@@ -380,16 +390,3 @@ function loadNotifications(tabId, deviceId) {
 	});
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
