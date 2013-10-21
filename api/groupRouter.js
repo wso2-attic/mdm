@@ -66,27 +66,9 @@ var group = (function () {
             }
 		});
 		router.post('groups/{groupid}/operations/{operation}', function(ctx){
-            log.info("Group Name >>>>>>>>>>>>>>"+ctx.groupid);
-            log.info("Group Name >>>>>>>>>>>>>>"+ctx.operation);
-
-            var subject = 'Admin';
-            var action = request.getMethod();
-            var resource =  ctx.groupid+"/"+ctx.operation;
-
-            var policy = require('policy');
-            policy.policy.init();
-            var decision = policy.policy.getDecision(resource,action,subject,"");
-
-            log.info("Decision >>>>>>>>>>>>>>"+decision);
-
-            if(decision=="Permit"){
                 response.status = 200;
                 response.content = "success";
-                var result = group.operation(ctx);
-
-            }else{
-                response.status = 404;
-            }
+                var result = group.sendMsgToGroupDevices(ctx);
 
 		});
 		

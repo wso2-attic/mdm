@@ -28,22 +28,44 @@ $("#btn-add").click(function() {
 		"users" : usersArray
 	};
 
-	noty({
-		text : 'Group Added successfully!',
-		'layout' : 'center'
-	});
+	
 
 	jQuery.ajax({
 		url : getServiceURLs("groupsCRUD", ""),
-		type : "POST",
-		async : "false",
+		type : "POST",		
 		data : JSON.stringify(jso),
 		contentType : "application/json",
-     	dataType : "json"			
+     	dataType : "json",
+     	success: function (data){
+     		alert("success");
+     	}			
 	});
 	
-	$( document ).ajaxComplete(function() {
-		window.location.assign("configuration");
+	
+	$.ajax({
+		statusCode: {
+			404: function() {
+				noty({
+					text : 'Error occured!',
+					'layout' : 'center',
+					'type': 'error'
+				});
+			},
+			500: function() {
+				noty({
+					text : 'Fatal error occured!',
+					'layout' : 'center',
+					'type': 'error'
+				});
+			},
+			200: function() {
+				noty({
+					text : 'Group Added successfully!',
+					'layout' : 'center'
+				});
+				window.location.assign("configuration");
+			}
+		}
 	});
 
 });

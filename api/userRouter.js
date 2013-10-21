@@ -135,7 +135,7 @@ var user = (function () {
 
         });
 		router.post('users/{userid}/operations/{operation}',function(ctx){
-			user.operation(ctx);
+			device.sendMsgToUserDevices(ctx);
 		});
     };
     // prototype

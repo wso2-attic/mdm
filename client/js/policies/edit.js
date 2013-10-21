@@ -104,14 +104,32 @@ $("#btn-add").click(function() {
      	dataType : "json"		
 	});
 	
-	noty({
-		text : 'Policies added successfully!',
-		'layout' : 'center',
-		'modal': false
-	});
 	
-	$( document ).ajaxComplete(function() {
-		window.location.assign("configuration");
+		
+	$.ajax({
+		statusCode: {
+			404: function() {
+				noty({
+					text : 'Error occured!',
+					'layout' : 'center',
+					'type': 'error'
+				});
+			},
+			500: function() {
+				noty({
+					text : 'Fatal error occured!',
+					'layout' : 'center',
+					'type': 'error'
+				});
+			},
+			200: function() {
+				noty({
+					text : 'Policy added successfully!',
+					'layout' : 'center'
+				});
+				window.location.assign("configuration");
+			}
+		}
 	});
 	
 });
