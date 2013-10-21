@@ -54,10 +54,31 @@ $(".btn-item-remove").click(function() {
 				jQuery.ajax({
 					url : getServiceURLs("policiesCRUD", item),
 					type : "DELETE",					
-					contentType : "text/plain"
+					contentType : "text/plain",
+					
+						statusCode: {
+						404: function() {
+							$noty.close();
+							noty({
+								text : 'Error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						500: function() {
+							$noty.close();
+							noty({
+								text : 'Fatal error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						200: function() {
+							$noty.close();							
+							window.location.assign("configuration");
+						}
+					}
 			
-				}).done(function() {
-					window.location.reload(true);
 				});
 				
 				
