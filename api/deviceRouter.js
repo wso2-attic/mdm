@@ -39,9 +39,11 @@ var device = (function () {
 		    var android = userAgent.indexOf("Android");
 
 		    if(android > 0){
-		        state = device.register(ctx);
+                var content = device.register(ctx);
+                response.content = content;
+                response.status = 200;
 		    }else{
-		        state = device.registerIOS(ctx);
+                var content = device.registerIOS(ctx);
 		    }
 
 		});

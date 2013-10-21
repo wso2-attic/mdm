@@ -354,17 +354,17 @@ var device = (function () {
                     }
                     
                     var deviceID = "" + devices[0].id;
-                    sendMessageToDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
-                    sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
-                    sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
+                 //   sendMessageToDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
+                 //   sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
+                 //   sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                         log.info("Policy Payload :"+gpresult[0].data);
                         var jsonData = parse(gpresult[0].data);
                         jsonData = policyByOsType(jsonData,'android');
-                        sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
-                        return true;
+                      //  sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
+                        return jsonData;
                     }
 
                     var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",platform);
@@ -373,8 +373,8 @@ var device = (function () {
                         log.info("Policy Payload :"+ppresult[0].data);
                         var jsonData = parse(ppresult[0].data);
                         jsonData = policyByOsType(jsonData,'android');
-                        sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
-                        return true;
+                      //  sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
+                        return jsonData;
                     }
                     var roleList = user.getUserRoles({'username':userId});
                     var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer","private_kasun:wso2mobile.com");
@@ -386,12 +386,12 @@ var device = (function () {
                         log.info("Policy Payload :"+gpresult[0].data);
                         var jsonData = parse(gpresult[0].data);
                         jsonData = policyByOsType(jsonData,'android');
-                        sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
+                      //  sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                     }
-                    return true;
+                    return jsonData;
                 }else{
                     db.query("UPDATE devices SET deleted = 0 WHERE reg_id = ?", ctx.regid);
-                    return true;
+                    return false;
                 }
             }else{
 
