@@ -22,7 +22,7 @@ $(document).ready(function() {
 		if(!urlExists(srcImage)){			
 			 $(this).attr("src", context().resourcePath + "none.png");			
 		}
-	});	
+	});		
 	
 
 });
@@ -380,16 +380,3 @@ function loadNotifications(tabId, deviceId) {
 	});
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
