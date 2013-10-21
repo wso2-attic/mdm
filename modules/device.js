@@ -154,9 +154,10 @@ var device = (function () {
             log.info("Test3");
             var result = db.query("select * from devices where id ="+deviceId);
             var userId = result[0].user_id;
-            user.getUserRoles({'username':userId});
+            var roleList = user.getUserRoles({'username':userId});
             for(var i = 0;i<roleList.length;i++){
                 var decision = policy.getDecision(operationName,action,roleList[i],"");
+                log.info("Test decision :"+decision);
                 if(decision=="Permit"){
                     break;
                 }
@@ -551,6 +552,7 @@ var device = (function () {
         getFeaturesFromDevice: function(ctx){
             var role = ctx.role;
        	    var deviceId =  ctx.deviceid;
+            log.info("Test Role :"+role);
             var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id", stringify(deviceId));
 			
             var obj = new Array();
