@@ -107,7 +107,7 @@ var notification = (function () {
                     }
 
                 } else if(featureCode == "501P") {
-
+                    log.info("DDDDDDDDDDDDDDDDDD :"+stringify(ctx.data));
                     var parsedReceivedData = parse(parse(stringify(ctx.data)));
                     var formattedData = new Array();
 
