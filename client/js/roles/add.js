@@ -57,6 +57,13 @@ $("#btn-add").click(function() {
 					'layout' : 'center'
 				});
 				window.location.assign("configuration");
+			},
+			409: function() {
+				noty({
+					text : 'Group already exist!',
+					'layout' : 'center',
+					'type': 'error'
+				});				
 			}
 		}			
 	});

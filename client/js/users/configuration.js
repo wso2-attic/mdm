@@ -108,7 +108,7 @@ $(".btn-invite").click(function() {
 				jQuery.ajax({
 					url : getServiceURLs("usersInvite"),
 					type : "PUT",					
-					data : {username: item},		
+					data : JSON.stringify({'userid': item}),		
 					contentType : "application/json",
 			     	dataType : "json"
 			
