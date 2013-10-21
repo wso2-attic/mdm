@@ -40,7 +40,8 @@ var device = (function () {
 
 		    if(android > 0){
                 var content = device.register(ctx);
-                response.content = content;
+     //           log.info("content>>>>>>>>>>>>>> :"+content);
+     //           response.content = content;
                 response.status = 200;
 		    }else{
                 var content = device.registerIOS(ctx);
