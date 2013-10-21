@@ -36,14 +36,7 @@ $("#btn-add").click(function() {
 		data : JSON.stringify(jso),
 		contentType : "application/json",
      	dataType : "json",
-     	success: function (data){
-     		alert("success");
-     	}			
-	});
-	
-	
-	$.ajax({
-		statusCode: {
+     	statusCode: {
 			404: function() {
 				noty({
 					text : 'Error occured!',
@@ -58,15 +51,18 @@ $("#btn-add").click(function() {
 					'type': 'error'
 				});
 			},
-			200: function() {
+			201: function() {
 				noty({
 					text : 'Group Added successfully!',
 					'layout' : 'center'
 				});
 				window.location.assign("configuration");
 			}
-		}
+		}			
 	});
+	
+	
+	
 
 });
 
