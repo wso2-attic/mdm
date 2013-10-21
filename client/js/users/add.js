@@ -61,15 +61,11 @@ $("#btn-add").click(function() {
 		
 	jQuery.ajax({
 		url : getServiceURLs("usersCRUD", ""),
-		type : "PUT",
-		async : "false",
+		type : "PUT",		
 		data : JSON.stringify(jso),		
 		contentType : "application/json",
-     	dataType : "json"				
-	});
-	
-	$.ajax({
-		statusCode: {
+     	dataType : "json",
+     	statusCode: {
 			404: function() {
 				noty({
 					text : 'Error occured!',
@@ -84,15 +80,16 @@ $("#btn-add").click(function() {
 					'type': 'error'
 				});
 			},
-			200: function() {
+			201: function() {
 				noty({
 					text : 'User Added successfully!',
 					'layout' : 'center'
 				});
 				window.location.assign("configuration");
 			}
-		}
+		}				
 	});
+	
 
 });
 

@@ -6,6 +6,8 @@ if (url.match('#')) {
 var selectedTab = null;
 var selectedDevice = null;
 
+
+
 $(document).ready(function() {
 	var tabId = $('#device-tab-heading-0').data("tabId");
 	var deviceId = $('#device-tab-heading-0').data("deviceId");
@@ -240,7 +242,7 @@ function loadAppList(tabId, deviceId) {
 				if(urlExists(context().appsImageService  + "/" +  appList.received_data[i].package + ".png")){
 					appList.received_data[i].image = context().appsImageService + "/" + appList.received_data[i].package + ".png";
 				}else{
-					appList.received_data[i].image = context().resourcePath + "appdefault.png";
+					appList.received_data[i].image = context().resourcePath + "os/default-icon.png";
 				}
 				
 				

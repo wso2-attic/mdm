@@ -101,13 +101,8 @@ $("#btn-add").click(function() {
 		async : "false",
 		data: JSON.stringify({policyData: policyData, policyName: policyName, policyType: policyType}),		
 		contentType : "application/json",
-     	dataType : "json"		
-	});
-	
-	
-		
-	$.ajax({
-		statusCode: {
+     	dataType : "json",
+     	statusCode: {
 			404: function() {
 				noty({
 					text : 'Error occured!',
@@ -124,13 +119,14 @@ $("#btn-add").click(function() {
 			},
 			200: function() {
 				noty({
-					text : 'Policy added successfully!',
+					text : 'Policy saved successfully!',
 					'layout' : 'center'
 				});
 				window.location.assign("configuration");
 			}
-		}
+		}			
 	});
+	
 	
 });
 

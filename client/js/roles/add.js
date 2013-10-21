@@ -36,14 +36,7 @@ $("#btn-add").click(function() {
 		data : JSON.stringify(jso),
 		contentType : "application/json",
      	dataType : "json",
-     	success: function (data){
-     		alert("success");
-     	}			
-	});
-	
-	
-	$.ajax({
-		statusCode: {
+     	statusCode: {
 			404: function() {
 				noty({
 					text : 'Error occured!',
@@ -65,8 +58,11 @@ $("#btn-add").click(function() {
 				});
 				window.location.assign("configuration");
 			}
-		}
+		}			
 	});
+	
+	
+	
 
 });
 
