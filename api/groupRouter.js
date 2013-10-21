@@ -26,7 +26,7 @@ var group = (function () {
         });
 		router.delete('groups/{groupid}', function(ctx){
             log.info("Test Delete Router");
-			group.delete(ctx);
+			group.deleteGroup(ctx);
 		    response.status = 201;
 		});
 		router.get('groups/{groupid}/users/device_count', function(ctx){
