@@ -51,7 +51,7 @@ $("#btn-add").click(function() {
 					'type': 'error'
 				});
 			},
-			201: function() {
+			200: function() {
 				noty({
 					text : 'Group Added successfully!',
 					'layout' : 'center'
