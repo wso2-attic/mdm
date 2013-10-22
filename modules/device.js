@@ -713,6 +713,17 @@ var device = (function () {
                     }
 
                 }
+        },
+        changeDeviceState:function(deviceId,state){
+            db.query("UPDATE devices SET status = ? WHERE id = ?",state,deviceId);
+        },
+        getCurrentDeviceState:function(deviceId){
+            var result = db.query("select status from devices where id = ?",deviceId);
+            if(result != undefined && result != null && result[0] != undefined && result[0] != null){
+                return result[0].status;
+            }else{
+                return null;
+            }
         }
     };
 
