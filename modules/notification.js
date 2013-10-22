@@ -178,6 +178,9 @@ var notification = (function () {
                    var obj = {};
                    obj.name = 'Not Rooted';
                    obj.status = arrayFromDatabase[i].status;
+                   if(obj.status == false){
+                        device.changeDeviceState(ctx.deviceid, "C");
+                   }
                    newArray.push(obj);
                }else{
                    var featureCode = arrayFromDatabase[i].code;
@@ -186,6 +189,12 @@ var notification = (function () {
                        var features = db.query("SELECT * FROM features WHERE code= '"+featureCode+"'");
                        obj.name = features[0].description;
                        obj.status = arrayFromDatabase[i].status;
+                       if(obj.status == false){
+                            var currentState = device.getCurrentDeviceState();
+                            if(currentState == 'A'){
+                                device.changeDeviceState(ctx.deviceid,"PV");
+                            }
+                       }
                        newArray.push(obj);
                    }catch(e){
                        log.info("error");
