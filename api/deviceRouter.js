@@ -87,10 +87,18 @@ var device = (function () {
                 response.status = 404;
                 print("Not Allowed");
              }*/
-            device.sendToDevice(ctx);
-            response.status = 200;
-            response.content = "success";
-
+            if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
+                var state = device.getCurrentDeviceState();
+                if(state == "A"){
+                    device.sendToDevice(ctx);
+                    response.status = 200;
+                    response.content = "success";
+                }
+            }else{
+                device.sendToDevice(ctx);
+                response.status = 200;
+                response.content = "success";
+            }
 		});
 
         router.post('devices/operations/{operation}', function(ctx){
