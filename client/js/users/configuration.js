@@ -67,11 +67,34 @@ $(".btn-item-remove").click(function() {
 				jQuery.ajax({
 					url : getServiceURLs("usersCRUD", item),
 					type : "DELETE",					
-					contentType : "text/plain"
+					contentType : "text/plain",
+					statusCode: {
+						400: function() {
+							noty({
+								text : 'Error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						500: function() {
+							noty({
+								text : 'Fatal error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						200: function() {
+							noty({
+								text : 'User is unassigned successfully!',
+								'layout' : 'center'
+							});
+							window.location.assign("configuration");
+						}
+					}
+					
 			
 				}).done(function() {
-					$noty.close();
-					window.location.reload(true);
+					$noty.close();					
 				});
 			}
 			
@@ -110,18 +133,32 @@ $(".btn-invite").click(function() {
 					type : "PUT",					
 					data : JSON.stringify({'userid': item}),		
 					contentType : "application/json",
-			     	dataType : "json"
+			     	dataType : "json",
+			     	statusCode: {
+						400: function() {
+							noty({
+								text : 'Error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						500: function() {
+							noty({
+								text : 'Fatal error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						200: function() {
+							noty({
+								text : 'User is invited successfully!',
+								'layout' : 'center'
+							});
+							window.location.assign("configuration");
+						}
+					}
 			
-				}).done(function() {
-					$noty.close();
-					window.location.reload(true);
 				});
-				
-								
-				noty({
-						text : 'User is invited successfully!',
-						'layout' : 'center'
-				});	
 							
 			
 				

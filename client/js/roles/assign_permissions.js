@@ -88,32 +88,29 @@ $("#btn-add").click(function() {
 		data: JSON.stringify({selectedGroup: selectedGroup, featureList: featureList}),		
 		contentType : "application/json",
 		dataType : "json",
-		error: function(datas){
-	       	
-	       					if (datas.status == 200) {
-
-									noty({
-										text : 'Permission Added success!',
-										'layout' : 'center',
-										'modal' : false
-									});
-									
-									window.location.assign("configuration");
-									
-
-								} else {
-
-									noty({
-										text : 'Permission assigning failed!',
-										'layout' : 'center',
-										'modal' : false,
-										type : 'error'
-									});
-
-									
-								}  	
-	       	
-	    }		
+		statusCode: {
+						400: function() {
+							noty({
+								text : 'Error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						500: function() {
+							noty({
+								text : 'Fatal error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						200: function() {
+							noty({
+								text : 'Permissions are assigned to group successfully!',
+								'layout' : 'center'
+							});
+							window.location.assign("configuration");
+						}
+					}		
 	});
 	
 	

@@ -37,17 +37,31 @@ $("#btn-add").click(function() {
 		async : "false",
 		data : JSON.stringify(jso),
 		contentType : "application/json",
-		dataType : "json"
-	});
-	
-	noty({
-		text : 'Roles are assigned to the user successfully!',
-		'layout' : 'center'
-	});
-	
-	$( document ).ajaxComplete(function() {
-		window.location.assign("configuration");
-	});
+		dataType : "json",
+		statusCode: {
+			400: function() {
+				noty({
+					text : 'Error occured!',
+					'layout' : 'center',
+					'type': 'error'
+				});
+			},
+			500: function() {
+				noty({
+					text : 'Fatal error occured!',
+					'layout' : 'center',
+					'type': 'error'
+				});
+			},
+			200: function() {
+				noty({
+					text : 'Roles are assigned to the user successfully!',
+					'layout' : 'center'
+				});
+				window.location.assign("configuration");
+			}
+		}
+	});	
 	
 
 });
