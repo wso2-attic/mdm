@@ -44,6 +44,13 @@ $("#btn-add").click(function() {
 					'type': 'error'
 				});
 			},
+			404: function() {
+				noty({
+					text : 'API not found!',
+					'layout' : 'center',
+					'type': 'error'
+				});
+			},
 			500: function() {
 				noty({
 					text : 'Fatal error occured!',
