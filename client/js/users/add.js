@@ -66,7 +66,7 @@ $("#btn-add").click(function() {
 		contentType : "application/json",
      	dataType : "json",
      	statusCode: {
-			404: function() {
+			400: function() {
 				noty({
 					text : 'Error occured!',
 					'layout' : 'center',
@@ -86,7 +86,7 @@ $("#btn-add").click(function() {
 					'layout' : 'center'
 				});
 				window.location.assign("configuration");
-			}			,
+			},
 			409: function() {
 				noty({
 					text : 'User already exist!',

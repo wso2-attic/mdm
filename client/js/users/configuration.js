@@ -15,10 +15,10 @@ $(document).ready(function() {
 	});
 	
 	
-	$(".tabel-filter-group").html("User Type: " + fnCreateSelect( oTable.fnGetColumnData(4)));
+	$(".tabel-filter-group").html("User Type: " + fnCreateSelect( oTable.fnGetColumnData(3)));
 	
 	$('.tabel-filter-group select').change( function () {
-            oTable.fnFilter( $(this).val(), 4 );
+            oTable.fnFilter( $(this).val(), 3 );
      } );
 	
 	

@@ -37,7 +37,7 @@ $("#btn-add").click(function() {
 		contentType : "application/json",
      	dataType : "json",
      	statusCode: {
-			404: function() {
+			400: function() {
 				noty({
 					text : 'Error occured!',
 					'layout' : 'center',
