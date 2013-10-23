@@ -71,7 +71,7 @@ var user_group = (function () {
            return  user.getUserRoles(ctx);
          },
          getRolesOfUserByAssignment:function(ctx){
-            var allRoles = group.getGroups(ctx);
+            var allRoles = group.getAllGroups(ctx);
             var userRoles = user.getUserRoles(ctx);
             var array = new Array();
             if(userRoles.length == 0){
