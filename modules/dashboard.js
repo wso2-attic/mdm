@@ -35,6 +35,12 @@ var dashboard = (function () {
           
           	var finalResult = db.query("SELECT platforms.type_name as label, ROUND((count(devices.id)/(select count(id) from devices))*100,0) as data from platforms, devices where devices.platform_id = platforms.id group by type");
                        
+            
+            
+            if(finalResult.length == 0){
+            	finalResult =  [{"label" : "No Data", "data" : 100}];
+            }
+            
             return finalResult;
             
             
@@ -49,8 +55,10 @@ var dashboard = (function () {
 	        var allByodCount = db.query("select count(id) as count from devices where byod=1");
 	        var finalResult =  [{"label" : "Personal", "data" : allByodCount[0].count}, {"label" : "Corporate", "data" : allDeviceCount[0].count - allByodCount[0].count}];   
             
-            
-            
+                       
+             if(finalResult.length == 0){
+            	finalResult =  [{"label" : "No Data", "data" : 100}];
+            }
             
             return finalResult;            
       
