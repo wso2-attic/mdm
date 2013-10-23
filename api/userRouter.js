@@ -79,12 +79,14 @@ var user = (function () {
 		   	}
 		});
 		router.put('users/', function(ctx){
-            var returnMsg = group.addUser(ctx);
+            var returnMsg = user.addUser(ctx);
+            log.info(returnMsg.status);
             if(returnMsg.status == 'ALLREADY_EXIST'){
                 response.status = 409;
                 response.content = "Already Exist";
             }else if(returnMsg.status == 'SUCCESSFULL' ){
                 ctx.generatedPassword = returnMsg.generatedPassword;
+                log.info("Email :"+ctx.generatedPassword);
                 user.sendEmail(ctx);
                 response.status = 201;
                 response.content = "Successfull";
