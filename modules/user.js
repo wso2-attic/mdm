@@ -246,7 +246,7 @@ var user = (function () {
                     if(roles[j]=='admin'||roles[j]=='mdmadmin'){
                         flag = 1;
                         break;
-                    }else if(roles[j]=='store'||roles[j]=='publisher'){
+                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'){
                         flag = 2;
                         break;
                     }else{

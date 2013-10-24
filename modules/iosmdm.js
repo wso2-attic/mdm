@@ -113,15 +113,21 @@ var iosmdm = (function() {
 
 			try {
 				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();
-				var tokenUpdate = plistExtractor.extractTokens(contentString);
+				var checkinMessageType = plistExtractor.extractTokens(contentString);
 
-				var tokenProperties = {};
-				tokenProperties["token"] = tokenUpdate.getToken();
-				tokenProperties["unlockToken"] = tokenUpdate.getUnlockToken();
-				tokenProperties["magicToken"] = tokenUpdate.getPushMagic();
-				tokenProperties["deviceid"] = tokenUpdate.getUdid();
-
-				device.updateiOSTokens(tokenProperties);
+				if(checkinMessageType.getMessageType() == "CheckOut") {
+					var ctx = {};
+					ctx.udid = checkinMessageType.getUdid();
+					device.unRegisterIOS(ctx);
+				} else {
+					var tokenProperties = {};
+					tokenProperties["token"] = checkinMessageType.getToken();
+					tokenProperties["unlockToken"] = checkinMessageType.getUnlockToken();
+					tokenProperties["magicToken"] = checkinMessageType.getPushMagic();
+					tokenProperties["deviceid"] = checkinMessageType.getUdid();
+	
+					device.updateiOSTokens(tokenProperties);	
+				}
 
 			} catch (e) {
 				log.error(e);
@@ -133,7 +139,7 @@ var iosmdm = (function() {
 			Packages.org.apache.commons.io.IOUtils.copy(inputStream, writer, "UTF-8");
 			var contentString = writer.toString();
 
-			log.error(contentString);
+			//log.error(contentString);
 
 			try {
 				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();

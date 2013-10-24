@@ -47,10 +47,11 @@ add = function(appController) {
 
 	try {
 		var groups = group.getGroupsByType({type:context.contextData.user.role});		
-	} catch(e) {		
+	} catch(e) {
+      //  print(group.getGroupsByType({type:context.contextData.user.role}));
 		var groups = [];
 	}
-	
+    print(stringify(groups));
 
 	context.title = context.title + " | Add User";
 	context.page = "configuration";
@@ -179,7 +180,8 @@ assign_groups = function(appController) {
 		var groups = userG.getRolesOfUserByAssignment({
 			username : username
 		});
-	} catch(e) {		
+	} catch(e) {
+        print(userG.getRolesOfUserByAssignment({username : username}));
 		var groups = [];
 	}
 

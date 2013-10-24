@@ -227,7 +227,9 @@ var policy = (function () {
             }
         },
         getGroupsByPolicy:function(ctx){
-            var allGroups = group.getAllGroups(ctx);
+            var totalGroups = group.getAllGroups({});
+            var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer");
+            var allGroups = common.removeNecessaryElements(totalGroups,removeRoles);
             var result = db.query("SELECT * FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? ",ctx.policyid);
 
             var array = new Array();
@@ -254,7 +256,7 @@ var policy = (function () {
                     array[i] = element;
                 }
             }
-
+            log.info("TEst >>>"+stringify(array));
             return array;
         },
         getUsersByPolicy:function(ctx){
