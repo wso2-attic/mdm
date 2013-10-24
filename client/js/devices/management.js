@@ -210,7 +210,11 @@ function performOperation(devices, feature, params) {
 				});
 
 				$noty.close();
-				$("#featureList option:selected").val("");
+				
+				$("#featureList").msDropdown().data("dd").setIndexByValue("");
+				$("#featureList").val("");
+
+
 
 			}
 			
