@@ -127,7 +127,15 @@ $(".btn-invite").click(function() {
 			text : 'Ok',
 			onClick : function($noty) {				
 				
-				$noty.close();	
+				$noty.close();
+				
+				noty({
+								text : 'Inviting user, please wait....',
+								'layout' : 'center'
+											
+				});
+				
+					
 				jQuery.ajax({
 					url : getServiceURLs("usersInvite"),
 					type : "PUT",					
@@ -151,7 +159,7 @@ $(".btn-invite").click(function() {
 						},
 						200: function() {
 							noty({
-								text : 'User is invited successfully!',
+								text : 'invitation is sent to user successfully!',
 								'layout' : 'center'
 							});
 							window.location.assign("configuration");

@@ -72,8 +72,7 @@ $("#btn-add").click(function() {
 		contentType : "application/json",
      	dataType : "json",
      	statusCode: {
-			400: function() {				
-				$.noty.closeAll();
+			400: function() {			
 				noty({
 					text : 'Error occured!',
 					'layout' : 'center',

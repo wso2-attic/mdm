@@ -106,7 +106,7 @@ var user = (function () {
                     var um = userManager(common.getTenantID());
                     if(um.userExists(ctx.username)) {
                         proxy_user.error = 'User already exist with the email address.';
-                        proxy_user.status = "Role_EXIST";
+                        proxy_user.status = "ALLREADY_EXIST";
                     } else {
 						var generated_password =  generatePassword();
                         um.addUser(ctx.username, generated_password,
