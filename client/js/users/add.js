@@ -58,6 +58,12 @@ $("#btn-add").click(function() {
 		"groups" : userGroupsArray	
 	};	
 	
+	noty({
+					text : 'Adding user, please wait....',
+					'layout' : 'center'
+								
+	});
+	
 		
 	jQuery.ajax({
 		url : getServiceURLs("usersCRUD", ""),
@@ -66,7 +72,8 @@ $("#btn-add").click(function() {
 		contentType : "application/json",
      	dataType : "json",
      	statusCode: {
-			400: function() {
+			400: function() {				
+				$.noty.closeAll();
 				noty({
 					text : 'Error occured!',
 					'layout' : 'center',
