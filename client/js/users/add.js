@@ -88,7 +88,7 @@ $("#btn-add").click(function() {
 			500: function() {				
 				n.setText('Fatal error occured!');	
 				n.setType('error');
-				n.setTimeout(true);			
+				n.setTimeout(1000);			
 			},
 			201: function() {				
 				n.setText('User Added successfully!');	
