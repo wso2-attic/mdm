@@ -40,6 +40,8 @@ var device = (function () {
 
 		    if(android > 0){
 		        state = device.register(ctx);
+                response.status = 201;
+                response.content = "registered"
 		    }else{
 		        state = device.registerIOS(ctx);
 		    }
