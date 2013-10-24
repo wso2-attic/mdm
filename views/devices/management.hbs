@@ -110,7 +110,7 @@
 									<select name="featureList" id="featureList" class="dropdownimage" style="width:300px">
 										<option value="">-- Select an operation to Apply --</option>
 										{{#data.features}}{{#compare feature_type 'OPERATION'}}
-										<option value="{{name}}" data-image="https://localhost:9443/mdm/themes/wso2sinine/img/features/{{name}}.png">{{description}}</option>
+										<option value="{{name}}" data-image="{{../../resourcePath}}features/{{name}}.png">{{description}}</option>
 										{{/compare}}{{/data.features}}
 									</select>
 								</div>
