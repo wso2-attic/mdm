@@ -59,7 +59,7 @@ $("#btn-add").click(function() {
 	};	
 	
 	 var n = noty({
-					text : 'Adding user, please wait....',
+					text : 'Adding user and sending an invitation, please wait....',
 					'layout' : 'center',
 					timeout: false				
 								
