@@ -197,7 +197,8 @@ router.get('webconsole/devices', function(ctx){
 
 router.get('webconsole/listDevices', function(ctx){
     var result = webconsole.getDevices(ctx);
-    response.content = result;
+    //response.content = result;
+    print(result);
 });
 
 
