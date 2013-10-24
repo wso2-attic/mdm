@@ -419,7 +419,9 @@ var device = (function () {
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                         log.info("Policy Payload :"+gpresult[0].data);
                         var jsonData = parse(gpresult[0].data);
-                        jsonData.push(appPolicyData);
+                        if(appPolicyData != null && appPolicyData != null){
+                            jsonData.push(appPolicyData);
+                        }
                         sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                         return true;
                     }
@@ -429,7 +431,9 @@ var device = (function () {
                     if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
                         log.info("Policy Payload :"+ppresult[0].data);
                         var jsonData = parse(ppresult[0].data);
-                        jsonData.push(appPolicyData);
+                        if(appPolicyData != null && appPolicyData != null){
+                            jsonData.push(appPolicyData);
+                        }
                         sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                         return true;
                     }
@@ -437,7 +441,9 @@ var device = (function () {
                     var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 1 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
                     if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
                         log.info("Policy Payload :"+gpresult[0].data);
-                        var jsonData = parse(gpresult[0].data);
+                        if(appPolicyData != null && appPolicyData != null){
+                            jsonData.push(appPolicyData);
+                        }
                         jsonData.push(appPolicyData);
                         sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                     }
@@ -757,7 +763,9 @@ var device = (function () {
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                         log.info("Policy Payload :"+gpresult[0].data);
                         var jsonData = parse(gpresult[0].data);
-                        jsonData.push(appPolicyData);
+                        if(appPolicyData!=undefined && appPolicyData!= null){
+                            jsonData.push(appPolicyData);
+                        }
                         this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
                         continue;
                     }
@@ -766,7 +774,9 @@ var device = (function () {
                     if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
                         log.info("Policy Payload :"+ppresult[0].data);
                         var jsonData = parse(ppresult[0].data);
-                        jsonData.push(appPolicyData);
+                        if(appPolicyData!=undefined && appPolicyData!= null){
+                            jsonData.push(appPolicyData);
+                        }
                         this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
                         continue;
                     }
@@ -778,7 +788,9 @@ var device = (function () {
                     if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
                         log.info("Policy Payload :"+gpresult[0].data);
                         var jsonData = parse(gpresult[0].data);
-                        jsonData.push(appPolicyData);
+                        if(appPolicyData!=undefined && appPolicyData!= null){
+                            jsonData.push(appPolicyData);
+                        }
                         this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
                     }
 
