@@ -26,7 +26,7 @@ var notification = (function () {
 		    var result = notification.getLastRecord(ctx);
 		    if(result!= null && result != undefined){
                 log.info("Test Refresh Result"+stringify(result));
-		        response.content = result;
+		        print(result);
 		        response.status = 200;
 		    }else{
 		        response.status = 404;

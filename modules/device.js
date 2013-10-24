@@ -797,7 +797,7 @@ var device = (function () {
                 }
         },
         changeDeviceState:function(deviceId,state){
-            db.query("UPDATE devices SET status = ? WHERE id = ?",state,deviceId);
+            db.query("UPDATE devices SET status = ? WHERE id = ?",state,stringify(deviceId));
         },
         updateDeviceProperties:function(deviceId, osVersion, deviceName) {
                     	
@@ -809,7 +809,7 @@ var device = (function () {
             db.query("UPDATE devices SET os_version = ?, properties = ? WHERE id = ?", osVersion, properties, deviceId + "");
         },
         getCurrentDeviceState:function(deviceId){
-            var result = db.query("select status from devices where id = ?",deviceId);
+            var result = db.query("select status from devices where id = ?",stringify(deviceId));
             if(result != undefined && result != null && result[0] != undefined && result[0] != null){
                 return result[0].status;
             }else{
