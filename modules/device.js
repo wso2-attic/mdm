@@ -472,6 +472,7 @@ var device = (function () {
             return true;
         },
         sendToDevice: function(ctx){
+            log.info("MSG format :"+stringify(ctx.data));
             var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
             var platformID = devices[0].platform_id;
             if(platformID==1){
@@ -482,11 +483,11 @@ var device = (function () {
             }
         },
         sendToDevices:function(ctx){
-            log.info("test sendToDevices");
+            log.info("test sendToDevices :"+stringify(ctx.params.data));
             log.info(ctx.devices[0]);
            var devices =  ctx.devices;
            for(var i=0;i<devices.length;i++){
-                this.sendToDevice({'deviceid':devices[i],'operation':ctx.operation});
+                this.sendToDevice({'deviceid':devices[i],'operation':ctx.operation,'data':ctx.params.data});
            }
         },
         getPendingOperationsFromDevice: function(ctx){
