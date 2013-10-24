@@ -70,7 +70,7 @@ $("#btn-add").click(function() {
 	}
 
 
-
+	/* comment because this is not belong to mdm
 
 	//policy data for blacklisted apps
 	var policyDataBlackList = new Array(); 
@@ -93,6 +93,8 @@ $("#btn-add").click(function() {
 	if(installedAppData.length > 0){
 		policyData.push({code: "509B", data: installedAppData});
 	}
+	
+	*/
 	
 		
 	jQuery.ajax({
