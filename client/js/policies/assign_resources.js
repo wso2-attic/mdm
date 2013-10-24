@@ -74,11 +74,11 @@ $("#btn-add").click(function() {
 	});
 	
 	$( document ).ajaxComplete(function() {
-		//window.location.assign("configuration");
+		window.location.assign("configuration");
 	});
 	
 	noty({
-		text : 'Roles are assigned to policies successfully!',
+		text : 'Resources are assigned to policies successfully!',
 		'layout' : 'center'
 	});
 	

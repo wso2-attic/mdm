@@ -153,7 +153,7 @@ var policy = (function () {
             return result;
         },
         addPolicy: function(ctx){
-            var result = db.query("insert into policies (name,content,type) values (?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType);
+            var result = db.query("insert into policies (name,content,type,category) values (?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType,ctx.category);
             log.info("Result >>>>>>>"+result);
             return result;
         },
@@ -167,7 +167,7 @@ var policy = (function () {
         },
         deletePolicy:function(ctx){
             var result = db.query("DELETE FROM policies where id = ?",ctx.policyid);
-            db.query("DELETE FROM policy_group_mapping where policy_id = ?",ctx.policyid);
+            db.query("DELETE FROM group_policy_mapping where policy_id = ?",ctx.policyid);
             return result;
         },
         assignGroupsToPolicy:function(ctx){

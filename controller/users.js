@@ -1,3 +1,6 @@
+var userGModule = require('/modules/user_group.js').user_group;
+var userG = new userGModule(db);
+
 var userModule = require('/modules/user.js').user;
 var user = new userModule(db);
 
@@ -173,10 +176,10 @@ assign_groups = function(appController) {
 	var username = request.getParameter('user');
 
 	try {
-		var groups = user.getRolesByUser({
+		var groups = userG.getRolesOfUserByAssignment({
 			username : username
 		});
-	} catch(e) {
+	} catch(e) {		
 		var groups = [];
 	}
 
