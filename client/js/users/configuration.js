@@ -129,9 +129,10 @@ $(".btn-invite").click(function() {
 				
 				$noty.close();
 				
-				noty({
+				var n = noty({
 								text : 'Inviting user, please wait....',
-								'layout' : 'center'
+								'layout' : 'center',
+								timeout: false
 											
 				});
 				
@@ -144,6 +145,7 @@ $(".btn-invite").click(function() {
 			     	dataType : "json",
 			     	statusCode: {
 						400: function() {
+							n.close();
 							noty({
 								text : 'Error occured!',
 								'layout' : 'center',
@@ -151,6 +153,7 @@ $(".btn-invite").click(function() {
 							});
 						},
 						500: function() {
+							n.close();
 							noty({
 								text : 'Fatal error occured!',
 								'layout' : 'center',
@@ -158,6 +161,7 @@ $(".btn-invite").click(function() {
 							});
 						},
 						200: function() {
+							n.close();
 							noty({
 								text : 'invitation is sent to user successfully!',
 								'layout' : 'center'

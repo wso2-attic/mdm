@@ -58,11 +58,14 @@ $("#btn-add").click(function() {
 		"groups" : userGroupsArray	
 	};	
 	
-	noty({
+	 var n = noty({
 					text : 'Adding user, please wait....',
-					'layout' : 'center'
+					'layout' : 'center',
+					timout: false				
 								
 	});
+	
+	
 	
 		
 	jQuery.ajax({
@@ -73,6 +76,7 @@ $("#btn-add").click(function() {
      	dataType : "json",
      	statusCode: {
 			400: function() {			
+				n.close();
 				noty({
 					text : 'Error occured!',
 					'layout' : 'center',
@@ -101,6 +105,7 @@ $("#btn-add").click(function() {
 				window.location.assign("configuration");
 			},
 			409: function() {
+				n.close();
 				noty({
 					text : 'User already exist!',
 					'layout' : 'center',
