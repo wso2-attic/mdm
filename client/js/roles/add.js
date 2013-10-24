@@ -60,14 +60,14 @@ $("#btn-add").click(function() {
 			},
 			201: function() {
 				noty({
-					text : 'Group Added successfully!',
+					text : 'Roles added successfully!',
 					'layout' : 'center'
 				});
 				window.location.assign("configuration");
 			},
 			409: function() {
 				noty({
-					text : 'Group already exist!',
+					text : 'Roles already exist!',
 					'layout' : 'center',
 					'type': 'error'
 				});				

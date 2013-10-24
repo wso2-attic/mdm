@@ -47,12 +47,13 @@
 
 							<div class="span2 operation-filter">
 								<div class="control-group">
-									<label class="control-label" for="inputEmail">OS</label>
+									<label class="control-label" for="inputEmail">Platform</label>
 									<div class="controls">
 										<select id="inputOS"  >
 											<option value="">--All--</option>
 											<option value="1">Android</option>
-											<option value="2">iOS</option>
+											<option value="3">iPad</option>
+											<option value="2">iPhone</option>
 										</select>
 									</div>
 								</div>
@@ -60,7 +61,7 @@
 
 							<div class="span2 operation-filter">
 								<div class="control-group">
-									<label class="control-label" for="inputOwnership" >Ownsership</label>
+									<label class="control-label" for="inputOwnership" >Ownership</label>
 									<div class="controls">
 										<select id="inputOwnership">
 											<option value="">--All--</option>
@@ -110,7 +111,7 @@
 									<select name="featureList" id="featureList" class="dropdownimage" style="width:300px">
 										<option value="">-- Select an operation to Apply --</option>
 										{{#data.features}}{{#compare feature_type 'OPERATION'}}
-										<option value="{{name}}" data-image="{{../../resourcePath}}features/{{name}}.png">{{description}}</option>
+										<option value="{{name}}" data-template="{{template}}" data-image="{{../../resourcePath}}features/{{name}}.png">{{description}}</option>
 										{{/compare}}{{/data.features}}
 									</select>
 								</div>
@@ -128,3 +129,7 @@
 
 </div>
 
+<!-- Modal Features -->
+<div id="featureModal" class="modal hide" tabindex="-1" role="dialog" aria-hidden="true">
+
+</div>
