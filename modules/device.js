@@ -382,7 +382,7 @@ var device = (function () {
 		    var userId = tenantUser.username;
 			var tenantId = tenantUser.tenantId;
 			
-            var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
+            var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);//from device platform comes as iOS and Android then convert into platform id to save in device table
             var platformId = platforms[0].id;
 
             var currentdate = new Date();
@@ -412,7 +412,7 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                    var appPolicyData = this.getAppPolicyData(ctx.email,ctx.platform,role);
+                    var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
 
 
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
