@@ -106,7 +106,7 @@ var user = (function () {
                     var um = userManager(common.getTenantID());
                     if(um.userExists(ctx.username)) {
                         proxy_user.error = 'User already exist with the email address.';
-                        proxy_user.status = "Role_EXIST";
+                        proxy_user.status = "ALLREADY_EXIST";
                     } else {
 						var generated_password =  generatePassword();
                         um.addUser(ctx.username, generated_password,
@@ -246,7 +246,7 @@ var user = (function () {
                     if(roles[j]=='admin'||roles[j]=='mdmadmin'){
                         flag = 1;
                         break;
-                    }else if(roles[j]=='store'||roles[j]=='publisher'){
+                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'){
                         flag = 2;
                         break;
                     }else{
