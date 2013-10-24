@@ -153,7 +153,7 @@ var policy = (function () {
             return result;
         },
         addPolicy: function(ctx){
-            var result = db.query("insert into policies (name,content,type) values (?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType);
+            var result = db.query("insert into policies (name,content,type,category) values (?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType,ctx.category);
             log.info("Result >>>>>>>"+result);
             return result;
         },
