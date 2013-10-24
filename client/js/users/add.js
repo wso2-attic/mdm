@@ -61,7 +61,7 @@ $("#btn-add").click(function() {
 	 var n = noty({
 					text : 'Adding user, please wait....',
 					'layout' : 'center',
-					timout: false				
+					timeout: false				
 								
 	});
 	
@@ -75,42 +75,29 @@ $("#btn-add").click(function() {
 		contentType : "application/json",
      	dataType : "json",
      	statusCode: {
-			400: function() {			
-				n.close();
-				noty({
-					text : 'Error occured!',
-					'layout' : 'center',
-					'type': 'error'
-				});
+			400: function() {				
+				n.setText('Error occured!');	
+				n.setType('error');
+				n.setTimeout(1000);			
 			},
-			404: function() {
-				noty({
-					text : 'API not found!',
-					'layout' : 'center',
-					'type': 'error'
-				});
+			404: function() {				
+				n.setText('API not found!');	
+				n.setType('error');	
+				n.setTimeout(1000);		
 			},
-			500: function() {
-				noty({
-					text : 'Fatal error occured!',
-					'layout' : 'center',
-					'type': 'error'
-				});
+			500: function() {				
+				n.setText('Fatal error occured!');	
+				n.setType('error');
+				n.setTimeout(true);			
 			},
-			201: function() {
-				noty({
-					text : 'User Added successfully!',
-					'layout' : 'center'
-				});
+			201: function() {				
+				n.setText('User Added successfully!');	
 				window.location.assign("configuration");
 			},
-			409: function() {
-				n.close();
-				noty({
-					text : 'User already exist!',
-					'layout' : 'center',
-					'type': 'error'
-				});				
+			409: function() {				
+				n.setText('User already exist!');	
+				n.setType('error');
+				n.setTimeout(1000);			
 			}
 		}				
 	});
