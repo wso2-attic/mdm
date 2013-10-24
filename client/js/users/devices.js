@@ -360,7 +360,7 @@ function loadGeneralInformation(tabId, deviceId) {
 		}
 	});
 
-	loadNotifications(tabId, deviceId)
+	loadNotifications(tabId, deviceId);
 
 }
 

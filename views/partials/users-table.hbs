@@ -22,8 +22,9 @@ class="table table-striped table-bordered" id="main-table">
 				 
 			<a href="#"  class="btn-invite" data-item="{{username}}" title="Invite"><i class="icon-envelope"> </i> Invite</a>&nbsp; 
 			
-			<a href="#"  class="btn-item-remove" data-item="{{username}}" title="Remove"><i class="icon-remove"> </i> Unassign</a>
-			
+			{{#compare type 'administrator' operator='!='}}
+			<a href="#"  class="btn-item-remove" data-item="{{username}}" title="Remove"><i class="icon-remove"> </i> Remove</a>
+			{{/compare}}
 			</td>
 		</tr>
 		{{/data.users}}
