@@ -52,6 +52,34 @@ var feature = (function () {
             }
             return obj;
         },
+        setFlag:function(list){
+            var entitlement = require("policy").entitlement;
+            entitlement.login();
+            var stub = entitlement.setEntitlementPolicyAdminServiceParameters();
+            var result = entitlement.readExistingPolicy(stub,"admin");
+            var languages = new XML('<xml>'+result+'</xml>');
+            var svgns = new Namespace('urn:oasis:names:tc:xacml:3.0:core:schema:wd-17');
+            var svg = languages..svgns::Policy;
+            var ops = svg.*[1].children().children().children().children().children().children(0)[0];
+            var array = ops.split('|');
+            array[0] = array[0].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
+            array[array.length-1] = array[array.length-1].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
+            log.info(stringify(array));
+            for(var i = 0; i<list.length;i++){
+                log.info("i value :"+list[i].value)
+                for(var j=0;j <  array.length;j++){
+                    log.info("j value :"+array[j])
+                    if(list[i].value ==  array[j] ){
+                        list[i].flag = true;
+                        break;
+                    }else{
+                        list[i].flag = false;
+                    }
+                }
+            }
+            return list;
+
+        },
         getAllFeaturesForRoles: function(ctx){
             var array = new Array();
 
@@ -63,7 +91,7 @@ var feature = (function () {
                 obj.value = featureGroupList[i].name;
                 obj.isFolder = true;
                 obj.key = featureGroupList[i].id;
-                obj.children = db.query("SELECT name as value, description as title from features where group_id ="+featureGroupList[i].id);
+                obj.children = this.setFlag(db.query("SELECT name as value, description as title from features where group_id ="+featureGroupList[i].id));
                 array[i] = obj;
             }
             log.info(array);
