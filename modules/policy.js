@@ -153,7 +153,7 @@ var policy = (function () {
             return result;
         },
         addPolicy: function(ctx){
-            var result = db.query("insert into policies (name,content,type) values (?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType);
+            var result = db.query("insert into policies (name,content,type,category) values (?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType,1);
             log.info("Result >>>>>>>"+result);
             return result;
         },
@@ -167,7 +167,7 @@ var policy = (function () {
         },
         deletePolicy:function(ctx){
             var result = db.query("DELETE FROM policies where id = ?",ctx.policyid);
-            db.query("DELETE FROM policy_group_mapping where policy_id = ?",ctx.policyid);
+            db.query("DELETE FROM group_policy_mapping where policy_id = ?",ctx.policyid);
             return result;
         },
         assignGroupsToPolicy:function(ctx){
@@ -227,7 +227,9 @@ var policy = (function () {
             }
         },
         getGroupsByPolicy:function(ctx){
-            var allGroups = group.getAllGroups(ctx);
+            var totalGroups = group.getAllGroups({});
+            var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer");
+            var allGroups = common.removeNecessaryElements(totalGroups,removeRoles);
             var result = db.query("SELECT * FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? ",ctx.policyid);
 
             var array = new Array();
@@ -254,7 +256,7 @@ var policy = (function () {
                     array[i] = element;
                 }
             }
-
+            log.info("TEst >>>"+stringify(array));
             return array;
         },
         getUsersByPolicy:function(ctx){

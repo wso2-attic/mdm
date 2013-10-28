@@ -37,9 +37,16 @@ $("#btn-add").click(function() {
 		contentType : "application/json",
      	dataType : "json",
      	statusCode: {
-			404: function() {
+			400: function() {
 				noty({
 					text : 'Error occured!',
+					'layout' : 'center',
+					'type': 'error'
+				});
+			},
+			404: function() {
+				noty({
+					text : 'API not found!',
 					'layout' : 'center',
 					'type': 'error'
 				});
@@ -51,16 +58,16 @@ $("#btn-add").click(function() {
 					'type': 'error'
 				});
 			},
-			200: function() {
+			201: function() {
 				noty({
-					text : 'Group Added successfully!',
+					text : 'Roles added successfully!',
 					'layout' : 'center'
 				});
 				window.location.assign("configuration");
 			},
 			409: function() {
 				noty({
-					text : 'Group already exist!',
+					text : 'Roles already exist!',
 					'layout' : 'center',
 					'type': 'error'
 				});				

@@ -138,14 +138,41 @@ $(".btn-invite").click(function() {
 					type : "PUT",					
 					data : {username: item},		
 					contentType : "application/json",
-			     	dataType : "json"
+			     	dataType : "json",
+			     	statusCode: {
+						400: function() {
+							noty({
+								text : 'Error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						404: function() {
+							noty({
+								text : 'API not found',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						500: function() {
+							noty({
+								text : 'Fatal error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						200: function() {
+							noty({
+								text : 'Group is invited successfully!',
+								'layout' : 'center'
+							});
+							window.location.assign("configuration");
+						}
+					}
 			
 				});
 				
-				noty({
-						text : 'User is invited successfully!',
-						'layout' : 'center'
-				});	
+				
 				
 				
 				

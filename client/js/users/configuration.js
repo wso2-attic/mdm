@@ -15,10 +15,10 @@ $(document).ready(function() {
 	});
 	
 	
-	$(".tabel-filter-group").html("User Type: " + fnCreateSelect( oTable.fnGetColumnData(4)));
+	$(".tabel-filter-group").html("User Type: " + fnCreateSelect( oTable.fnGetColumnData(3)));
 	
 	$('.tabel-filter-group select').change( function () {
-            oTable.fnFilter( $(this).val(), 4 );
+            oTable.fnFilter( $(this).val(), 3 );
      } );
 	
 	
@@ -67,11 +67,34 @@ $(".btn-item-remove").click(function() {
 				jQuery.ajax({
 					url : getServiceURLs("usersCRUD", item),
 					type : "DELETE",					
-					contentType : "text/plain"
+					contentType : "text/plain",
+					statusCode: {
+						400: function() {
+							noty({
+								text : 'Error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						500: function() {
+							noty({
+								text : 'Fatal error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						200: function() {
+							noty({
+								text : 'User is unassigned successfully!',
+								'layout' : 'center'
+							});
+							window.location.assign("configuration");
+						}
+					}
+					
 			
 				}).done(function() {
-					$noty.close();
-					window.location.reload(true);
+					$noty.close();					
 				});
 			}
 			
@@ -104,24 +127,50 @@ $(".btn-invite").click(function() {
 			text : 'Ok',
 			onClick : function($noty) {				
 				
-				$noty.close();	
+				$noty.close();
+				
+				var n = noty({
+								text : 'Inviting user, please wait....',
+								'layout' : 'center',
+								timeout: false
+											
+				});
+				
+					
 				jQuery.ajax({
 					url : getServiceURLs("usersInvite"),
 					type : "PUT",					
 					data : JSON.stringify({'userid': item}),		
 					contentType : "application/json",
-			     	dataType : "json"
+			     	dataType : "json",
+			     	statusCode: {
+						400: function() {
+							n.close();
+							noty({
+								text : 'Error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						500: function() {
+							n.close();
+							noty({
+								text : 'Fatal error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						200: function() {
+							n.close();
+							noty({
+								text : 'invitation is sent to user successfully!',
+								'layout' : 'center'
+							});
+							window.location.assign("configuration");
+						}
+					}
 			
-				}).done(function() {
-					$noty.close();
-					window.location.reload(true);
 				});
-				
-								
-				noty({
-						text : 'User is invited successfully!',
-						'layout' : 'center'
-				});	
 							
 			
 				

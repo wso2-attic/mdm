@@ -39,10 +39,9 @@ var device = (function () {
 		    var android = userAgent.indexOf("Android");
 
 		    if(android > 0){
-                var content = device.register(ctx);
-     //           log.info("content>>>>>>>>>>>>>> :"+content);
-     //           response.content = content;
-                response.status = 200;
+		        state = device.register(ctx);
+                response.status = 201;
+                response.content = "registered"
 		    }else{
                 var content = device.registerIOS(ctx);
 		    }
@@ -90,10 +89,18 @@ var device = (function () {
                 response.status = 404;
                 print("Not Allowed");
              }*/
-            device.sendToDevice(ctx);
-            response.status = 200;
-            response.content = "success";
-
+            if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
+                var state = device.getCurrentDeviceState();
+                if(state == "A"){
+                    device.sendToDevice(ctx);
+                    response.status = 200;
+                    response.content = "success";
+                }
+            }else{
+                device.sendToDevice(ctx);
+                response.status = 200;
+                response.content = "success";
+            }
 		});
 
         router.post('devices/operations/{operation}', function(ctx){

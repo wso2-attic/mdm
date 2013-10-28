@@ -6,7 +6,7 @@ var user_group = (function () {
     var user = '';
     var groupModule = require('group.js').group;
     var group = '';
-
+    var common = require('common.js');
     var carbon = require('carbon');
 
     var server = function(){
@@ -71,7 +71,10 @@ var user_group = (function () {
            return  user.getUserRoles(ctx);
          },
          getRolesOfUserByAssignment:function(ctx){
-            var allRoles = group.getGroups(ctx);
+             var totalGroups = group.getAllGroups({});
+             var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer");
+             var allRoles = common.removeNecessaryElements(totalGroups,removeRoles);
+             log.info("getRolesOfUserByAssignment :"+stringify(allRoles));
             var userRoles = user.getUserRoles(ctx);
             var array = new Array();
             if(userRoles.length == 0){

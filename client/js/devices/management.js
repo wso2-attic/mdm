@@ -6,6 +6,9 @@ selectbox +=											'{{/compare}}{{/data.features}}';
 selectbox +=											'</select>';
 
 
+selectedDevices = null;
+selectedFeature = null;
+
 oTable = $('#main-table').dataTable({
 	
 			
@@ -101,8 +104,12 @@ $( "#featureList" ).change(function() {
 	var ownership = $('#inputOwnership').val();
 	var os = $('#inputOS').val();
 	
-	var operation = $(this).val();
-	var operationText = this.options[this.selectedIndex].innerHTML;
+	var feature = $(this).val();
+	selectedFeature = feature;
+	var featureTemplate = $("#featureList option:selected").data('template');
+	
+	//selectedFeatureTemplate = this.options[this.selectedIndex].data('template');
+	//alert(selectedFeatureTemplate);
 	
 	var nFiltered = oTable.fnGetData();
 	
@@ -126,15 +133,55 @@ $( "#featureList" ).change(function() {
 		return;
 	}
 			
+	selectedDevices = devices;
+	prePerformOperation(devices, feature, featureTemplate);
 	
+	
+	
+	
+	
+	
+	
+	
+	
+});
+
+
+
+function prePerformOperation(devices, feature, featureTemplate) {
+
+	if (featureTemplate != "") {
+		$.get('../client/templates/feature_templates/' + featureTemplate + '.hbs').done(function(templateData) {
+			var template = Handlebars.compile(templateData);
+			$("#featureModal").html(template({
+				feature : feature,
+				resourcePath : context().resourcePath
+			}));
+			$('#featureModal').modal('show');
+
+		}).fail(function() {
+
+		});
+
+	} else {
+		performOperation(devices, feature, {
+			data : {}
+		});
+	}
+
+}
+
+
+function performOperation(devices, feature, params) {
+
 	noty({
-		text : 'Are you sure you want to perform "'+operationText+'" operation on selected devices? ' + devices.length + " devices will be affected.",
+		text : 'Are you sure you want to perform this operation? ' + devices.length + ' devices will be affected',
 		buttons : [{
 			addClass : 'btn btn-cancel',
 			text : 'Cancel',
 			onClick : function($noty) {
 				$noty.close();
-				$('#featureList').msDropDown().data('dd').setIndexByValue("");		
+
 			}
 			
 			
@@ -145,12 +192,13 @@ $( "#featureList" ).change(function() {
 			onClick : function($noty) {
 
 				jQuery.ajax({
-					url : getServiceURLs("performDevicesOperation", operation),
+					url : getServiceURLs("performDevicesOperation", feature),
 					type : "POST",
 					async : "false",
-					data : JSON.stringify({operation: operation, devices:devices, roles: roles, user: user, ownership: ownership, os:os}),
+					data : JSON.stringify({operation: feature, devices:devices, params: params}),
 					contentType : "application/json",
-					dataType : "json"					
+					dataType : "json",
+					
 
 				});
 
@@ -162,20 +210,40 @@ $( "#featureList" ).change(function() {
 				});
 
 				$noty.close();
-				$('#featureList').msDropDown().data('dd').setIndexByValue("");		
+				
+				$("#featureList").msDropdown().data("dd").setIndexByValue("");
+				$("#featureList").val("");
+
+
 
 			}
 			
 		}]
 	});
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+}
+
+
+$('#featureModal').on('click', '.feature-command', function(e) {
+	var params = {};
+
+	var value = $(this).data('value');
+	if (value != "") {
+		params['function'] = value;
+	}
+
+	$(".feature-input").each(function(index) {
+		if($(this).attr('type') == 'checkbox'){			
+			params[$(this).attr("id")] = $(this).is(':checked');
+		}else{
+			params[$(this).attr("id")] = $(this).val();
+		}
+	});
+
+	performOperation(selectedDevices, selectedFeature, {
+		data : params
+	});
+
 });
+
 

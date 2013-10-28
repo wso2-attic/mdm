@@ -58,6 +58,15 @@ $("#btn-add").click(function() {
 		"groups" : userGroupsArray	
 	};	
 	
+	 var n = noty({
+					text : 'Adding user and sending an invitation, please wait....',
+					'layout' : 'center',
+					timeout: false				
+								
+	});
+	
+	
+	
 		
 	jQuery.ajax({
 		url : getServiceURLs("usersCRUD", ""),
@@ -66,33 +75,29 @@ $("#btn-add").click(function() {
 		contentType : "application/json",
      	dataType : "json",
      	statusCode: {
-			404: function() {
-				noty({
-					text : 'Error occured!',
-					'layout' : 'center',
-					'type': 'error'
-				});
+			400: function() {				
+				n.setText('Error occured!');	
+				n.setType('error');
+				n.setTimeout(1000);			
 			},
-			500: function() {
-				noty({
-					text : 'Fatal error occured!',
-					'layout' : 'center',
-					'type': 'error'
-				});
+			404: function() {				
+				n.setText('API not found!');	
+				n.setType('error');	
+				n.setTimeout(1000);		
 			},
-			201: function() {
-				noty({
-					text : 'User Added successfully!',
-					'layout' : 'center'
-				});
+			500: function() {				
+				n.setText('Fatal error occured!');	
+				n.setType('error');
+				n.setTimeout(1000);			
+			},
+			201: function() {				
+				n.setText('User Added successfully!');	
 				window.location.assign("configuration");
-			}			,
-			409: function() {
-				noty({
-					text : 'User already exist!',
-					'layout' : 'center',
-					'type': 'error'
-				});				
+			},
+			409: function() {				
+				n.setText('User already exist!');	
+				n.setType('error');
+				n.setTimeout(1000);			
 			}
 		}				
 	});

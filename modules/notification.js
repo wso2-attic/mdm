@@ -48,7 +48,7 @@ var notification = (function () {
             return notifications;
         },
         addIosNotification: function(ctx){
-            log.info("IOS Notification >>>>>"+stringify(ctx));
+            //log.info("IOS Notification >>>>>"+stringify(ctx));
 
             var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
             var notifications = db.query("SELECT feature_code FROM notifications WHERE id = ?", identifier);
@@ -107,7 +107,7 @@ var notification = (function () {
                     }
 
                 } else if(featureCode == "501P") {
-                    log.info("DDDDDDDDDDDDDDDDDD :"+stringify(ctx.data));
+                    
                     var parsedReceivedData = parse(parse(stringify(ctx.data)));
                     var formattedData = new Array();
 
@@ -141,6 +141,18 @@ var notification = (function () {
                     if(policySeperator == -1) {
                         db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", ctx.data+"", recivedDate+"", identifier);
                     }
+                    
+                    if(featureCode == "500A") {
+                    	
+                    	var dataObj = parse(parse(stringify(ctx.data)));
+                    	var deviceName = dataObj["DeviceName"];
+                    	var osVersion = dataObj["OSVersion"];
+                    	
+                    	var notifications = db.query("SELECT device_id FROM notifications WHERE id = ?", identifier + "");
+                    	var deviceId = notifications[0].device_id;
+
+                    	device.updateDeviceProperties(deviceId, osVersion, deviceName);
+                    }
                 }
             }
         },
@@ -165,7 +177,7 @@ var notification = (function () {
             return result[result.length-1];
         },
         getPolicyState: function(ctx){
-            log.info("Test Function :aaaaaaaaaaaaaaaaaaaaa");
+            
             var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, '501P');
             // log.info("RRR"+stringify(result[0].received_data));
             var newArray = new Array();
@@ -179,6 +191,12 @@ var notification = (function () {
                    obj.name = 'Not Rooted';
                    obj.status = arrayFromDatabase[i].status;
                    newArray.push(obj);
+                   if(obj.status == false){
+                       log.info(obj.status);
+                       log.info(ctx.deviceid);
+                        device.changeDeviceState(ctx.deviceid, "C");
+                   }
+
                }else{
                    var featureCode = arrayFromDatabase[i].code;
                    try{
@@ -187,8 +205,15 @@ var notification = (function () {
                        obj.name = features[0].description;
                        obj.status = arrayFromDatabase[i].status;
                        newArray.push(obj);
+                       if(obj.status == false){
+                            var currentState = device.getCurrentDeviceState(ctx.deviceid);
+                            if(currentState == 'A'){
+                                device.changeDeviceState(ctx.deviceid,"PV");
+                            }
+                       }
+
                    }catch(e){
-                       log.info("error");
+                       log.info(e);
                    }
                }
             }

@@ -79,16 +79,26 @@ var user = (function () {
 		   	}
 		});
 		router.put('users/', function(ctx){
-			var result = user.addUser(ctx);
-		    if(result.error != null && result.error != undefined){
-		    	response.status = 400;
-		        print(result.error);
-		    }else{
-				response.status = 201;
-				ctx.generatedPassword = result.generatedPassword;
-				user.sendEmail(ctx);
-		        print("User added Successful");
-		    }
+            var returnMsg = user.addUser(ctx);
+            log.info(returnMsg.status);
+            if(returnMsg.status == 'ALLREADY_EXIST'){
+                response.status = 409;
+                response.content = "Already Exist";
+            }else if(returnMsg.status == 'SUCCESSFULL' ){
+                ctx.generatedPassword = returnMsg.generatedPassword;
+                log.info("Email :"+ctx.generatedPassword);
+                user.sendEmail(ctx);
+                response.status = 201;
+                response.content = "Successfull";
+            }else if(returnMsg.status == 'BAD_REQUEST'){
+                response.status = 400;
+                response.content = "Name not According to Policy";
+            }else if(returnMsg.status == 'SERVER_ERROR'){
+                response.status = 500;
+                response.content = "Session Expired";
+            }else{
+                response.status = 400;
+            }
 		});
         router.delete('users/{+userid}', function(ctx){
             log.info("Test User Delete");

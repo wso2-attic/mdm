@@ -106,11 +106,13 @@ var user = (function () {
                     var um = userManager(common.getTenantID());
                     if(um.userExists(ctx.username)) {
                         proxy_user.error = 'User already exist with the email address.';
+                        proxy_user.status = "ALLREADY_EXIST";
                     } else {
 						var generated_password =  generatePassword();
                         um.addUser(ctx.username, generated_password,
                             ctx.groups, claimMap, null);
                         createPrivateRolePerUser(ctx.username);
+                        proxy_user.status = "SUCCESSFULL";
 						proxy_user.generatedPassword = generated_password;
                     }
                 }
@@ -119,6 +121,7 @@ var user = (function () {
                     print('Error in getting the tenantId from session');
                 }
             } catch(e) {
+                proxy_user.status = "BAD_REQUEST";
                 log.error(e);
                 proxy_user.error = 'Error occurred while creating the user.';
             }
@@ -243,7 +246,7 @@ var user = (function () {
                     if(roles[j]=='admin'||roles[j]=='mdmadmin'){
                         flag = 1;
                         break;
-                    }else if(roles[j]=='store'||roles[j]=='publisher'){
+                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'){
                         flag = 2;
                         break;
                     }else{

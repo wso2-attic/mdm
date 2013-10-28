@@ -112,7 +112,8 @@ function performOperation(groupId, feature, params) {
 					async : "false",
 					data : JSON.stringify(params),
 					contentType : "application/json",
-					dataType : "json"
+					dataType : "json",
+					
 
 				});
 
