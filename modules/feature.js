@@ -27,13 +27,13 @@ var feature = (function () {
         return obj1;
     }
 
-    function setFlag(list,group){
-        log.info("Test Group >>>>>>>>>>"+group);
+    function setFlag(list,groupId){
+        log.info("Test Group >>>>>>>>>>"+groupId);
         try{
             var entitlement = require("policy").entitlement;
             entitlement.login();
             var stub = entitlement.setEntitlementPolicyAdminServiceParameters();
-            var result = entitlement.readExistingPolicy(stub,group);
+            var result = entitlement.readExistingPolicy(stub,groupId);
             var languages = new XML('<xml>'+result+'</xml>');
             var svgns = new Namespace('urn:oasis:names:tc:xacml:3.0:core:schema:wd-17');
             var svg = languages..svgns::Policy;
@@ -106,7 +106,7 @@ var feature = (function () {
                 obj.value = featureGroupList[i].name;
                 obj.isFolder = true;
                 obj.key = featureGroupList[i].id;
-                obj.children = setFlag(db.query("SELECT name as value, description as title from features where group_id = ?",stringify(featureGroupList[i].id)),ctx.group);
+                obj.children = setFlag(db.query("SELECT name as value, description as title from features where group_id = ?",stringify(featureGroupList[i].id)),ctx.groupid);
                 array[i] = obj;
             }
             log.info(array);
