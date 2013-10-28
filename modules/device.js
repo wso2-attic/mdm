@@ -73,68 +73,7 @@ var device = (function () {
         return obj1;
     }
 
-    function monitorr(ctx){
-        var that = application.get("that");
-        var result = db.query("SELECT * from devices");
 
-        for(var i=0; i<result.length; i++){
-
-            var deviceId = result[i].id;
-            log.info("Device ID :"+deviceId);
-            var platform = '';
-            if(result[0].platform_id == 1){
-                platform = 'android';
-            }else if(result[0].platform_id == 2){
-                platform = 'ios';
-            }
-            var operation = 'MONITORING';
-            var data = {};
-            var userId = result[i].user_id;
-            that.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
-            that.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
-
-            var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
-            if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                log.info("Policy Payload :"+gpresult[0].data);
-                var jsonData = parse(gpresult[0].data);
-                jsonData = policyByOsType(jsonData,'android');
-                that.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
-                continue;
-            }
-
-            var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",stringify(platform));
-            if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
-                log.info("Policy Payload :"+ppresult[0].data);
-                var jsonData = parse(ppresult[0].data);
-                jsonData = policyByOsType(jsonData,'android');
-                that.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
-                continue;
-            }
-            log.info("UUUUUUUUUUUUUUUU"+userId);
-
-            var roleList = user.getUserRoles({'username':userId});
-
-             var role = '';
-             for(var i=0;i<roleList.length;i++){
-                 if(roleList[i] == 'store' || roleList[i] == 'store' || roleList[i] == 'Internal/everyone'){
-                    continue;
-                 }else{
-                    role = roleList[i];
-                 break;
-                 }
-             }
-             log.info(role);
-             var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
-             log.info(gpresult[0]);
-             if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
-                log.info("Policy Payload :"+gpresult[0].data);
-                var jsonData = parse(gpresult[0].data);
-                jsonData = policyByOsType(jsonData,'android');
-                device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
-             }
-
-        }
-    }
 
     function checkPermission(role, deviceId, operationName, that){
         var policy = require('policy').policy;
@@ -415,8 +354,8 @@ var device = (function () {
                    // var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
                     var appPolicyData = null;
 
-
-                    var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
+                    log.info("Initial email :"+userId);
+                    var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",userId);
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                         log.info("Policy Payload :"+upresult[0].data);
                         var jsonData = parse(upresult[0].data);
@@ -763,11 +702,11 @@ var device = (function () {
 
                   //  var appPolicyData = this.getAppPolicyData(userId,platform,role);
                     var appPolicyData = null;
-
-                    var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
+                    log.info("Original User Email :"+userId);
+                    var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",userId);
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                        log.info("Policy Payload :"+gpresult[0].data);
-                        var jsonData = parse(gpresult[0].data);
+                        log.info("Policy Payload :"+upresult[0].data);
+                        var jsonData = parse(upresult[0].data);
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
