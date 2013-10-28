@@ -758,7 +758,9 @@ var device = (function () {
                     var role = roles[0];
                     log.info("Roleeeee"+role);
 
-                    var appPolicyData = this.getAppPolicyData(userId,platform,role);
+                  //  var appPolicyData = this.getAppPolicyData(userId,platform,role);
+                    var appPolicyData = null;
+
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                         log.info("Policy Payload :"+gpresult[0].data);
