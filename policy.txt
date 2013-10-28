@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="admin" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
   <Target/>
   <Rule Effect="Permit" RuleId="rule1">
@@ -21,3 +22,5 @@
     </Target>
   </Rule>
 </Policy>
+=======
+>>>>>>> 2b7f7b64bab432aa289543f2f2f819e58dab03e4
