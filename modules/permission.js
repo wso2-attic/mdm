@@ -114,6 +114,8 @@ var permission = (function () {
 
             var policy = require('policy');
 
+        //    policy.entitlement.setKeyStorePath();
+
             policy.entitlement.login();
 
             var entitlementPolicyAdminService = policy.entitlement.setEntitlementPolicyAdminServiceParameters();
