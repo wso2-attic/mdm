@@ -5,8 +5,10 @@ treeData = null;
 
 $(document).ready( function () {
 	
+	var role = getURLParameter("group");
+		
 	jQuery.ajax({
-		url : getServiceURLs("permissionFeatures"),
+		url : getServiceURLs("permissionFeatures", role),
 		type : "GET",			
 		contentType : "application/json",
 		dataType : "json",
