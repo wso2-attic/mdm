@@ -28,18 +28,23 @@ var feature = (function () {
     }
 
     function setFlag(list){
-        var entitlement = require("policy").entitlement;
-        entitlement.login();
-        var stub = entitlement.setEntitlementPolicyAdminServiceParameters();
-        var result = entitlement.readExistingPolicy(stub,"admin");
-        var languages = new XML('<xml>'+result+'</xml>');
-        var svgns = new Namespace('urn:oasis:names:tc:xacml:3.0:core:schema:wd-17');
-        var svg = languages..svgns::Policy;
-        var ops = svg.*[1].children().children().children().children().children().children(0)[0];
-        var array = ops.split('|');
-        array[0] = array[0].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
-        array[array.length-1] = array[array.length-1].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
-        log.info(stringify(array));
+        try{
+            var entitlement = require("policy").entitlement;
+            entitlement.login();
+            var stub = entitlement.setEntitlementPolicyAdminServiceParameters();
+            var result = entitlement.readExistingPolicy(stub,"admin");
+            var languages = new XML('<xml>'+result+'</xml>');
+            var svgns = new Namespace('urn:oasis:names:tc:xacml:3.0:core:schema:wd-17');
+            var svg = languages..svgns::Policy;
+            var ops = svg.*[1].children().children().children().children().children().children(0)[0];
+            var array = ops.split('|');
+            array[0] = array[0].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
+            array[array.length-1] = array[array.length-1].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
+            log.info(stringify(array));
+        }catch(e){
+            array = null;
+            log.info("EntitlementPolicy admin service cannot be invoked");
+        }
         if(array != undefined && array != null && array.length != undefined && array.length != null){
             for(var i = 0; i<list.length;i++){
                 log.info("i value :"+list[i].value)
