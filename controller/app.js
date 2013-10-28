@@ -154,7 +154,6 @@ theme = function() {
 */
 
 context = function() {
-
     var contextData = {};
     var currentUser = session.get("mdmConsoleUser");  
     if(currentUser){

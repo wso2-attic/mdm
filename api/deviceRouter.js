@@ -43,7 +43,7 @@ var device = (function () {
                 response.status = 201;
                 response.content = "registered"
 		    }else{
-		        state = device.registerIOS(ctx);
+                var content = device.registerIOS(ctx);
 		    }
 
 		});
