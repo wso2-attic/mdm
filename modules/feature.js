@@ -51,10 +51,10 @@ var feature = (function () {
                 for(var j=0;j <  array.length;j++){
                     log.info("j value :"+array[j])
                     if(list[i].value ==  array[j] ){
-                        list[i].flag = true;
+                        list[i].select = true;
                         break;
                     }else{
-                        list[i].flag = false;
+                        list[i].select = false;
                     }
                 }
             }
