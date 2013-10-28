@@ -417,8 +417,8 @@ var device = (function () {
 
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                        log.info("Policy Payload :"+gpresult[0].data);
-                        var jsonData = parse(gpresult[0].data);
+                        log.info("Policy Payload :"+upresult[0].data);
+                        var jsonData = parse(upresult[0].data);
                         if(appPolicyData != null && appPolicyData != null){
                             jsonData.push(appPolicyData);
                         }
@@ -441,6 +441,7 @@ var device = (function () {
                     var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 1 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
                     if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
                         log.info("Policy Payload :"+gpresult[0].data);
+						var jsonData = parse(gpresult[0].data);
                         if(appPolicyData != null && appPolicyData != null){
                             jsonData.push(appPolicyData);
                         }
