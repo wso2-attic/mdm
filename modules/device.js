@@ -412,7 +412,8 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                    var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                   // var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                    var appPolicyData = null;
 
 
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
@@ -735,6 +736,7 @@ var device = (function () {
 
         },
         monitor:function(ctx){
+            log.info("monitor");
                 var result = db.query("SELECT * from devices");
                 for(var i=0; i<result.length; i++){
 
