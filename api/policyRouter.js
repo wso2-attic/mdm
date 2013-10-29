@@ -17,9 +17,9 @@ var policy = (function () {
             }
 
         });
-        router.put('policies/{policyid}', function(ctx){
+        router.put('policies/', function(ctx){
 
-            log.info("check policy router POST");
+            log.info("check policy router PUT");
             log.info(ctx);
             var result = policy.updatePolicy(ctx);
             if(result == 1){
