@@ -33,13 +33,15 @@
 								</div>
 							</div>
 							
+							<!-- this is disable because it does not support multiple admins
 							<div class="control-group">
-								<label class="control-label" for="inputFirstName">Type</label>
+								<label class="control-label" for="inputFirstName">Role Type</label>
 								<div class="controls">
 									User <input type="radio" class="radioGroupType" name="inputType" value="user" checked="checked"> &nbsp;
-									Administrator <input type="radio" class="radioGroupType" name="inputType" value="administrator"> &nbsp;									
+									MDM Admin <input type="radio" class="radioGroupType" name="inputType" value="administrator"> &nbsp;									
 								</div>
 							</div>
+							-->
 
 							<div class="control-group">
 								<label class="control-label" for="inputMobile">Users</label>
@@ -47,7 +49,7 @@
 									<div class="multiple-selectbox">
 										<select multiple="multiple" size="10" id="inputUsers" name="inputUsers" class='duallistbox'>
 											{{#data.users}}
-											<option value="{{username}}">{{firstName}} {{lastName}} ({{type}})</option>
+											<option value="{{username}}">{{firstName}} {{lastName}}</option>
 											{{/data.users}}
 										</select>
 									</div>
