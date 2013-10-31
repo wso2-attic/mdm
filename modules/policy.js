@@ -153,9 +153,13 @@ var policy = (function () {
             return result;
         },
         addPolicy: function(ctx){
+            var existingPolicies =  db.query("SELECT * from  policies WHERE name = ?",ctx.policyName);
+            if(existingPolicies != undefined && existingPolicies != null && existingPolicies[0] != undefined && existingPolicies[0] != null ){
+                return 409;
+            }
             var result = db.query("insert into policies (name,content,type,category) values (?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType,1);
             log.info("Result >>>>>>>"+result);
-            return result;
+            return 201;
         },
         getAllPolicies:function(ctx){
             var result = db.query("SELECT * FROM policies");

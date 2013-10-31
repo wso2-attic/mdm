@@ -95,6 +95,13 @@ $("#btn-add").click(function() {
 	}
 	
 	*/
+
+    var n = noty({
+        text : 'Adding policy, please wait....',
+        'layout' : 'center',
+        timeout: false
+
+    });
 		
 	jQuery.ajax({
 		url : getServiceURLs("policiesCRUD", ""),
@@ -103,29 +110,32 @@ $("#btn-add").click(function() {
 		data: JSON.stringify({policyData: policyData, policyName: policyName, policyType: policyType, category: "1"}),		
 		contentType : "application/json",
      	dataType : "json",
-     	statusCode: {
-			404: function() {
-				noty({
-					text : 'Error occured!',
-					'layout' : 'center',
-					'type': 'error'
-				});
-			},
-			500: function() {
-				noty({
-					text : 'Fatal error occured!',
-					'layout' : 'center',
-					'type': 'error'
-				});
-			},
-			200: function() {
-				noty({
-					text : 'Policy saved successfully!',
-					'layout' : 'center'
-				});
-				window.location.assign("configuration");
-			}
-		}		
+        statusCode: {
+            400: function() {
+                n.setText('Error occured!');
+                n.setType('error');
+                n.setTimeout(1000);
+            },
+            404: function() {
+                n.setText('API not found!');
+                n.setType('error');
+                n.setTimeout(1000);
+            },
+            500: function() {
+                n.setText('Fatal error occured!');
+                n.setType('error');
+                n.setTimeout(1000);
+            },
+            201: function() {
+                n.setText('Policy added successfully!');
+                window.location.assign("configuration");
+            },
+            409: function() {
+                n.setText('Policy already exist!');
+                n.setType('error');
+                n.setTimeout(1000);
+            }
+        }
 	});
 	
 		
