@@ -29,6 +29,12 @@ var policyModule = require('../modules/policy.js').policy;
 var policy = new policyModule(db);
 policy.monitoring({});
 
+var groupModule = require('../modules/group.js').group;
+var group = new groupModule(db);
+var groupName = 'mdmadmin';
+var userList = new Array();
+group.addGroup({'name':groupName,'users':userList});
+
 /*var deviceModule = require('../modules/device.js').device;
 var device = new deviceModule(db);
 device.monitoring({});*/

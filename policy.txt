@@ -5,7 +5,11 @@
       <AnyOf>
         <AllOf>
           <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+<<<<<<< HEAD
             <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(APPLIST|INSTALLAPP|UNINSTALLAPP)</AttributeValue>
+=======
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(LOCK|WIPE|CLEARPASSWORD|LOCATION|CAMERA|MUTE|ENCRYPT|ENTERPRISEWIPE|POLICY|BLACKLISTAPPS|APPLIST|INSTALLAPP|UNINSTALLAPP)</AttributeValue>
+>>>>>>> 1214b56d623776b31820b82febfb07317d84456d
             <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
           </Match>
           <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">

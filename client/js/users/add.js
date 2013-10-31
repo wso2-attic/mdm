@@ -40,7 +40,7 @@ $("#btn-add").click(function() {
 	}
 	
 	
-	var userGroupsArray = []
+	var userGroupsArray = [];
 	if (userGroups != null) {
 		userGroupsArray = userGroups.toString().split(",");
 	}
