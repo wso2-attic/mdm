@@ -106,26 +106,3 @@ $("#btn-add").click(function() {
 });
 
 
-$( ".radioUserType" ).change(function() {
-	var value = $(this).val();	
-	//$(".inputGroupsSelect .box1 .filter").val(value);	
-	//$(".inputGroupsSelect .box1 .filter" ).change();
-	
-	if(value == 'user'){
-		$("#userSeletBox").css("display", "block");
-		$("#adminSeletBox").css("display", "none");
-	}else{
-		$("#userSeletBox").css("display", "none");
-		$("#adminSeletBox").css("display", "block");
-	}
-});
-
-
-
-$( document ).ready(function() {
-	//var value = 'user';	
-	//$(".inputGroupsSelect .box1 .filter").val(value);	
-	//$(".inputGroupsSelect .box1 .filter" ).change();
-	
-	$("#adminSeletBox").css("display", "none");
-});
