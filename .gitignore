@@ -223,3 +223,4 @@ pip-log.txt
 .idea/
 mdm.iml/
 /config/android.json
+/policy.txt
