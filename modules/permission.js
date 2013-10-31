@@ -4,6 +4,9 @@ var permission = (function () {
     var userModule = require('user.js').user;
     var user;
 
+    var groupModule = require('group.js').group;
+    var group;
+
     var configs = {
         CONTEXT: "/"
     };
@@ -14,8 +17,10 @@ var permission = (function () {
     var module = function (dbs) {
         db = dbs;
         user = new userModule(db);
+        group = new groupModule(db);
         //mergeRecursive(configs, conf);
     };
+
 
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
@@ -132,7 +137,6 @@ var permission = (function () {
         deletePolicy:function(ctx){
 
         }
-
     };
     // return module
     return module;
