@@ -109,8 +109,11 @@ var user = (function () {
                         proxy_user.status = "ALLREADY_EXIST";
                     } else {
 						var generated_password =  generatePassword();
-                        um.addUser(ctx.username, generated_password,
-                            ctx.groups, claimMap, null);
+                        if(ctx.type == 'user'){
+                            um.addUser(ctx.username, generated_password,ctx.groups, claimMap, null);
+                        }else if(ctx.type == 'administrator'){
+                            um.addUser(ctx.username, generated_password,new Array('mdmadmin'), claimMap, null);
+                        }
                         createPrivateRolePerUser(ctx.username);
                         proxy_user.status = "SUCCESSFULL";
 						proxy_user.generatedPassword = generated_password;
