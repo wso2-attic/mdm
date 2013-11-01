@@ -265,8 +265,7 @@ var policy = (function () {
         },
         getUsersByPolicy:function(ctx){
             var allUsers = user.getAllUsers(ctx);
-            var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? ",stringify(ctx.policyid));
-
+            var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ?",ctx.policyid);
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
                 for(var i =0; i < allUsers.length;i++){
@@ -279,7 +278,8 @@ var policy = (function () {
                 for(var i =0; i < allUsers.length;i++){
                     var element = {};
                     for(var j=0 ;j< result.length;j++){
-                        if(allUsers[i]==result[j].user_id){
+                        log.info(allUsers[i].username+" "+result[j].user_id);
+                        if(allUsers[i].username==result[j].user_id){
                             element.name = allUsers[i].username;
                             element.available = true;
                             break;
