@@ -158,7 +158,7 @@ var user = (function () {
             if(tenantId){
                 var um = userManager(common.getTenantID());
                 var allUsers = um.listUsers();
-                var removeUsers = new Array("wso2.anonymous.user","admin");
+                var removeUsers = new Array("wso2.anonymous.user","admin","admin@admin.com");
                 var users = common.removeNecessaryElements(allUsers,removeUsers);
                 for(var i = 0; i < users.length; i++) {
                     var user = um.getUser(users[i]);
