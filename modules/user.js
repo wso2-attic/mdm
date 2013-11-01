@@ -182,10 +182,16 @@ var user = (function () {
             return users_list;
         },
         deleteUser: function(ctx){
-            var um = userManager(common.getTenantID());
-            um.removeUser(ctx.userid);
-			var private_role = ctx.userid.replace("@", ":");
-			um.removeRole("Internal/private_"+private_role);
+            var result = db.query("select * from devices where user_id = ?",ctx.userid);
+            if(result != undefined && result != null && result[0].length != undefined && result[0].length != null && result[0].length > 0){
+                return 404;
+            }else{
+                var um = userManager(common.getTenantID());
+                um.removeUser(ctx.userid);
+                var private_role = ctx.userid.replace("@", ":");
+                um.removeRole("Internal/private_"+private_role);
+                return 200;
+            }
         },
 
         /*End of User CRUD Operations (Create, Retrieve, Update, Delete)*/
