@@ -5,6 +5,12 @@ $(document).ready(function() {
 		"sDom" : "<'row-fluid'<'tabel-filter-group span8'T><'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
 		"iDisplayLength" : 10,		
 		"bStateSave" : false,
+		 "aoColumnDefs": [
+					  {
+					     bSortable: false,
+					     aTargets: [ -1 ]
+					  }
+		],
 		"oTableTools" : {
 			"aButtons" : ["copy", "print", {
 				"sExtends" : "collection",

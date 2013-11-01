@@ -6,6 +6,12 @@ $(document).ready( function () {
 		"aaSorting": [[ 0, "desc" ]],
 		"iDisplayLength": 10,
 		 "bStateSave": false,
+		 "aoColumnDefs": [
+					  {
+					     bSortable: false,
+					     aTargets: [ -1 ]
+					  }
+		],
 		"oTableTools": {
 			"aButtons": [
 				"copy",
