@@ -1,3 +1,4 @@
+
 var device = (function () {
     var userModule = require('user.js').user;
 	    var user;
