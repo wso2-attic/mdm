@@ -65,6 +65,11 @@ var group = (function () {
                 response.status = 400;
             }
 		});
+		router.put('groups/{groupid}', function(ctx){
+			var result = group.editGroup(ctx.groupid, ctx.new_name);
+            response.content = result;
+            response.status = 200;
+		});
 		router.post('groups/{groupid}/operations/{operation}', function(ctx){
                 response.status = 200;
                 response.content = "success";

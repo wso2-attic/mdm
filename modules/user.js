@@ -319,7 +319,11 @@ var user = (function () {
             sender.to = ctx.username;
             sender.subject = subject;
             sender.text = content;
-            sender.send();
+            try{
+				sender.send();
+			}catch(e){
+				log.info(e);
+			}
         },
 
         /*Get all devices belongs to particular user*/
