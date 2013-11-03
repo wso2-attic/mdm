@@ -15,14 +15,19 @@ var group = (function () {
 		        response.status = 404;
 		    }
 		});
-        router.get('groups/invite', function(ctx){
-            var groups= group.getGroups(ctx);
-            if(groups[0]!=null){
-                response.content = groups;
-                response.status = 200;
-            }else{
-                response.status = 404;
-            }
+        router.put('groups/invite', function(ctx){
+            var users= group.getUsersOfGroup(ctx);
+			log.info(ctx);
+            // if(users[0]!=null){
+            // 				for (var i = users.length - 1; i >= 0; i--){
+            // 					user.sendEmail({
+            // 						username: users[i].username;
+            // 					});
+            // 				};
+            //                 response.status = 200;
+            //             }else{
+            //                 response.status = 404;
+            //             }
         });
 		router.delete('groups/{groupid}', function(ctx){
             log.info("Test Delete Router");
