@@ -17,17 +17,16 @@ var group = (function () {
 		});
         router.put('groups/invite', function(ctx){
             var users= group.getUsersOfGroup(ctx);
-			log.info(ctx);
-            // if(users[0]!=null){
-            // 				for (var i = users.length - 1; i >= 0; i--){
-            // 					user.sendEmail({
-            // 						username: users[i].username;
-            // 					});
-            // 				};
-            //                 response.status = 200;
-            //             }else{
-            //                 response.status = 404;
-            //             }
+            if(users[0]!=null){
+				for (var i = users.length - 1; i >= 0; i--){
+					user.sendEmail({
+						username: users[i].username;
+					});
+				};
+                response.status = 200;
+            }else{
+                response.status = 404;
+            }
         });
 		router.delete('groups/{groupid}', function(ctx){
             log.info("Test Delete Router");
