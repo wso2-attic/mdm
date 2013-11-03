@@ -20,7 +20,7 @@ var group = (function () {
             if(users[0]!=null){
 				for (var i = users.length - 1; i >= 0; i--){
 					user.sendEmail({
-						username: users[i].username;
+						username: users[i].username
 					});
 				};
                 response.status = 200;
