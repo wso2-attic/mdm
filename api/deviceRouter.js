@@ -52,9 +52,25 @@ var device = (function () {
 		    var result = device.unRegister(ctx);
 		});
 
-	/*	router.post('devices/isregistered', function(ctx){
+		/*	router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);
 		});*/
+		
+		router.post('devices/AppInstall', function(ctx){
+            ctx.operation = "INSTALLAPP";
+			for (var i = ctx['data'].length - 1; i >= 0; i--){
+				var operation =  ctx['data'][i];
+				var result = device.sendToDevice({data:operation});
+			};
+		});
+
+		router.post('devices/AppUNInstall', function(ctx){
+            ctx.operation = "UNINSTALLAPP";
+		    for (var i = ctx['data'].length - 1; i >= 0; i--){
+				var operation =  ctx['data'][i];
+				var result = device.sendToDevice({data:operation});
+			};
+		});
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
 
