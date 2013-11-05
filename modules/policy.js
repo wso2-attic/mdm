@@ -66,76 +66,22 @@ var policy = (function () {
         }
         return  jsonData;
     }
+    function getPolicyIdFromDevice(deviceId){
+        var devices = db.query("SELECT * from devices where id = ?",deviceId);
+        var userId = devices[0].user_id;
+        var upresult = db.query("SELECT policies.id as id FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",userId);
+        if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
+            return upresult[0].id;
+        }
 
-   function monitor(ctx){
-       var db = application.get('db');
-       var deviceModule1 = require('device.js').device;
-       var device1 = new deviceModule1(db);
+        var ppresult = db.query("SELECT policies.id as id FROM policies,platform_policy_mapping where policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",platform);
+        if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
+            return ppresult[0].id;
+        }
 
-       var userModule1 = require('user.js').user;
-       var user1 = new userModule1(db);
-
-       /* var result = db.query("SELECT * from devices");
-
-        for(var i=0; i<result.length; i++){
-
-            var deviceId = result[i].id;
-            var platform = '';
-            if(result[0].platform_id == 1){
-                platform = 'android';
-            }else if(result[0].platform_id == 2){
-                platform = 'ios';
-            }
-            var operation = 'MONITORING';
-            var data = {};
-            var userId = result[i].user_id;
-            device1.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
-            device1.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
-
-            var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
-            if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                log.info("Policy Payload :"+gpresult[0].data);
-                var jsonData = parse(gpresult[0].data);
-                jsonData = policyByOsType(jsonData,'android');
-                device1.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
-                continue;
-            }
-
-            var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",stringify(platform));
-            if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
-                log.info("Policy Payload :"+ppresult[0].data);
-                var jsonData = parse(ppresult[0].data);
-                jsonData = policyByOsType(jsonData,'android');
-                device1.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
-                continue;
-            }
-            log.info("UUUUUUUUUUUUUUUU"+userId); */
-
-            var roless = user1.getUserRoles({'username':'kasun@wso2mobile.com'});
-            log.info(roles[0]);
-           // var roleList = user.getUserRoles({'username':userId});
-           /* var role = '';
-            for(var i=0;i<roleList.length;i++){
-                if(roleList[i] == 'store' || roleList[i] == 'store' || roleList[i] == 'Internal/everyone'){
-                    continue;
-                }else{
-                    role = roleList[i];
-                    break;
-                }
-            }
-            log.info(role);
-            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
-            log.info(gpresult[0]);
-            if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
-                log.info("Policy Payload :"+gpresult[0].data);
-                var jsonData = parse(gpresult[0].data);
-                jsonData = policyByOsType(jsonData,'android');
-                device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
-            }*/
-
+        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
+        return gpresult[0].id;
     }
-
-
     // prototype
     module.prototype = {
         constructor: module,
@@ -326,15 +272,54 @@ var policy = (function () {
             return array;
         },
         enforcePolicy:function(ctx){
-            var policies = db.query("SELECT * from group_policy_mapping where policy_id=?",ctx.policy_id);
-            var policyData = policies[0].content;
+            var policyId =  ctx.policy_id;
+            var policies = db.query("SELECT * from policies where id = ?",policyId);
+            var payLoad = parse(policies[0].content);
 
-            var result = db.query("SELECT * from group_policy_mapping where policy_id=?",ctx.policy_id);
-            var groupId = result[0].group_id;
-            var users = group.getUsersOfGroup({'groupid':groupId});
-            for(var i=0;i<users.length;i++){
-                userg.sendMsgToUser({'userid': users[i].username,'operation':'POLICY','data':parse(policyData)});
+            var users1 = db.query("SELECT * from user_policy_mapping where policy_id=?",policyId);
+            for(var i = 0;i<users1.length;i++){
+                var devices1 = db.query("SELECT * from devices where user_id = ?",users1[i].user_id);
+                for(var j = 0;j<devices1.length;j++){
+                    device.sendToDevice({'deviceid':devices1[j].id,'operation':'500P','data':payLoad});
+                }
             }
+            var platforms =  db.query("SELECT * from platform_policy_mapping where policy_id=?",policyId);
+            for(var i = 0;i<platforms.length;i++){
+                var platformId = "";
+                if(platforms[i].platform_id == 'android'){
+                    var devices2 = db.query("SELECT * from devices where platform_id = ?",String(1));
+                    for(var j=0;j<devices2.length;j++){
+                        var tempId = getPolicyIdFromDevice(devices2[j].id);
+                        if(tempId == policyId){
+                            device.sendToDevice({'deviceid':devices2[i].id,'operation':'500P','data':payLoad});
+                        }
+                    }
+
+                }else{
+                    var devices3 = db.query("SELECT * from devices where platform_id > ?",String(1));
+                    for(var j=0;j<devices3.length;j++){
+                        var tempId = getPolicyIdFromDevice(devices3[j].id);
+                        if(tempId == policyId){
+                            device.sendToDevice({'deviceid':devices3[i].id,'operation':'500P','data':payLoad});
+                        }
+                    }
+                }
+
+            }
+            var groups =  db.query("SELECT * from group_policy_mapping where policy_id=?",policyId);
+            for(var i = 0;i<groups.length;i++){
+                var users2 = group.getUsersOfGroup({'groupid':groups[i].group_id});
+                for(var j=0;j<users2.length;j++){
+                    var devices4 = db.query("SELECT * from devices where user_id = ?",users2[j].username);
+                    for(var k = 0;k<devices4.length;k++){
+                        var tempId = getPolicyIdFromDevice(devices4[k].id);
+                        if(tempId == policyId){
+                            device.sendToDevice({'deviceid':devices4[k].id,'operation':'500P','data':payLoad});
+                        }
+                    }
+                }
+            }
+
         },
         monitoring:function(ctx){
             setInterval(
