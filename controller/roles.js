@@ -130,7 +130,7 @@ add = function(appController){
 	log.info("sdfsd");
 	log.info(session.get("mdmConsoleUser"));
 	
-	context.title = context.title + " | Add Group";
+	context.title = context.title + " | Add Role";
 	context.page = "configuration";
 	context.jsFile= "roles/add.js"
 	context.data = {
@@ -141,6 +141,26 @@ add = function(appController){
 	return context;
 }
 
+edit = function(appController){
+	context = appController.context();
+	try{
+		var users = user.getUsersByType({type:context.contextData.user.role});
+	}catch(e){
+		var users = [];
+	}
+	log.info("sdfsd");
+	log.info(session.get("mdmConsoleUser"));
+	
+	context.title = context.title + " | Edit Role";
+	context.page = "configuration";
+	context.jsFile= "roles/edit.js"
+	context.data = {
+		configOption : "roles",
+		users: users,
+		tenantId:session.get("mdmConsoleUser").tenantId
+	}
+	return context;
+}
 
 
 
