@@ -28,10 +28,11 @@ $("#btn-add").click(function() {
 		"users" : usersArray
 	};
 
+	var previousName = getURLParameter('group');
 	
 
 	jQuery.ajax({
-		url : getServiceURLs("groupsCRUD", ""),
+		url : getServiceURLs("groupsCRUD", previousName),
 		type : "PUT",		
 		data : JSON.stringify(jso),
 		contentType : "application/json",
