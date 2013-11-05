@@ -69,6 +69,7 @@ var policy = (function () {
     function getPolicyIdFromDevice(deviceId){
         var devices = db.query("SELECT * from devices where id = ?",deviceId);
         var userId = devices[0].user_id;
+
         var upresult = db.query("SELECT policies.id as id FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",userId);
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
             return upresult[0].id;
@@ -78,8 +79,11 @@ var policy = (function () {
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
             return ppresult[0].id;
         }
-
-        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
+        var roleList = user.getUserRoles({'username':userId});
+        var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer","private_kasun:wso2mobile.com");
+        var roles = common.removeNecessaryElements(roleList,removeRoles);
+        var role = roles[0];
+        var gpresult = db.query("SELECT policies.id as id FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
         return gpresult[0].id;
     }
     // prototype
