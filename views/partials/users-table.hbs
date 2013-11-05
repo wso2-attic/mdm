@@ -19,6 +19,7 @@ class="table table-striped table-bordered" id="main-table">
 			<td class="center">
 				
 			{{#compare type 'administrator' operator='!='}}
+				<a href="view?user={{username}}"  data-item="{{username}}" title="View User"><i class="icon-user"> </i> View User</a>&nbsp;
 				<a href="assign_groups?user={{username}}"  class="btn-assign-roles" data-item="{{username}}" title="Assign Roles"><i class="icon-edit"> </i> Assign Roles</a>&nbsp;
 				<a href="#"  class="btn-invite" data-item="{{username}}" title="Invite"><i class="icon-envelope"> </i> Invite</a>&nbsp;  	
 			{{/compare}}		
