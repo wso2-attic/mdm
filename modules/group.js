@@ -98,6 +98,24 @@ var group = (function () {
             }
             return proxy_role;
         },
+		editGroup: function(ctx){
+			var proxy_role = {};
+            var tenant_id = common.getTenantID();
+            if(tenant_id){
+                var um = userManager(tenant_id);
+                    if(um.roleExists(ctx.name)) {
+                        proxy_role.error = 'Role already exist in the system.';
+                        proxy_role.status = "ALLREADY_EXIST";
+                    }else{
+						um.updateRole(ctx.name, ctx.new_name);
+						proxy_role = ctx.new_name;
+					} 
+            }else{
+                proxy_role.status = "SERVER_ERROR";
+                print('Error in getting the tenantId from session');
+            }
+            return proxy_role;
+		},
 		getAllGroups: function(ctx){
             var type = ctx.type;
 			var um = userManager(common.getTenantID());
