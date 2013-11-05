@@ -273,7 +273,7 @@ var device = (function () {
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)", 
         	ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
 
-		common.initAPNS(common.getPushCertPath(), common.getPushCertPassword(), deviceToken, pushMagicToken);
+		common.initAPNS(deviceToken, pushMagicToken);
 
         return true;
     }

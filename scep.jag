@@ -4,15 +4,10 @@
 	var iosMdm = new iosMdmModule();
 	var log = new Log();
 	var operation = request.getParameter("operation");
-	 
-	var caPath = common.getCAPath();
-	var raPath = common.getRAPath();
-	var caPrivateKeyPath = common.getCAPrivateKey();
-	var raPrivateKeyPath = common.getRAPrivateKey();
 	
 	if(operation == "GetCACert") {
 		
-		var scepResponse = iosMdm.getCACert(caPath, raPath);
+		var scepResponse = iosMdm.getCACert();
 
 		if (scepResponse.getResultCriteria() == "CA_CERT_FAILED") {
 			response.sendRedirect("mdmerror.jag");
@@ -35,8 +30,7 @@
 		print(new Stream(byteArrayInputStream)); 
 		
 	} else if(operation == "PKIOperation") {
-		var pkiMessage = iosMdm.getPKIMessage(request.getInputStream(), caPath, caPrivateKeyPath, 
-			raPath, raPrivateKeyPath);
+		var pkiMessage = iosMdm.getPKIMessage(request.getInputStream());
 					
 		response.contentType = "application/x-pki-message";
 		var byteArrayInputStream = new Packages.java.io.ByteArrayInputStream(pkiMessage);	

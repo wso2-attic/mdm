@@ -5,7 +5,7 @@
 	var log = new Log();
 	var operation = request.getParameter("operation");
 	 
-	var data = iosMdm.getCA(common.getCAPath());
+	var data = iosMdm.getCA();
 
 	response.contentType = "application/x-x509-ca-cert";
 	
