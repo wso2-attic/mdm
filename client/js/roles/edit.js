@@ -23,9 +23,7 @@ $("#btn-add").click(function() {
 	// alert(JSON.stringify(userGroupsArray));
 	jso = {
 		"tenant_id" : tenantId,
-		"name" : name,
-		"type" : type,
-		"users" : usersArray
+		"name" : name	
 	};
 
 	var previousName = getURLParameter('group');

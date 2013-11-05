@@ -143,11 +143,8 @@ add = function(appController){
 
 edit = function(appController){
 	context = appController.context();
-	try{
-		var users = user.getUsersByType({type:context.contextData.user.role});
-	}catch(e){
-		var users = [];
-	}
+	var role = request.getParameter('group');
+	
 	log.info("sdfsd");
 	log.info(session.get("mdmConsoleUser"));
 	
@@ -156,7 +153,7 @@ edit = function(appController){
 	context.jsFile= "roles/edit.js"
 	context.data = {
 		configOption : "roles",
-		users: users,
+		role: role,
 		tenantId:session.get("mdmConsoleUser").tenantId
 	}
 	return context;

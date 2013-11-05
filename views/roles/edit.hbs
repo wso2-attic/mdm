@@ -29,35 +29,9 @@
 							<div class="control-group">
 								<label class="control-label" for="inputFirstName">Name</label>
 								<div class="controls">
-									<input type="text" id="inputName" class="input-xxlarge" data-required="true">
+									<input type="text" id="inputName" class="input-xxlarge" data-required="true" value="{{data.role}}">
 								</div>
-							</div>
-							
-							<!-- this is disable because it does not support multiple admins
-							<div class="control-group">
-								<label class="control-label" for="inputFirstName">Role Type</label>
-								<div class="controls">
-									User <input type="radio" class="radioGroupType" name="inputType" value="user" checked="checked"> &nbsp;
-									MDM Admin <input type="radio" class="radioGroupType" name="inputType" value="administrator"> &nbsp;									
-								</div>
-							</div>
-							-->
-
-							<div class="control-group">
-								<label class="control-label" for="inputMobile">Users</label>
-								<div class="controls raw">
-									<div class="multiple-selectbox">
-										<select multiple="multiple" size="10" id="inputUsers" name="inputUsers" class='duallistbox'>
-											{{#data.users}}
-											{{#compare type 'user'}}
-											<option value="{{username}}">{{firstName}} {{lastName}}</option>
-											{{/compare}}
-											{{/data.users}}
-										</select>
-									</div>
-
-								</div>
-							</div>
+							</div>						
 
 							<hr>
 							<div class="offset1-5">
