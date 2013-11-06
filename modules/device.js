@@ -710,7 +710,10 @@ var device = (function () {
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
-                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
+                        var obj = {};
+                        obj.type = upresult[0].type;
+                        obj.policies = jsonData;
+                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                         continue;
                     }
 
@@ -721,7 +724,10 @@ var device = (function () {
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
-                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
+                        var obj = {};
+                        obj.type = ppresult[0].type;
+                        obj.policies = jsonData;
+                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                         continue;
                     }
 
@@ -735,7 +741,10 @@ var device = (function () {
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
-                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
+                        var obj = {};
+                        obj.type = upresult[0].type;
+                        obj.policies = jsonData;
+                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                     }
 
                 }
