@@ -32,11 +32,11 @@ var iosmdm = (function() {
 
 	module.prototype = {
 		constructor : module,
-		getCA : function(caPath) {
+		getCA : function() {
 			try {
-				var fileInputStream = new Packages.java.io.FileInputStream(caPath);
-
-				return new Packages.org.apache.commons.io.IOUtils.toByteArray(fileInputStream);
+				var keystoreReader = new Packages.com.wso2mobile.ios.mdm.impl.KeystoreReader();
+				var caCertificate = keystoreReader.getCACertificate();
+				return caCertificate.getEncoded();
 			} catch (e) {
 				log.error(e);
 			}
@@ -63,7 +63,7 @@ var iosmdm = (function() {
 
 			try {
 				var requestHandler = new Packages.com.wso2mobile.ios.mdm.impl.RequestHandler();
-				var signedData = requestHandler.handleProfileRequest(inputStream, caPath, caPrivateKeyPath, token);
+				var signedData = requestHandler.handleProfileRequest(inputStream, token);
 
 				return signedData;
 			} catch (e) {
@@ -76,7 +76,7 @@ var iosmdm = (function() {
 
 			try {
 				var requestHandler = new Packages.com.wso2mobile.ios.mdm.impl.RequestHandler();
-				var scepResponse = requestHandler.handleGetCACert(caPath, raPath);
+				var scepResponse = requestHandler.handleGetCACert();
 
 				return scepResponse;
 			} catch (e) {
@@ -93,11 +93,11 @@ var iosmdm = (function() {
 			return strPostBodyCACaps.getBytes();
 
 		},
-		getPKIMessage : function(inputStream, caPath, caPrivateKeyPath, raPath, raPrivateKeyPath) {
+		getPKIMessage : function(inputStream) {
 
 			try {
 				var certGenerator = new Packages.com.wso2mobile.ios.mdm.impl.CertificateGenerator();
-				var pkiMessage = certGenerator.getPKIMessage(inputStream, caPath, caPrivateKeyPath, raPath, raPrivateKeyPath);
+				var pkiMessage = certGenerator.getPKIMessage(inputStream);
 
 				return pkiMessage;
 			} catch (e) {
@@ -115,7 +115,7 @@ var iosmdm = (function() {
 				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();
 				var checkinMessageType = plistExtractor.extractTokens(contentString);
 
-				if(checkinMessageType.getMessageType() == "CheckOut") {
+				if (checkinMessageType.getMessageType() == "CheckOut") {
 					var ctx = {};
 					ctx.udid = checkinMessageType.getUdid();
 					device.unRegisterIOS(ctx);
@@ -125,8 +125,8 @@ var iosmdm = (function() {
 					tokenProperties["unlockToken"] = checkinMessageType.getUnlockToken();
 					tokenProperties["magicToken"] = checkinMessageType.getPushMagic();
 					tokenProperties["deviceid"] = checkinMessageType.getUdid();
-	
-					device.updateiOSTokens(tokenProperties);	
+
+					device.updateiOSTokens(tokenProperties);
 				}
 
 			} catch (e) {
@@ -197,10 +197,10 @@ var iosmdm = (function() {
 				log.error(e);
 			}
 		},
-		initAPNS : function(pathPushCert, pushCertPassword, deviceToken, magicToken) {
+		initAPNS : function(deviceToken, magicToken) {
 
 			try {
-				var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender(pathPushCert, pushCertPassword);
+				var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender();
 
 				var userData = new Packages.java.util.ArrayList();
 				var params = new Packages.java.util.HashMap();
