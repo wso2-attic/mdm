@@ -46,35 +46,9 @@ var removeNecessaryElements = function(list,removeList){
     return newList;
 }
 
-var getCAPath = function() {
-	return "/home/gayan/Desktop/temp/keys/ca_cert.pem";
-}
-
-var getRAPath = function() {
-	return "/home/gayan/Desktop/temp/keys/ra_cert.pem";
-}
-
-var getCAPrivateKey = function() {
-	return "/home/gayan/Desktop/temp/keys/ca_private.pem";
-}
-
-var getRAPrivateKey = function() {
-	return "/home/gayan/Desktop/temp/keys/ra_private.pem";
-}
-
-//move this to a xml configuration file
-var getPushCertPassword = function() {
-	return "shan130474";
-}
-
-var getPushCertPath = function() {
-	return "/home/gayan/Desktop/temp/keys/PlainCert.pfx";
-} 
-
-var initAPNS = function(pathPushCert, pushCertPassword, deviceToken, magicToken) {
-
+var initAPNS = function(deviceToken, magicToken) {
 	try {
-		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender(pathPushCert, pushCertPassword);
+		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender();
 
 		var userData = new Packages.java.util.ArrayList();
 		var params = new Packages.java.util.HashMap();
