@@ -91,6 +91,7 @@ var user = (function () {
         constructor: module,
         /*User CRUD Operations (Create, Retrieve, Update, Delete)*/
         addUser: function(ctx){
+            log.info("Check Params"+stringify(ctx));
             var claimMap = new java.util.HashMap();
 
             claimMap.put(claimEmail, ctx.username);
@@ -183,7 +184,8 @@ var user = (function () {
         },
         deleteUser: function(ctx){
             var result = db.query("select * from devices where user_id = ?",ctx.userid);
-            if(result != undefined && result != null && result[0].length != undefined && result[0].length != null && result[0].length > 0){
+            log.info("Result :"+result);
+            if(result != undefined && result != null && result != '' && result[0].length != undefined && result[0].length != null && result[0].length > 0){
                 return 404;
             }else{
                 var um = userManager(common.getTenantID());

@@ -19,7 +19,7 @@ index = function(appController){
 
 	context = appController.context();	
 	
-	var testData =  policy.getUsersByPolicy({policyid: 35});
+	var testData =  policy.enforcePolicy({policyid: 44});
 	
 	print(testData);
 	

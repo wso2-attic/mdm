@@ -67,8 +67,14 @@ var policy = (function () {
         return  jsonData;
     }
     function getPolicyIdFromDevice(deviceId){
-        var devices = db.query("SELECT * from devices where id = ?",deviceId);
+        var devices = db.query("SELECT * from devices where id = ?",String(deviceId));
         var userId = devices[0].user_id;
+        var platform = '';
+        if(devices[0].platform_id == 1){
+            platform = 'android';
+        }else{
+            platform = 'ios';
+        }
 
         var upresult = db.query("SELECT policies.id as id FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",userId);
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
@@ -276,18 +282,18 @@ var policy = (function () {
             return array;
         },
         enforcePolicy:function(ctx){
-            var policyId =  ctx.policy_id;
-            var policies = db.query("SELECT * from policies where id = ?",policyId);
+            var policyId =  ctx.policyid;
+            var policies = db.query("SELECT * from policies where id = ?",String(policyId));
             var payLoad = parse(policies[0].content);
 
-            var users1 = db.query("SELECT * from user_policy_mapping where policy_id=?",policyId);
+            var users1 = db.query("SELECT * from user_policy_mapping where policy_id=?",String(policyId));
             for(var i = 0;i<users1.length;i++){
                 var devices1 = db.query("SELECT * from devices where user_id = ?",users1[i].user_id);
                 for(var j = 0;j<devices1.length;j++){
-                    device.sendToDevice({'deviceid':devices1[j].id,'operation':'500P','data':payLoad});
+                    device.sendToDevice({'deviceid':devices1[j].id,'operation':'POLICY','data':payLoad});
                 }
             }
-            var platforms =  db.query("SELECT * from platform_policy_mapping where policy_id=?",policyId);
+            var platforms =  db.query("SELECT * from platform_policy_mapping where policy_id=?",String(policyId));
             for(var i = 0;i<platforms.length;i++){
                 var platformId = "";
                 if(platforms[i].platform_id == 'android'){
@@ -295,7 +301,7 @@ var policy = (function () {
                     for(var j=0;j<devices2.length;j++){
                         var tempId = getPolicyIdFromDevice(devices2[j].id);
                         if(tempId == policyId){
-                            device.sendToDevice({'deviceid':devices2[i].id,'operation':'500P','data':payLoad});
+                            device.sendToDevice({'deviceid':devices2[j].id,'operation':'POLICY','data':payLoad});
                         }
                     }
 
@@ -304,13 +310,13 @@ var policy = (function () {
                     for(var j=0;j<devices3.length;j++){
                         var tempId = getPolicyIdFromDevice(devices3[j].id);
                         if(tempId == policyId){
-                            device.sendToDevice({'deviceid':devices3[i].id,'operation':'500P','data':payLoad});
+                            device.sendToDevice({'deviceid':devices3[i].id,'operation':'POLICY','data':payLoad});
                         }
                     }
                 }
 
             }
-            var groups =  db.query("SELECT * from group_policy_mapping where policy_id=?",policyId);
+            var groups =  db.query("SELECT * from group_policy_mapping where policy_id=?",String(policyId));
             for(var i = 0;i<groups.length;i++){
                 var users2 = group.getUsersOfGroup({'groupid':groups[i].group_id});
                 for(var j=0;j<users2.length;j++){
@@ -318,7 +324,7 @@ var policy = (function () {
                     for(var k = 0;k<devices4.length;k++){
                         var tempId = getPolicyIdFromDevice(devices4[k].id);
                         if(tempId == policyId){
-                            device.sendToDevice({'deviceid':devices4[k].id,'operation':'500P','data':payLoad});
+                            device.sendToDevice({'deviceid':devices4[k].id,'operation':'POLICY','data':payLoad});
                         }
                     }
                 }

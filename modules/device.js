@@ -171,16 +171,20 @@ var device = (function () {
     }
 
 	function sendMessageToDevice(ctx){
-
+        log.info("Test Function");
         var message = stringify(ctx.data);
         var token = Math.random() * 1000000;
         var status = false;
         var device_info = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", ctx.deviceid+"");
         var userID = device_info[0].user_id;
+        log.info(userID);
+        log.info(ctx.operation);
         var feature = db.query("SELECT * FROM features WHERE name LIKE ?", ctx.operation);
+        log.info(stringify(feature));
         if(feature==undefined || feature == null || feature[0]== undefined || feature[0] == null ){
             return false;
         }
+
         var groupID = "-1";
         var string = "0";
         if (device_info[0] != null) {
@@ -213,7 +217,7 @@ var device = (function () {
             + currentdate.getMinutes() + ":"
             + currentdate.getSeconds();
 
-        log.info("Test Function");
+
         if (parseInt(string) >= parseInt(stringnew)) {
             db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", 
             	ctx.deviceid, groupID, message, datetime, feature[0].code, userID,feature[0].description);	
@@ -420,6 +424,8 @@ var device = (function () {
         },
         sendToDevice: function(ctx){
             log.info("MSG format :"+stringify(ctx.data));
+            log.info(ctx.deviceid);
+            log.info(ctx.operation);
             var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
             var platformID = devices[0].platform_id;
             if(platformID==1){
