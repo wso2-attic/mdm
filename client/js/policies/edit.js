@@ -187,10 +187,10 @@ $(document).ready( function () {
 						
 					}
 					
-					if($("#" + code + "-" + key).attr('type') == "text" || $("#" + code + "-" + key).attr('type') == "password" || $("#" + code + "-" + key).attr('type') == "select"){
+					if($("#" + code + "-" + key).attr('type') == "text" || $("#" + code + "-" + key).attr('type') == "password" || $("#" + code + "-" + key).is("select")){
 						$("#" + code + "-" + key).val(value);
 						$("#" + code + "-policy .icon-ok-sign").css("display", "inline");
-					}
+					}	
 					
 					
 					

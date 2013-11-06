@@ -569,3 +569,16 @@ width:600px;
 .span1 {
     margin-left: 10px;
 }
+
+
+.multiple-selectbox .bootstrap-duallistbox-container .box1.filtered .clear1, .bootstrap-duallistbox-container .box2.filtered .clear2 {
+    display: none;
+}
+
+.policy-os-icon-block{
+	padding-top:10px;
+	padding-right:10px
+}
+
+.policy-os-icon{
+	padding: 3px;

@@ -85,6 +85,41 @@ edit = function(appController) {
 };
 
 
+view = function(appController) {
+	context = appController.context();
+	var userId = request.getParameter('user');
+	if (!userId) {
+		userId = session.get('mdmConsoleSelectedUser');
+	}
+	session.put('mdmConsoleSelectedUser', userId);
+	try {
+		var objUser = user.getUser({
+			"userid" : userId
+		});
+	} catch(e) {
+		var objUser = {};
+	}
+	
+	
+	try {
+		var groups = userG.getRolesOfUserByAssignment({
+			username : userId
+		});
+	} catch(e) {       
+		var groups = [];
+	}
+	
+		
+	context.title = context.title + " | View User";
+	context.page = "configuration";	
+	context.data = {
+		user: objUser,
+		groups: groups
+	};
+	return context;
+
+};
+
 devices = function(appController) {
 	
 		
@@ -109,6 +144,12 @@ devices = function(appController) {
 		});
 	} catch(e) {
 		var devices = [];
+	}
+	
+	if(devices.length <= 0){
+		noDevices = true;
+	}else{
+		noDevices = false;
 	}
 
 	for (var i = 0; i < devices.length; i++) {
@@ -164,7 +205,8 @@ devices = function(appController) {
 	context.data = {
 		configOption : "users",
 		devices : devices,
-		user : objUser
+		user : objUser,
+		noDevices: noDevices
 	};
 
 	return context;

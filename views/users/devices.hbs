@@ -18,6 +18,11 @@
 				<div class="block-body container-fluid raw-fluid well-small">
 
 					<ul class="nav nav-tabs" id="devicesTab">
+						{{#if data.noDevices}}
+							<div class="well text-center">
+								This user does not have any devices
+							</div>
+						{{/if}}
 
 						{{#data.devices}}
 

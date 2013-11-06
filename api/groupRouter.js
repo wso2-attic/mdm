@@ -15,10 +15,14 @@ var group = (function () {
 		        response.status = 404;
 		    }
 		});
-        router.get('groups/invite', function(ctx){
-            var groups= group.getGroups(ctx);
-            if(groups[0]!=null){
-                response.content = groups;
+        router.put('groups/invite', function(ctx){
+            var users= group.getUsersOfGroup(ctx);
+            if(users[0]!=null){
+				for (var i = users.length - 1; i >= 0; i--){
+					user.sendEmail({
+						username: users[i].username
+					});
+				};
                 response.status = 200;
             }else{
                 response.status = 404;
@@ -64,6 +68,11 @@ var group = (function () {
             }else{
                 response.status = 400;
             }
+		});
+		router.put('groups/{groupid}', function(ctx){
+			var result = group.editGroup(ctx.groupid, ctx.new_name);
+            response.content = result;
+            response.status = 200;
 		});
 		router.post('groups/{groupid}/operations/{operation}', function(ctx){
                 response.status = 200;

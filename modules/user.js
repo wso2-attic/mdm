@@ -158,7 +158,7 @@ var user = (function () {
             if(tenantId){
                 var um = userManager(common.getTenantID());
                 var allUsers = um.listUsers();
-                var removeUsers = new Array("wso2.anonymous.user","admin");
+                var removeUsers = new Array("wso2.anonymous.user","admin","admin@admin.com");
                 var users = common.removeNecessaryElements(allUsers,removeUsers);
                 for(var i = 0; i < users.length; i++) {
                     var user = um.getUser(users[i]);
@@ -182,10 +182,16 @@ var user = (function () {
             return users_list;
         },
         deleteUser: function(ctx){
-            var um = userManager(common.getTenantID());
-            um.removeUser(ctx.userid);
-			var private_role = ctx.userid.replace("@", ":");
-			um.removeRole("Internal/private_"+private_role);
+            var result = db.query("select * from devices where user_id = ?",ctx.userid);
+            if(result != undefined && result != null && result[0].length != undefined && result[0].length != null && result[0].length > 0){
+                return 404;
+            }else{
+                var um = userManager(common.getTenantID());
+                um.removeUser(ctx.userid);
+                var private_role = ctx.userid.replace("@", ":");
+                um.removeRole("Internal/private_"+private_role);
+                return 200;
+            }
         },
 
         /*End of User CRUD Operations (Create, Retrieve, Update, Delete)*/
@@ -313,7 +319,11 @@ var user = (function () {
             sender.to = ctx.username;
             sender.subject = subject;
             sender.text = content;
-            sender.send();
+            try{
+				sender.send();
+			}catch(e){
+				log.info(e);
+			}
         },
 
         /*Get all devices belongs to particular user*/

@@ -72,7 +72,7 @@ var user_group = (function () {
          },
          getRolesOfUserByAssignment:function(ctx){
              var totalGroups = group.getAllGroups({});
-             var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer");
+             var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer","mdmadmin");
              var allRoles = common.removeNecessaryElements(totalGroups,removeRoles);
              log.info("getRolesOfUserByAssignment :"+stringify(allRoles));
             var userRoles = user.getUserRoles(ctx);

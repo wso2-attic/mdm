@@ -355,7 +355,7 @@ var device = (function () {
                     var appPolicyData = null;
 
                     log.info("Initial email :"+userId);
-                    var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",userId);
+                    var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",String(userId));
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                         log.info("Policy Payload :"+upresult[0].data);
                         var jsonData = parse(upresult[0].data);
@@ -710,7 +710,10 @@ var device = (function () {
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
-                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
+                        var obj = {};
+                        obj.type = upresult[0].type;
+                        obj.policies = jsonData;
+                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                         continue;
                     }
 
@@ -721,7 +724,10 @@ var device = (function () {
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
-                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
+                        var obj = {};
+                        obj.type = ppresult[0].type;
+                        obj.policies = jsonData;
+                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                         continue;
                     }
 
@@ -735,7 +741,10 @@ var device = (function () {
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
-                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':jsonData});
+                        var obj = {};
+                        obj.type = upresult[0].type;
+                        obj.policies = jsonData;
+                        this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                     }
 
                 }

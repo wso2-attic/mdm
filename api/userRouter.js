@@ -103,8 +103,13 @@ var user = (function () {
         router.delete('users/{+userid}', function(ctx){
             log.info("Test User Delete");
             var result = user.deleteUser(ctx);
-            response.status = 200;
-
+            if(result == 404){
+                response.status = 404;
+                response.content = "Cannot delete user, associated devices exist";
+            }else if(result == 200){
+                response.status = 200;
+                response.content = "User Deleted";
+            }
         });
 		router.get('users/{+username}/groups/',function(ctx){
             log.info("Check Router");
