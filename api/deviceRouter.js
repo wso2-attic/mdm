@@ -63,7 +63,7 @@ var device = (function () {
 				var operation =  ctx['data'][i];
 				log.info('>>>>>>>>>');
 				log.info(operation);
-				var result = device.sendToDevice({data:operation, platform_id: operation.platform_id, deviceid: String(operation.deviceid)});
+				var result = device.sendToDevice({data:operation, operation: ctx.operation, platform_id: operation.platform_id, deviceid: String(operation.deviceid)});
 			};
 		});
 
@@ -71,7 +71,7 @@ var device = (function () {
             ctx.operation = "UNINSTALLAPP";
 		    for (var i = ctx['data'].length - 1; i >= 0; i--){
 				var operation =  ctx['data'][i];
-				var result = device.sendToDevice({data:operation, platform_id: operation.platform_id, deviceid: operation.deviceid});
+				var result = device.sendToDevice({data:operation, operation: ctx.operation, platform_id: operation.platform_id, deviceid: String(operation.deviceid)});
 			};
 		});
 
