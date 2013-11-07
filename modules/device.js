@@ -765,7 +765,7 @@ log.error("properties >>>>>>>>>>>>>>>>>>>>> " + stringify(properties));
         	properties = parse(parse(stringify(properties)));
         	properties["device"] = deviceName;
         	
-            db.query("UPDATE devices SET os_version = ?, properties = ? WHERE id = ?", osVersion, properties, deviceId + "");
+            db.query("UPDATE devices SET os_version = ?, properties = ? WHERE id = ?", osVersion, stringify(properties), deviceId + "");
         },
         getCurrentDeviceState:function(deviceId){
             var result = db.query("select status from devices where id = ?",stringify(deviceId));
