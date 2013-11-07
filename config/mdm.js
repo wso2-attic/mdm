@@ -6,14 +6,19 @@ var config;
             config = require('/config/config.json'),
             process = require('process'),
             localIP = process.getProperty('carbon.local.ip'),
+            host = process.getProperty('server.host'),
             httpPort = process.getProperty('http.port'),
             httpsPort = process.getProperty('https.port');
 
         pinch(config, /^/, function (path, key, value) {
-            if ((typeof value === 'string') && value.indexOf('%https.host%') > -1) {
-                return value.replace('%https.host%', 'https://' + localIP + ':' + httpsPort);
-            } else if ((typeof value === 'string') && value.indexOf('%http.host%') > -1) {
-                return value.replace('%http.host%', 'http://' + localIP + ':' + httpPort);
+            if ((typeof value === 'string') && value.indexOf('%https.ip%') > -1) {
+                return value.replace('%https.ip%', 'https://' + localIP + ':' + httpsPort);
+            } else if ((typeof value === 'string') && value.indexOf('%http.ip%') > -1) {
+                return value.replace('%http.ip%', 'http://' + localIP + ':' + httpPort);
+            }else if ((typeof value === 'string') && value.indexOf('%https.host%') > -1) {
+                return value.replace('%https.host%', 'http://' + host + ':' + httpPort);
+            }else if ((typeof value === 'string') && value.indexOf('%http.host%') > -1) {
+                return value.replace('%http.host%', 'http://' + host + ':' + httpPort);
             }
             return  value;
         });
