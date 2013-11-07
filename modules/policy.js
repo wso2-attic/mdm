@@ -287,6 +287,7 @@ var policy = (function () {
             var payLoad = parse(policies[0].content);
 
             var users1 = db.query("SELECT * from user_policy_mapping where policy_id=?",String(policyId));
+
             for(var i = 0;i<users1.length;i++){
                 var devices1 = db.query("SELECT * from devices where user_id = ?",users1[i].user_id);
                 for(var j = 0;j<devices1.length;j++){
@@ -295,7 +296,6 @@ var policy = (function () {
             }
             var platforms =  db.query("SELECT * from platform_policy_mapping where policy_id=?",String(policyId));
             for(var i = 0;i<platforms.length;i++){
-                var platformId = "";
                 if(platforms[i].platform_id == 'android'){
                     var devices2 = db.query("SELECT * from devices where platform_id = ?",String(1));
                     for(var j=0;j<devices2.length;j++){
