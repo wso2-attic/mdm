@@ -1,7 +1,7 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
 var user = (function () {
-    var config = require('../config/config.json');
+    var config = require('config/mdm.js').config();
     var routes = new Array();
 
 	var log = new Log();

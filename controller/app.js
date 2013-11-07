@@ -1,5 +1,5 @@
 var ui = require('../config/ui.json');
-var config = require('../config/config.json');
+var config = require('/config/mdm.js').config();
 
 var configApis = require('../config/apis.json');
 var log = new Log();

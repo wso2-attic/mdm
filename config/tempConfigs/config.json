@@ -1,7 +1,7 @@
 {
-    "HTTPS_URL": "https://192.168.1.95:9443",
-    "HTTP_URL": "http://192.168.1.95:9763",
-	"IOS_URL": "http://192.168.1.95:9763/devicelogin.html",
+    "HTTPS_URL": "%https.host%",
+    "HTTP_URL": "%http.host%",
+    "IOS_URL": "%https.host%/devicelogin.html",
     "MDM_UI_URI": "/mdm/",
     "MDM_API_URI": "/mdm/api/",
     "MDM_THEME": "wso2sinine",
@@ -26,14 +26,14 @@
     "email": {
         "companyName": "",
         "senderAddress": "",
-		"emailPassword": "",
-        "emailTemplate": "\nYou have been registered to the WSO2 MDM. Please click the link below to enroll your device.\n \n"
+        "emailPassword": "",
+        "emailTemplate": "\nYou have been registered to the WSO2Mobile MDM. Below is the link to enroll.\n \n"
     },
     "device": {
-        "android_location": "",
-        "ios_location": ""
+        "android_location": "/mdm/mdm.apk",
+        "ios_location": "%https.host%/mdm/devicelogin"
     },
-	"mam": {
-		"store_location": "https://localhost:9443/store/"
-	}
+    "mam": {
+        "store_location": "%https.host%/store/"
+    }
 }

@@ -60,7 +60,7 @@ var mam = (function () {
 
             var url = "https://localhost:9443/store/apis/v1/assets/mobileapp";
             var data = {  };
-          	var configs = require('/config/config.json');
+          	var configs = require('config/mdm.js').config();
 			var url  = configs.mam.store_location+"apis/assets/mobileapp";
 			var data = get(url, {} ,"json");
             var result = data.data;
