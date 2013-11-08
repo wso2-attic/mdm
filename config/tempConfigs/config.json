@@ -1,6 +1,6 @@
 {
-    "HTTPS_URL": "%https.host%",
-    "HTTP_URL": "%http.host%",
+    "HTTPS_URL": "%https.ip%",
+    "HTTP_URL": "%http.ip%",
     "IOS_URL": "%https.host%/devicelogin.html",
     "MDM_UI_URI": "/mdm/",
     "MDM_API_URI": "/mdm/api/",
@@ -31,9 +31,9 @@
     },
     "device": {
         "android_location": "/mdm/mdm.apk",
-        "ios_location": "%https.host%/mdm/devicelogin"
+        "ios_location": "%https.ip%/mdm/devicelogin"
     },
     "mam": {
-        "store_location": "%https.host%/store/"
+        "store_location": "%https.ip%/store/"
     }
 }
