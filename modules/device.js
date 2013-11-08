@@ -169,11 +169,7 @@ var device = (function () {
         }
 
     }
-    function getCurrentDateTime(){
-        var date = new Date();
-        var fdate = date.getFullYear() + '-' +('00' + (date.getMonth()+1)).slice(-2) + '-' +('00' + date.getDate()).slice(-2) + ' ' + ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2) + ':' + ('00' + date.getSeconds()).slice(-2);
-        return fdate;
-    }
+
     function versionComparison(osVersion,platformId,featureId){
         var deviceOsVersion = osVersion.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
         for (var i = deviceOsVersion.length; i < 4; i++) {
@@ -218,7 +214,7 @@ var device = (function () {
         if(versionCompatibility == false){
             return false;
         }
-        var currentDate = getCurrentDateTime();
+        var currentDate = common.getCurrentDateTime();
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription);
         var lastRecord = db.query("SELECT LAST_INSERT_ID()");
         var lastRecordJson = lastRecord[0];
@@ -319,13 +315,7 @@ var device = (function () {
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);//from device platform comes as iOS and Android then convert into platform id to save in device table
             var platformId = platforms[0].id;
 
-            var currentdate = new Date();
-            var createdDate =  currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/"
-                + currentdate.getFullYear() + " @ "
-                + currentdate.getHours() + ":"
-                + currentdate.getMinutes() + ":"
-                + currentdate.getSeconds();
+            var createdDate =  common.getCurrentDateTime();
 
             if(ctx.regid!=null){
                 var result = db.query("SELECT * FROM devices WHERE reg_id= ?", ctx.regid);
