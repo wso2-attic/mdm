@@ -27,7 +27,7 @@ gcm.setApiKey(androidConfig.api_key);
 
 var policyModule = require('../modules/policy.js').policy;
 var policy = new policyModule(db);
-policy.monitoring({});
+//policy.monitoring({});
 
 var groupModule = require('../modules/group.js').group;
 var group = new groupModule(db);
