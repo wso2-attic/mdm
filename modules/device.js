@@ -390,7 +390,7 @@ var device = (function () {
             }
         },
         registerIOS: function(ctx){
-            var tenantUser = carbon.server.tenantUser(ctx.email+"@carbon.super");
+            var tenantUser = carbon.server.tenantUser(ctx.email);
 		    var userId = tenantUser.username;
 			var tenantId = tenantUser.tenantId;
 			
@@ -405,7 +405,7 @@ var device = (function () {
                 db.query("Update devices SET reg_id = ? WHERE udid = ?", ctx.regid, ctx.udid);
             }else{
                 db.query("INSERT INTO devices (tenant_id, os_version, created_date, properties, reg_id, status, deleted, user_id, platform_id, vendor, udid) VALUES(?, ?, ?, ?, ?, 'A', '0', ?, ?, ?, ?)", 
-                	tenantId, ctx.osversion, createdDate, ctx.properties, ctx.regid, userId, platformId, ctx.vendor, ctx.udid);
+                	tenantId, ctx.osversion, createdDate, stringify(ctx.properties), ctx.regid, userId, platformId, ctx.vendor, ctx.udid);
             }
 
             return true;
@@ -511,9 +511,9 @@ var device = (function () {
 			var result = db.query("SELECT properties FROM devices WHERE udid = " + stringify(ctx.deviceid));
 
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
-                log.error(properties);
+                log.error(result);
                 var properties = parse(result[0].properties);
-
+log.error("properties >>>>>>>>>>>>>>>>>>>>> " + stringify(properties));
                 var platform = "" + properties["product"];
                 if (platform.toLowerCase().indexOf("ipad") != -1) {
                     platform = "iPad";
@@ -753,7 +753,7 @@ var device = (function () {
         	properties = parse(parse(stringify(properties)));
         	properties["device"] = deviceName;
         	
-            db.query("UPDATE devices SET os_version = ?, properties = ? WHERE id = ?", osVersion, properties, deviceId + "");
+            db.query("UPDATE devices SET os_version = ?, properties = ? WHERE id = ?", osVersion, stringify(properties), deviceId + "");
         },
         getCurrentDeviceState:function(deviceId){
             var result = db.query("select status from devices where id = ?",stringify(deviceId));
