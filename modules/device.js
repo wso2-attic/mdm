@@ -169,75 +169,63 @@ var device = (function () {
         }
 
     }
+    function getCurrentDateTime(){
+        var date = new Date();
+        var fdate = date.getFullYear() + '-' +('00' + (date.getMonth()+1)).slice(-2) + '-' +('00' + date.getDate()).slice(-2) + ' ' + ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2) + ':' + ('00' + date.getSeconds()).slice(-2);
+        return fdate;
+    }
+    function versionComparison(osVersion,platformId,featureId){
+        var deviceOsVersion = osVersion.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+        for (var i = deviceOsVersion.length; i < 4; i++) {
+            deviceOsVersion += "0";
+        }
+        var platformFeatures = db.query("SELECT id, template, min_version FROM platformfeatures WHERE (platform_id = ? AND feature_id = ?)",platformId, featureId);
+        var minVersion = platformFeatures[0].min_version;
+        minVersion = minVersion.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
+        for (var i = minVersion.length; i < 4; i++) {
+            minVersion += "0";
+        }
+        if(parseInt(deviceOsVersion)>parseInt(minVersion)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 	function sendMessageToDevice(ctx){
-        log.info("Test Function");
-        var message = stringify(ctx.data);
-        var token = Math.random() * 1000000;
-        var status = false;
-        var device_info = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", ctx.deviceid+"");
-        var userID = device_info[0].user_id;
-        log.info(userID);
-        log.info(ctx.operation);
-        var feature = db.query("SELECT * FROM features WHERE name LIKE ?", ctx.operation);
-        log.info(stringify(feature));
-        if(feature==undefined || feature == null || feature[0]== undefined || feature[0] == null ){
+        var payLoad = stringify(ctx.data);
+        var deviceId = ctx.deviceid;
+        var operationName = ctx.operation;
+
+        var devices = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", deviceId+"");
+        if(devices == undefined || devices == null || devices[0]== undefined || devices[0] == null ){
             return false;
         }
+        var userID = devices[0].user_id;
+        var osVersion = devices[0].os_version;
+        var platformId = devices[0].platform_id;
+        var regId = devices[0].reg_id;
 
-        var groupID = "-1";
-        var string = "0";
-        if (device_info[0] != null) {
-            string = device_info[0].os_version;
-        }
-        string = string.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
-        for (var i = string.length; i < 4; i++) {
-            string += "0";
-        }
-        var platform_feature = db.query("SELECT id, template, min_version FROM platformfeatures WHERE (platform_id = ? AND feature_id = ?)", 
-        	device_info[0].platform_id, feature[0].id);
-        var stringnew = "0";
-        if (platform_feature[0] != null) {
-            stringnew = platform_feature[0].min_version;
-        }
-        stringnew = stringnew.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
-        for (var i = stringnew.length; i < 4; i++) {
-            stringnew += "0";
-        }
-        var regId = device_info[0].reg_id;
-        //  var data = "{}";
-        if (platform_feature[0] != null) {
-            //     data = platform_feature[0].template;
-        }
-        var currentdate = new Date();
-        var datetime =  currentdate.getDate() + "/"
-            + (currentdate.getMonth()+1)  + "/"
-            + currentdate.getFullYear() + " @ "
-            + currentdate.getHours() + ":"
-            + currentdate.getMinutes() + ":"
-            + currentdate.getSeconds();
-
-
-        if (parseInt(string) >= parseInt(stringnew)) {
-            db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", 
-            	ctx.deviceid, groupID, message, datetime, feature[0].code, userID,feature[0].description);	
-            var lastRecord = db.query("SELECT LAST_INSERT_ID()");
-            var lastRecordJson = lastRecord[0];
-            log.info(lastRecordJson["LAST_INSERT_ID()"]);
-            token = lastRecordJson["LAST_INSERT_ID()"];
-            log.info(token);
-            var msg = {};
-            msg.token = token;
-            jsonStringData = stringify(msg.toSource());
-            log.info(jsonStringData);
-            log.info("Data fromat"+message);
-            log.info("Code :"+feature[0].code);
-            var gcmMSG = gcm.sendViaGCMtoMobile(regId, feature[0].code, token, message, 3);
-            log.info(gcmMSG);
-            return true;
-        } else {
+        var features = db.query("SELECT * FROM features WHERE name LIKE ?", ctx.operation);
+        if(features == undefined || features == null || features[0]== undefined || features[0] == null ){
             return false;
         }
+        var featureCode = features[0].code;
+        var featureId = features[0].id;
+        var featureDescription = features[0].description;
+
+        var versionCompatibility = versionComparison(osVersion, platformId, featureId);
+        if(versionCompatibility == false){
+            return false;
+        }
+        var currentDate = getCurrentDateTime();
+        db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription);
+        var lastRecord = db.query("SELECT LAST_INSERT_ID()");
+        var lastRecordJson = lastRecord[0];
+        var token = lastRecordJson["LAST_INSERT_ID()"];
+        var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
+        log.info(gcmMSG);
+        return true;
     }
     
     function sendMessageToIOSDevice(ctx){

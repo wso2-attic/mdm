@@ -75,12 +75,10 @@ var policy = (function () {
         }else{
             platform = 'ios';
         }
-
         var upresult = db.query("SELECT policies.id as id FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",userId);
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
             return upresult[0].id;
         }
-
         var ppresult = db.query("SELECT policies.id as id FROM policies,platform_policy_mapping where policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",platform);
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
             return ppresult[0].id;
@@ -92,10 +90,8 @@ var policy = (function () {
         var gpresult = db.query("SELECT policies.id as id FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
         return gpresult[0].id;
     }
-    // prototype
     module.prototype = {
         constructor: module,
-
         updatePolicy:function(ctx){
             var result;
             var policy = db.query("SELECT * FROM policies where name = ?",ctx.policyName);
@@ -337,17 +333,7 @@ var policy = (function () {
 	                device.monitor(ctx);
 	            }
             ,100000);
-        },
-        removePolicyFromGroup:function(ctx){
-        //    var result = db.query("INSERT INTO group_policy_mapping (user_id,policy_id) values (?,?)",ctx.uid,ctx.pid);
-        //    return result;
-        },
-        assignPolicyToUser:function(ctx){
-
-            return result;
         }
-
     };
-    // return module
     return module;
 })();
