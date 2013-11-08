@@ -274,12 +274,15 @@ var device = (function () {
     module.prototype = {
         constructor: module,
         isRegistered: function(ctx){
-            log.info(" isRegistered: function(ctx) reg id :"+ctx.regid);
-            var result = db.query("SELECT reg_id FROM devices WHERE reg_id = ? && deleted = 0", ctx.regid);
-            log.info("IS Registered >>>>>>>>>>"+result[0]);
-            var state = (result != null && result != undefined && result[0] != null && result[0] != undefined);
-            log.info(state);
-            return state;
+            if(ctx.regid != undefined && ctx.regid != null && ctx.regid != ''){
+                var result = db.query("SELECT reg_id FROM devices WHERE reg_id = ? && deleted = 0", ctx.regid);
+                var state = (result != null && result != undefined && result[0] != null && result[0] != undefined);
+                return state;
+            }else if(ctx.udid != undefined && ctx.udid != null && ctx.udid != ''){
+                var result = db.query("SELECT udid FROM devices WHERE udid = ? && deleted = 0", ctx.udid);
+                var state = (result != null && result != undefined && result[0] != null && result[0] != undefined);
+                return state;
+            }
         },
         getAppPolicyData:function(userId, platformId, role ){
             var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 2 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
