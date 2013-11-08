@@ -169,11 +169,7 @@ var device = (function () {
         }
 
     }
-    function getCurrentDateTime(){
-        var date = new Date();
-        var fdate = date.getFullYear() + '-' +('00' + (date.getMonth()+1)).slice(-2) + '-' +('00' + date.getDate()).slice(-2) + ' ' + ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2) + ':' + ('00' + date.getSeconds()).slice(-2);
-        return fdate;
-    }
+
     function versionComparison(osVersion,platformId,featureId){
         var deviceOsVersion = osVersion.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
         for (var i = deviceOsVersion.length; i < 4; i++) {
@@ -218,7 +214,7 @@ var device = (function () {
         if(versionCompatibility == false){
             return false;
         }
-        var currentDate = getCurrentDateTime();
+        var currentDate = common.getCurrentDateTime();
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription);
         var lastRecord = db.query("SELECT LAST_INSERT_ID()");
         var lastRecordJson = lastRecord[0];
@@ -274,12 +270,15 @@ var device = (function () {
     module.prototype = {
         constructor: module,
         isRegistered: function(ctx){
-            log.info(" isRegistered: function(ctx) reg id :"+ctx.regid);
-            var result = db.query("SELECT reg_id FROM devices WHERE reg_id = ? && deleted = 0", ctx.regid);
-            log.info("IS Registered >>>>>>>>>>"+result[0]);
-            var state = (result != null && result != undefined && result[0] != null && result[0] != undefined);
-            log.info(state);
-            return state;
+            if(ctx.regid != undefined && ctx.regid != null && ctx.regid != ''){
+                var result = db.query("SELECT reg_id FROM devices WHERE reg_id = ? && deleted = 0", ctx.regid);
+                var state = (result != null && result != undefined && result[0] != null && result[0] != undefined);
+                return state;
+            }else if(ctx.udid != undefined && ctx.udid != null && ctx.udid != ''){
+                var result = db.query("SELECT udid FROM devices WHERE udid = ? && deleted = 0", ctx.udid);
+                var state = (result != null && result != undefined && result[0] != null && result[0] != undefined);
+                return state;
+            }
         },
         getAppPolicyData:function(userId, platformId, role ){
             var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 2 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
@@ -316,13 +315,7 @@ var device = (function () {
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);//from device platform comes as iOS and Android then convert into platform id to save in device table
             var platformId = platforms[0].id;
 
-            var currentdate = new Date();
-            var createdDate =  currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/"
-                + currentdate.getFullYear() + " @ "
-                + currentdate.getHours() + ":"
-                + currentdate.getMinutes() + ":"
-                + currentdate.getSeconds();
+            var createdDate =  common.getCurrentDateTime();
 
             if(ctx.regid!=null){
                 var result = db.query("SELECT * FROM devices WHERE reg_id= ?", ctx.regid);
@@ -513,7 +506,7 @@ var device = (function () {
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
                 log.error(result);
                 var properties = parse(result[0].properties);
-log.error("properties >>>>>>>>>>>>>>>>>>>>> " + stringify(properties));
+
                 var platform = "" + properties["product"];
                 if (platform.toLowerCase().indexOf("ipad") != -1) {
                     platform = "iPad";
@@ -627,6 +620,8 @@ log.error("properties >>>>>>>>>>>>>>>>>>>>> " + stringify(properties));
             }
         },
         unRegisterIOS:function(ctx){
+        	
+        	sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});
         	
             if(ctx.udid != null){
                 var result = db.query("DELETE FROM devices WHERE udid = ?", parse(stringify(ctx.udid)));

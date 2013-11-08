@@ -159,7 +159,7 @@ var notification = (function () {
         addNotification: function(ctx){
 			log.info("Android Notification >>>>>"+stringify(ctx));
             var currentdate = new Date();
-            var recivedDate =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
+            var recivedDate = common.getCurrentDateTime();
 
             db.query("UPDATE notifications SET status='R', received_data = ? , received_date = ? WHERE id = ?", ctx.data, recivedDate, ctx.msgID);
         },
