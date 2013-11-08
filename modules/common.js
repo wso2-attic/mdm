@@ -234,12 +234,21 @@ var loadPayload = function(identifier , operationCode, data) {
 		} else if(data.type == "Market") {
 			operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.INSTALL_APPSTORE_APPLICATION;
 			paramMap.put("iTunesStoreID", data.identity);
+		} else if(data.type == "VPP") {
+			operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.INSTALL_APPSTORE_APPLICATION_VOLUME_PURCHASE;
+			paramMap.put("iTunesStoreID", data.identity);
 		}
 		
 	} else if(operationCode == "510A") {
 		
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_APPLICATION;
 		paramMap.put("Identifier", data.identifier);
+		
+	} else if(operationCode == "528A") {
+		
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APPLY_REDEMPTION_CODE;
+		paramMap.put("Identifier", data.identifier);
+		paramMap.put("RedemptionCode", data.redemptionCode);
 		
 	} else if(operationCode == "527A") {
 		return "ENTERPRISE_WIPE";
