@@ -506,7 +506,7 @@ var device = (function () {
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
                 log.error(result);
                 var properties = parse(result[0].properties);
-log.error("properties >>>>>>>>>>>>>>>>>>>>> " + stringify(properties));
+
                 var platform = "" + properties["product"];
                 if (platform.toLowerCase().indexOf("ipad") != -1) {
                     platform = "iPad";
@@ -620,6 +620,8 @@ log.error("properties >>>>>>>>>>>>>>>>>>>>> " + stringify(properties));
             }
         },
         unRegisterIOS:function(ctx){
+        	
+        	sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});
         	
             if(ctx.udid != null){
                 var result = db.query("DELETE FROM devices WHERE udid = ?", parse(stringify(ctx.udid)));

@@ -52,6 +52,10 @@ var device = (function () {
 		router.post('devices/unregister', function(ctx){
 		    var result = device.unRegister(ctx);
 		});
+		
+		router.post('devices/unregisterios', function(ctx){
+		    var result = device.unRegisterIOS(ctx);
+		});
 
 		/*	router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);

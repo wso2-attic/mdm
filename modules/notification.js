@@ -101,7 +101,7 @@ var notification = (function () {
                         var pushMagicToken = regIdJsonObj.magicToken;
                         var deviceToken = regIdJsonObj.token;
 
-                        common.initAPNS(common.getPushCertPath(), common.getPushCertPassword(), deviceToken, pushMagicToken);
+                        common.initAPNS(deviceToken, pushMagicToken);
                     } else {
                         db.query("UPDATE notifications SET status='R' WHERE id = ?", notificationId);
                     }
