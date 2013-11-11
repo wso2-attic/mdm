@@ -40,7 +40,7 @@ var group = (function () {
 		});
         router.get('groups/{groupid}/users', function(ctx){
             log.info("Test Router");
-            var allUsers = group.getUsersByGroup(ctx);
+            var allUsers = group.getGroupsByType(ctx);
             response.content =  allUsers;
             response.status = 200;
         });
