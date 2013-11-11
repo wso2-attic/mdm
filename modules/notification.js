@@ -173,7 +173,6 @@ var notification = (function () {
             if(result == null || result == undefined ||result.length == 0) {
                 return {};
             }
-
             return result[result.length-1];
         },
         getPolicyState: function(ctx){
