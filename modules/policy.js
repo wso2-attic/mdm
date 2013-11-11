@@ -109,7 +109,7 @@ var policy = (function () {
             if(existingPolicies != undefined && existingPolicies != null && existingPolicies[0] != undefined && existingPolicies[0] != null ){
                 return 409;
             }
-            var result = db.query("insert into policies (name,content,type,category) values (?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType,1);
+            var result = db.query("insert into policies (name,content,type,category) values (?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType, ctx.category);
             log.info("Result >>>>>>>"+result);
             return 201;
         },
