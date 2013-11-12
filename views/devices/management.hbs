@@ -109,7 +109,7 @@
 								
 								<div class="raw">
 									<select name="featureList" id="featureList" class="dropdownimage" style="width:300px">
-										<option value="">-- Select an operation to Apply --</option>
+										<option value="">-- Select an operation to apply --</option>
 										{{#data.features}}{{#compare feature_type 'OPERATION'}}
 										<option value="{{name}}" data-template="{{template}}" data-image="{{../../resourcePath}}features/{{name}}.png">{{description}}</option>
 										{{/compare}}{{/data.features}}
