@@ -53,9 +53,8 @@ var notification = (function () {
             var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
             var notifications = db.query("SELECT feature_code FROM notifications WHERE id = ?", identifier);
 
-            var currentdate = new Date();
-            var recivedDate =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
 
+            var recivedDate =  common.getCurrentDateTime();
             if(notifications != null) {
                 var featureCode = notifications[0].feature_code;
 
@@ -104,6 +103,10 @@ var notification = (function () {
                         common.initAPNS(deviceToken, pushMagicToken);
                     } else {
                         db.query("UPDATE notifications SET status='R' WHERE id = ?", notificationId);
+                        
+                        var ctx = {};
+                        ctx.id = notificationId;
+                        discardOldNotifications(ctx);
                     }
 
                 } else if(featureCode == "501P") {
@@ -276,6 +279,16 @@ var notification = (function () {
 
             array.push(obj2);
             return array;
+        }, discardOldNotifications:function(ctx) {
+        	
+        	var currentOperation = db.query("SELECT received_date, device_id, feature_code, user_id FROM notifications WHERE id = ?", parseInt(ctx.id));
+        	
+        	var receivedDate = currentOperation[0].received_date;
+        	var deviceId = currentOperation[0].device_id;
+        	var featureCode = currentOperation[0].feature_code;
+        	var userId = currentOperation[0].user_id;
+        	
+        	db.query("UPDATE notifications SET status = 'D' WHERE device_id = ? AND feature_code = ? AND user_id = ? AND status = 'P'", deviceId, featureCode, userId);
         }
 
     };
