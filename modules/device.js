@@ -394,8 +394,7 @@ var device = (function () {
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
 
-            var createdDate =  common.getCurrentDateTime();
-
+            var createdDate = common.getCurrentDateTime();
             var devicesCheckUDID = db.query("SELECT * FROM devices WHERE udid = ?", ctx.udid);
             if(devicesCheckUDID != undefined && devicesCheckUDID != null && devicesCheckUDID[0] != undefined && devicesCheckUDID[0] != null){
                 db.query("Update devices SET reg_id = ? WHERE udid = ?", ctx.regid, ctx.udid);
