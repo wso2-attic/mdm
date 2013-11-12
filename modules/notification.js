@@ -53,9 +53,8 @@ var notification = (function () {
             var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
             var notifications = db.query("SELECT feature_code FROM notifications WHERE id = ?", identifier);
 
-            var currentdate = new Date();
-            var recivedDate =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
 
+            var recivedDate =  common.getCurrentDateTime();
             if(notifications != null) {
                 var featureCode = notifications[0].feature_code;
 
