@@ -121,22 +121,58 @@
 			<div id="collapse5" class="accordion-body collapse">
 				<div class="accordion-inner">
 					<!-- eMail Configurations Start -->
-					<div class="control-group">
-						<label class="control-label">Authentication Type</label>
-						<div class="controls">							
-							<select  id="520A-type" class="policy-input"><option value="">--Select--</option>
-								<option value="GMAIL">GMAIL</option><option value="YAHOO">YAHOO</option><option value="HOTMAIL">HOTMAIL</option>
-							</select>
-							
-						</div>
-					</div>
+					
 
 					<div class="control-group">
-						<label class="control-label">Account Name</label>
+						<label class="control-label">Incoming Mail Server</label>
 						<div class="controls">
-							<input type="text" id="520A-displayname" class="policy-input">
+							<input type="text" id="520A-incomingMailServerHostName" class="policy-input">
 						</div>
-					</div>					
+					</div>	
+					
+					<div class="control-group">
+						<label class="control-label">Incoming Mail Server Port</label>
+						<div class="controls">
+							<input type="text" id="520A-incomingMailServerPortNumber" class="policy-input">
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">Out Going Mail Server</label>
+						<div class="controls">
+							<input type="text" id="520A-outgoingMailServerHostName" class="policy-input">
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">Outgoing Mail Server Port</label>
+						<div class="controls">
+							<input type="text" id="520A-outgoingMailServerPortNumber" class="policy-input">
+						</div>
+					</div>		
+					
+					
+					<div class="control-group">
+						<label class="control-label">Email Account Name</label>
+						<div class="controls">
+							<input type="text" id="520A-emailAccountName" class="policy-input">
+						</div>
+					</div>	
+					
+					<div class="control-group">
+						<label class="control-label">Incoming Mail Server Use SSL</label>
+						<div class="controls">
+							<input type="checkbox" data-group="policies" id="520A-incomingMailServerUseSSL" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">Out Going Mail Server Use SSL</label>
+						<div class="controls">
+							<input type="checkbox" data-group="policies" id="520A-outgoingMailServerUseSSL" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+						</div>
+					</div>
+								
 
 
 					<br />					
