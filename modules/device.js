@@ -375,6 +375,7 @@ var device = (function () {
                         if(appPolicyData != null && appPolicyData != null){
                             jsonData.push(appPolicyData);
                         }
+                        log.info("Policy Payload with app policy :"+stringify(jsonData));
                         sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                         return true;
                     }
