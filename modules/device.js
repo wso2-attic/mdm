@@ -249,8 +249,8 @@ var device = (function () {
         var users = db.query("SELECT user_id FROM devices WHERE id = ?", ctx.deviceid+"");
         var userId = users[0].user_id;
 
-        var currentdate = new Date();
-        var datetime =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
+
+        var datetime =  common.getCurrentDateTime();
 
         log.info("Test operation"+ctx.operation);
 
@@ -264,6 +264,27 @@ var device = (function () {
 		common.initAPNS(deviceToken, pushMagicToken);
 
         return true;
+    }
+    
+    function checkPendingOperations() {
+    	
+    	var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' ORDER BY sent_date DESC");
+    	
+    	for(var i = 0; i < pendingOperations.length; i++) {
+    		
+    		var deviceId = pendingOperations[i].device_id;
+    		var devices = db.query("SELECT reg_id FROM devices WHERE udid = ?", deviceId);
+    		
+    		if(devices != null && devices[0] != null && devices != undefined && devices[0] != undefined) {
+    			var regId = devices[0].reg_id;
+		    	var regIdJsonObj = parse(regId);
+		    	var pushMagicToken = regIdJsonObj.magicToken;
+		        var deviceToken = regIdJsonObj.token;
+		    	
+		    	common.initAPNS(deviceToken, pushMagicToken);		
+    		}
+    	}
+
     }
 
     // prototype
@@ -390,9 +411,7 @@ var device = (function () {
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
 
-            var currentdate = new Date();
-            var createdDate =  currentdate.getDate() + "/"+ (currentdate.getMonth()+1)  + "/"+ currentdate.getFullYear() + " @ "+ currentdate.getHours() + ":"+ currentdate.getMinutes() + ":"+ currentdate.getSeconds();
-
+            var createdDate = common.getCurrentDateTime();
             var devicesCheckUDID = db.query("SELECT * FROM devices WHERE udid = ?", ctx.udid);
             if(devicesCheckUDID != undefined && devicesCheckUDID != null && devicesCheckUDID[0] != undefined && devicesCheckUDID[0] != null){
                 db.query("Update devices SET reg_id = ? WHERE udid = ?", ctx.regid, ctx.udid);
@@ -428,9 +447,9 @@ var device = (function () {
 			
             var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
             
-            if(deviceList[0]!=null){
+            if(deviceList[0]!=null) {
                 var deviceID = String(deviceList[0].id);
-                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE notifications.status='P' AND notifications.device_id = ?", deviceID+"");
+                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE notifications.status='P' AND notifications.device_id = ? ORDER BY sent_date DESC", deviceID+"");
                 
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
                     var id = pendingFeatureCodeList[0].id;
@@ -757,6 +776,13 @@ var device = (function () {
             }else{
                 return null;
             }
+        },
+        invokePendingOperations:function(){
+            setInterval(
+           		function(){
+	                checkPendingOperations();
+	            }
+            , 10000);
         }
     };
 
