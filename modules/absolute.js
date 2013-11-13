@@ -27,11 +27,15 @@ var mvc = (function () {
 	  return obj1;
 	}
 	function getResource(name){
-		var f = new File(name);
-		f.open("r");
-		var cont = f.readAll();
-		f.close();
-		return cont;
+		try{
+			var f = new File(name);
+			f.open("r");
+			var cont = f.readAll();
+			f.close();
+			return cont;
+		}catch(e){
+			request.sendError(404);
+		}
 	}
 	
 	function isExists(filename){
@@ -59,10 +63,14 @@ var mvc = (function () {
 		var m = mime(resourceURL);
 		response.addHeader('Content-Type', m);
 		if(isBinaryResource(m)){
-			var f = new File(resourceURL);
-			f.open('r');
-		    print(f.getStream());
-			f.close();
+			try{
+				var f = new File(resourceURL);
+				f.open('r');
+			    print(f.getStream());
+				f.close();
+			}catch(e){
+				request.sendError(404);
+			}
 		}else{
 			print(getResource(resourceURL));
 		}
