@@ -35,6 +35,7 @@ var notification = (function () {
         constructor: module,
         getNotifications: function(ctx){
             var result = db.query("SELECT * FROM notifications WHERE device_id = ? ORDER BY id DESC LIMIT 10", ctx.deviceid);
+
             var notifications = new Array();
             for (i=0;i<10;i++){
 
@@ -42,8 +43,13 @@ var notification = (function () {
                     notifications[i] = {};
                     continue;
                 }
-
-                notifications[i] = result[i];
+                var obj = {};
+                obj.sent_date = String(result[i].sent_date);
+                obj.received_date = String(result[i].received_date);
+                obj.received_data = result[i].received_data;
+                obj.feature_code =  result[i].feature_code;
+                obj.feature_description =  result[i].feature_description;
+                notifications[i] = obj;
             }
             return notifications;
         },

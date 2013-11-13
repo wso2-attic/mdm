@@ -19,7 +19,8 @@ index = function(appController){
 
 	context = appController.context();	
 	
-	var testData =  device.getFeaturesFromDevice({deviceid: 993});
+	var testData =  notification.getNotifications({deviceid: 998});
+
 	print(testData);
 	
 	return {};
