@@ -68,7 +68,7 @@ var mvc = (function () {
 				f.open('r');
 			    print(f.getStream());
 				f.close();
-			}catch(){
+			}catch(e){
 				request.sendError(404);
 			}
 		}else{
