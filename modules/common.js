@@ -53,6 +53,12 @@ var getCurrentDateTime = function(){
 }
 
 var initAPNS = function(deviceToken, magicToken) {
+	
+	if(deviceToken == null || magicToken == null || 
+		deviceToken == undefined || magicToken == undefined) {
+		return;
+	}
+	
 	try {
 		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender();
 
