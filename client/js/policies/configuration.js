@@ -154,8 +154,7 @@ $(".btn-item-enforce").click(function() {
 							$noty.close();							
 							noty({
 								text : 'Policy is enforced successfully!',
-								'layout' : 'center',
-								'type': 'error'
+								'layout' : 'center'								
 							});
 						}
 					}
