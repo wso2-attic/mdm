@@ -274,14 +274,15 @@ var device = (function () {
     		
     		var deviceId = pendingOperations[i].device_id;
     		var devices = db.query("SELECT reg_id FROM devices WHERE udid = ?", deviceId);
-
-	    	var regId = devices[0].reg_id;
-	    	var regIdJsonObj = parse(regId);
-	    	var pushMagicToken = regIdJsonObj.magicToken;
-	        var deviceToken = regIdJsonObj.token;
-	    	
-	    	common.initAPNS(deviceToken, pushMagicToken);	
-	    	
+    		
+    		if(devices != null && devices[0] != null && devices != undefined && devices[0] != undefined) {
+    			var regId = devices[0].reg_id;
+		    	var regIdJsonObj = parse(regId);
+		    	var pushMagicToken = regIdJsonObj.magicToken;
+		        var deviceToken = regIdJsonObj.token;
+		    	
+		    	common.initAPNS(deviceToken, pushMagicToken);		
+    		}
     	}
 
     }
