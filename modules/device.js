@@ -322,14 +322,15 @@ var device = (function () {
                 jsonData = policyByOsType(jsonData,'android');
                 return jsonData;
             }
-            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 1 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
+            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 2 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
             log.info(gpresult[0]);
             if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
                 log.info("Policy Payload :"+gpresult[0].data);
                 var jsonData = parse(gpresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
+                return jsonData;
             }
-            return jsonData;
+            return null;
         },
         register: function(ctx){
             var log = new Log();
@@ -362,8 +363,9 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                   // var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
-                    var appPolicyData = null;
+                    var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                    log.info("app policy dataaaaaaaaaaaaaaaa");
+                    //var appPolicyData = null;
 
                     log.info("Initial email :"+userId);
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",String(userId));
