@@ -309,8 +309,8 @@ var device = (function () {
         getAppPolicyData:function(userId, platformId, role ){
             var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 2 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
             if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                log.info("Policy Payload :"+gpresult[0].data);
-                var jsonData = parse(gpresult[0].data);
+                log.info("Policy Payload :"+upresult[0].data);
+                var jsonData = parse(upresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
                 return jsonData;
             }
