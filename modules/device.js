@@ -730,7 +730,7 @@ var device = (function () {
                             jsonData.push(appPolicyData);
                         }
                         var obj = {};
-                        obj.type = upresult[0].type;
+                        obj.type = gpresult[0].type;
                         obj.policies = jsonData;
                         this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                     }
