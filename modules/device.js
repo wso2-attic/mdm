@@ -228,6 +228,11 @@ var device = (function () {
 		log.info("CTX >>>>>"+stringify(ctx));
         var message = stringify(ctx.data);
         var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
+        
+        if(devices == null || devices == undefined || devices[0] == null || devices[0] == undefined) {
+        	return;
+        }
+        
         var regId = devices[0].reg_id;
         var regIdJsonObj = parse(regId);
 
@@ -639,11 +644,11 @@ var device = (function () {
             }
         },
         unRegisterIOS:function(ctx){
-        	
+        	log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ctx.udidctx.udid " + ctx.udid);
         	sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});
         	
             if(ctx.udid != null){
-                var result = db.query("DELETE FROM devices WHERE udid = ?", parse(stringify(ctx.udid)));
+                var result = db.query("DELETE FROM devices WHERE udid = ?", ctx.udid);
                 if(result == 1){
                     return true;
                 }else{
