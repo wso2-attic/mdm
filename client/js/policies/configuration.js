@@ -108,6 +108,69 @@ $(".btn-item-remove").click(function() {
 
 });
 
+$(".btn-item-enforce").click(function() {
+	var item = $(this).data("item");
+		
+	noty({
+		text : 'Are you sure you want enforce this policy?',
+		buttons : [{
+			addClass : 'btn btn-cancel',
+			text : 'Cancel',
+			onClick : function($noty) {
+				$noty.close();
+
+			}
+			
+			
+		}, {
+			
+			addClass : 'btn btn-orange',
+			text : 'Ok',
+			onClick : function($noty) {
+				
+				jQuery.ajax({
+					url : getServiceURLs("policiesEnforce", item),
+					type : "GET",					
+					contentType : "text/plain",
+					
+						statusCode: {
+						404: function() {
+							$noty.close();
+							noty({
+								text : 'Error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						500: function() {
+							$noty.close();
+							noty({
+								text : 'Fatal error occured!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
+						200: function() {
+							$noty.close();							
+							noty({
+								text : 'Policy is enforced successfully!',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						}
+					}
+			
+				});
+				
+				
+			}
+			
+		}]
+	});	
+
+
+});
+
 
 
 
