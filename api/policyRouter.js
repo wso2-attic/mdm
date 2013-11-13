@@ -5,6 +5,14 @@ var policy = (function () {
         var policyModule = require('modules/policy.js').policy;
         var policy = new policyModule(db);
 
+        router.get('policies/{policyid}/enforce', function(ctx){
+
+            log.info("check policy router POST");
+            log.info(ctx);
+            var result = policy.addPolicy(ctx);
+            response.status = result;
+
+        });
         router.post('policies/', function(ctx){
 
             log.info("check policy router POST");

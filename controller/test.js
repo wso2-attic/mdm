@@ -19,8 +19,7 @@ index = function(appController){
 
 	context = appController.context();	
 	
-	var testData =  policy.enforcePolicy({policyid: 44});
-	
+	var testData =  device.getFeaturesFromDevice({deviceid: 993});
 	print(testData);
 	
 	return {};

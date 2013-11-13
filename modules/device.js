@@ -267,7 +267,24 @@ var device = (function () {
     }
     
     function checkPendingOperations() {
-    	var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P'");
+    	
+    	var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' ORDER BY sent_date DESC");
+    	
+    	for(var i = 0; i < pendingOperations.length; i++) {
+    		
+    		var deviceId = pendingOperations[i].device_id;
+    		var devices = db.query("SELECT reg_id FROM devices WHERE udid = ?", deviceId);
+    		
+    		if(devices != null && devices[0] != null && devices != undefined && devices[0] != undefined) {
+    			var regId = devices[0].reg_id;
+		    	var regIdJsonObj = parse(regId);
+		    	var pushMagicToken = regIdJsonObj.magicToken;
+		        var deviceToken = regIdJsonObj.token;
+		    	
+		    	common.initAPNS(deviceToken, pushMagicToken);		
+    		}
+    	}
+
     }
 
     // prototype
@@ -430,9 +447,9 @@ var device = (function () {
 			
             var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
             
-            if(deviceList[0]!=null){
+            if(deviceList[0]!=null) {
                 var deviceID = String(deviceList[0].id);
-                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE notifications.status='P' AND notifications.device_id = ?", deviceID+"");
+                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE notifications.status='P' AND notifications.device_id = ? ORDER BY sent_date DESC", deviceID+"");
                 
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
                     var id = pendingFeatureCodeList[0].id;
@@ -733,7 +750,7 @@ var device = (function () {
                             jsonData.push(appPolicyData);
                         }
                         var obj = {};
-                        obj.type = upresult[0].type;
+                        obj.type = gpresult[0].type;
                         obj.policies = jsonData;
                         this.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
                     }
@@ -759,6 +776,13 @@ var device = (function () {
             }else{
                 return null;
             }
+        },
+        invokePendingOperations:function(){
+            setInterval(
+           		function(){
+	                checkPendingOperations();
+	            }
+            , 10000);
         }
     };
 
