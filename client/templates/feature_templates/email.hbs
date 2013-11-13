@@ -4,32 +4,80 @@
 		<h4 id="myModalLabel">Email Configuration</h4>
 	</div>
 	<div class="modal-body">
-		<div class="raw">
-			<div class="feature-lable">
-				Authentication Type:
-			</div>
-			<select id="type" class="feature-input">
-				<option value="GMAIL">GMAIL</option><option value="YAHOO">YAHOO</option><option value="HOTMAIL">HOTMAIL</option>
-			</select>
-		</div>
+		
 		<div class="raw-fluid">
 			<div class="feature-lable">
-				Account Name:
+				Incoming Mail Server:
 			</div>
-			<input type="text" id="displayname" class="feature-input">
+			<input type="text" id="incomingMailServerHostName" class="feature-input">
 		</div>
-		<div class="raw">
+		
+		<div class="raw-fluid">
 			<div class="feature-lable">
-				Username:
+				Incoming Mail Server Port:
 			</div>
-			<input type="text" id="username" class="feature-input">
+			<input type="text" id="incomingMailServerPortNumber" class="feature-input">
 		</div>
-		<div class="raw">
+		
+		
+		<div class="raw-fluid">
 			<div class="feature-lable">
-				Password:
+				Outgoing Mail Server:
 			</div>
-			<input type="password" id="password" class="feature-input">
+			<input type="text" id="outgoingMailServerHostName" class="feature-input">
 		</div>
+		
+		<div class="raw-fluid">
+			<div class="feature-lable">
+				Outgoing Mail Server port:
+			</div>
+			<input type="text" id="outgoingMailServerPortNumber" class="feature-input">
+		</div>
+		
+		<div class="raw-fluid">
+			<div class="feature-lable">
+				 Email account name:
+			</div>
+			<input type="text" id="emailAccountName" class="feature-input">
+		</div>
+		
+		<div class="raw-fluid">
+			<div class="feature-lable">
+				Incoming Mail Server Username:
+			</div>
+			<input type="text" id="incomingMailServerUsername" class="feature-input">
+		</div>
+		
+		<div class="raw-fluid">
+			<div class="feature-lable">
+				Incoming Mail Server Password:
+			</div>
+			<input type="text" id="incomingPassword" class="feature-input">
+		</div>
+		
+		<div class="raw-fluid">
+			<div class="feature-lable">
+				Outgoing  Mail Server Username:
+			</div>
+			<input type="text" id="outgoingMailServerUsername" class="feature-input">
+		</div>
+		
+		<div class="raw-fluid">
+			<div class="feature-lable">
+				Outgoing Mail Server Password:
+			</div>
+			<input type="text" id="outgoingPassword" class="feature-input">
+		</div>
+		
+		<div class="raw">
+			Incoming Mail Server Allow SSL: <input type="checkbox" id="incomingMailServerUseSSL" class="feature-input">
+		</div>
+		
+		<div class="raw">
+			Outgoing Mail Server Allow SSL: <input type="checkbox" id="outgoingMailServerUseSSL" class="feature-input">
+		</div>
+		
+		
 	</div>
 
 	<div class="modal-footer">

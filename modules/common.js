@@ -53,6 +53,12 @@ var getCurrentDateTime = function(){
 }
 
 var initAPNS = function(deviceToken, magicToken) {
+	
+	if(deviceToken == null || magicToken == null || 
+		deviceToken == undefined || magicToken == undefined) {
+		return;
+	}
+	
 	try {
 		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender();
 
@@ -118,16 +124,16 @@ var loadPayload = function(identifier , operationCode, data) {
 	log.error("operationCode >>>>>>>>>>>>>>>>>> " + operationCode);	
 	
 	if(operationCode == "503A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_LOCK;  //checked
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_LOCK;  
 	} else if(operationCode == "505A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CLEAR_PASSCODE;
 		paramMap.put("UnlockToken", data.unlock_token);
 	} else if(operationCode == "502A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APPLICATION_LIST;
 	} else if(operationCode == "500A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_INFORMATION; //checked
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_INFORMATION; 
 	} else if(operationCode == "508A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS; //checked
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS; 
 		paramMap.put("PayloadIdentifier", payloadIdentifier["CAMERA"]);
 		if(data.function == "Disable") {
 			paramMap.put("AllowCamera", false);
@@ -136,14 +142,14 @@ var loadPayload = function(identifier , operationCode, data) {
 		}
 		isProfile = true;
 	} else if(operationCode == "507A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS; //checked
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS; 
 		paramMap.put("PayloadIdentifier", payloadIdentifier["WIFI"]);
 		paramMap.put("PayloadDisplayName", "WIFI Configurations");
 		paramMap.put("Password", data.password);
 		paramMap.put("SSID", data.ssid);
 		isProfile = true;
 	} else if(operationCode == "512A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APN_SETTINGS; //checked - not working
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APN_SETTINGS; 
 		paramMap.put("PayloadIdentifier", payloadIdentifier["APN"]);
 		paramMap.put("PayloadDisplayName", "VPN Configurations");
 		paramMap.put("APN", data.carrier);
@@ -160,7 +166,7 @@ var loadPayload = function(identifier , operationCode, data) {
 		paramMap.put("Label", data.label);
 		isProfile = true;
 	} else if(operationCode == "519A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.PASSCODE_POLICY; //checked
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.PASSCODE_POLICY; 
 		paramMap.put("PayloadIdentifier", payloadIdentifier["PASSWORDPOLICY"]);
 		paramMap.put("PayloadDisplayName", "Passcode Policy");
 		paramMap.put("MaxFailedAttempts", data.maxFailedAttempts);
@@ -172,38 +178,25 @@ var loadPayload = function(identifier , operationCode, data) {
 		paramMap.put("RequireAlphanumeric", data.requireAlphanumeric);
 		isProfile = true;
 	} else if(operationCode == "520A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.EMAIL_CONFIGURATIONS; //checked
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.EMAIL_CONFIGURATIONS;
 		paramMap.put("PayloadIdentifier", payloadIdentifier["EMAIL"]);
 		paramMap.put("PayloadDisplayName", "Email Configurations");
-		paramMap.put("EmailAccountName", data.displayname);
-		paramMap.put("IncomingMailServerUsername", data.username);
-		paramMap.put("IncomingPassword", data.password);
-		paramMap.put("IncomingMailServerUseSSL", true);
-		paramMap.put("OutgoingMailServerUsername", data.username);
-		paramMap.put("OutgoingPassword", data.password);
-		paramMap.put("OutgoingMailServerUseSSL", true);
-		paramMap.put("OutgoingPasswordSameAsIncomingPassword", true);
-		
-		if (data.type == "GMAIL") {
-			paramMap.put("IncomingMailServerHostName", "imap.gmail.com");
-			paramMap.put("IncomingMailServerPortNumber", 993);
-			paramMap.put("OutgoingMailServerHostName", "smtp.gmail.com");
-			paramMap.put("OutgoingMailServerPortNumber", 587);
-        } else if (data.type == "YAHOO") {
-        	paramMap.put("IncomingMailServerHostName", "pop.mail.yahoo.com");
-			paramMap.put("IncomingMailServerPortNumber", 110);
-			paramMap.put("OutgoingMailServerHostName", "smtp.mail.yahoo.com");
-			paramMap.put("OutgoingMailServerPortNumber", 25);
-	    } else if (data.type == "HOTMAIL") {
-	    	paramMap.put("IncomingMailServerHostName", "pop3.live.com");
-			paramMap.put("IncomingMailServerPortNumber", 995);
-			paramMap.put("OutgoingMailServerHostName", "smtp.live.com");
-			paramMap.put("OutgoingMailServerPortNumber", 587);
-        }
+		paramMap.put("EmailAccountName", data.emailAccountName);
+		paramMap.put("IncomingMailServerUsername", data.incomingMailServerUsername);
+		paramMap.put("IncomingPassword", data.incomingPassword);
+		paramMap.put("IncomingMailServerUseSSL", data.incomingMailServerUseSSL);
+		paramMap.put("OutgoingMailServerUsername", data.outgoingMailServerUsername);
+		paramMap.put("OutgoingPassword", data.outgoingPassword);
+		paramMap.put("OutgoingMailServerUseSSL", data.outgoingMailServerUseSSL);
+		paramMap.put("OutgoingPasswordSameAsIncomingPassword", (data.outgoingPassword == data.incomingPassword));
+		paramMap.put("IncomingMailServerHostName", data.incomingMailServerHostName);
+		paramMap.put("IncomingMailServerPortNumber", data.incomingMailServerPortNumber);
+		paramMap.put("OutgoingMailServerHostName", data.outgoingMailServerHostName);
+		paramMap.put("OutgoingMailServerPortNumber", data.outgoingMailServerPortNumber);
 		
 		isProfile = true;
 	} else if(operationCode == "521A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CALENDAR_SUBSCRIPTION; //checked
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CALENDAR_SUBSCRIPTION; 
 		paramMap.put("PayloadIdentifier", payloadIdentifier["GOOGLECALENDAR"]);
 		paramMap.put("PayloadDisplayName", "Calendar Subscription");
 		paramMap.put("SubCalAccountUsername", data.username);
@@ -221,7 +214,7 @@ var loadPayload = function(identifier , operationCode, data) {
 		paramMap.put("SharedSecret", data.sharedsecret);
 		isProfile = true;
 	} else if(operationCode == "524A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.LDAP; //checked
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.LDAP; 
 		paramMap.put("PayloadIdentifier", payloadIdentifier["LDAP"]);
 		paramMap.put("PayloadDisplayName", "LDAP Configurations");
 		paramMap.put("LDAPAccountDescription", data.ldapdesc);
