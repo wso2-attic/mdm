@@ -364,7 +364,7 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
                     var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
-                    log.info("app policy dataaaaaaaaaaaaaaaa");
+                    log.info("app policy dataaaaaaaaaaaaaaaa :"+appPolicyData);
                     //var appPolicyData = null;
 
                     log.info("Initial email :"+userId);
