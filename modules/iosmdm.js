@@ -148,7 +148,7 @@ var iosmdm = (function() {
 				var commandUUID = apnsStatus.getCommandUUID();
 
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
-					log.error("Acknowledged >>>>>>>>>>>>>>>>");
+					log.error("Acknowledged >>>>>>>>>>>>>>>>" + apnsStatus.getOperation());
 
 					var responseData = "";
 
@@ -158,7 +158,7 @@ var iosmdm = (function() {
 						responseData = apnsStatus.getResponseData();
 					} else if ("ProfileList" == apnsStatus.getOperation()) {
 						responseData = apnsStatus.getResponseData();
-					} else if ("NeedsRedemption" == apnsStatus.getOperation()) {
+					} else if ("NeedsRedemption" == apnsStatus.getState()) {
 						log.error("NeedsRedemption >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 						
 						var notifications = db.query("SELECT device_id, message FROM notifications WHERE id = ?", commandUUID);
@@ -178,6 +178,10 @@ var iosmdm = (function() {
 					ctx.msgID = commandUUID;
 
 					notification.addIosNotification(ctx);
+					
+					ctx = {};
+					ctx.id = commandUUID;
+					notification.discardOldNotifications(ctx);
 
 					return;
 				} else if (("Error").equals(apnsStatus.getStatus())) {
@@ -189,6 +193,8 @@ var iosmdm = (function() {
 					ctx.msgID = commandUUID;
 
 					notification.addIosNotification(ctx);
+					
+					return;
 				}
 
 				var ctx = {};
