@@ -155,7 +155,9 @@ var notification = (function () {
                 		
                 		var isExist = false;
                 		
-                		for(var featureCode in featureCodeArray) {
+                		for(var j = 0; j < featureCodeArray.length; j++) {
+                			var featureCode = featureCodeArray[j];
+
                 			if(featureCode == code) {
                 				isExist = true;
                 				break;
