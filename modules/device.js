@@ -385,7 +385,10 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                    var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role)[0];
+                    var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                    if(appPolicyData != null){
+                        appPolicyData = appPolicyData[0];
+                    }
                     log.debug("app policy dataaaaaaaaaaaaaaaa :"+stringify(appPolicyData));
                     //var appPolicyData = null;
 
