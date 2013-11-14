@@ -139,7 +139,7 @@ var device = (function () {
         sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
         sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
         
-        var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
+        var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?", String(userId));
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
             log.info("Policy Payload :"+upresult[0].data);
             var jsonData = parse(upresult[0].data);
@@ -274,7 +274,7 @@ var device = (function () {
     
     function checkPendingOperations() {
     	
-    	var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' ORDER BY sent_date DESC");
+    	var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' AND device_id IN (SELECT id FROM devices WHERE platform_id IN (SELECT id FROM platforms WHERE type_name = 'iOS')) ORDER BY sent_date DESC;");
     	
     	for(var i = 0; i < pendingOperations.length; i++) {
     		
