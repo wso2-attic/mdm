@@ -73,7 +73,27 @@ var device = (function () {
         return obj1;
     }
 
+    function removeEmptyCodes(array){
+        var newArray = new Array();
+        for(var i=0;i<array.length;i++){
+            if(array[i].data.function != undefined ){
+                newArray.push(array[i]);
+            }
+        }
+        return newArray;
+    }
 
+    function removeOtherCodes(array){
+        var newArray = new Array();
+        for(var i=0;i<array.length;i++){
+            if(array[i].code == "526A" || array[i].code == "513A" || array[i].code == "511A"){
+                continue;
+            }else{
+                newArray.push(array[i]);
+            }
+        }
+        return newArray;
+    }
 
     function checkPermission(role, deviceId, operationName, that){
         var policy = require('policy').policy;
@@ -725,6 +745,10 @@ var device = (function () {
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                         log.debug("Policy Payload :"+upresult[0].data);
                         var jsonData = parse(upresult[0].data);
+                        if(result.platform_id != 1){
+                            jsonData = removeEmptyCodes(jsonData);
+                            jsonData = removeOtherCodes(jsonData);
+                        }
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
@@ -739,6 +763,10 @@ var device = (function () {
                     if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
                         log.debug("Policy Payload :"+ppresult[0].data);
                         var jsonData = parse(ppresult[0].data);
+                        if(result.platform_id != 1){
+                            jsonData = removeEmptyCodes(jsonData);
+                            jsonData = removeOtherCodes(jsonData);
+                        }
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
@@ -756,6 +784,10 @@ var device = (function () {
                     if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
                         log.debug("Policy Payload :"+gpresult[0].data);
                         var jsonData = parse(gpresult[0].data);
+                        if(result.platform_id != 1){
+                            jsonData = removeEmptyCodes(jsonData);
+                            jsonData = removeOtherCodes(jsonData);
+                        }
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
                         }
