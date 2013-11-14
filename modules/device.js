@@ -210,10 +210,11 @@ var device = (function () {
         var featureId = features[0].id;
         var featureDescription = features[0].description;
 
-        var versionCompatibility = versionComparison(osVersion, platformId, featureId);
+        /*var versionCompatibility = versionComparison(osVersion, platformId, featureId);
         if(versionCompatibility == false){
             return false;
-        }
+        }*/
+
         var currentDate = common.getCurrentDateTime();
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription);
         var lastRecord = db.query("SELECT LAST_INSERT_ID()");
@@ -307,7 +308,8 @@ var device = (function () {
             }
         },
         getAppPolicyData:function(userId, platformId, role ){
-            var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 2 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
+
+            var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 2 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",String(userId));
             if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                 log.info("Policy Payload :"+upresult[0].data);
                 var jsonData = parse(upresult[0].data);
@@ -363,8 +365,8 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                  //  var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
-                  //  log.info("app policy dataaaaaaaaaaaaaaaa :"+appPolicyData);
+                 //   var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                 //   log.info("app policy dataaaaaaaaaaaaaaaa :"+appPolicyData);
                     var appPolicyData = null;
 
                     log.info("Initial email :"+userId);
