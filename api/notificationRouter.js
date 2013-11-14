@@ -6,6 +6,7 @@ var notification = (function () {
 		router.get('notifications/devices/{deviceid}', function(ctx){
 		    var result = notification.getNotifications(ctx);
             log.info("Test Notification Result"+result);
+
 		    if(result!= null && result != undefined && result[0] != null && result[0] != undefined){
 		        response.content = result;
 		        response.status = 200;

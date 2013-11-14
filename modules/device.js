@@ -309,8 +309,8 @@ var device = (function () {
         getAppPolicyData:function(userId, platformId, role ){
             var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 2 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
             if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                log.info("Policy Payload :"+gpresult[0].data);
-                var jsonData = parse(gpresult[0].data);
+                log.info("Policy Payload :"+upresult[0].data);
+                var jsonData = parse(upresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
                 return jsonData;
             }
@@ -322,14 +322,15 @@ var device = (function () {
                 jsonData = policyByOsType(jsonData,'android');
                 return jsonData;
             }
-            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 1 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
+            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 2 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
             log.info(gpresult[0]);
             if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
                 log.info("Policy Payload :"+gpresult[0].data);
                 var jsonData = parse(gpresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
+                return jsonData;
             }
-            return jsonData;
+            return null;
         },
         register: function(ctx){
             var log = new Log();
@@ -362,7 +363,8 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                   // var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                  //  var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                  //  log.info("app policy dataaaaaaaaaaaaaaaa :"+appPolicyData);
                     var appPolicyData = null;
 
                     log.info("Initial email :"+userId);
@@ -373,6 +375,7 @@ var device = (function () {
                         if(appPolicyData != null && appPolicyData != null){
                             jsonData.push(appPolicyData);
                         }
+                        log.info("Policy Payload with app policy :"+stringify(jsonData));
                         sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                         return true;
                     }

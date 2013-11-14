@@ -18,7 +18,7 @@ var user = new userModule(db);
 configuration = function(appController){	
 	
 	try{
-		var policies = policy.getAllPolicies({});
+		var policies = policy.getAllPoliciesForMDM({});
 	}catch(e){
 		var policies = [];
 	}

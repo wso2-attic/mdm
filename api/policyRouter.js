@@ -6,12 +6,7 @@ var policy = (function () {
         var policy = new policyModule(db);
 
         router.get('policies/{policyid}/enforce', function(ctx){
-
-            log.info("check policy router POST");
-            log.info(ctx);
-            var result = policy.addPolicy(ctx);
-            response.status = result;
-
+            policy.enforcePolicy(ctx);
         });
         router.post('policies/', function(ctx){
 
