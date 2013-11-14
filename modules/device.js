@@ -405,7 +405,10 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                    var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role)[0];
+                    var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                    if(appPolicyData != null){
+                        appPolicyData = appPolicyData[0];
+                    }
                     log.debug("app policy dataaaaaaaaaaaaaaaa :"+stringify(appPolicyData));
                     //var appPolicyData = null;
 
@@ -760,8 +763,9 @@ var device = (function () {
 
                   //  var appPolicyData = this.getAppPolicyData(userId,platform,role);
                     var appPolicyData = null;
-                    log.debug("Original User Email :"+userId);
-                    var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",userId);
+                    log.info("Original User Email :"+userId);
+                    var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",String(userId));
+
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
                         log.debug("Policy Payload :"+upresult[0].data);
                         var jsonData = parse(upresult[0].data);
