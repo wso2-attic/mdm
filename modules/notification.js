@@ -287,7 +287,7 @@ var notification = (function () {
             return array;
         }, discardOldNotifications:function(ctx) {
         	
-        	var currentOperation = db.query("SELECT received_date, device_id, feature_code, user_id FROM notifications WHERE id = ? AND feature_code != '500P' AND feature_code != '501P' ", parseInt(ctx.id));
+        	var currentOperation = db.query("SELECT received_date, device_id, feature_code, user_id FROM notifications WHERE id = ? AND feature_code != '500P' ", parseInt(ctx.id));
         	
         	if(currentOperation == null || currentOperation[0] == null || currentOperation == undefined || currentOperation[0] == undefined) {
         		return;
