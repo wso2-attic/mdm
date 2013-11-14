@@ -44,8 +44,8 @@ var notification = (function () {
                     continue;
                 }
                 var obj = {};
-                obj.sent_date =  result[i].sent_date;
-                obj.received_date =  result[i].received_date;
+                obj.sent_date =  common.getFormattedDate(result[i].sent_date);
+                obj.received_date = common.getFormattedDate(result[i].received_date);
                 obj.received_data = result[i].received_data;
                 obj.feature_code =  result[i].feature_code;
                 obj.feature_description =  result[i].feature_description;

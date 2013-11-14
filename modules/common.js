@@ -52,6 +52,15 @@ var getCurrentDateTime = function(){
     return fdate;
 }
 
+var getFormattedDate = function(value){
+    if(value==null && value == undefined){
+        return "";
+    }
+    var date = new Date(value);
+    var fdate = date.getFullYear() + '-' +('00' + (date.getMonth()+1)).slice(-2) + '-' +('00' + date.getDate()).slice(-2) + ' ' + ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2) + ':' + ('00' + date.getSeconds()).slice(-2);
+    return fdate;
+}
+
 var initAPNS = function(deviceToken, magicToken) {
 	
 	if(deviceToken == null || magicToken == null || 
