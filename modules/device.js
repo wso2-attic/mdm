@@ -278,8 +278,8 @@ var device = (function () {
     	for(var i = 0; i < pendingOperations.length; i++) {
     		
     		var deviceId = pendingOperations[i].device_id;
-    		var devices = db.query("SELECT reg_id FROM devices WHERE udid = ?", deviceId);
-    		
+    		var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", deviceId);
+
     		if(devices != null && devices[0] != null && devices != undefined && devices[0] != undefined) {
     			var regId = devices[0].reg_id;
 		    	var regIdJsonObj = parse(regId);
@@ -644,7 +644,7 @@ var device = (function () {
             }
         },
         unRegisterIOS:function(ctx){
-        	log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ctx.udidctx.udid " + ctx.udid);
+
         	sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});
         	
             if(ctx.udid != null){
