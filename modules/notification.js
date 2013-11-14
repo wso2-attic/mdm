@@ -57,12 +57,13 @@ var notification = (function () {
             //log.info("IOS Notification >>>>>"+stringify(ctx));
 
             var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
-            var notifications = db.query("SELECT feature_code FROM notifications WHERE id = ?", identifier);
-
-
+            var notifications = db.query("SELECT message, feature_code, device_id FROM notifications WHERE id = ?", identifier);
             var recivedDate =  common.getCurrentDateTime();
-            if(notifications != null) {
+            
+            if(notifications != null &&  notifications[0] != null) {
                 var featureCode = notifications[0].feature_code;
+                var device_id = notifications[0].device_id;
+                var message = notifications[0].message;
 
                 if(featureCode == "500P") {
 
@@ -112,13 +113,14 @@ var notification = (function () {
                         
                         var ctx = {};
                         ctx.id = notificationId;
-                        discardOldNotifications(ctx);
+                        this.discardOldNotifications(ctx);
                     }
 
                 } else if(featureCode == "501P") {
                     
                     var parsedReceivedData = parse(parse(stringify(ctx.data)));
                     var formattedData = new Array();
+                    var featureCodeArray =  new Array();
 
                     for(var i = 0; i < parsedReceivedData.length; i++) {
                         var receivedObject = parsedReceivedData[i];
@@ -140,7 +142,33 @@ var notification = (function () {
                         innerResponse.status = true;
                         innerResponse.code = featureCodes[0].code;
                         formattedData.push(innerResponse);
+                        featureCodeArray.push(featureCodes[0].code);
                     }
+                    	
+				    var receivedData = parse(message);
+				    var policies = receivedData["policies"];
+                	
+                	for(var i = 0; i < policies.length; i++) {
+                		
+                		var receivedElement = policies[i];
+                		var code = receivedElement["code"];
+                		
+                		var isExist = false;
+                		
+                		for(var featureCode in featureCodeArray) {
+                			if(featureCode == code) {
+                				isExist = true;
+                				break;
+                			}
+                		}
+                		
+                		if(!isExist) {
+	                    	var innerResponse = {};
+	                        innerResponse.status = false;
+	                        innerResponse.code = code;
+	                        formattedData.push(innerResponse);
+                		}
+                	}
 
                     db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", stringify(formattedData) +"", recivedDate+"", identifier);
 
