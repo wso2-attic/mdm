@@ -210,10 +210,11 @@ var device = (function () {
         var featureId = features[0].id;
         var featureDescription = features[0].description;
 
-        var versionCompatibility = versionComparison(osVersion, platformId, featureId);
+        /*var versionCompatibility = versionComparison(osVersion, platformId, featureId);
         if(versionCompatibility == false){
             return false;
-        }
+        }*/
+
         var currentDate = common.getCurrentDateTime();
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription);
         var lastRecord = db.query("SELECT LAST_INSERT_ID()");
@@ -278,8 +279,8 @@ var device = (function () {
     	for(var i = 0; i < pendingOperations.length; i++) {
     		
     		var deviceId = pendingOperations[i].device_id;
-    		var devices = db.query("SELECT reg_id FROM devices WHERE udid = ?", deviceId);
-    		
+    		var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", deviceId);
+
     		if(devices != null && devices[0] != null && devices != undefined && devices[0] != undefined) {
     			var regId = devices[0].reg_id;
 		    	var regIdJsonObj = parse(regId);
@@ -307,10 +308,11 @@ var device = (function () {
             }
         },
         getAppPolicyData:function(userId, platformId, role ){
-            var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 2 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
+
+            var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 2 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",String(userId));
             if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                log.info("Policy Payload :"+gpresult[0].data);
-                var jsonData = parse(gpresult[0].data);
+                log.info("Policy Payload :"+upresult[0].data);
+                var jsonData = parse(upresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
                 return jsonData;
             }
@@ -322,14 +324,15 @@ var device = (function () {
                 jsonData = policyByOsType(jsonData,'android');
                 return jsonData;
             }
-            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 1 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
+            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 2 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
             log.info(gpresult[0]);
             if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
                 log.info("Policy Payload :"+gpresult[0].data);
                 var jsonData = parse(gpresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
+                return jsonData;
             }
-            return jsonData;
+            return null;
         },
         register: function(ctx){
             var log = new Log();
@@ -362,7 +365,8 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                   // var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                 //   var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                 //   log.info("app policy dataaaaaaaaaaaaaaaa :"+appPolicyData);
                     var appPolicyData = null;
 
                     log.info("Initial email :"+userId);
@@ -373,6 +377,7 @@ var device = (function () {
                         if(appPolicyData != null && appPolicyData != null){
                             jsonData.push(appPolicyData);
                         }
+                        log.info("Policy Payload with app policy :"+stringify(jsonData));
                         sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                         return true;
                     }
@@ -644,7 +649,7 @@ var device = (function () {
             }
         },
         unRegisterIOS:function(ctx){
-        	log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ctx.udidctx.udid " + ctx.udid);
+
         	sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});
         	
             if(ctx.udid != null){

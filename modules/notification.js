@@ -44,8 +44,8 @@ var notification = (function () {
                     continue;
                 }
                 var obj = {};
-                obj.sent_date = String(result[i].sent_date);
-                obj.received_date = String(result[i].received_date);
+                obj.sent_date =  result[i].sent_date;
+                obj.received_date =  result[i].received_date;
                 obj.received_data = result[i].received_data;
                 obj.feature_code =  result[i].feature_code;
                 obj.feature_description =  result[i].feature_description;
@@ -287,7 +287,7 @@ var notification = (function () {
             return array;
         }, discardOldNotifications:function(ctx) {
         	
-        	var currentOperation = db.query("SELECT received_date, device_id, feature_code, user_id FROM notifications WHERE id = ? AND feature_code != '500P' AND feature_code != '501P' ", parseInt(ctx.id));
+        	var currentOperation = db.query("SELECT received_date, device_id, feature_code, user_id FROM notifications WHERE id = ? AND feature_code != '500P' ", parseInt(ctx.id));
         	
         	if(currentOperation == null || currentOperation[0] == null || currentOperation == undefined || currentOperation[0] == undefined) {
         		return;

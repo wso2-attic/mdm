@@ -113,8 +113,12 @@ var policy = (function () {
             log.info("Result >>>>>>>"+result);
             return 201;
         },
-        getAllPolicies:function(ctx){
-            var result = db.query("SELECT * FROM policies");
+        getAllPoliciesForMDM:function(ctx){
+            var result = db.query("SELECT * FROM policies where category = 1");
+            return result;
+        },
+        getAllPoliciesForMAM:function(ctx){
+            var result = db.query("SELECT * FROM policies where category = 2");
             return result;
         },
         getPolicy:function(ctx){
