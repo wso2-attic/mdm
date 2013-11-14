@@ -708,7 +708,11 @@ var device = (function () {
                     var platform = '';
                     if(result[0].platform_id == 1){
                         platform = 'android';
-                    }else if(result[0].platform_id == 2){
+                    } else if(result[0].platform_id == 2) {
+                        platform = 'ios';
+                    } else if(result[0].platform_id == 3) {
+                        platform = 'ios';
+                    } else if(result[0].platform_id == 4) {
                         platform = 'ios';
                     }
                     var operation = 'MONITORING';
