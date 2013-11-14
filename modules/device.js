@@ -74,24 +74,33 @@ var device = (function () {
     }
 
     function removeEmptyCodes(array){
+    	
         var newArray = new Array();
-        for(var i=0;i<array.length;i++){
-            if(array[i].data.function != undefined ){
+        
+        for(var i = 0; i < array.length; i++){
+            if((array[i].data)["function"] != null || (array[i].data)["function"] != undefined) {
                 newArray.push(array[i]);
             }
+            
         }
+        
         return newArray;
     }
 
     function removeOtherCodes(array){
+    	
         var newArray = new Array();
-        for(var i=0;i<array.length;i++){
-            if(array[i].code == "526A" || array[i].code == "513A" || array[i].code == "511A"){
+        
+        for(var i = 0; i < array.length; i++){
+        	
+            if(array[i].code == "526A" || array[i].code == "513A" || array[i].code == "511A") {
                 continue;
-            }else{
+            } else {
                 newArray.push(array[i]);
             }
+            
         }
+        
         return newArray;
     }
 
@@ -163,6 +172,8 @@ var device = (function () {
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
             log.debug("Policy Payload :"+upresult[0].data);
             var jsonData = parse(upresult[0].data);
+			jsonData = removeEmptyCodes(jsonData);
+            jsonData = removeOtherCodes(jsonData);
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
             return true;
         }
@@ -172,6 +183,8 @@ var device = (function () {
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
             log.debug("Policy Payload :"+ppresult[0].data);
             var jsonData = parse(ppresult[0].data);
+            jsonData = removeEmptyCodes(jsonData);
+            jsonData = removeOtherCodes(jsonData);
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
             return true;
         }
@@ -185,6 +198,8 @@ var device = (function () {
         if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
             log.debug("Policy Payload :"+gpresult[0].data);
             var jsonData = parse(gpresult[0].data);
+            jsonData = removeEmptyCodes(jsonData);
+            jsonData = removeOtherCodes(jsonData);
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
         }
 
@@ -278,9 +293,14 @@ var device = (function () {
 
         var datetime =  common.getCurrentDateTime();
 
-        log.debug("Test operation"+ctx.operation);
+        log.error("Test operation"+ctx.operation);
 
         var features = db.query("SELECT id, code, description FROM features WHERE name LIKE ?", ctx.operation+"");
+        
+        if(features == null || features == undefined || features[0] == null || features[0] == undefined) {
+        	return false;
+        }
+        
         var featureCode = features[0].code;
         var featureDescription = features[0].description;
 
