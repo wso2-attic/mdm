@@ -8,7 +8,7 @@ var notification = (function () {
             log.info("Test Notification Result"+result);
 
 		    if(result!= null && result != undefined && result[0] != null && result[0] != undefined){
-		        response.content = result;
+		        print(result);
 		        response.status = 200;
 		    }else{
 		        response.status = 404;

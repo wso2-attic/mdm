@@ -43,7 +43,7 @@ var policy = (function () {
             log.info(ctx);
             var result = policy.getAllPolicies(ctx);
             if(result != undefined && result != null && result[0] != undefined && result[0]!= null){
-                response.content = result;
+                print(result);
                 response.status = 200;
             }else{
                 response.status = 404;
@@ -56,7 +56,7 @@ var policy = (function () {
 
             if(result != undefined && result != null){
                 log.info("Content "+stringify(result));
-                response.content = result;
+                print(result);
                 response.status = 200;
             }else{
                 response.status = 404;
