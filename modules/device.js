@@ -81,22 +81,22 @@ var device = (function () {
         var decision = null;
         var action = 'POST';
         if(role == 'admin'){
-            log.info("subject :"+role);
-            log.info("action :"+action);
-            log.info("resource :"+operationName);
+            log.debug("subject :"+role);
+            log.debug("action :"+action);
+            log.debug("resource :"+operationName);
             decision = policy.getDecision(operationName, action, role, "");
-            log.info("Test decision :"+decision);
+            log.debug("Test decision :"+decision);
         }else if(role == 'mdmadmin'){
-            log.info("Test2");
+            log.debug("Test2");
             decision = policy.getDecision(operationName, action, role, "");
         }else{
-            log.info("Test3");
+            log.debug("Test3");
             var result = db.query("select * from devices where id ="+deviceId);
             var userId = result[0].user_id;
             var roleList = user.getUserRoles({'username':userId});
             for(var i = 0;i<roleList.length;i++){
                 var decision = policy.getDecision(operationName,action,roleList[i],"");
-                log.info("Test decision :"+decision);
+                log.debug("Test decision :"+decision);
                 if(decision=="Permit"){
                     break;
                 }
@@ -139,18 +139,18 @@ var device = (function () {
         sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
         sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
         
-        var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",stringify(userId));
+        var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?", String(userId));
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-            log.info("Policy Payload :"+upresult[0].data);
+            log.debug("Policy Payload :"+upresult[0].data);
             var jsonData = parse(upresult[0].data);
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
             return true;
         }
 
         var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = 'ios'");
-        log.info(ppresult[0]);
+        log.debug(ppresult[0]);
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
-            log.info("Policy Payload :"+ppresult[0].data);
+            log.debug("Policy Payload :"+ppresult[0].data);
             var jsonData = parse(ppresult[0].data);
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
             return true;
@@ -161,9 +161,9 @@ var device = (function () {
         var roles = common.removeNecessaryElements(roleList,removeRoles);
         var role = roles[0];
         var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
-        log.info(gpresult[0]);
+        log.debug(gpresult[0]);
         if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
-            log.info("Policy Payload :"+gpresult[0].data);
+            log.debug("Policy Payload :"+gpresult[0].data);
             var jsonData = parse(gpresult[0].data);
             sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
         }
@@ -221,12 +221,12 @@ var device = (function () {
         var lastRecordJson = lastRecord[0];
         var token = lastRecordJson["LAST_INSERT_ID()"];
         var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
-        log.info(gcmMSG);
+        log.debug(gcmMSG);
         return true;
     }
     
     function sendMessageToIOSDevice(ctx){
-		log.info("CTX >>>>>"+stringify(ctx));
+		log.debug("CTX >>>>>"+stringify(ctx));
         var message = stringify(ctx.data);
         var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
         
@@ -242,7 +242,7 @@ var device = (function () {
             message = {};
             message.unlock_token = unlockToken;
             message = stringify(message);
-            log.info("Messagee"+message);
+            log.debug("Messagee"+message);
         }
 
         var pushMagicToken = regIdJsonObj.magicToken;
@@ -258,7 +258,7 @@ var device = (function () {
 
         var datetime =  common.getCurrentDateTime();
 
-        log.info("Test operation"+ctx.operation);
+        log.debug("Test operation"+ctx.operation);
 
         var features = db.query("SELECT id, code, description FROM features WHERE name LIKE ?", ctx.operation+"");
         var featureCode = features[0].code;
@@ -274,7 +274,7 @@ var device = (function () {
     
     function checkPendingOperations() {
     	
-    	var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' ORDER BY sent_date DESC");
+    	var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' AND device_id IN (SELECT id FROM devices WHERE platform_id IN (SELECT id FROM platforms WHERE type_name = 'iOS')) ORDER BY sent_date DESC;");
     	
     	for(var i = 0; i < pendingOperations.length; i++) {
     		
@@ -311,23 +311,23 @@ var device = (function () {
 
             var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 2 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",String(userId));
             if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                log.info("Policy Payload :"+upresult[0].data);
+                log.debug("Policy Payload :"+upresult[0].data);
                 var jsonData = parse(upresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
                 return jsonData;
             }
             var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = 2 && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",platformId);
-            log.info(ppresult[0]);
+            log.debug(ppresult[0]);
             if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
-                log.info("Policy Payload :"+ppresult[0].data);
+                log.debug("Policy Payload :"+ppresult[0].data);
                 var jsonData = parse(ppresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
                 return jsonData;
             }
             var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 2 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
-            log.info(gpresult[0]);
+            log.debug(gpresult[0]);
             if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
-                log.info("Policy Payload :"+gpresult[0].data);
+                log.debug("Policy Payload :"+gpresult[0].data);
                 var jsonData = parse(gpresult[0].data);
                 jsonData = policyByOsType(jsonData,'android');
                 return jsonData;
@@ -361,31 +361,31 @@ var device = (function () {
 
                     
                     var deviceID = "" + devices[0].id;
-                    sendMessageToDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
+                    sendMessageToDevice({'deviceid':deviceID, 'operation': "debug", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                 //   var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
-                 //   log.info("app policy dataaaaaaaaaaaaaaaa :"+appPolicyData);
-                    var appPolicyData = null;
+                    var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role)[0];
+                    log.debug("app policy dataaaaaaaaaaaaaaaa :"+stringify(appPolicyData));
+                    //var appPolicyData = null;
 
-                    log.info("Initial email :"+userId);
+                    log.debug("Initial email :"+userId);
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",String(userId));
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                        log.info("Policy Payload :"+upresult[0].data);
+                        log.debug("Policy Payload :"+upresult[0].data);
                         var jsonData = parse(upresult[0].data);
                         if(appPolicyData != null && appPolicyData != null){
                             jsonData.push(appPolicyData);
                         }
-                        log.info("Policy Payload with app policy :"+stringify(jsonData));
+                        log.debug("Policy Payload with app policy :"+stringify(jsonData));
                         sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': jsonData});
                         return true;
                     }
 
                     var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = 1 && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",ctx.platform);
-                    log.info(ppresult[0]);
+                    log.debug(ppresult[0]);
                     if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
-                        log.info("Policy Payload :"+ppresult[0].data);
+                        log.debug("Policy Payload :"+ppresult[0].data);
                         var jsonData = parse(ppresult[0].data);
                         if(appPolicyData != null && appPolicyData != null){
                             jsonData.push(appPolicyData);
@@ -396,7 +396,7 @@ var device = (function () {
 
                     var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = 1 && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
                     if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
-                        log.info("Policy Payload :"+gpresult[0].data);
+                        log.debug("Policy Payload :"+gpresult[0].data);
 						var jsonData = parse(gpresult[0].data);
                         if(appPolicyData != null && appPolicyData != null){
                             jsonData.push(appPolicyData);
@@ -433,21 +433,21 @@ var device = (function () {
             return true;
         },
         sendToDevice: function(ctx){
-            log.info("MSG format :"+stringify(ctx.data));
-            log.info(ctx.deviceid);
-            log.info(ctx.operation);
+            log.debug("MSG format :"+stringify(ctx.data));
+            log.debug(ctx.deviceid);
+            log.debug(ctx.operation);
             var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
             var platformID = devices[0].platform_id;
             if(platformID==1){
                 return sendMessageToDevice(ctx);
             }else{
-                log.info("platformID"+platformID);
+                log.debug("platformID"+platformID);
                 return sendMessageToIOSDevice(ctx);
             }
         },
         sendToDevices:function(ctx){
-            log.info("test sendToDevices :"+stringify(ctx.params.data));
-            log.info(ctx.devices[0]);
+            log.debug("test sendToDevices :"+stringify(ctx.params.data));
+            log.debug(ctx.devices[0]);
            var devices =  ctx.devices;
            for(var i=0;i<devices.length;i++){
                 this.sendToDevice({'deviceid':devices[i],'operation':ctx.operation,'data':ctx.params.data});
@@ -568,7 +568,7 @@ var device = (function () {
         getFeaturesFromDevice: function(ctx){
             var role = ctx.role;
        	    var deviceId =  ctx.deviceid;
-            log.info("Test Role :"+role);
+            log.debug("Test Role :"+role);
             var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id", stringify(deviceId));
 			
             var obj = new Array();
@@ -590,7 +590,7 @@ var device = (function () {
                 obj.push(featureArr);
             }
 
-         //   log.info(obj);
+         //   log.debug(obj);
 
             return obj;
         },
@@ -668,9 +668,9 @@ var device = (function () {
             var userId = result[0].user_id;
             var roles = this.getUserRoles({'username':userId});
             var roleList = parse(roles);
-            log.info(roleList[0]);
+            log.debug(roleList[0]);
             var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
-            log.info(gpresult[0]);
+            log.debug(gpresult[0]);
             sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
         },
         getLicenseAgreement: function(ctx){
@@ -688,17 +688,17 @@ var device = (function () {
                 setInterval((application.get("that")).monitor({}),100000);
             }catch (e){
                // setInterval(this.monitoring({}),10000);
-                log.info("Error In Monitoring");
+                log.debug("Error In Monitoring");
             }
 
         },
         monitor:function(ctx){
-            log.info("monitor");
+            log.debug("monitor");
                 var result = db.query("SELECT * from devices");
                 for(var i=0; i<result.length; i++){
 
                     var deviceId = result[i].id;
-                    log.info("Device ID :"+deviceId);
+                    log.debug("Device ID :"+deviceId);
                     var platform = '';
                     if(result[0].platform_id == 1){
                         platform = 'android';
@@ -708,22 +708,22 @@ var device = (function () {
                     var operation = 'MONITORING';
                     var data = {};
                     var userId = result[i].user_id;
-                    this.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
+                    this.sendToDevice({'deviceid':deviceId,'operation':'debug','data':{}});
                     this.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
-                    log.info("Test1");
+                    log.debug("Test1");
 
                     var roleList = user.getUserRoles({'username':userId});
                     var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer","private_kasun:wso2mobile.com");
                     var roles = common.removeNecessaryElements(roleList,removeRoles);
                     var role = roles[0];
-                    log.info("Roleeeee"+role);
+                    log.debug("Roleeeee"+role);
 
                   //  var appPolicyData = this.getAppPolicyData(userId,platform,role);
                     var appPolicyData = null;
-                    log.info("Original User Email :"+userId);
+                    log.debug("Original User Email :"+userId);
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",userId);
                     if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-                        log.info("Policy Payload :"+upresult[0].data);
+                        log.debug("Policy Payload :"+upresult[0].data);
                         var jsonData = parse(upresult[0].data);
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
@@ -737,7 +737,7 @@ var device = (function () {
 
                     var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",platform);
                     if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
-                        log.info("Policy Payload :"+ppresult[0].data);
+                        log.debug("Policy Payload :"+ppresult[0].data);
                         var jsonData = parse(ppresult[0].data);
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
@@ -752,9 +752,9 @@ var device = (function () {
 
 
                     var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
-                    log.info("Resulttttttttttt"+gpresult[0]);
+                    log.debug("Resulttttttttttt"+gpresult[0]);
                     if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
-                        log.info("Policy Payload :"+gpresult[0].data);
+                        log.debug("Policy Payload :"+gpresult[0].data);
                         var jsonData = parse(gpresult[0].data);
                         if(appPolicyData!=undefined && appPolicyData!= null){
                             jsonData.push(appPolicyData);
