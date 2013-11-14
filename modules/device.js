@@ -363,9 +363,9 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "DATAUSAGE", 'data': "hi"});
 
-                    var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
-                    log.info("app policy dataaaaaaaaaaaaaaaa :"+appPolicyData);
-                    //var appPolicyData = null;
+                  //  var appPolicyData = this.getAppPolicyData(userId,ctx.platform,role);
+                  //  log.info("app policy dataaaaaaaaaaaaaaaa :"+appPolicyData);
+                    var appPolicyData = null;
 
                     log.info("Initial email :"+userId);
                     var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = 1 && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",String(userId));
