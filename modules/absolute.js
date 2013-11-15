@@ -34,7 +34,7 @@ var mvc = (function () {
 			f.close();
 			return cont;
 		}catch(e){
-			request.sendError(404);
+			response.sendError(404);
 		}
 	}
 	
