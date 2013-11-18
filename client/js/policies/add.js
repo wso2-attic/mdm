@@ -53,7 +53,7 @@ $("#btn-add").click(function() {
 			}	
 				
 		}else{	
-			if($(this).val() !== ""){
+			if(!($(this).val() == "" | $(this) != null | $(this) != undefined)){
 				params[prefix][suffix] = $(this).val();
 			}			
 			
