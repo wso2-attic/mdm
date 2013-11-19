@@ -171,7 +171,14 @@ var notification = (function () {
 	                        formattedData.push(innerResponse);
                 		}
                 	}
-
+                    var notifications = db.query("SELECT * from notifications where id = ?",identifier);
+                    var deviceId =  notifications[0].device_id;
+                    var featureCode = notifications[0].feature_code;
+                    try{
+                        db.query("DELETE FROM notifications WHERE device_id = ? AND status='R' AND feature_code = ?",deviceId,featureCode);
+                    }catch (e){
+                        log.info(e);
+                    }
                     db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", stringify(formattedData) +"", recivedDate+"", identifier);
 
                 } else {

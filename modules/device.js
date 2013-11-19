@@ -303,7 +303,11 @@ var device = (function () {
         
         var featureCode = features[0].code;
         var featureDescription = features[0].description;
+        try{
+            db.query("DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",ctx.deviceid,featureCode);
+        }catch (e){
 
+        }
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)", 
         	ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
 
