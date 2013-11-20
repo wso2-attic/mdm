@@ -43,6 +43,23 @@
 		
 		<div class="raw-fluid">
 			<div class="feature-lable">
+				 Email account description:
+			</div>
+			<textarea type="text" id="emailAccountDescription" class="feature-input"></textarea>
+		</div>
+		
+		<div class="raw-fluid">
+			<div class="feature-lable">
+				 Email account type:
+			</div>
+			<select type="text" id="emailAccountType" class="feature-input">
+				<option value="imap">imap</option>
+				<option value="pop">pop</option>
+			</select>
+		</div>
+		
+		<div class="raw-fluid">
+			<div class="feature-lable">
 				Incoming Mail Server Username:
 			</div>
 			<input type="text" id="incomingMailServerUsername" class="feature-input">
@@ -54,6 +71,17 @@
 			</div>
 			<input type="text" id="incomingPassword" class="feature-input">
 		</div>
+		
+		<div class="raw-fluid">
+			<div class="feature-lable">
+				  Incoming mail server authentication:
+			</div>
+			<select type="text" id="incomingMailServerAuthentication" class="feature-input">
+				<option value="none">None</option>
+				<option value="password">Password</option>
+			</select>
+		</div>
+		
 		
 		<div class="raw-fluid">
 			<div class="feature-lable">
@@ -69,10 +97,20 @@
 			<input type="text" id="outgoingPassword" class="feature-input">
 		</div>
 		
+		<div class="raw-fluid">
+			<div class="feature-lable">
+				  Outgoing mail server authentication:
+			</div>
+			<select type="text" id="outgoingMailServerAuthentication" class="feature-input">
+				<option value="none">None</option>
+				<option value="password">Password</option>
+			</select>
+		</div>
+		
 		<div class="raw">
 			Incoming Mail Server Allow SSL: <input type="checkbox" id="incomingMailServerUseSSL" class="feature-input"  data-true-val="true" data-false-val="false">
 		</div>
-		
+		<br>
 		<div class="raw">
 			Outgoing Mail Server Allow SSL: <input type="checkbox" id="outgoingMailServerUseSSL" class="feature-input"  data-true-val="true" data-false-val="false">
 		</div>
