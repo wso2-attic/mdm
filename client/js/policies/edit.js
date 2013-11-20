@@ -65,8 +65,10 @@ $("#btn-add").click(function() {
 	
 	var policyData =  Array();
 	
-	for (var param in params) {     	
-     	policyData.push({code: param, data: params[param]});
+	for (var param in params) { 		
+		if(!$.isEmptyObject(params[param])){
+			policyData.push({code: param, data: params[param]});
+		} 
 	}
 
 
