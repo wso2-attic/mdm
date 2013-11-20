@@ -191,6 +191,33 @@ var loadPayload = function(identifier , operationCode, data) {
 		paramMap.put("PayloadIdentifier", payloadIdentifier["EMAIL"]);
 		paramMap.put("PayloadDisplayName", "Email Configurations");
 		paramMap.put("EmailAccountName", data.emailAccountName);
+		paramMap.put("EmailAddress", data.emailAddress);
+		
+		if(data.emailAccountType == "imap") {
+			paramMap.put("EmailAccountType", "EmailTypeIMAP");
+		} else if(data.emailAccountType == "pop") {
+			paramMap.put("EmailAccountType", "EmailTypePOP");
+		} else {
+			paramMap.put("EmailAccountType", "");
+		}
+		
+		if(data.incomingMailServerAuthentication == "password") {
+			paramMap.put("IncomingMailServerAuthentication", "EmailAuthPassword");
+		} else if(data.incomingMailServerAuthentication == "none") {
+			paramMap.put("IncomingMailServerAuthentication", "EmailAuthNone");
+		} else {
+			paramMap.put("IncomingMailServerAuthentication", "");
+		}
+		
+		if(data.outgoingMailServerAuthentication == "password") {
+			paramMap.put("OutgoingMailServerAuthentication", "EmailAuthPassword");
+		} else if(data.outgoingMailServerAuthentication == "none") {
+			paramMap.put("OutgoingMailServerAuthentication", "EmailAuthNone");
+		} else {
+			paramMap.put("OutgoingMailServerAuthentication", "");
+		}
+		
+		paramMap.put("EmailAccountDescription", data.emailAccountDescription);
 		paramMap.put("IncomingMailServerUsername", data.incomingMailServerUsername);
 		paramMap.put("IncomingPassword", data.incomingPassword);
 		paramMap.put("IncomingMailServerUseSSL", data.incomingMailServerUseSSL);
