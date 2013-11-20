@@ -226,8 +226,16 @@ var device = (function () {
     function sendMessageToIOSDevice(ctx){
 		log.debug("CTX >>>>>"+stringify(ctx));
         var message = stringify(ctx.data);
+
+        //Filter the policy depending on Device
+        var filterMessage = policyFiltering({'plaform': 'iOS', 'operation':ctx.operation, 'data': ctx.data});
+        if (filterMessage != null) {
+            log.debug("Old Message >>>>> " + message);
+            log.debug("New Message >>>>> " + filterMessage);
+            message = filterMessage;
+        }
+
         var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
-        
         if(devices == null || devices == undefined || devices[0] == null || devices[0] == undefined) {
         	return;
         }
@@ -294,6 +302,36 @@ var device = (function () {
     		}
     	}
 
+    }
+
+    function policyFiltering(ctx) {
+        //This function is used to filter policy based on the platform
+        log.debug("policyFiltering >>>>>"+stringify(ctx));
+
+        var platform = String(ctx.plaform);
+        var platformFeature;
+        var messageArray
+        var i = 0;
+
+        if (ctx.operation == "POLICY" || ctx.operation == 'MONITORING') {
+            //Filter and remove Policies which are not valid for platform
+            log.debug(platform + " " + ctx.operation);
+            messageArray = parse(stringify(ctx.data));
+            log.debug("Policy codes before: " + messageArray.length);
+            while (i < messageArray.length) {
+                platformFeature = db.query("SELECT count(*) as count FROM platformfeatures JOIN platforms ON platformfeatures.platform_id = platforms.id JOIN features ON platformfeatures.feature_id = features.id WHERE platforms.type_name = ? AND features.code = ?", platform, messageArray[i].code + "");
+                log.debug("Platform Feature: " + platformFeature[0].count);
+                if (platformFeature[0].count == 0) {
+                    //feature not available for the platform
+                    messageArray.splice(i,1);
+                } else {
+                    ++i;
+                }
+            }
+            log.debug("Policy codes: " + messageArray.length);
+            return stringify(messageArray);
+        }
+        return null;
     }
 
     // prototype
