@@ -42,7 +42,14 @@ $("#btn-add").click(function() {
 				}
 			}else{
 				var checkVal = $(this).data("falseVal");
+				var requireData = $(this).data("requiredata");
 				if(checkVal !== ""){
+					if(requireData){
+						if($("#" + requireData).val() == ""){
+							return;
+						}
+					}
+					
 					if($(this).data("notfunction") == true){ 
 						params[prefix][suffix] = checkVal;
 					}else{
