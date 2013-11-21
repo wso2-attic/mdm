@@ -228,12 +228,26 @@ var device = (function () {
         var message = stringify(ctx.data);
 
         //Filter the policy depending on Device
-        var filterMessage = policyFiltering({'deviceid': ctx.deviceid, 'operation':ctx.operation, 'data': ctx.data});
-        if (filterMessage != null) {
-            log.debug("Old Message >>>>> " + message);
-            log.debug("New Message >>>>> " + filterMessage);
-            message = filterMessage;
+        if (ctx.operation == 'MONITORING') {
+            log.debug("Message >>>>>> " + message);
+            var filterMessage = policyFiltering({'deviceid': ctx.deviceid, 'operation':ctx.operation, 'data': ctx.data.policies});
+            if (filterMessage != null) {
+                log.debug("MONITORING");
+                log.debug("Old Message >>>>> " + message);
+                ctx.data.policies = filterMessage;
+                message = stringify(ctx.data);
+                log.debug("New Message >>>>> " + message);
+            }
+        } else if (ctx.operation == "POLICY") {
+            var filterMessage = policyFiltering({'deviceid': ctx.deviceid, 'operation':ctx.operation, 'data': ctx.data});
+            if (filterMessage != null) {
+                log.debug("POLICY");
+                log.debug("Old Message >>>>> " + message);
+                log.debug("New Message >>>>> " + stringify(filterMessage));
+                message = stringify(filterMessage);
+            }
         }
+
 
         var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
         if(devices == null || devices == undefined || devices[0] == null || devices[0] == undefined) {
@@ -313,7 +327,7 @@ var device = (function () {
         var messageArray
         var i = 0;
 
-        if (ctx.operation == "POLICY" || ctx.operation == 'MONITORING') {
+        //if (ctx.operation == "POLICY" || ctx.operation == 'MONITORING') {
             //Filter and remove Policies which are not valid for platform
             log.debug(ctx.operation);
             messageArray = parse(stringify(ctx.data));
@@ -330,9 +344,9 @@ var device = (function () {
                 }
             }
             log.debug("Policy codes: " + messageArray.length);
-            return stringify(messageArray);
-        }
-        return null;
+            return messageArray;
+        //}
+        //return null;
     }
 
     // prototype
