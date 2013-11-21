@@ -5,7 +5,7 @@
 	
 	"MDM_UI_URI": "/mdm/",
     "MDM_API_URI": "/mdm/api/",
-    "MDM_THEME": "wso2sinine",    
+    "MDM_THEME": "wso2sinine2d",    
     "DEVICES_IMAGE_SERVICE" : "/assets/wso2mobile/img/models",
     "APPS_IMAGE_SERVICE" : "/assets/wso2mobile/img/apps"     
 }
