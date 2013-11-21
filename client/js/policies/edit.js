@@ -42,8 +42,15 @@ $("#btn-add").click(function() {
 				}
 			}else{
 				var checkVal = $(this).data("falseVal");
+				var requireData = $(this).data("requiredata");
 				if(checkVal !== ""){
-					if($(this).data("notfunction") == true){
+					if(requireData){
+						if($("#" + requireData).val() == ""){
+							return;
+						}
+					}
+					
+					if($(this).data("notfunction") == true){ 
 						params[prefix][suffix] = checkVal;
 					}else{
 						params[prefix]["function"] = checkVal;
@@ -65,10 +72,10 @@ $("#btn-add").click(function() {
 	
 	var policyData =  Array();
 	
-	for (var param in params) { 		
-		if(!$.isEmptyObject(params[param])){
-			policyData.push({code: param, data: params[param]});
-		} 
+	for (var param in params) { 
+		if(!isEmptyObj(params[param])){    	
+     		policyData.push({code: param, data: params[param]});
+     	}
 	}
 
 
@@ -219,3 +226,14 @@ $(document).ready( function () {
 	
 	
 } );
+
+
+
+function isEmptyObj(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}

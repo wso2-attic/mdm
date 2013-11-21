@@ -60,7 +60,7 @@ $("#btn-add").click(function() {
 			}	
 				
 		}else{	
-			if(!($(this).val() == "" | $(this) != null | $(this) != undefined)){
+			if($(this).val() !== ""){
 				params[prefix][suffix] = $(this).val();
 			}			
 			
@@ -72,12 +72,14 @@ $("#btn-add").click(function() {
 	
 	var policyData =  Array();
 	
-	for (var param in params) { 		
-		if(!isEmpty(params[param])){
-			policyData.push({code: param, data: params[param]});
-		} 
+	for (var param in params) { 
+		if(!isEmptyObj(params[param])){    	
+     		policyData.push({code: param, data: params[param]});
+     	}
 	}
 
+    //alert(JSON.stringify(policyData));
+	//return;
 
 	/* comment because this is not belong to mdm
 
@@ -197,7 +199,7 @@ $(document).ready(function() {
 });
 
 
-function isEmpty(obj) {
+function isEmptyObj(obj) {
     for(var prop in obj) {
         if(obj.hasOwnProperty(prop))
             return false;
@@ -205,3 +207,4 @@ function isEmpty(obj) {
 
     return true;
 }
+
