@@ -34,9 +34,9 @@ configuration = function(appController){
 			permissionGroup: permissionGroup,
 			groups: groups
 		
-		}
+	};
 	return context;
-}
+};
 
 
 add = function(appController){	
@@ -64,9 +64,9 @@ add = function(appController){
 			configOption : "permissions",
 			groups: groups,
 			features: features
-	}
+	};
 	return context;
-}
+};
 
 
 
@@ -95,6 +95,6 @@ add_bundle = function(appController){
 			configOption : "permissions",
 			groups: groups,
 			features: features
-	}
+	};
 	return context;
-}
+};

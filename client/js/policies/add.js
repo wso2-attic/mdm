@@ -73,7 +73,7 @@ $("#btn-add").click(function() {
 	var policyData =  Array();
 	
 	for (var param in params) { 		
-		if(!$.isEmptyObject(params[param])){
+		if(!isEmpty(params[param])){
 			policyData.push({code: param, data: params[param]});
 		} 
 	}
@@ -195,3 +195,13 @@ $(document).ready(function() {
 	
 
 });
+
+
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
