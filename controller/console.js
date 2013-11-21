@@ -62,6 +62,7 @@ login = function(appController){
 	return context;	
 
 };
+
 logout = function(appController){
 	
 };

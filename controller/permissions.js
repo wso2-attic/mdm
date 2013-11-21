@@ -6,12 +6,9 @@ var feature = new featureModule(db);
 
 
 
-configuration = function(appController){	
-	
-	//var permissionGroup = [{id: 1, name: "test1", features: "Test|Test"}, { id: 2, name: "test1", features: "Test|Test"}];
-	
-	context = appController.context();
-	
+configuration = function(appController){		
+		
+	context = appController.context();	
 	
 	try{
 		var permissionGroup = JSON.parse(get(appController.getServiceURLs("permissionsCRUD", "")).data);	
