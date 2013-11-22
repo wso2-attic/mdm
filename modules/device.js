@@ -212,7 +212,13 @@ var device = (function () {
         if(versionCompatibility == false){
             return false;
         }*/
-
+        if(featureCode == "501P"){
+            try{
+                db.query("DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",deviceId,featureCode);
+            }catch (e){
+                log.info(e);
+            }
+        }
         var currentDate = common.getCurrentDateTime();
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription);
         var lastRecord = db.query("SELECT LAST_INSERT_ID()");
@@ -228,12 +234,26 @@ var device = (function () {
         var message = stringify(ctx.data);
 
         //Filter the policy depending on Device
-        var filterMessage = policyFiltering({'plaform': 'iOS', 'operation':ctx.operation, 'data': ctx.data});
-        if (filterMessage != null) {
-            log.debug("Old Message >>>>> " + message);
-            log.debug("New Message >>>>> " + filterMessage);
-            message = filterMessage;
+        if (ctx.operation == 'MONITORING') {
+            log.debug("Message >>>>>> " + message);
+            var filterMessage = policyFiltering({'deviceid': ctx.deviceid, 'operation':ctx.operation, 'data': ctx.data.policies});
+            if (filterMessage != null) {
+                log.debug("MONITORING");
+                log.debug("Old Message >>>>> " + message);
+                ctx.data.policies = filterMessage;
+                message = stringify(ctx.data);
+                log.debug("New Message >>>>> " + message);
+            }
+        } else if (ctx.operation == "POLICY") {
+            var filterMessage = policyFiltering({'deviceid': ctx.deviceid, 'operation':ctx.operation, 'data': ctx.data});
+            if (filterMessage != null) {
+                log.debug("POLICY");
+                log.debug("Old Message >>>>> " + message);
+                log.debug("New Message >>>>> " + stringify(filterMessage));
+                message = stringify(filterMessage);
+            }
         }
+
 
         var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
         if(devices == null || devices == undefined || devices[0] == null || devices[0] == undefined) {
@@ -274,7 +294,15 @@ var device = (function () {
         
         var featureCode = features[0].code;
         var featureDescription = features[0].description;
-
+        if(featureCode == "501P"){
+            try{
+                log.info("Test2");
+                db.query("DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",ctx.deviceid,featureCode);
+                log.info("Test3");
+            }catch (e){
+                log.info(e);
+            }
+        }
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)", 
         	ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
 
@@ -308,20 +336,21 @@ var device = (function () {
         //This function is used to filter policy based on the platform
         log.debug("policyFiltering >>>>>"+stringify(ctx));
 
-        var platform = String(ctx.plaform);
-        var platformFeature;
+        var device_id = String(ctx.deviceid);
+        var deviceFeature;
         var messageArray
         var i = 0;
 
-        if (ctx.operation == "POLICY" || ctx.operation == 'MONITORING') {
+        //if (ctx.operation == "POLICY" || ctx.operation == 'MONITORING') {
             //Filter and remove Policies which are not valid for platform
-            log.debug(platform + " " + ctx.operation);
+            log.debug(ctx.operation);
             messageArray = parse(stringify(ctx.data));
             log.debug("Policy codes before: " + messageArray.length);
             while (i < messageArray.length) {
-                platformFeature = db.query("SELECT count(*) as count FROM platformfeatures JOIN platforms ON platformfeatures.platform_id = platforms.id JOIN features ON platformfeatures.feature_id = features.id WHERE platforms.type_name = ? AND features.code = ?", platform, messageArray[i].code + "");
-                log.debug("Platform Feature: " + platformFeature[0].count);
-                if (platformFeature[0].count == 0) {
+                log.debug("Policy code: " + messageArray[i].code);
+                deviceFeature = db.query("SELECT count(*) as count FROM platformfeatures JOIN devices ON platformfeatures.platform_id = devices.platform_id JOIN features ON platformfeatures.feature_id = features.id WHERE devices.id = ? AND features.code = ?", device_id, messageArray[i].code + "");
+                log.debug("Device Feature: " + deviceFeature[0].count);
+                if (deviceFeature[0].count == 0) {
                     //feature not available for the platform
                     messageArray.splice(i,1);
                 } else {
@@ -329,9 +358,9 @@ var device = (function () {
                 }
             }
             log.debug("Policy codes: " + messageArray.length);
-            return stringify(messageArray);
-        }
-        return null;
+            return messageArray;
+        //}
+        //return null;
     }
 
     // prototype
@@ -508,7 +537,7 @@ var device = (function () {
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
                     var id = pendingFeatureCodeList[0].id;
                     var feature_code = pendingFeatureCodeList[0].feature_code;
-                    
+
                     if(feature_code == "500P") {
 						
 						var message = parse(pendingFeatureCodeList[0].message);

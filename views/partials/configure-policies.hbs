@@ -94,7 +94,7 @@
 					<div class="control-group">
 						<label class="control-label">Allow Simple</label>
 						<div class="controls">								
-							<input type="checkbox" data-group="policies" id="519A-allowSimple" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
+							<input type="checkbox" data-requiredata="519A-maxFailedAttempts" data-group="policies" id="519A-allowSimple" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 
@@ -102,7 +102,7 @@
 					<div class="control-group">
 						<label class="control-label">Require Alphanumeric</label>
 						<div class="controls">						
-							<input type="checkbox" data-group="policies" id="519A-requireAlphanumeric" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
+							<input type="checkbox" data-requiredata="519A-maxFailedAttempts" data-group="policies" id="519A-requireAlphanumeric" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 
@@ -125,20 +125,7 @@
 							<input type="checkbox" data-group="policies" id="508A-function" class="policy-input" data-true-val="Disable" data-false-val="Enable" >
 						</div>
 					</div>
-
-					<div class="control-group">
-						<label class="control-label">Lock Device</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="503A-function" class="policy-input" data-true-val="lock" data-false-val="" >
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label">Clear Screen Lock Password</label>
-						<div class="controls">
-							<input type="checkbox" data-group="policies" id="505A-function" class="policy-input" data-true-val="unlock" data-false-val="" >
-						</div>
-					</div>
+				
 
 					<div class="control-group">
 						<label class="control-label">Change Lock Code</label>
@@ -180,7 +167,7 @@
 					<div class="control-group">
 						<label class="control-label">Encrypt</label>
 						<div class="controls">
-							<input type="checkbox" data-group="policies" id="511A-function" class="policy-input" data-true-val="encrypt" data-false-val="decrypt" >
+							<input type="checkbox" data-requiredata="511A-password" data-group="policies" id="511A-function" class="policy-input" data-true-val="encrypt" data-false-val="decrypt" >
 						</div>
 					</div>
 
@@ -239,7 +226,7 @@
 					<div class="control-group">
 						<label class="control-label">Use SSL</label>
 						<div class="controls">
-							<input type="checkbox" data-group="policies" id="512A-usedssl" class="policy-input" data-true-val="true" data-false-val="false" checked="checked">
+							<input type="checkbox" data-group="policies" data-requiredata="512A-carrier" data-notfunction="true" id="512A-usedssl" class="policy-input" data-true-val="true" data-false-val="false">
 						</div>
 					</div>
 
@@ -273,7 +260,7 @@
 					<div class="control-group">
 						<label class="control-label">Use SSL</label>
 						<div class="controls">															
-							<input type="checkbox" data-group="policies" id="524A-usedssl" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
+							<input type="checkbox" data-group="policies" data-requiredata="524A-hostname" id="524A-usedssl" data-notfunction="true" class="policy-input" data-true-val="true" data-false-val="false" >
 						</div>
 					</div>
 

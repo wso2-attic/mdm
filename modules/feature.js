@@ -97,8 +97,7 @@ var feature = (function () {
 
         getAllFeaturesForRoles: function(ctx){
             var array = new Array();
-
-            var featureGroupList = db.query("SELECT * from featuregroup");
+            var featureGroupList = db.query("SELECT * from featuregroup where name IN ('MDM_OPERATION','MDM_CONFIGURATION','MMM')");
 
             for(var i = 0;i<featureGroupList.length;i++){
                 var obj = {};

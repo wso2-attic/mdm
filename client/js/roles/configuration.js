@@ -136,7 +136,7 @@ $(".btn-invite").click(function() {
 				jQuery.ajax({
 					url : getServiceURLs("groupsInvite"),
 					type : "PUT",					
-					data : {username: item},		
+					data : JSON.stringify({'groupid': item}),		
 					contentType : "application/json",
 			     	dataType : "json",
 			     	statusCode: {
@@ -240,7 +240,7 @@ $(document).ready( function () {
         
         oTable = $('#main-table').dataTable( {
                 "sDom": "<'row-fluid'<'tabel-filter-group span8'T><'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-                "iDisplayLength": 20,
+                "iDisplayLength": 10,
                  "bStateSave": false,
                  "aoColumnDefs": [
 					  {

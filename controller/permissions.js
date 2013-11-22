@@ -6,12 +6,9 @@ var feature = new featureModule(db);
 
 
 
-configuration = function(appController){	
-	
-	//var permissionGroup = [{id: 1, name: "test1", features: "Test|Test"}, { id: 2, name: "test1", features: "Test|Test"}];
-	
-	context = appController.context();
-	
+configuration = function(appController){		
+		
+	context = appController.context();	
 	
 	try{
 		var permissionGroup = JSON.parse(get(appController.getServiceURLs("permissionsCRUD", "")).data);	
@@ -34,9 +31,9 @@ configuration = function(appController){
 			permissionGroup: permissionGroup,
 			groups: groups
 		
-		}
+	};
 	return context;
-}
+};
 
 
 add = function(appController){	
@@ -64,9 +61,9 @@ add = function(appController){
 			configOption : "permissions",
 			groups: groups,
 			features: features
-	}
+	};
 	return context;
-}
+};
 
 
 
@@ -95,6 +92,6 @@ add_bundle = function(appController){
 			configOption : "permissions",
 			groups: groups,
 			features: features
-	}
+	};
 	return context;
-}
+};

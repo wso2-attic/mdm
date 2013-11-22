@@ -38,9 +38,9 @@ configuration = function(appController){
 			policies: policies,
 			groups: groups
 		
-		}
+	};
 	return context;
-}
+};
 
 
 assign_groups = function(appController){	
@@ -78,7 +78,7 @@ assign_groups = function(appController){
 	context = appController.context();
 	context.title = context.title + " | Assign Users to group";	
 	context.page = "configuration";	
-	context.jsFile= "policies/assign_groups.js"
+	context.jsFile= "policies/assign_groups.js";
 	context.data = {
 		configOption : "policies",
 		groups: groups,
@@ -87,9 +87,9 @@ assign_groups = function(appController){
 		platforms: platforms,
 		users: users,
 		policyName: policyName
-	}
+	};
 	return context;
-}
+};
 
 
 
@@ -145,9 +145,9 @@ assign_resources = function(appController){
 		users: users,
 		policyName: policyName,
 		policies: policies
-	}
+	};
 	return context;
-}
+};
 
 
 
@@ -184,9 +184,9 @@ add = function(appController){
 			groups: groups,
 			features: features,
 			installedApps: installedApps
-	}
+	};
 	return context;
-}
+};
 
 
 edit = function(appController){	

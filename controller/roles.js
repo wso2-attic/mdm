@@ -36,10 +36,10 @@ configuration = function(appController){
 	context.data = {
 		configOption : "roles",
 		groups : groups
-	}
+	};
 	return context;
 
-}
+};
 
 
 management = function(appController){
@@ -67,10 +67,10 @@ management = function(appController){
 		groups: groups,
 		features: features,
 		tenantId:session.get("mdmConsoleUser").tenantId
-	}
+	};
 	return context;
 
-}
+};
 
 
 users = function(appController){
@@ -114,10 +114,10 @@ users = function(appController){
 		configOption : "roles",
 		users: users,
 		features: features
-	}
+	};
 	return context;
 
-}
+};
 
 
 add = function(appController){
@@ -132,14 +132,14 @@ add = function(appController){
 	
 	context.title = context.title + " | Add Role";
 	context.page = "configuration";
-	context.jsFile= "roles/add.js"
+	context.jsFile= "roles/add.js";
 	context.data = {
 		configOption : "roles",
 		users: users,
 		tenantId:session.get("mdmConsoleUser").tenantId
-	}
+	};
 	return context;
-}
+};
 
 edit = function(appController){
 	context = appController.context();
@@ -150,14 +150,14 @@ edit = function(appController){
 	
 	context.title = context.title + " | Edit Role";
 	context.page = "configuration";
-	context.jsFile= "roles/edit.js"
+	context.jsFile= "roles/edit.js";
 	context.data = {
 		configOption : "roles",
 		role: role,
 		tenantId:session.get("mdmConsoleUser").tenantId
-	}
+	};
 	return context;
-}
+};
 
 
 
@@ -177,15 +177,15 @@ assign_users = function(appController){
 	context = appController.context();
 	context.title = context.title + " | Assign Users to group";
 	context.page = "configuration";
-	context.jsFile= "roles/assign_users.js"
+	context.jsFile= "roles/assign_users.js";
 	context.data = {
 		configOption : "roles",
 		users: users,
 		tenantId:session.get("mdmConsoleUser").tenantId,
 		groupId: groupId
-	}
+	};
 	return context;
-}
+};
 
 
 
@@ -196,14 +196,14 @@ assign_permissions = function(appController){
 	context = appController.context();
 	context.title = context.title + " | Assign permissions to group";
 	context.page = "configuration";
-	context.jsFile= "roles/assign_permissions.js"
+	context.jsFile= "roles/assign_permissions.js";
 	context.data = {
 		configOption : "roles",		
 		tenantId:session.get("mdmConsoleUser").tenantId,
 		groupId: groupId
-	}
+	};
 	return context;
-}
+};
 
 
 view_users = function(appController){
@@ -228,13 +228,13 @@ view_users = function(appController){
 	context = appController.context();
 	context.title = context.title + " | Configuration";
 	context.page = "configuration";
-	context.jsFile= "users/configuration.js"
+	context.jsFile= "users/configuration.js";
 	context.data = {
 		configOption : "roles",
 		users: users,
 		groups: groups,
 		groupId: groupId
-	}
+	};
 	return context;
-}
+};
 

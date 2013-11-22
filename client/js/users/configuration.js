@@ -21,7 +21,7 @@ $(document).ready(function() {
 	});
 	
 	
-	$(".tabel-filter-group").html("User Type: " + fnCreateSelect( oTable.fnGetColumnData(3)));
+	$(".tabel-filter-group").html("Type: " + fnCreateSelect( oTable.fnGetColumnData(3)));
 	
 	$('.tabel-filter-group select').change( function () {
             oTable.fnFilter( $(this).val(), 3 );
