@@ -71,7 +71,7 @@ var mvc = (function () {
 			    stream.close();
 				f.close();
 			}catch(e){
-				request.sendError(404);
+				response.sendError(404);
 			}
 		}else{
 			print(getResource(resourceURL));
