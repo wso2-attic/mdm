@@ -136,7 +136,7 @@ $(".btn-invite").click(function() {
 				jQuery.ajax({
 					url : getServiceURLs("groupsInvite"),
 					type : "PUT",					
-					data : {groupid: item},		
+					data : JSON.stringify({'groupid': item}),		
 					contentType : "application/json",
 			     	dataType : "json",
 			     	statusCode: {
