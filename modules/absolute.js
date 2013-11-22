@@ -66,9 +66,7 @@ var mvc = (function () {
 			try{
 				var f = new File(resourceURL);
 				f.open('r');
-				var stream = f.getStream();
-			    print(stream);
-			    stream.close();
+			    print(f.getStream());
 				f.close();
 			}catch(e){
 				response.sendError(404);
