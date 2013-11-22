@@ -34,7 +34,7 @@ var mvc = (function () {
 			f.close();
 			return cont;
 		}catch(e){
-			request.sendError(404);
+			response.sendError(404);
 		}
 	}
 	
@@ -66,7 +66,9 @@ var mvc = (function () {
 			try{
 				var f = new File(resourceURL);
 				f.open('r');
-			    print(f.getStream());
+				var stream = f.getStream();
+			    print(stream);
+			    stream.close();
 				f.close();
 			}catch(e){
 				request.sendError(404);
