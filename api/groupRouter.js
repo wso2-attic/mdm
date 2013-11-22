@@ -19,9 +19,7 @@ var group = (function () {
             var users= group.getUsersOfGroup(ctx);
             if(users[0]!=null){
 				for (var i = users.length - 1; i >= 0; i--){
-					user.sendEmail({
-						username: users[i].username
-					});
+					user.sendEmail(user.getUser({userid: users[i].username}));
 				};
                 response.status = 200;
             }else{
