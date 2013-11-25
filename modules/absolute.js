@@ -1,4 +1,5 @@
 var Handle = require("/modules/handlebars.js").Handlebars;
+var appRedirect = "App Redirected";
 var mvc = (function () {
 	var configs= {
 		SERVER_URL: "/",
@@ -193,60 +194,72 @@ var mvc = (function () {
 			
 			//App controller
 			var appController;
-			if(isExists('/controller/app.js')){
-				appController =require('/controller/app.js');
-			}
-			
-			//Extracting the template from the view
-			var template;
-			var templateURI = '/views/'+controller+"/"+view;
-			if(isExists(templateURI)){
-				template = Handle.compile(getResource(templateURI));
-			}
-			
-			var context;
-			//If controller is empty the request is for the app index page
-			if(controller==''){
-				if(appController.index!=undefined){
-					context = appController.index();	
+			//Try catch is used if an exception is thrown my appcontroller 
+			try{
+				if(isExists('/controller/app.js')){
+					appController =require('/controller/app.js');
 				}
-			}
-			if(isExists('/controller/'+controller+".js") && require('/controller/'+controller+".js")[viewName] !=undefined){
-				context = require('/controller/'+controller+".js")[viewName](appController);
-				log.debug("Current context "+context);
-			}		
-			//Extracting the layout from the controller
-			var layout;
-			if(context!=undefined && context.layout!=undefined){
-				if(configs.AUTH_SUPPORT){
-					if(context.auth_roles!=undefined && context.auth_roles.length>0){
-						var authState = isArrayOverlap(configs.AUTH_USER_ROLES, context.auth_roles);
-						if(!authState){
-							 log.debug("--------Goose Auth Error (User roles doesn't match with route roles)--------");
-							 response.sendError(403);
-							 return;
-						}
+				//Extracting the template from the view
+				var template;
+				var templateURI = '/views/'+controller+"/"+view;
+				if(isExists(templateURI)){
+					template = Handle.compile(getResource(templateURI));
+				}
+				
+				var context;
+				//If controller is empty the request is for the app index page
+				if(controller==''){
+					if(appController.index!=undefined){
+						context = appController.index();	
 					}
 				}
-				layout = Handle.compile(getResource("/pages/"+context.layout+".hbs"));
-			}
-			//If we can't find a controller as well as a view we are sending a 404 error
-			if(template==undefined && context==undefined){
-				try{
-					response.sendError(404);
-				}catch (e) {
-					new Log().debug(e);
-				}
-			}else{
-				if(template!=undefined){
-						var b = template(context);
-						if(layout==undefined){
-							//If the controller hasn't specified a layout
-							print(b);
-						}else{
-							//Now mixing the controller context with generated body template
-							print(layout(mergeRecursive({body:b}, context)));
+
+				if(isExists('/controller/'+controller+".js") && require('/controller/'+controller+".js")[viewName] !=undefined){
+					context = require('/controller/'+controller+".js")[viewName](appController);
+					log.debug("Current context "+context);
+				}		
+				//Extracting the layout from the controller
+				var layout;
+				if(context!=undefined && context.layout!=undefined){
+					if(configs.AUTH_SUPPORT){
+						if(context.auth_roles!=undefined && context.auth_roles.length>0){
+							var authState = isArrayOverlap(configs.AUTH_USER_ROLES, context.auth_roles);
+							if(!authState){
+								 log.debug("--------Goose Auth Error (User roles doesn't match with route roles)--------");
+								 response.sendError(403);
+								 return;
+							}
 						}
+					}
+					layout = Handle.compile(getResource("/pages/"+context.layout+".hbs"));
+				}
+				//If we can't find a controller as well as a view we are sending a 404 error
+				if(template==undefined && context==undefined){
+					try{
+						response.sendError(404);
+					}catch (e) {
+						new Log().debug(e);
+					}
+				}else{
+					if(template!=undefined){
+							var b = template(context);
+							if(layout==undefined){
+								//If the controller hasn't specified a layout
+								print(b);
+							}else{
+								//Now mixing the controller context with generated body template
+								print(layout(mergeRecursive({body:b}, context)));
+							}
+					}
+				}
+			}
+			catch(e){
+				log.info(e);
+				// log.info(e);
+				if(e==appRedirect){
+					log.error("User redirected");
+				}else{
+					//log.error(e);
 				}
 			}
         },
