@@ -1,7 +1,8 @@
 $("#btn-add").click(function() {
 	
 	$( 'form').parsley( 'validate' );	
-	if(!$('form').parsley('isValid')){
+	if(!$('form').parsley('isValid')){	
+		
 		noty({
 				text : 'Input validation failed!',
 				'layout' : 'center',
