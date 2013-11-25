@@ -1,7 +1,8 @@
 $("#btn-add").click(function() {
 	
 	$( 'form').parsley( 'validate' );	
-	if(!$('form').parsley('isValid')){
+	if(!$('form').parsley('isValid')){		
+			
 		noty({
 				text : 'Input validation failed!',
 				'layout' : 'center',
@@ -206,5 +207,36 @@ function isEmptyObj(obj) {
     }
 
     return true;
+}
+
+
+//validations
+
+$( ".policy-input" ).change(function() {
+	
+	validations();
+
+});
+
+
+
+function validations(){
+	//remove allow simple when minimum complex characters are set
+	if($('#519A-minComplexChars').val() != ""){
+		$('#519A-allowSimple').parent().parent().hide();
+		$('#519A-allowSimple').prop('checked', false);
+	}else{
+		$('#519A-allowSimple').parent().parent().show();
+	}
+	
+	
+	//remove encryption passcode when passcode policy is set
+	if($('#519A-maxFailedAttempts').val() != "" | $('#519A-minLength').val() != ""){
+		$('#511A-password').parent().parent().hide();
+		$('#511A-password').val("");
+	}else{
+		$('#511A-password').parent().parent().show();
+	}
+	
 }
 

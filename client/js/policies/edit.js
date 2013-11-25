@@ -1,7 +1,8 @@
 $("#btn-add").click(function() {
 	
 	$( 'form').parsley( 'validate' );	
-	if(!$('form').parsley('isValid')){
+	if(!$('form').parsley('isValid')){	
+		
 		noty({
 				text : 'Input validation failed!',
 				'layout' : 'center',
@@ -218,8 +219,10 @@ $(document).ready( function () {
 				
 			}
 			
-					
+			validations();		
 		}
+		
+		
 	});
 
 		
@@ -237,4 +240,25 @@ function isEmptyObj(obj) {
     }
 
     return true;
+}
+
+
+
+//validations
+
+$( ".policy-input" ).change(function() {
+	
+	validations();
+
+});
+
+
+
+function validations(){	
+	//remove allow simple when minimum complex characters are set
+	if($('#519A-minComplexChars').val() != ""){
+		$('#519A-allowSimple').parent().parent().hide();
+	}else{
+		$('#519A-allowSimple').parent().parent().show();
+	}
 }
