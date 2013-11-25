@@ -318,7 +318,7 @@ var user = (function () {
             sender.from = config.email.senderAddress;
 
             log.info("Email sent to -> "+ctx.username);
-            sender.to = ctx.username;
+            sender.to = stringify(ctx.username);
             sender.subject = subject;
             sender.text = content;
             try{

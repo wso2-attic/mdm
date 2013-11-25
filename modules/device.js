@@ -212,7 +212,13 @@ var device = (function () {
         if(versionCompatibility == false){
             return false;
         }*/
-
+        if(featureCode == "501P"){
+            try{
+                db.query("DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",deviceId,featureCode);
+            }catch (e){
+                log.info(e);
+            }
+        }
         var currentDate = common.getCurrentDateTime();
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription);
         var lastRecord = db.query("SELECT LAST_INSERT_ID()");
@@ -288,7 +294,15 @@ var device = (function () {
         
         var featureCode = features[0].code;
         var featureDescription = features[0].description;
-
+        if(featureCode == "501P"){
+            try{
+                log.info("Test2");
+                db.query("DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",ctx.deviceid,featureCode);
+                log.info("Test3");
+            }catch (e){
+                log.info(e);
+            }
+        }
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)", 
         	ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
 

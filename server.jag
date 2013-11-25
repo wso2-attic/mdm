@@ -13,7 +13,8 @@
 		} else if(payload instanceof Packages.java.lang.String) {
 			response.contentType = "application/x-apple-aspen-config";
 			var byteArrayInputStream = new Packages.java.io.ByteArrayInputStream(payload.getBytes("UTF-8"));	
-			print(new Stream(byteArrayInputStream)); 	
+			var stream = new Stream(byteArrayInputStream);
+			byteArrayInputStream.close(); 	
 		}
 	}
 	

@@ -171,7 +171,13 @@ var notification = (function () {
 	                        formattedData.push(innerResponse);
                 		}
                 	}
-
+                    try{
+                        log.info("dddddddddddddd :"+device_id);
+                        log.info("ffffffffffff :"+featureCode);
+                        db.query("DELETE FROM notifications WHERE device_id = ? AND status='R' AND feature_code = ?",device_id,"501P");
+                    }catch(e){
+                        log.info(e);
+                    }
                     db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", stringify(formattedData) +"", recivedDate+"", identifier);
 
                 } else {
@@ -197,9 +203,17 @@ var notification = (function () {
         },
         addNotification: function(ctx){
 			log.info("Android Notification >>>>>"+stringify(ctx));
-            var currentdate = new Date();
             var recivedDate = common.getCurrentDateTime();
-
+            var result = db.query("select * from notifications where id = '"+ctx.msgID+"'");
+            var deviceId =  result[0].device_id;
+            var featureCode =  result[0].feature_code;
+            if(featureCode == "501P"){
+                try{
+                    db.query("DELETE FROM notifications WHERE device_id = ? AND status='R' AND feature_code = ?",deviceId,featureCode);
+                }catch(e){
+                    log.info(e);
+                }
+            }
             db.query("UPDATE notifications SET status='R', received_data = ? , received_date = ? WHERE id = ?", ctx.data, recivedDate, ctx.msgID);
         },
         getLastRecord: function(ctx){
