@@ -208,78 +208,159 @@ var device = function(){
         return null;
     }
     var getPendingOperationsFromDevice = function(udid){
-            var deviceList = db.query("SELECT id FROM devices WHERE udid = " + udid);
+        var deviceList = db.query("SELECT id FROM devices WHERE udid = " + udid);
+        
+        if(deviceList[0]!=null) {
+            var deviceID = String(deviceList[0].id);
+            var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE notifications.status='P' AND notifications.device_id = ? ORDER BY sent_date DESC", deviceID+"");
             
-            if(deviceList[0]!=null) {
-                var deviceID = String(deviceList[0].id);
-                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE notifications.status='P' AND notifications.device_id = ? ORDER BY sent_date DESC", deviceID+"");
-                
-                if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
-                    var id = pendingFeatureCodeList[0].id;
-                    var feature_code = pendingFeatureCodeList[0].feature_code;
+            if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
+                var id = pendingFeatureCodeList[0].id;
+                var feature_code = pendingFeatureCodeList[0].feature_code;
 
-                    if(feature_code == "500P") {
-						
-						var message = parse(pendingFeatureCodeList[0].message);
-						var received_data = pendingFeatureCodeList[0].received_data;
-						        			          	
-                    	if(received_data == null || received_data == '') {
+                if(feature_code == "500P") {
+					
+					var message = parse(pendingFeatureCodeList[0].message);
+					var received_data = pendingFeatureCodeList[0].received_data;
+					        			          	
+                	if(received_data == null || received_data == '') {
 
-		                    var arrEmptyReceivedData = new Array();
-		                    
-		                    for(var i = 0; i < message.length; i++) {
-		                    	var receivedObject = {};
-		                    	receivedObject.status = "pending";
-		                    	receivedObject.counter = "0";
-		                    	receivedObject.message = message[i];
-		                    	arrEmptyReceivedData.push(receivedObject);
-		                    }
-                    
-                    		db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(arrEmptyReceivedData), id+"");
-                    		
-                    		received_data = parse(stringify(arrEmptyReceivedData));
-                    	} else {
-                    		received_data = parse(received_data);
-                    	}
-                    	
-                		for(var i = 0; i < received_data.length; i++) {
-							
-							var counter = parseInt(received_data[i].counter);
-							
-	                    	if(received_data[i].status == "pending") {
-	                    		
-	                    		var objResponse = {};
-	                    		objResponse.feature_code = received_data[i].message.code + "";
-	                    		objResponse.message = stringify(received_data[i].message.data);
-	                    		objResponse.id = id + "-" + i;
-	                    		
-	                    		received_data[i].counter = ++counter + "";
-	                    		
-	                    		if(counter > 3) {
-	                    			received_data[i].status = "skipped";
-	                    		}
-	                    		
-	                    		db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(received_data), id+"");
-	                    		
-	                    		if(counter > 3) {
-	                    			continue;
-	                    		}
-	                    		
-	                    		return parse(stringify(objResponse));
-	                    	}
+	                    var arrEmptyReceivedData = new Array();
+	                    
+	                    for(var i = 0; i < message.length; i++) {
+	                    	var receivedObject = {};
+	                    	receivedObject.status = "pending";
+	                    	receivedObject.counter = "0";
+	                    	receivedObject.message = message[i];
+	                    	arrEmptyReceivedData.push(receivedObject);
 	                    }
-                    } else {
-                    	db.query("UPDATE notifications SET status='C' WHERE id = ?", id+"");
+                
+                		db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(arrEmptyReceivedData), id+"");
+                		
+                		received_data = parse(stringify(arrEmptyReceivedData));
+                	} else {
+                		received_data = parse(received_data);
+                	}
+                	
+            		for(var i = 0; i < received_data.length; i++) {
+						
+						var counter = parseInt(received_data[i].counter);
+						
+                    	if(received_data[i].status == "pending") {
+                    		
+                    		var objResponse = {};
+                    		objResponse.feature_code = received_data[i].message.code + "";
+                    		objResponse.message = stringify(received_data[i].message.data);
+                    		objResponse.id = id + "-" + i;
+                    		
+                    		received_data[i].counter = ++counter + "";
+                    		
+                    		if(counter > 3) {
+                    			received_data[i].status = "skipped";
+                    		}
+                    		
+                    		db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(received_data), id+"");
+                    		
+                    		if(counter > 3) {
+                    			continue;
+                    		}
+                    		
+                    		return parse(stringify(objResponse));
+                    	}
                     }
-
-                    return pendingFeatureCodeList[0];
-                }else{
-                    return null;
+                } else {
+                	db.query("UPDATE notifications SET status='C' WHERE id = ?", id+"");
                 }
+
+                return pendingFeatureCodeList[0];
             }else{
                 return null;
             }
+        }else{
+            return null;
         }
+    }
+    var getFeaturesFromDevice = function(role, deviceid){
+        var role = role;
+   	    var deviceId =  deviceid;
+        log.debug("Test Role :"+role);
+        var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id", stringify(deviceId));
+		
+        var obj = new Array();
+        for(var i=0; i<featureList.length; i++){
+            var featureArr = {};
+            var ftype = db.query("SELECT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id= ?", stringify(featureList[i].id));
+
+            featureArr["name"] = featureList[i].name;
+            featureArr["feature_code"] = featureList[i].code;
+            featureArr["feature_type"] = ftype[0].name;
+            featureArr["description"] = featureList[i].description;
+            featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
+            //featureArr["enable"] = true;
+            if(featureList[i].template === null || featureList[i].template === ""){
+
+            }else{
+                featureArr["template"] = featureList[i].template;
+            }
+            obj.push(featureArr);
+        }
+
+     //   log.debug(obj);
+
+        return obj;
+    },
+    var sendMsgToUserDevices = function(userid, data, operation){
+        var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", userid);
+        var succeeded="";
+        var failed="";
+        for(var i=0; i<device_list.length; i++){
+            var status = this.sendToDevice({'deviceid':device_list[i].id, 'operation': operation, 'data' : data});
+            if(status == true){
+                succeeded += device_list[i].id+",";
+            }else{
+                failed += device_list[i].id+",";
+            }
+        }
+        return "Succeeded : "+succeeded+", Failed : "+failed;
+    }
+    var sendMsgToGroupDevices = function(operation, data){
+        var succeeded="";
+        var failed="";
+
+        var userList = group.getUsersOfGroup();
+
+        for(var i = 0; i < userList.length; i++) {
+
+            var objUser = {};
+
+            var result = db.query("SELECT id FROM devices WHERE user_id = ? AND tenant_id = ?", String(userList[i].email), common.getTenantID());
+
+            for(var j = 0; j < result.length; j++) {
+
+                var status = this.sendToDevice({'deviceid':result[i].id, 'operation': operation, 'data' : data});
+                if(status == true){
+                    succeeded += result[i].id+",";
+                }else{
+                    failed += result[i].id+",";
+                }
+            }
+        }
+        if(succeeded != "" && failed != ""){
+            return "Succeeded : "+succeeded+", Failed : "+failed;
+        }else{
+            return "Succeeded : "+succeeded;
+        }
+    }
+    var enforcePolicy = function(id){
+        var result = db.query("SELECT * from devices where id = ?",id);
+        var userId = result[0].user_id;
+        var roles = this.getUserRoles({'username':userId});
+        var roleList = parse(roles);
+        log.debug(roleList[0]);
+        var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
+        log.debug(gpresult[0]);
+        sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
+    }
 }
 device.prototype.constructor = function (dbs) {
     db = dbs;

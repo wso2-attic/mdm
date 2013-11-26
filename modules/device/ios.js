@@ -107,41 +107,55 @@ var iosDevice = function(){
         return true;
     }
     var updateiOSTokens = function(deviceid, token, unlockToken, magicToken){
-			var result = db.query("SELECT properties FROM devices WHERE udid = " + stringify(deviceid));
-            
-            if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
-                log.error(result);
-                var properties = parse(result[0].properties);
+		var result = db.query("SELECT properties FROM devices WHERE udid = " + stringify(deviceid));
+        
+        if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
+            log.error(result);
+            var properties = parse(result[0].properties);
 
-                var platform = "" + properties["product"];
-                if (platform.toLowerCase().indexOf("ipad") != -1) {
-                    platform = "iPad";
-                } else if (platform.toLowerCase().indexOf("ipod") != -1) {
-                    platform = "iPod";
-                } else {
-                    platform = "iPhone";
-                }
-
-                properties["model"] = platform;
-
-                var tokenProperties = {};
-                tokenProperties["token"] = token;
-                tokenProperties["unlockToken"] = unlockToken;
-                tokenProperties["magicToken"] = magicToken;
-
-                var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?", 
-                	stringify(properties), stringify(tokenProperties), deviceid);
-
-                if(updateResult != null && updateResult != undefined && updateResult == 1) {
-                    	
-					setTimeout(function(){invokeInitialFunctions(deviceid)}, 2000);
-                    	
-                    return true;
-                }
+            var platform = "" + properties["product"];
+            if (platform.toLowerCase().indexOf("ipad") != -1) {
+                platform = "iPad";
+            } else if (platform.toLowerCase().indexOf("ipod") != -1) {
+                platform = "iPod";
+            } else {
+                platform = "iPhone";
             }
 
+            properties["model"] = platform;
+
+            var tokenProperties = {};
+            tokenProperties["token"] = token;
+            tokenProperties["unlockToken"] = unlockToken;
+            tokenProperties["magicToken"] = magicToken;
+
+            var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?", 
+            	stringify(properties), stringify(tokenProperties), deviceid);
+
+            if(updateResult != null && updateResult != undefined && updateResult == 1) {
+                	
+				setTimeout(function(){invokeInitialFunctions(deviceid)}, 2000);
+                	
+                return true;
+            }
+        }
+
+        return false;
+    }
+    var unRegisterIOS = function(udid){
+    	sendMessageToIOSDevice({'deviceid':udid, 'operation': "ENTERPRISEWIPE", 'data': ""});
+    	
+        if(udid != null){
+            var result = db.query("DELETE FROM devices WHERE udid = ?", udid);
+            if(result == 1){
+                return true;
+            }else{
+                return false
+            }
+        }else{
             return false;
         }
+    }
 }
 
 iosDevice.prototype = new device();
