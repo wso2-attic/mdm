@@ -147,6 +147,8 @@ var iosmdm = (function() {
 
 				var commandUUID = apnsStatus.getCommandUUID();
 
+                log.debug("APNSTATUS >>>>> " + apnsStatus.getStatus());
+
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
 					log.error("Acknowledged >>>>>>>>>>>>>>>>" + apnsStatus.getOperation());
 
@@ -177,13 +179,18 @@ var iosmdm = (function() {
 					ctx.data = responseData;
 					ctx.msgID = commandUUID;
 
-					notification.addIosNotification(ctx);
+					var pendingExist = notification.addIosNotification(ctx);
 					
 					ctx = {};
 					ctx.id = commandUUID;
 					notification.discardOldNotifications(ctx);
 
-					return;
+                    if (pendingExist != true) {
+                        //log.debug("Pending Exist >>>>>>> FALSE");
+                        return;
+                    }
+                    //log.debug("Pending Exist >>>>>>> TRUE");
+
 				} else if (("Error").equals(apnsStatus.getStatus())) {
 					log.error("Error " + apnsStatus.getError());
 
@@ -192,9 +199,13 @@ var iosmdm = (function() {
 					ctx.data = apnsStatus.getError();
 					ctx.msgID = commandUUID;
 
-					notification.addIosNotification(ctx);
-					
-					return;
+                    var pendingExist = notification.addIosNotification(ctx);
+
+                    if (pendingExist != true) {
+                        //log.debug("Pending Exist >>>>>>> FALSE");
+                        return;
+                    }
+                    //log.debug("Pending Exist >>>>>>> TRUE");
 				}
 
 				var ctx = {};
