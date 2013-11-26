@@ -4,7 +4,6 @@ var config = require('/config/mdm.js').config();
 var configApis = require('../config/apis.json');
 var log = new Log();
 
-
 /*
 	Basic Application Info
 */
@@ -21,8 +20,9 @@ appInfo = function() {
 /*
 	Redirect to login page if the user is no loggedin
 */
-if(session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "login"){
+if(session.get("mdmConsoleUserLogin") == null && session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "login"){
 	response.sendRedirect(appInfo().server_url + "login");
+    throw require('/modules/absolute.js').appRedirect;
 }
 
 
