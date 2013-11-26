@@ -210,6 +210,7 @@ var notification = (function () {
         },
         addNotification: function(ctx){
 			log.info("Android Notification >>>>>"+stringify(ctx));
+			log.info("CTX>>>>>>>>>>>>>>>>>>" + ctx.msgID);
             var recivedDate = common.getCurrentDateTime();
             var result = db.query("select * from notifications where id = '"+ctx.msgID+"'");
             var deviceId =  result[0].device_id;
