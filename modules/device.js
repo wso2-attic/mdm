@@ -306,7 +306,13 @@ var device = (function () {
         db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)", 
         	ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
 
-		common.initAPNS(deviceToken, pushMagicToken);
+        log.debug("sendMessageToIOSDevice >>>>>>>> common.initAPNS");
+
+        try {
+		    common.initAPNS(deviceToken, pushMagicToken);
+        } catch (e) {
+            log.error(e);
+        }
 
         return true;
     }
@@ -325,8 +331,13 @@ var device = (function () {
 		    	var regIdJsonObj = parse(regId);
 		    	var pushMagicToken = regIdJsonObj.magicToken;
 		        var deviceToken = regIdJsonObj.token;
-		    	
-		    	common.initAPNS(deviceToken, pushMagicToken);		
+                log.debug("checkPendingOperations >>>>>>>> common.initAPNS");
+		    	try {
+		    	    common.initAPNS(deviceToken, pushMagicToken);
+                } catch (e) {
+                    log.error(e);
+                    return;
+                }
     		}
     	}
 

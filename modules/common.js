@@ -67,7 +67,11 @@ var initAPNS = function(deviceToken, magicToken) {
 		deviceToken == undefined || magicToken == undefined) {
 		return;
 	}
-	
+
+    log.debug("initAPNS >>>>>>>>");
+    log.debug("Device Token: >>>>>> " + deviceToken);
+    log.debug("Magic Token: >>>>>> " + magicToken);
+
 	try {
 		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender();
 

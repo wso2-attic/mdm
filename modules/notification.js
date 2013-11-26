@@ -100,14 +100,21 @@ var notification = (function () {
 
                     if(pendingExist) {
 
+                        /*
                         var message = stringify(ctx.data);
                         var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", device_id + "");
                         var regId = devices[0].reg_id;
                         var regIdJsonObj = parse(regId);
                         var pushMagicToken = regIdJsonObj.magicToken;
                         var deviceToken = regIdJsonObj.token;
+                        try {
+                            common.initAPNS(deviceToken, pushMagicToken);
+                        } catch (e) {
+                            log.error(e);
+                        }
+                        */
+                        return true;
 
-                        common.initAPNS(deviceToken, pushMagicToken);
                     } else {
                         db.query("UPDATE notifications SET status='R' WHERE id = ?", notificationId);
                         
