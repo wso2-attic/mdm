@@ -333,11 +333,12 @@ var device = (function () {
         if (sendToAPNS == 1) {
             try {
                 log.debug("sendMessageToIOSDevice >>>>>>>> common.initAPNS");
-                db.query("UPDATE notifications SET status = 'A' WHERE device_id = ? AND status = 'P'", ctx.deviceid);
                 common.initAPNS(deviceToken, pushMagicToken);
             } catch (e) {
                 log.error(e);
+                return;
             }
+            db.query("UPDATE notifications SET status = 'A' WHERE device_id = ? AND status = 'P'", ctx.deviceid);
         }
 
         return true;
