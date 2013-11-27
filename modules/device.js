@@ -303,22 +303,47 @@ var device = (function () {
                 log.info(e);
             }
         }
-        db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)", 
-        	ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
 
-        log.debug("sendMessageToIOSDevice >>>>>>>> common.initAPNS");
+        //Check if the feature code is a monitoring and status is "A" or "P"
+        var notifyExists = db.query("SELECT count(*) as count FROM notifications JOIN features ON notifications.feature_code = features.code WHERE notifications.device_id = ? AND notifications.feature_code = ? AND features.monitor = 1 AND (notifications.status = 'A' OR notifications.status = 'P')", ctx.deviceid, featureCode);
+        log.debug("notifyExists >>>>> " + stringify(notifyExists[0]));
+        if (notifyExists[0].count == 0) {
+            log.debug("insert into notifications!!!!!!!!!!!");
+            db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)",
+                ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
+        }
 
-        try {
-		    common.initAPNS(deviceToken, pushMagicToken);
-        } catch (e) {
-            log.error(e);
+        var sendToAPNS = 0;
+        var lastApnsTime = db.query("SELECT TIMESTAMPDIFF(SECOND, min(sent_date), CURRENT_TIMESTAMP()) as seconds FROM notifications WHERE status = 'A' AND device_id = ?", ctx.deviceid);
+        log.debug("lastApnsTime >>>>>>>>> " + stringify(lastApnsTime[0]));
+        if (lastApnsTime != null && lastApnsTime[0] != null && lastApnsTime != undefined && lastApnsTime[0] != undefined) {
+            //1 hr = 60 * 60 = 3600 seconds
+            if (lastApnsTime[0].seconds != null && lastApnsTime[0].seconds != undefined) {
+                if (lastApnsTime[0].seconds >= 3600) {
+                    sendToAPNS = 1;
+                }
+            }else {
+                sendToAPNS = 1;
+            }
+        } else {
+            sendToAPNS = 1;
+        }
+
+        if (sendToAPNS == 1) {
+            try {
+                log.debug("sendMessageToIOSDevice >>>>>>>> common.initAPNS");
+                db.query("UPDATE notifications SET status = 'A' WHERE device_id = ? AND status = 'P'", ctx.deviceid);
+                common.initAPNS(deviceToken, pushMagicToken);
+            } catch (e) {
+                log.error(e);
+            }
         }
 
         return true;
     }
     
     function checkPendingOperations() {
-    	
+    	//Nira - Not happening
     	var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' AND device_id IN (SELECT id FROM devices WHERE platform_id IN (SELECT id FROM platforms WHERE type_name = 'iOS')) ORDER BY sent_date DESC;");
     	
     	for(var i = 0; i < pendingOperations.length; i++) {
@@ -544,7 +569,7 @@ var device = (function () {
             
             if(deviceList[0]!=null) {
                 var deviceID = String(deviceList[0].id);
-                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE notifications.status='P' AND notifications.device_id = ? ORDER BY sent_date DESC", deviceID+"");
+                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE (notifications.status='P' OR notifications.status = 'A') AND notifications.device_id = ? ORDER BY sent_date DESC", deviceID+"");
                 
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
                     var id = pendingFeatureCodeList[0].id;

@@ -185,11 +185,11 @@ var iosmdm = (function() {
 					ctx.id = commandUUID;
 					notification.discardOldNotifications(ctx);
 
-                    if (pendingExist != true) {
-                        log.debug("Pending Exist >>>>>>> FALSE");
-                        return;
-                    }
-                    log.debug("Pending Exist >>>>>>> TRUE");
+//                    if (pendingExist != true) {
+//                        log.debug("Pending Exist >>>>>>> FALSE");
+//                        return;
+//                    }
+//                    log.debug("Pending Exist >>>>>>> TRUE");
 
 				} else if (("Error").equals(apnsStatus.getStatus())) {
 					log.error("Error " + apnsStatus.getError());
@@ -201,11 +201,11 @@ var iosmdm = (function() {
 
                     var pendingExist = notification.addIosNotification(ctx);
 
-                    if (pendingExist != true) {
-                        log.debug("Pending Exist >>>>>>> FALSE");
-                        return;
-                    }
-                    log.debug("Pending Exist >>>>>>> TRUE");
+//                    if (pendingExist != true) {
+//                        log.debug("Pending Exist >>>>>>> FALSE");
+//                        return;
+//                    }
+//                    log.debug("Pending Exist >>>>>>> TRUE");
 				}
 
 				var ctx = {};
@@ -214,6 +214,7 @@ var iosmdm = (function() {
 
 				if (operation != null && operation.feature_code.indexOf("-") > 0) {
 					var featureCode = operation.feature_code.split("-")[0];
+                    log.debug("sendPushNotifications >>> Feature Code >>>>>> " + featureCode);
 
 					return common.loadPayload(new Packages.java.lang.String(operation.id), featureCode, operation.message);
 				} else if (operation != null) {
