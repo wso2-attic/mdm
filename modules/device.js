@@ -332,6 +332,7 @@ var device = (function () {
 		    	var pushMagicToken = regIdJsonObj.magicToken;
 		        var deviceToken = regIdJsonObj.token;
                 log.debug("checkPendingOperations >>>>>>>> common.initAPNS");
+                log.debug("checkPendingOperations >>>>>>>> " + request.getRequestURL());
 		    	try {
 		    	    common.initAPNS(deviceToken, pushMagicToken);
                 } catch (e) {

@@ -186,10 +186,10 @@ var iosmdm = (function() {
 					notification.discardOldNotifications(ctx);
 
                     if (pendingExist != true) {
-                        //log.debug("Pending Exist >>>>>>> FALSE");
+                        log.debug("Pending Exist >>>>>>> FALSE");
                         return;
                     }
-                    //log.debug("Pending Exist >>>>>>> TRUE");
+                    log.debug("Pending Exist >>>>>>> TRUE");
 
 				} else if (("Error").equals(apnsStatus.getStatus())) {
 					log.error("Error " + apnsStatus.getError());
@@ -202,10 +202,10 @@ var iosmdm = (function() {
                     var pendingExist = notification.addIosNotification(ctx);
 
                     if (pendingExist != true) {
-                        //log.debug("Pending Exist >>>>>>> FALSE");
+                        log.debug("Pending Exist >>>>>>> FALSE");
                         return;
                     }
-                    //log.debug("Pending Exist >>>>>>> TRUE");
+                    log.debug("Pending Exist >>>>>>> TRUE");
 				}
 
 				var ctx = {};
