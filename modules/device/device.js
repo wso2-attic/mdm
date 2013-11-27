@@ -361,6 +361,26 @@ var device = function(){
         log.debug(gpresult[0]);
         sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
     }
+    var changeDeviceState = function(deviceId,state){
+        db.query("UPDATE devices SET status = ? WHERE id = ?", state, stringify(deviceId));
+    }
+	var updateDeviceProperties = function(deviceId, osVersion, deviceName) {
+                    	
+        var deviceResult = db.query("SELECT properties FROM devices WHERE id = ?", deviceId + "");
+    	var properties = deviceResult[0].properties;
+    	properties = parse(parse(stringify(properties)));
+    	properties["device"] = deviceName;
+    	
+        db.query("UPDATE devices SET os_version = ?, properties = ? WHERE id = ?", osVersion, stringify(properties), deviceId + "");
+    }
+    var getCurrentDeviceState = function(deviceId){
+        var result = db.query("select status from devices where id = ?",stringify(deviceId));
+        if(result != undefined && result != null && result[0] != undefined && result[0] != null){
+            return result[0].status;
+        }else{
+            return null;
+        }
+    }
 }
 device.prototype.constructor = function (dbs) {
     db = dbs;
