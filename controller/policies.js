@@ -48,6 +48,10 @@ assign_groups = function(appController){
 	
 	var policyId = request.getParameter('policy');
 	var policyName = request.getParameter('policyName');
+	
+	var hasGroups = false;
+	var hasUsers = false;
+	var hasPlatforms = false;
 		
 	try{
 		var groups = policy.getGroupsByPolicy({policyid: policyId});		
@@ -56,7 +60,14 @@ assign_groups = function(appController){
 		var groups = [];
 	}
 	
-	//print(groups);
+	for(var i = 0; i < groups.length; i++){		
+		if(groups[i].available){			
+			hasGroups = true;
+		}
+	}
+	
+	
+		
 	
 	try{
 		var users = policy.getUsersByPolicy({policyid: policyId});
@@ -64,6 +75,12 @@ assign_groups = function(appController){
 	}catch(e){
 		print("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var users = [];
+	}
+	
+	for(var i = 0; i < users.length; i++){		
+		if(users[i].available){			
+			hasUsers = true;
+		}
 	}
 	
 	
@@ -74,6 +91,11 @@ assign_groups = function(appController){
 		var platforms = [];
 	}
 	
+	for(var i = 0; i < platforms.length; i++){		
+		if(platforms[i].available){			
+			hasPlatforms = true;
+		}
+	}
 					
 	context = appController.context();
 	context.title = context.title + " | Assign Users to group";	
@@ -86,7 +108,8 @@ assign_groups = function(appController){
 		policyId: policyId,
 		platforms: platforms,
 		users: users,
-		policyName: policyName
+		policyName: policyName,
+		hasResources : {hasGroups: hasGroups, hasUsers: hasUsers, hasPlatforms: hasPlatforms}
 	};
 	return context;
 };
