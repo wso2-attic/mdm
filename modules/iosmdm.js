@@ -115,11 +115,13 @@ var iosmdm = (function() {
 				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();
 				var checkinMessageType = plistExtractor.extractTokens(contentString);
 
+                log.debug("CheckinMessageType >>>>>>>>>>>>>>>>>>>>>> " + checkinMessageType.getMessageType());
+
 				if (checkinMessageType.getMessageType() == "CheckOut") {
 					var ctx = {};
 					ctx.udid = checkinMessageType.getUdid();
 					device.unRegisterIOS(ctx);
-				} else {
+				} else if (checkinMessageType.getMessageType() == "TokenUpdate") {
 					var tokenProperties = {};
 					tokenProperties["token"] = checkinMessageType.getToken();
 					tokenProperties["unlockToken"] = checkinMessageType.getUnlockToken();

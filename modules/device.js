@@ -128,7 +128,8 @@ var device = (function () {
     }
     
 	function invokeInitialFunctions(ctx) {
-		
+
+
 		var db = application.get('db');
 		var devices = db.query("SELECT * FROM devices WHERE udid = " + stringify(ctx.deviceid));
         var deviceID = devices[0].id;
