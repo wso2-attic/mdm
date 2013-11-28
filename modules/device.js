@@ -255,12 +255,15 @@ var device = (function () {
             }
         }
 
-
         var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
         if(devices == null || devices == undefined || devices[0] == null || devices[0] == undefined) {
         	return;
         }
-        
+
+        //Fixed error log which is created when device is removed while monitoring is happening. Log used to show empty JSON string
+        if (devices[0].reg_id == null || devices[0].reg_id == undefined) {
+            return;
+        }
         var regId = devices[0].reg_id;
         var regIdJsonObj = parse(regId);
 
@@ -314,38 +317,47 @@ var device = (function () {
                 ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
         }
 
-        var sendToAPNS = 0;
-        var lastApnsTime = db.query("SELECT TIMESTAMPDIFF(SECOND, min(sent_date), CURRENT_TIMESTAMP()) as seconds FROM notifications WHERE status = 'A' AND device_id = ?", ctx.deviceid);
+        var sendToAPNS = null;
+        //var lastApnsTime = db.query("SELECT TIMESTAMPDIFF(SECOND, min(sent_date), CURRENT_TIMESTAMP()) as seconds FROM notifications WHERE status = 'A' AND device_id = ?", ctx.deviceid);
+        var lastApnsTime = db.query("SELECT TIMESTAMPDIFF(SECOND, min(sent_date), CURRENT_TIMESTAMP()) as seconds FROM device_awake WHERE status = 'S' AND device_id = ?", ctx.deviceid);
         log.debug("lastApnsTime >>>>>>>>> " + stringify(lastApnsTime[0]));
         if (lastApnsTime != null && lastApnsTime[0] != null && lastApnsTime != undefined && lastApnsTime[0] != undefined) {
             //1 hr = 60 * 60 = 3600 seconds
             if (lastApnsTime[0].seconds != null && lastApnsTime[0].seconds != undefined) {
                 if (lastApnsTime[0].seconds >= 3600) {
-                    sendToAPNS = 1;
+                    sendToAPNS = "UPDATE";
                 }
             }else {
-                sendToAPNS = 1;
+                sendToAPNS = "INSERT";
             }
         } else {
-            sendToAPNS = 1;
+            sendToAPNS = "INSERT";
         }
 
-        if (sendToAPNS == 1) {
+        if (sendToAPNS != null) {
             try {
                 log.debug("sendMessageToIOSDevice >>>>>>>> common.initAPNS");
                 common.initAPNS(deviceToken, pushMagicToken);
             } catch (e) {
+                db.query("UPDATE device_awake SET status = 'E', processed_date = ? WHERE device_id = ? AND status = 'S'", datetime, ctx.deviceid);
                 log.error(e);
                 return;
             }
-            db.query("UPDATE notifications SET status = 'A' WHERE device_id = ? AND status = 'P'", ctx.deviceid);
+            //db.query("UPDATE notifications SET status = 'A' WHERE device_id = ? AND status = 'P'", ctx.deviceid);
+
+            log.debug("sendToAPNS value >>>>>>>>> " + sendToAPNS);
+            if (sendToAPNS == "INSERT") {
+                db.query("INSERT INTO device_awake (device_id, sent_date, call_count, status) VALUES(?,?,1,'S')", ctx.deviceid, datetime);
+            } else if (sendToAPNS == "UPDATE") {
+                db.query("UPDATE device_awake SET sent_date = ?, call_count = call_count + 1 WHERE device_id = ? AND status = 'S'", datetime, ctx.deviceid);
+            }
         }
 
         return true;
     }
     
     function checkPendingOperations() {
-    	//Nira - Not happening
+    	//This function is not used anymore..  this can be removed during refactoring
     	var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' AND device_id IN (SELECT id FROM devices WHERE platform_id IN (SELECT id FROM platforms WHERE type_name = 'iOS')) ORDER BY sent_date DESC;");
     	
     	for(var i = 0; i < pendingOperations.length; i++) {
@@ -765,6 +777,7 @@ var device = (function () {
         	sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});
         	
             if(ctx.udid != null){
+                db.query("UPDATE device_awake JOIN devices ON devices.id = device_awake.device_id SET device_awake.status = 'D' WHERE devices.udid = ? AND device_awake.status = 'S'", ctx.udid);
                 var result = db.query("DELETE FROM devices WHERE udid = ?", ctx.udid);
                 if(result == 1){
                     return true;

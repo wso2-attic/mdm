@@ -223,7 +223,12 @@ var iosmdm = (function() {
 					return common.loadPayload(new Packages.java.lang.String(operation.id), operation.feature_code, operation.message);
 				}
 
-				return null;
+                //End of all Notifications pending for the device
+                var datetime =  common.getCurrentDateTime();
+                log.debug("UPDATE device_awake status >>>>>>>> ");
+                db.query("UPDATE device_awake JOIN devices ON devices.id = device_awake.device_id SET device_awake.status = 'P', device_awake.processed_date = ? WHERE devices.udid = ? AND device_awake.status = 'S'", datetime, apnsStatus.getUdid());
+
+                return null;
 
 			} catch (e) {
 				log.error(e);
