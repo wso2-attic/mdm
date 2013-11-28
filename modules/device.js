@@ -785,6 +785,10 @@ var device = (function () {
             log.debug(gpresult[0]);
             sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
         },
+        getSenderId: function(ctx){
+            var androidConfig = require('android.json');
+            return androidConfig.sender_id;
+        }         ,
         getLicenseAgreement: function(ctx){
             var path = "/license/license.txt";
             var file = new File(path);

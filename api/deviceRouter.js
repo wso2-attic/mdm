@@ -157,6 +157,11 @@ var device = (function () {
             response.status = 200;
         });
 
+        router.get('devices/sender_id', function(ctx){
+            var result = device.getSenderId(ctx);
+            print(result);
+            response.status = 200;
+        });
 
 
 		router.get('pending/devices/{udid}/operations', function(ctx){
