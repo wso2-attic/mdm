@@ -222,7 +222,7 @@ $( ".policy-input" ).change(function() {
 
 function validations(){
 	//remove allow simple when minimum complex characters are set
-	if($('#519A-minComplexChars').val() != ""){
+	if(! ($('#519A-minComplexChars').val() == "" || $('#519A-minComplexChars').val() == "0")){
 		$('#519A-allowSimple').parent().parent().hide();
 		$('#519A-allowSimple').prop('checked', false);
 	}else{
