@@ -582,3 +582,10 @@ width:600px;
 
 .policy-os-icon{
 	padding: 3px;
+}
+
+
+
+#accordionPolicies .accordion-toggle {
+    cursor:s-resize;
+}
