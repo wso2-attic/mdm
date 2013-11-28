@@ -93,12 +93,15 @@ var policy = (function () {
     module.prototype = {
         constructor: module,
         updatePolicy:function(ctx){
+            var policyId = '';
             var result;
             var policy = db.query("SELECT * FROM policies where name = ?",ctx.policyName);
+            policyId = policy[0].id;
             if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
                 log.info("Content >>>>>"+stringify( ctx.policyData));
                 result = db.query("UPDATE policies SET content= ?,type = ? WHERE name = ?",ctx.policyData, ctx.policyType, ctx.policyName);
                 log.info("Result >>>>>>>"+result);
+                this.enforcePolicy({"policyid":policyId});
             }else{
                 result = this.addPolicy(ctx);
             }

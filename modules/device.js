@@ -701,9 +701,6 @@ var device = (function () {
                 }
                 obj.push(featureArr);
             }
-
-         //   log.debug(obj);
-
             return obj;
         },
         sendMsgToUserDevices: function(ctx){
