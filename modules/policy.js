@@ -331,6 +331,38 @@ var policy = (function () {
             }
 
         },
+        getPolicyPayLoad:function(deviceId,category){
+            var devices = db.query("SELECT * from devices where id = "+deviceId);
+            var username = devices[0].user_id;//username for pull policy payLoad
+
+            var platforms = db.query("select platforms.type_name from devices,platforms where platforms.id = devices.platform_id AND devices.id = "+deviceId);
+            var platformName = platforms[0].type_name;//platform name for pull policy payLoad
+
+            var roleList = user.getUserRoles({'username':username});
+            var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer","private_kasun:wso2mobile.com");
+            var roles = common.removeNecessaryElements(roleList,removeRoles);
+            var role = roles[0];//role name for pull policy payLoad
+
+
+            var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",category,String(username));
+            if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
+                var policyPayLoad = parse(upresult[0].data);
+                return policyPayLoad;
+            }
+
+            var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",category,platformName);
+            if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
+                var policyPayLoad = parse(ppresult[0].data);
+                return policyPayLoad;
+            }
+
+            var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",category,role);
+            if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
+                var policyPayLoad = parse(gpresult[0].data);
+                return policyPayLoad;
+            }
+            return null;
+        },
         monitoring:function(ctx){
             setInterval(
            	 function(ctx){

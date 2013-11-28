@@ -115,11 +115,13 @@ var iosmdm = (function() {
 				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();
 				var checkinMessageType = plistExtractor.extractTokens(contentString);
 
+                log.debug("CheckinMessageType >>>>>>>>>>>>>>>>>>>>>> " + checkinMessageType.getMessageType());
+
 				if (checkinMessageType.getMessageType() == "CheckOut") {
 					var ctx = {};
 					ctx.udid = checkinMessageType.getUdid();
 					device.unRegisterIOS(ctx);
-				} else {
+				} else if (checkinMessageType.getMessageType() == "TokenUpdate") {
 					var tokenProperties = {};
 					tokenProperties["token"] = checkinMessageType.getToken();
 					tokenProperties["unlockToken"] = checkinMessageType.getUnlockToken();
@@ -185,11 +187,11 @@ var iosmdm = (function() {
 					ctx.id = commandUUID;
 					notification.discardOldNotifications(ctx);
 
-                    if (pendingExist != true) {
-                        //log.debug("Pending Exist >>>>>>> FALSE");
-                        return;
-                    }
-                    //log.debug("Pending Exist >>>>>>> TRUE");
+//                    if (pendingExist != true) {
+//                        log.debug("Pending Exist >>>>>>> FALSE");
+//                        return;
+//                    }
+//                    log.debug("Pending Exist >>>>>>> TRUE");
 
 				} else if (("Error").equals(apnsStatus.getStatus())) {
 					log.error("Error " + apnsStatus.getError());
@@ -201,11 +203,11 @@ var iosmdm = (function() {
 
                     var pendingExist = notification.addIosNotification(ctx);
 
-                    if (pendingExist != true) {
-                        //log.debug("Pending Exist >>>>>>> FALSE");
-                        return;
-                    }
-                    //log.debug("Pending Exist >>>>>>> TRUE");
+//                    if (pendingExist != true) {
+//                        log.debug("Pending Exist >>>>>>> FALSE");
+//                        return;
+//                    }
+//                    log.debug("Pending Exist >>>>>>> TRUE");
 				}
 
 				var ctx = {};
@@ -214,13 +216,19 @@ var iosmdm = (function() {
 
 				if (operation != null && operation.feature_code.indexOf("-") > 0) {
 					var featureCode = operation.feature_code.split("-")[0];
+                    log.debug("sendPushNotifications >>> Feature Code >>>>>> " + featureCode);
 
 					return common.loadPayload(new Packages.java.lang.String(operation.id), featureCode, operation.message);
 				} else if (operation != null) {
 					return common.loadPayload(new Packages.java.lang.String(operation.id), operation.feature_code, operation.message);
 				}
 
-				return null;
+                //End of all Notifications pending for the device
+                var datetime =  common.getCurrentDateTime();
+                log.debug("UPDATE device_awake status >>>>>>>> ");
+                db.query("UPDATE device_awake JOIN devices ON devices.id = device_awake.device_id SET device_awake.status = 'P', device_awake.processed_date = ? WHERE devices.udid = ? AND device_awake.status = 'S'", datetime, apnsStatus.getUdid());
+
+                return null;
 
 			} catch (e) {
 				log.error(e);
