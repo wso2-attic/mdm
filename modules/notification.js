@@ -37,12 +37,7 @@ var notification = (function () {
             var result = db.query("SELECT * FROM notifications WHERE device_id = ? ORDER BY id DESC LIMIT 10", ctx.deviceid);
 
             var notifications = new Array();
-            for (i=0;i<10;i++){
-
-                if(result[i] == null) {
-                    notifications[i] = {};
-                    continue;
-                }
+            for (i=0; i<result.length; i++){
                 var obj = {};
                 obj.sent_date =  common.getFormattedDate(result[i].sent_date);
                 obj.received_date = common.getFormattedDate(result[i].received_date);
