@@ -544,17 +544,32 @@ var device = (function () {
             var tenantUser = carbon.server.tenantUser(ctx.email);
 		    var userId = tenantUser.username;
 			var tenantId = tenantUser.tenantId;
+
+            log.debug("registerIOS >>>>>>>>>>>>>>>> ");
 			
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
 
             var createdDate = common.getCurrentDateTime();
-            var devicesCheckUDID = db.query("SELECT * FROM devices WHERE udid = ?", ctx.udid);
+
+            /*
+             var devicesCheckUDID = db.query("SELECT * FROM devices WHERE udid = ?", ctx.udid);
             if(devicesCheckUDID != undefined && devicesCheckUDID != null && devicesCheckUDID[0] != undefined && devicesCheckUDID[0] != null){
                 db.query("Update devices SET reg_id = ? WHERE udid = ?", ctx.regid, ctx.udid);
             }else{
                 db.query("INSERT INTO devices (tenant_id, os_version, created_date, properties, reg_id, status, deleted, user_id, platform_id, vendor, udid) VALUES(?, ?, ?, ?, ?, 'A', '0', ?, ?, ?, ?)", 
                 	tenantId, ctx.osversion, createdDate, stringify(ctx.properties), ctx.regid, userId, platformId, ctx.vendor, ctx.udid);
+            }*/
+
+            var devicesCheckUDID = db.query("SELECT * FROM device_pending WHERE udid = ?", ctx.udid);
+
+            //Save device data into temporary table
+            if(devicesCheckUDID != undefined && devicesCheckUDID != null && devicesCheckUDID[0] != undefined && devicesCheckUDID[0] != null){
+                db.query("UPDATE device_pending SET tenant_id = ?, user_id = ?, platform_id = ?, properties = ?, created_date = ?, status = 'A', vendor = ? WHERE udid = ?",
+                    tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid);
+            } else {
+                db.query("INSERT INTO device_pending (tenant_id, user_id, platform_id, properties, created_date, status, vendor, udid) VALUES(?, ?, ?, ?, ?, 'A', ?, ?)",
+                    tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid);
             }
 
             return true;
@@ -657,7 +672,8 @@ var device = (function () {
         },
         updateiOSTokens: function(ctx){
 		
-			var result = db.query("SELECT properties FROM devices WHERE udid = " + stringify(ctx.deviceid));
+			//var result = db.query("SELECT properties FROM devices WHERE udid = " + stringify(ctx.deviceid));
+            var result = db.query("SELECT properties FROM device_pending WHERE udid = " + stringify(ctx.deviceid));
 
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
                 log.error(result);
@@ -679,8 +695,14 @@ var device = (function () {
                 tokenProperties["unlockToken"] = ctx.unlockToken;
                 tokenProperties["magicToken"] = ctx.magicToken;
 
-                var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?", 
-                	stringify(properties), stringify(tokenProperties), ctx.deviceid);
+//                var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
+//                	stringify(properties), stringify(tokenProperties), ctx.deviceid);
+
+                //Copy record from temporary table into device table and delete the record from the temporary table
+                var updateResult = db.query("INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) " +
+                    "SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
+                    stringify(tokenProperties), stringify(properties), ctx.deviceid);
+                db.query("DELETE FROM device_pending WHERE udid = ?", ctx.deviceid);
 
                 if(updateResult != null && updateResult != undefined && updateResult == 1) {
                     	
