@@ -263,7 +263,10 @@ var device = (function () {
         //Fixed error log which is created when device is removed while monitoring is happening. Log used to show empty JSON string
         if (devices[0].reg_id == null || devices[0].reg_id == undefined) {
             return;
+        } else if (devices[0].reg_id.trim().length == 0) {
+            return;
         }
+
         var regId = devices[0].reg_id;
         var regIdJsonObj = parse(regId);
 
