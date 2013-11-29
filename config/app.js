@@ -4,7 +4,7 @@ var db = application.get('db');
 var dbconfig = require('db.json');
 if(db==null || db==undefined){
     //db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
-    db = new Database("EMM_DB");
+    db = new Database("MDM_DB");
     application.put('db',db);
 }
 
