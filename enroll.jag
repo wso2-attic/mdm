@@ -23,7 +23,7 @@
 		
 		var data = iosMdm.generateMobileConfigurations(username);
 		
-		db.query("INSERT INTO user_pending (user_id, byod, token) VALUES(?, ?, ?)", username, byod, username);
+		db.query("INSERT INTO device_pending (user_id, byod, token) VALUES(?, ?, ?)", username, byod, username);
 		
 		if(data == null) {
 			response.sendRedirect("mdmerror.jag");
