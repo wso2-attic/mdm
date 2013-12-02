@@ -544,8 +544,6 @@ var device = (function () {
             var tenantUser = carbon.server.tenantUser(ctx.email);
 		    var userId = tenantUser.username;
 			var tenantId = tenantUser.tenantId;
-
-            log.debug("registerIOS >>>>>>>>>>>>>>>> ");
 			
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
@@ -671,12 +669,12 @@ var device = (function () {
             }
         },
         updateiOSTokens: function(ctx){
-		
+			
 			//var result = db.query("SELECT properties FROM devices WHERE udid = " + stringify(ctx.deviceid));
-            var result = db.query("SELECT properties FROM device_pending WHERE udid = " + stringify(ctx.deviceid));
+            var result = db.query("SELECT properties, user_id FROM device_pending WHERE udid = " + stringify(ctx.deviceid));
 
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
-                log.error(result);
+      
                 var properties = parse(result[0].properties);
 
                 var platform = "" + properties["product"];
@@ -698,10 +696,33 @@ var device = (function () {
 //                var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
 //                	stringify(properties), stringify(tokenProperties), ctx.deviceid);
 
-                //Copy record from temporary table into device table and delete the record from the temporary table
-                var updateResult = db.query("INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) " +
-                    "SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
-                    stringify(tokenProperties), stringify(properties), ctx.deviceid);
+                var userPendingResult = db.query("SELECT byod FROM user_pending WHERE user_id = ? ORDER BY executed_time DESC", result[0].user_id);  
+                
+                if(userPendingResult != null && userPendingResult != undefined && userPendingResult[0] != null && userPendingResult[0] != undefined) {
+                	db.query("UPDATE device_pending SET byod = ? WHERE user_id = ?", userPendingResult[0].byod, result[0].user_id); 
+                } 
+                
+                var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);  
+                
+                if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
+                	
+                	var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
+	                   
+	                if(devicePendingResult != null && devicePendingResult != undefined && devicePendingResult[0] != null && devicePendingResult[0] != undefined) {
+	                	devicePendingResult = devicePendingResult[0]
+	                	var updateResult = db.query("UPDATE devices SET tenant_id = ?, user_id = ?, platform_id = ?, reg_id =? , properties = ?, status = ?, byod = ?, vendor = ?, udid = ?  WHERE udid = ?",
+	                		devicePendingResult.tenant_id, devicePendingResult.user_id, devicePendingResult.platform_id, stringify(tokenProperties), stringify(properties), devicePendingResult.status, 
+	                		devicePendingResult.byod, devicePendingResult.vendor, devicePendingResult.udid, ctx.deviceid);
+	                }
+
+                } else {
+                	//Copy record from temporary table into device table and delete the record from the temporary table
+	                var updateResult = db.query("INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) " +
+	                    "SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
+	                    stringify(tokenProperties), stringify(properties), ctx.deviceid);
+                }
+                    
+                db.query("DELETE FROM user_pending WHERE user_id = ?", result[0].user_id);
                 db.query("DELETE FROM device_pending WHERE udid = ?", ctx.deviceid);
 
                 if(updateResult != null && updateResult != undefined && updateResult == 1) {
