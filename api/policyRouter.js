@@ -33,6 +33,8 @@ var policy = (function () {
             var result = policy.deletePolicy(ctx);
             if(result==1){
                 response.status = 200;
+            }else if(result == 0){
+                response.status = 403;
             }else{
                 response.status = 404;
             }
