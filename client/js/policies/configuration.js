@@ -83,6 +83,14 @@ $(".btn-item-remove").click(function() {
 								'type': 'error'
 							});
 						},
+						403: function() {
+							$noty.close();
+							noty({
+								text : 'Resources are assigned to this policy! Ploicy cannot be deleted',
+								'layout' : 'center',
+								'type': 'error'
+							});
+						},
 						500: function() {
 							$noty.close();
 							noty({
