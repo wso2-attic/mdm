@@ -50,7 +50,7 @@ var device = (function () {
 		});
 
 		router.post('devices/unregister', function(ctx){
-		    var result = device.unRegister(ctx);
+		    var result = device.unRegisterAndroid(ctx);
 		});
 		
 		router.post('devices/unregisterios', function(ctx){
