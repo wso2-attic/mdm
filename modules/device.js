@@ -468,7 +468,7 @@ var device = (function () {
                 return state;
             }
         },
-        register: function(ctx){
+        registerAndroid: function(ctx){
             var log = new Log();
             ctx.email = ctx.email+"@carbon.super";
             var tenantUser = carbon.server.tenantUser(ctx.email);

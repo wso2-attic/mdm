@@ -40,7 +40,7 @@ var device = (function () {
 		    var android = userAgent.indexOf("Android");
 
 		    if(android > 0){
-		        device.register(ctx);
+		        device.registerAndroid(ctx);
                 	response.status = 201;
                 	response.content = "registered"
 		    }else{
