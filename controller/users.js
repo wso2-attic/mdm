@@ -38,6 +38,7 @@ configuration = function(appController) {
 		users : users,
 		groups : groups
 	};
+	context.auth_roles = ['Internal/everyone'];
 	return context;
 };
 
@@ -61,6 +62,7 @@ add = function(appController) {
 		groups : groups,
 		tenantId : session.get("mdmConsoleUser").tenantId
 	};
+	context.auth_roles = ['Internal/everyone'];
 	return context;
 
 };

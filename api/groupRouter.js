@@ -43,7 +43,7 @@ var group = (function () {
             response.status = 200;
         });
         router.put('groups/{groupid}/users', function(ctx){
-            log.info("Test Request PUTTTTT"+stringify(ctx));
+            log.info("Test Request "+stringify(ctx));
              var result = group.updateUserListOfRole(ctx);
              response.content = result;
              response.status = 200;

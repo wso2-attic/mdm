@@ -10,7 +10,6 @@ var router = new goose({CONTEXT: "/mdm/api/", AUTH_SUPPORT: true, AUTH_USER_ROLE
 var log =new Log();
 var configs = require('config/mdm.js').config();
 var db = application.get('db');
-var dbconfig = require('config/db.json');
 
 var deviceModule = require('modules/device.js').device;
 var device = new deviceModule();

@@ -225,7 +225,7 @@ var mvc = (function () {
 						if(context.auth_roles!=undefined && context.auth_roles.length>0){
 							var authState = isArrayOverlap(configs.AUTH_USER_ROLES, context.auth_roles);
 							if(!authState){
-								 log.debug("--------Goose Auth Error (User roles doesn't match with route roles)--------");
+								 log.debug("--------Absolute Auth Error (User roles doesn't match with route roles)--------");
 								 response.sendError(403);
 								 return;
 							}
