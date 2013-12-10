@@ -128,9 +128,6 @@
 	},
 
 
-	"/mdm/api/devices/register":{
-		'POST': ['Internal/everyone']
-	},
 	"/mdm/api/devices/{deviceid}/operations/{operation}":{
 		'POST': ['Internal/everyone']
 	},
