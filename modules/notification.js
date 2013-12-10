@@ -62,9 +62,31 @@ var notification = (function () {
 
                 if(featureCode == "500P") {
 
+                	var deviceFeatureCodes = db.query("SELECT id, feature_code FROM policy_device_profiles WHERE device_id = ? ", device_id);
+                	
+                	if(deviceFeatureCodes != null && deviceFeatureCodes != undefined) {
+                		for(var i = 0; i < deviceFeatureCodes.length; i++) {
+                			
+                			var featureName = db.query("SELECT name FROM features WHERE code = ? ", deviceFeatureCodes[i].feature_code);
+
+                			if(featureName != null && featureName != undefined && featureName[0] != null && featureName[0] != undefined) {
+                				
+                				var payloadIdentifiers = common.getPayloadIdentifierMap();
+                				var payloadId = payloadIdentifiers[featureName[0].name];
+                				
+                    			var data = {};
+                    			data.identifier = payloadId;
+                    			device.invokeMessageToIOSDevice({'deviceid':device_id, 'operation': "REMOVEPROFILE", 'data': data});
+                			}
+                			
+                			db.query("DELETE FROM policy_device_profiles WHERE id = ? ", deviceFeatureCodes[i].id );
+                			
+                		}
+                	}
+                    	
                     var notificationId = identifier.split("-")[0];
                     var policySequence = identifier.split("-")[1];
-
+					
                     var pendingFeatureCodeList = db.query("SELECT received_data, device_id FROM notifications WHERE id = ?", notificationId + "");
                     var received_data = pendingFeatureCodeList[0].received_data;
                     var device_id = pendingFeatureCodeList[0].device_id;
@@ -111,6 +133,12 @@ var notification = (function () {
                         return true;
 
                     } else {
+                    	
+	                	for(var i = 0; i < parsedReceivedData.length; i++) {
+	                        var receivedObject = parsedReceivedData[i];
+	                        db.query("INSERT INTO policy_device_profiles (device_id, feature_code) VALUES (?, ?)", device_id, receivedObject.message.code);
+	                    }
+ 
                         db.query("UPDATE notifications SET status='R' WHERE id = ?", notificationId);
                         
                         var ctx = {};
@@ -170,7 +198,7 @@ var notification = (function () {
 	                    	var innerResponse = {};
 	                        innerResponse.status = false;
 	                        innerResponse.code = code;
-	                        formattedData.push(innerResponse);
+	                        formattedData.push(innerResponse);                       
                 		}
                 	}
                     try{
@@ -334,7 +362,7 @@ var notification = (function () {
             return array;
         }, discardOldNotifications:function(ctx) {
         	
-        	var currentOperation = db.query("SELECT received_date, device_id, feature_code, user_id FROM notifications WHERE id = ? AND feature_code != '500P' ", parseInt(ctx.id));
+        	var currentOperation = db.query("SELECT received_date, device_id, feature_code, user_id FROM notifications WHERE id = ? AND feature_code != '500P' AND feature_code != '529A' ", parseInt(ctx.id));
         	
         	if(currentOperation == null || currentOperation[0] == null || currentOperation == undefined || currentOperation[0] == undefined) {
         		return;

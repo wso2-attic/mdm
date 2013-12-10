@@ -824,6 +824,9 @@ var device = (function () {
                 return false;
             }
         },
+        invokeMessageToIOSDevice:function(ctx) {
+        	sendMessageToIOSDevice(ctx);
+        },
         enforcePolicy:function(ctx){
             var result = db.query("SELECT * from devices where id = ?",ctx.id);
             var userId = result[0].user_id;
