@@ -66,6 +66,21 @@ var policy = (function () {
         }
         return  jsonData;
     }
+    function isPolicyAssignedToResource(policyId){
+        var result = db.query("SELECT * from policies, user_policy_mapping where user_policy_mapping.policy_id=policies.id && policies.id ="+policyId);
+        if(result != undefined && result != null && result[0] != undefined && result[0] != null){
+            return true;
+        }
+        result = db.query("SELECT * from policies, platform_policy_mapping where platform_policy_mapping.policy_id=policies.id && policies.id ="+policyId);
+        if(result != undefined && result != null && result[0] != undefined && result[0] != null){
+            return true;
+        }
+        result = db.query("SELECT * from policies, user_policy_mapping where user_policy_mapping.policy_id=policies.id && policies.id ="+policyId);
+        if(result != undefined && result != null && result[0] != undefined && result[0] != null){
+            return true;
+        }
+        return false;
+    }
     function getPolicyIdFromDevice(deviceId){
         var devices = db.query("SELECT * from devices where id = ?",String(deviceId));
         var userId = devices[0].user_id;
@@ -93,12 +108,15 @@ var policy = (function () {
     module.prototype = {
         constructor: module,
         updatePolicy:function(ctx){
+            var policyId = '';
             var result;
             var policy = db.query("SELECT * FROM policies where name = ?",ctx.policyName);
+            policyId = policy[0].id;
             if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
                 log.info("Content >>>>>"+stringify( ctx.policyData));
                 result = db.query("UPDATE policies SET content= ?,type = ? WHERE name = ?",ctx.policyData, ctx.policyType, ctx.policyName);
                 log.info("Result >>>>>>>"+result);
+                this.enforcePolicy({"policyid":policyId});
             }else{
                 result = this.addPolicy(ctx);
             }
@@ -126,6 +144,10 @@ var policy = (function () {
             return result[0];
         },
         deletePolicy:function(ctx){
+            var resource = isPolicyAssignedToResource(ctx.policyid);
+            if(resource == true){
+                return 0;
+            }
             var result = db.query("DELETE FROM policies where id = ?",ctx.policyid);
             db.query("DELETE FROM group_policy_mapping where policy_id = ?",ctx.policyid);
             return result;

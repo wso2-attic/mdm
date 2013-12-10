@@ -5,9 +5,7 @@
 	var log = new Log();
 	log.info('inside');
 
-	var token = 'admin@admin.com'; //session.get("token");
-
-	var signedData = iosMdm.handleProfileRequest(request.getInputStream(), token);
+	var signedData = iosMdm.handleProfileRequest(request.getInputStream());
 		
 	if(signedData == null) {
 		response.sendRedirect("mdmerror.jag");

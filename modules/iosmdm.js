@@ -59,11 +59,11 @@ var iosmdm = (function() {
 
 			return null;
 		},
-		handleProfileRequest : function(inputStream, caPath, caPrivateKeyPath, token) {
+		handleProfileRequest : function(inputStream) {
 
 			try {
 				var requestHandler = new Packages.com.wso2mobile.ios.mdm.impl.RequestHandler();
-				var signedData = requestHandler.handleProfileRequest(inputStream, token);
+				var signedData = requestHandler.handleProfileRequest(inputStream);
 
 				return signedData;
 			} catch (e) {
