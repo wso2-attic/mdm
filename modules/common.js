@@ -283,6 +283,11 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_APPLICATION;
 		paramMap.put("Identifier", data.identifier);
 		
+	} else if(operationCode == "529A") {
+		
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_PROFILE;
+		paramMap.put("Identifier", data.identifier);
+		
 	} else if(operationCode == "528A") {
 		
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APPLY_REDEMPTION_CODE;
