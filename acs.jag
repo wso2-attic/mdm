@@ -30,7 +30,7 @@
 
                 if (sso.client.validateSignature(samlRespObj, keyStoreProps)) {
                     var sessionObj = sso.client.decodeSAMLLoginResponse(samlRespObj, samlResponse, sessionId);
-
+                    log.info("Session IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD :"+sessionObj.sessionId);
                     if (sessionObj.sessionIndex != null || sessionObj.sessionIndex != 'undefined') {
                         session.put("LOGGED_IN_USER", sessionObj.loggedInUser);
                         session.put("Loged", "true");
@@ -77,6 +77,13 @@
 								userFeed.isAdmin = isAdmin;
 								session.put("mdmConsoleUserLogin", "true");
 								session.put("mdmConsoleUser", userFeed);
+
+                                log.info("test policy moduleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+                                var entitlement = require('policy').entitlement;
+
+                                session.put("entitlement",entitlement);
+
+                                session.get("entitlement").login();
 
 								var appController =require('/controller/app.js');
 								if(isAdmin){

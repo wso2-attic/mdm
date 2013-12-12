@@ -620,11 +620,18 @@ var device = (function () {
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
                     sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
 
-
                     var mdmPolicy = getPolicyPayLoad(deviceID,1);
+                //    var mamPolicy = getPolicyPayLoad(deviceID,2);
+
                     if(mdmPolicy != undefined && mdmPolicy != null){
                         if(mdmPolicy.payLoad != undefined && mdmPolicy.payLoad != null){
                             sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': mdmPolicy.payLoad});
+                           /* if(mamPolicy != undefined && mamPolicy != null){
+                                var mdmPolicyPayload = mdmPolicy.payLoad;
+                                var mamPolicyPayload = mamPolicy.payLoad;
+                                var policyPayload = mdmPolicyPayload.concat(mamPolicyPayload);
+                                sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': policyPayload});
+                            }*/
                         }
                     }
                     return true;
