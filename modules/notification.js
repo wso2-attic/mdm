@@ -222,11 +222,12 @@ var notification = (function () {
                     	var dataObj = parse(parse(stringify(ctx.data)));
                     	var deviceName = dataObj["DeviceName"];
                     	var osVersion = dataObj["OSVersion"];
+                    	var wifiMac = dataObj["WiFiMAC"];
                     	
                     	var notifications = db.query("SELECT device_id FROM notifications WHERE id = ?", identifier + "");
                     	var deviceId = notifications[0].device_id;
 
-                    	device.updateDeviceProperties(deviceId, osVersion, deviceName);
+                    	device.updateDeviceProperties(deviceId, osVersion, deviceName, wifiMac);
                     }
                 }
             }

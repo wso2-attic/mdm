@@ -695,9 +695,9 @@ var device = (function () {
 
 //                var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
 //                	stringify(properties), stringify(tokenProperties), ctx.deviceid);
-
+log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1");
                 var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);  
-                
+               log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2", userResultExist); 
                 if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
                 	
                 	var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
@@ -943,14 +943,14 @@ var device = (function () {
         changeDeviceState:function(deviceId,state){
             db.query("UPDATE devices SET status = ? WHERE id = ?",state,stringify(deviceId));
         },
-        updateDeviceProperties:function(deviceId, osVersion, deviceName) {
+        updateDeviceProperties:function(deviceId, osVersion, deviceName, wifiMac) {
                     	
             var deviceResult = db.query("SELECT properties FROM devices WHERE id = ?", deviceId + "");
         	var properties = deviceResult[0].properties;
         	properties = parse(parse(stringify(properties)));
         	properties["device"] = deviceName;
         	
-            db.query("UPDATE devices SET os_version = ?, properties = ? WHERE id = ?", osVersion, stringify(properties), deviceId + "");
+            db.query("UPDATE devices SET os_version = ?, properties = ?, wifi_mac = ? WHERE id = ?", osVersion, stringify(properties), wifiMac, deviceId + "");
         },
         getCurrentDeviceState:function(deviceId){
             var result = db.query("select status from devices where id = ?",stringify(deviceId));
