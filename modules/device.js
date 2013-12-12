@@ -838,7 +838,7 @@ log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1");
             sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
         },
         getSenderId: function(ctx){
-            var androidConfig = require('android.json');
+            var androidConfig = require('config/android.json');
             return androidConfig.sender_id;
         }         ,
         getLicenseAgreement: function(ctx){
@@ -858,7 +858,6 @@ log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1");
                // setInterval(this.monitoring({}),10000);
                 log.debug("Error In Monitoring");
             }
-
         },
         monitor:function(ctx){
             log.debug("monitor");
@@ -966,6 +965,21 @@ log.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1");
 	                checkPendingOperations();
 	            }
             , 10000);
+        },
+
+        saveiOSPushToken:function(ctx){
+            //Save the Push Token to the respective device using UDID
+            if (ctx.pushToken != null || ctx.pushToken != undefined) {
+                log.debug("saveiOSPushToken >>>>>> " + ctx.udid + " >>>>>>>>> " + ctx.pushToken);
+                var result = db.query("SELECT COUNT(*) as count FROM devices WHERE udid = ?", ctx.udid);
+                if (result[0].count > 0) {
+                    db.query("UPDATE devices SET push_token = ? WHERE udid = ?", ctx.pushToken, ctx.udid);
+                } else {
+                    return null;
+                }
+                return "SUCCESS";
+            }
+            return null;
         }
     };
 
