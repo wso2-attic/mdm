@@ -588,10 +588,10 @@ var device = (function () {
         sendToDevices:function(ctx){
             log.debug("test sendToDevices :"+stringify(ctx.params.data));
             log.debug(ctx.devices[0]);
-           var devices =  ctx.devices;
-           for(var i=0;i<devices.length;i++){
+            var devices =  ctx.devices;
+            for(var i=0;i<devices.length;i++){
                 this.sendToDevice({'deviceid':devices[i],'operation':ctx.operation,'data':ctx.params.data});
-           }
+            }
         },
         getPendingOperationsFromDevice: function(ctx){
 			
