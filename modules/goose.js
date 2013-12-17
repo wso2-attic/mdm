@@ -97,19 +97,19 @@ var goose = (function () {
 			for (var property in routes){
 				if(routes.hasOwnProperty(property)){
 					var routeObject = routes[property];
-					log.debug('--------Goose Rule setup current route --------'+routeObject.route);
+					// log.debug('--------Goose Rule setup current route --------'+routeObject.route);
 					var r = jsonFile[routeObject.route];
 					if(r==undefined){
-						log.debug('--------Goose No Rule specified for route --------'+routeObject.route);
+						// log.debug('--------Goose No Rule specified for route --------'+routeObject.route);
 						continue;
 					}
 					r = r[routeObject.verb];
 					if(r==undefined){
-						log.debug('--------Goose No Rule specified for route method --------'+routeObject.verb);
+						// log.debug('--------Goose No Rule specified for route method --------'+routeObject.verb);
 						continue;
 					}
 					routeObject.roles = r; 
-					log.debug('--------Goose Rule setup authorized roles for route --------'+routeObject.roles);
+					// log.debug('--------Goose Rule setup authorized roles for route --------'+routeObject.roles);
 				}
 			}
 		},

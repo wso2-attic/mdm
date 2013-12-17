@@ -108,7 +108,7 @@ var feature = (function () {
                 obj.children = setFlag(db.query("SELECT name as value, description as title from features where group_id = ?",stringify(featureGroupList[i].id)),ctx.groupid);
                 array[i] = obj;
             }
-            log.info(array);
+            log.debug(array);
             return array;
         }
     };

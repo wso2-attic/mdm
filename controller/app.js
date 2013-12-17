@@ -68,7 +68,7 @@ index = function(){
 		if(user.isAdmin){
 			response.sendRedirect('console/dashboard');
 		}else{
-			response.sendRedirect(appInfo().server_url + 'users/devices?user=' + userFeed.username);
+			response.sendRedirect(appInfo().server_url + 'users/devices?user=' + user.username);
 		}
 	}
 

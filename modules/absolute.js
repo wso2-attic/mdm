@@ -6,6 +6,7 @@ var mvc = (function () {
 		ENGINE: "hbs"
 	};
 	var log;
+	var rules;
 	var module = function (cf) {
 		mergeRecursive(configs,cf);
 		log= new Log();
@@ -169,7 +170,19 @@ var mvc = (function () {
 			
 			log.debug("Request url: "+reqURL);
 			log.debug("Page url: "+pageURL);
-			
+			if(configs.AUTH_SUPPORT){
+				if(rules[pageURL]){
+					if(rules[pageURL]!=undefined && rules[pageURL].length>0){
+						var authState = isArrayOverlap(configs.AUTH_USER_ROLES, rules[pageURL]);
+						if(!authState){
+							 log.debug("--------Absolute Auth Error (User roles doesn't match with route roles)--------");
+							 response.sendError(403);
+							 return;
+						}
+					}
+				}
+			}
+
 			var pageParams = pageURL.split('/');
 			
 			if(isAPI(pageParams)){
@@ -221,16 +234,6 @@ var mvc = (function () {
 				//Extracting the layout from the controller
 				var layout;
 				if(context!=undefined && context.layout!=undefined){
-					if(configs.AUTH_SUPPORT){
-						if(context.auth_roles!=undefined && context.auth_roles.length>0){
-							var authState = isArrayOverlap(configs.AUTH_USER_ROLES, context.auth_roles);
-							if(!authState){
-								 log.debug("--------Absolute Auth Error (User roles doesn't match with route roles)--------");
-								 response.sendError(403);
-								 return;
-							}
-						}
-					}
 					layout = Handle.compile(getResource("/pages/"+context.layout+".hbs"));
 				}
 				//If we can't find a controller as well as a view we are sending a 404 error
@@ -272,6 +275,9 @@ var mvc = (function () {
 		compileTemplate: function(templatePath, context){
 			var template = Handle.compile(getResource(templatePath));
 			return template(context);
+		},
+		setupRules: function(jsonFile){
+			rules = jsonFile;
 		}
     };
 // return module
