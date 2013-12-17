@@ -1,11 +1,16 @@
 var log = new Log();
 
+var androidConfig = require('android.json');
+var gcm = require('gcm').gcm;
+gcm.setApiKey(androidConfig.api_key);
 var db = application.get('db');
 if(db==null || db==undefined){
     //db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
     db = new Database("EMM_DB");
     application.put('db',db);
 }
+
+
 
 var app_TENANT_CONFIGS = 'tenant.configs';
 var app_carbon = require('carbon');
@@ -32,10 +37,7 @@ var groupName = 'mdmadmin';
 var userList = new Array();
 group.addGroup({'name':groupName,'users':userList});
 
-var androidConfig = require('android.json');
 
-var gcm = require('gcm').gcm;
-gcm.setApiKey(androidConfig.api_key);
 
 /*var deviceModule = require('../modules/device.js').device;
 var device = new deviceModule(db);

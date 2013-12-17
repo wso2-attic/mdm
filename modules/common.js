@@ -1,10 +1,11 @@
 var log = new Log();
 var getTenantID = function() {
 	if (Session["mdmConsoleUser"]) {
-
+    log.info("Tenant ID common.js :"+Session["mdmConsoleUser"]['tenantId']);
 	//	return Session["mdmConsoleUser"]['tenantId'];
         return "-1234";
 	} else {
+    //    log.info("Tenant ID common.js :"+session.get("mdmConsoleUser").tenantId);
 	//	return null;
         return "-1234";
 	}

@@ -29,12 +29,11 @@
             if (configs.ssoConfiguration.responseSigningEnabled) {
 
                 if (sso.client.validateSignature(samlRespObj, keyStoreProps)) {
+                    log.info("Saml object session ID :"+samlRespObj.sessionId);
                     var sessionObj = sso.client.decodeSAMLLoginResponse(samlRespObj, samlResponse, sessionId);
-                    log.info("Session IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD :"+sessionObj.sessionId);
                     if (sessionObj.sessionIndex != null || sessionObj.sessionIndex != 'undefined') {
                         session.put("LOGGED_IN_USER", sessionObj.loggedInUser);
                         session.put("Loged", "true");
-
                         sso_sessions[sso_sessions[sessionObj.sessionIndex] = sessionObj.sessionId] = sessionObj.sessionIndex;
 
                             log.info('user is set :::' + sessionObj.loggedInUser);
