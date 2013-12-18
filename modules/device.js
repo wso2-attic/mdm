@@ -222,6 +222,10 @@ var device = (function () {
         var lastRecord = db.query("SELECT LAST_INSERT_ID()");
         var lastRecordJson = lastRecord[0];
         var token = lastRecordJson["LAST_INSERT_ID()"];
+        log.info(regId);
+        log.info(featureCode);
+        log.info(token);
+        log.info(payLoad);
         var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
         log.info(gcmMSG);
         return true;
@@ -617,15 +621,15 @@ var device = (function () {
                     var devices = db.query("SELECT * FROM devices WHERE reg_id = ?", ctx.regid);
                     var deviceID = devices[0].id;
 
-                    sendMessageToDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
-                    sendMessageToDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
+                    sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
+                    sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
 
                     var mdmPolicy = getPolicyPayLoad(deviceID,1);
                 //    var mamPolicy = getPolicyPayLoad(deviceID,2);
 
                     if(mdmPolicy != undefined && mdmPolicy != null){
                         if(mdmPolicy.payLoad != undefined && mdmPolicy.payLoad != null){
-                            sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': mdmPolicy.payLoad});
+                            sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': mdmPolicy.payLoad});
                            /* if(mamPolicy != undefined && mamPolicy != null){
                                 var mdmPolicyPayload = mdmPolicy.payLoad;
                                 var mamPolicyPayload = mamPolicy.payLoad;
@@ -848,7 +852,7 @@ var device = (function () {
         },
         updateDeviceProperties:function(deviceId, osVersion, deviceName) {
 
-            var deviceResult = db.query("SELECT properties FROM devices WHERE id = ?", deviceId + "");
+            var deviceResult = db.query("SELECT properties FROM devices WHERE id = ?", deviceId+ "");
             var properties = deviceResult[0].properties;
             properties = parse(parse(stringify(properties)));
             properties["device"] = deviceName;
