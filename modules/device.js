@@ -693,30 +693,6 @@ var device = (function () {
 
             return true;
         },
-<<<<<<< HEAD
-=======
-        sendToDevice: function(ctx){
-            log.debug("MSG format :"+stringify(ctx.data));
-            log.debug(ctx.deviceid);
-            log.debug(ctx.operation);
-            var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
-            var platformID = devices[0].platform_id;
-            if(platformID==1){
-                return sendMessageToDevice(ctx);
-            }else{
-                log.debug("platformID"+platformID);
-                return sendMessageToIOSDevice(ctx);
-            }
-        },
-        sendToDevices:function(ctx){
-            log.debug("test sendToDevices :"+stringify(ctx.params.data));
-            log.debug(ctx.devices[0]);
-            var devices =  ctx.devices;
-            for(var i=0;i<devices.length;i++){
-                this.sendToDevice({'deviceid':devices[i],'operation':ctx.operation,'data':ctx.params.data});
-            }
-        },
->>>>>>> f5b39bb0b0a3a3fb0380a6307cbc278aed3986c0
         getPendingOperationsFromDevice: function(ctx){
 
             var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
@@ -868,62 +844,8 @@ var device = (function () {
                 return false;
             }
         },
-<<<<<<< HEAD
         invokeMessageToIOSDevice:function(ctx) {
         	sendMessageToIOSDevice(ctx);
-        },
-        enforcePolicy:function(ctx){
-            var result = db.query("SELECT * from devices where id = ?",ctx.id);
-            var userId = result[0].user_id;
-            var roles = this.getUserRoles({'username':userId});
-            var roleList = parse(roles);
-            log.debug(roleList[0]);
-            var gpresult = db.query("SELECT policies.content as data FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
-            log.debug(gpresult[0]);
-            sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': gpresult[0].data});
-        },
-        getSenderId: function(ctx){
-            var androidConfig = require('config/android.json');
-            return androidConfig.sender_id;
-        }         ,
-        getLicenseAgreement: function(ctx){
-            var path = "/license/license.txt";
-            var file = new File(path);
-            file.open("r");
-            var message = "";
-            message = file.readAll();
-           // print(message);
-            file.close();
-            return message;
-        },monitoring:function(ctx){
-            application.put("that",this);
-            try{
-                setInterval((application.get("that")).monitor({}),100000);
-            }catch (e){
-               // setInterval(this.monitoring({}),10000);
-                log.debug("Error In Monitoring");
-            }
-=======
-        invokePendingOperations:function(){
-        setInterval(
-            function(){
-                checkPendingOperations();
-            }
-            , 10000);
->>>>>>> refactorrc1
-        },
-        updateDeviceProperties:function(deviceId, osVersion, deviceName) {
-
-            var deviceResult = db.query("SELECT properties FROM devices WHERE id = ?", deviceId+ "");
-            var properties = deviceResult[0].properties;
-            properties = parse(parse(stringify(properties)));
-            properties["device"] = deviceName;
-
-<<<<<<< HEAD
-                }
-        },
-        changeDeviceState:function(deviceId,state){
-            db.query("UPDATE devices SET status = ? WHERE id = ?",state,stringify(deviceId));
         },
         updateDeviceProperties:function(deviceId, osVersion, deviceName, wifiMac) {
                     	
@@ -949,7 +871,6 @@ var device = (function () {
 	            }
             , 10000);
         },
-
         saveiOSPushToken:function(ctx){
             //Save the Push Token to the respective device using UDID
             if (ctx.pushToken != null || ctx.pushToken != undefined) {
@@ -963,9 +884,8 @@ var device = (function () {
                 return "SUCCESS";
             }
             return null;
-=======
             db.query("UPDATE devices SET os_version = ?, properties = ? WHERE id = ?", osVersion, stringify(properties), deviceId + "");
->>>>>>> refactorrc1
+
         }
     };
 
