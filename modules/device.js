@@ -227,7 +227,7 @@ var device = (function () {
         log.info(token);
         log.info(payLoad);
         var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
-        log.info(gcmMSG);
+       // log.info(gcmMSG);
         return true;
     }
 

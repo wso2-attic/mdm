@@ -32,13 +32,3 @@ var policy = new policyModule(db);
 policy.monitoring({});
 
 
-/*var deviceModule = require('../modules/device.js').device;
-var device = new deviceModule(db);
-device.monitoring({});*/
-
-
-//var policy = require('policy');
-//log.info(policy.policy.init());
-//policy.entitlement.login();
-//log.info("Test Init Script");
-

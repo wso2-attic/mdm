@@ -1,5 +1,6 @@
 var log = new Log();
 var getTenantID = function() {
+
 	if (session.get("mdmConsoleUser").tenantId != 0) {
         var tenantID = session.get("mdmConsoleUser").tenantId;
         log.info("Tenant IDD :"+tenantID);
@@ -7,7 +8,6 @@ var getTenantID = function() {
 	} else {
 	    return "-1234";
 	}
-
 }
 
 var removePrivateRole = function(roleList){
