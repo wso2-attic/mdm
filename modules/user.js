@@ -203,7 +203,8 @@ var user = (function () {
         /*Get list of roles belongs to particular user*/
         getUserRoles: function(ctx){
             log.info("User Name >>>>>>>>>"+ctx.username);
-            var um = userManager(common.getTenantID());
+            var tenantUser = carbon.server.tenantUser(ctx.username);
+            var um = userManager(tenantUser.tenantId);
             var roles = um.getRoleListOfUser(ctx.username);
             var roleList = common.removePrivateRole(roles);
             return roleList;

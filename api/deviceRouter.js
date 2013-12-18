@@ -40,7 +40,7 @@ var device = (function () {
 		    var android = userAgent.indexOf("Android");
 
 		    if(android > 0){
-		        device.register(ctx);
+		        device.registerAndroid(ctx);
                 	response.status = 201;
                 	response.content = "registered"
 		    }else{
@@ -50,7 +50,7 @@ var device = (function () {
 		});
 
 		router.post('devices/unregister', function(ctx){
-		    var result = device.unRegister(ctx);
+		    var result = device.unRegisterAndroid(ctx);
 		});
 		
 		router.post('devices/unregisterios', function(ctx){

@@ -133,6 +133,10 @@ var group = (function () {
             }else{
                 return false;
             }
+        },roleExists:function(ctx){
+            var um = userManager(common.getTenantID());
+            var result = um.roleExists(ctx.groupid);
+            return result;
         },
 
         /*end of Group CRUD Operations (Create, Retrieve, Update, Delete)*/
