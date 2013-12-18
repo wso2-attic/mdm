@@ -693,6 +693,30 @@ var device = (function () {
 
             return true;
         },
+<<<<<<< HEAD
+=======
+        sendToDevice: function(ctx){
+            log.debug("MSG format :"+stringify(ctx.data));
+            log.debug(ctx.deviceid);
+            log.debug(ctx.operation);
+            var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
+            var platformID = devices[0].platform_id;
+            if(platformID==1){
+                return sendMessageToDevice(ctx);
+            }else{
+                log.debug("platformID"+platformID);
+                return sendMessageToIOSDevice(ctx);
+            }
+        },
+        sendToDevices:function(ctx){
+            log.debug("test sendToDevices :"+stringify(ctx.params.data));
+            log.debug(ctx.devices[0]);
+            var devices =  ctx.devices;
+            for(var i=0;i<devices.length;i++){
+                this.sendToDevice({'deviceid':devices[i],'operation':ctx.operation,'data':ctx.params.data});
+            }
+        },
+>>>>>>> f5b39bb0b0a3a3fb0380a6307cbc278aed3986c0
         getPendingOperationsFromDevice: function(ctx){
 
             var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
