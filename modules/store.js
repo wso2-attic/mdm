@@ -5,6 +5,7 @@ var store = (function () {
     var routes = new Array();
     var log = new Log();
     var db;
+    
     var module = function (dbs) {
         db = dbs;
         //mergeRecursive(configs, conf);
@@ -33,7 +34,6 @@ var store = (function () {
     module.prototype = {
         constructor: module,
         getAllDevicesFromEmail: function(ctx){
-	
            log.info("Test platform :"+ctx.data.platform);
            var devicesArray;
 		   if(ctx.data.platform=='webapp'){

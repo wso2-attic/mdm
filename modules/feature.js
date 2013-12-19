@@ -5,6 +5,7 @@ var feature = (function () {
     var routes = new Array();
     var log = new Log();
     var db;
+    var common = require("/modules/common.js");
     var module = function (dbs) {
         db = dbs;
         //mergeRecursive(configs, conf);
@@ -73,8 +74,8 @@ var feature = (function () {
     module.prototype = {
         constructor: module,
         getAllFeatures: function(ctx){
-        	
-            var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND features.id = platformfeatures.feature_id;");
+        	var tenantID = common.getTenantID();
+            var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND features.id = platformfeatures.feature_id AND devices.tenant_id = ?;", tenantID);
 
             var obj = new Array();
             for(var i=0; i<featureList.length; i++){
