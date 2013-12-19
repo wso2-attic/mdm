@@ -124,7 +124,7 @@ var device = (function () {
             log.debug("resource :"+operationName);
             decision = policy.getDecision(operationName, action, role, "");
             log.debug("Test decision :"+decision);
-        }else if(role == 'mdmadmin'){
+        }else if(role == 'Internal/mdmadmin'){
             log.debug("Test2");
             decision = policy.getDecision(operationName, action, role, "");
         }else{

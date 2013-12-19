@@ -222,8 +222,8 @@
         }
     },
     "pageRoutes": {
-    	"users/configuration": ["mdmadmin", "admin"],
-    	"devices/management": ["mdmadmin", "admin"],
-    	"console/dashboard" : ["mdmadmin", "admin"]
+    	"users/configuration": ["Internal/mdmadmin", "admin"],
+    	"devices/management": ["Internal/mdmadmin", "admin"],
+    	"console/dashboard" : ["Internal/mdmadmin", "admin"]
     }
 }

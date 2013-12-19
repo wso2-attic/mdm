@@ -3,7 +3,8 @@ var appRedirect = "App Redirected";
 var mvc = (function () {
 	var configs= {
 		SERVER_URL: "/",
-		ENGINE: "hbs"
+		ENGINE: "hbs",
+		CLIENT_JS_FOLDER: ["client", "assets"]
 	};
 	var log;
 	var rules;
@@ -60,21 +61,46 @@ var mvc = (function () {
 				return true;
 	    }
 	}
+	function isDenied(resourceURL){
+		var allowFlag = true;
+		for (var i = configs.CLIENT_JS_FOLDER.length - 1; i >= 0; i--) {
+			var loc = configs.CLIENT_JS_FOLDER[i];
+			log.info(resourceURL +"  "+ loc);
+			if(resourceURL.indexOf(loc) == 0){
+				allowFlag = false;
+			}
+		};
+		return allowFlag;
+	}
 	function routeAsset(resourceURL){
 		//log.info("Resource URL"+resourceURL);
+		if(!isExists(resourceURL)){
+			response.sendError(404);
+			return;
+		}
 		var m = mime(resourceURL);
-		response.addHeader('Content-Type', m);
-		if(isBinaryResource(m)){
-			try{
-				var f = new File(resourceURL);
-				f.open('r');
-			    print(f.getStream());
-				f.close();
-			}catch(e){
-				response.sendError(404);
+		if(m!=undefined){
+			if(m=='application/javascript'){
+				if(isDenied(resourceURL)){
+					response.sendError(403);
+					return;
+				}
+			}
+			response.addHeader('Content-Type', m);
+			if(isBinaryResource(m)){
+				try{
+					var f = new File(resourceURL);
+					f.open('r');
+				    print(f.getStream());
+					f.close();
+				}catch(e){
+					response.sendError(404);
+				}
+			}else{
+				print(getResource(resourceURL));
 			}
 		}else{
-			print(getResource(resourceURL));
+			response.sendError(403);
 		}
 	}
 	//Register all the partials in the views/partial directory
@@ -122,8 +148,12 @@ var mvc = (function () {
 	            return 'application/octet-stream';    
 	        case 'ttf':
 	            return 'application/octet-stream'; 
-			default:
-				return 'text/plain';
+	        case 'txt':
+	        	return 'text/plain';
+	        case 'json':
+	        	return 'application/json';
+	        default:
+	        	return undefined;
 	    }
 	}
 	//Call
@@ -171,7 +201,7 @@ var mvc = (function () {
 			log.debug("Request url: "+reqURL);
 			log.debug("Page url: "+pageURL);
 			if(configs.AUTH_SUPPORT){
-				if(rules[pageURL]){
+				if(rules[pageURL] && configs.AUTH_USER_ROLES){
 					if(rules[pageURL]!=undefined && rules[pageURL].length>0){
 						var authState = isArrayOverlap(configs.AUTH_USER_ROLES, rules[pageURL]);
 						if(!authState){
