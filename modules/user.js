@@ -113,7 +113,7 @@ var user = (function () {
                         if(ctx.type == 'user'){
                             um.addUser(ctx.username, generated_password,ctx.groups, claimMap, null);
                         }else if(ctx.type == 'administrator'){
-                            um.addUser(ctx.username, generated_password,new Array('mdmadmin'), claimMap, null);
+                            um.addUser(ctx.username, generated_password,new Array('Internal/mdmadmin'), claimMap, null);
                         }
                         createPrivateRolePerUser(ctx.username);
                         proxy_user.status = "SUCCESSFULL";
@@ -255,7 +255,7 @@ var user = (function () {
                 var flag = 0;
                 for(var j=0 ;j<roles.length;j++){
                     log.info("Test iteration2"+roles[j]);
-                    if(roles[j]=='admin'||roles[j]=='mdmadmin'||roles[j]=='mamadmin'){
+                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'||roles[j]=='mamadmin'){
                         flag = 1;
                         break;
                     }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'){

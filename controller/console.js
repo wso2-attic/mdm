@@ -27,7 +27,7 @@ login = function(appController){
 					var isMDMAdmin = false;
 					var isMAdmin = false;
 					for (var i = 0; i < parsedRoles.length; i++) {
-						if(parsedRoles[i] == 'mdmadmin') {
+						if(parsedRoles[i] == 'Internal/mdmadmin') {
 							isMDMAdmin = true;
 							break;
 						}
