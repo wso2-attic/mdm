@@ -33,16 +33,17 @@
 
      <div class="container">
 
-      <form class="form-signin" action="enroll" id="authform" >
+      <form class="form-signin" action="enroll" id="authform" method="post" >
         <h2 class="form-signin-heading">Please sign in</h2>
         <input name="username" id="uname" type="text" class="form-control" placeholder="Email address" autofocus value="admin@admin.com">
-        <input name="password" type="password" class="form-control" placeholder="Password" value="admin">       
+        <input name="password" id="password" type="password" class="form-control" placeholder="Password" value="admin">       
         <div style="padding-bottom: 20px; padding-top: 10px">
-        <input name="byod" type="radio" value="0" /> Company Owned
+        <input name="byod" id="byod" type="radio" value="0" /> Company Owned
         <input name="byod" type="radio" value="1" checked="checked"  /> Personal Device        
         </div>
 		<button type="button" class="btn btn-lg btn-primary btn-block" onclick="onClickSubmit()">Sign in</button>
 		<br />
+		<!--
 	    <div class="mdm-message text-center">
 		<div class="raw">
 			Make sure you download the root certificate
@@ -51,6 +52,7 @@
 			<a href="ca">Download</a>
 		</div>
 	    </div>
+	    -->
       </form>
 
 
@@ -64,8 +66,16 @@
 		var monitor;
 	
 		function onClickSubmit() {
-			$("#authform").submit();
-			monitor = setInterval(function(){ invokeServer(); }, 1000);	 
+			
+			if($('#byod').is(':checked')) {
+				$("#authform").submit();
+				monitor = setInterval(function(){ invokeServer(); }, 1000);	 
+			} else {
+				$('#authform').attr('action', 'devicelogin');
+				$("#authform").submit();
+			}
+			
+
 		}
 		
 		function invokeServer() {
