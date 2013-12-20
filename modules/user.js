@@ -136,7 +136,9 @@ var user = (function () {
                 var proxy_user = {};
                 var tenantUser = carbon.server.tenantUser(ctx.userid);
                 var um = userManager(tenantUser.tenantId);
+                log.info('start');
                 var user = um.getUser(tenantUser.username);
+                log.info('end');
                 var claims = [claimEmail, claimFirstName, claimLastName];
                 var claimResult = user.getClaimsForSet(claims,null);
                 proxy_user.email = claimResult.get(claimEmail);
@@ -174,12 +176,25 @@ var user = (function () {
                     proxy_user.tenantId = tenantId;
                     proxy_user.roles = stringify(user.getRoles());
                     users_list.push(proxy_user);
-
                 }
             }else{
                 print('Error in getting the tenantId from session');
             }
             log.info("LLLLLLLLLLLLLLLLLLLL"+stringify(users_list));
+            return users_list;
+        },
+        getAllUserNames: function(){
+            var tenantId = common.getTenantID();
+            var users_list = [];
+            if(tenantId){
+                var um = userManager(common.getTenantID());
+                var allUsers = um.listUsers();
+                var removeUsers = new Array("wso2.anonymous.user","admin","admin@admin.com");
+                var users = common.removeNecessaryElements(allUsers,removeUsers);
+                users_list = users;
+            }else{
+                print('Error in getting the tenantId from session');
+            }
             return users_list;
         },
         deleteUser: function(ctx){

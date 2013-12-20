@@ -127,8 +127,7 @@ var user = (function () {
 		router.get('users/',function(ctx){
 			var obj = session.get("user");
 			var log = new Log();
-			
-			var users= user.getUsers(ctx);
+			var users= user.getAllUsers(ctx);
 		    if(users[0] != null){
 		        response.content = users;
 		        response.status = 200;
