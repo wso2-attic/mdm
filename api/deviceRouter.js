@@ -40,7 +40,7 @@ var device = (function () {
 		    var android = userAgent.indexOf("Android");
 
 		    if(android > 0){
-		        device.register(ctx);
+		        device.registerAndroid(ctx);
                 	response.status = 201;
                 	response.content = "registered"
 		    }else{
@@ -50,7 +50,7 @@ var device = (function () {
 		});
 
 		router.post('devices/unregister', function(ctx){
-		    var result = device.unRegister(ctx);
+		    var result = device.unRegisterAndroid(ctx);
 		});
 		
 		router.post('devices/unregisterios', function(ctx){
@@ -146,16 +146,7 @@ var device = (function () {
 		        response.status = 404;
 		    }
 		});
-        router.post('devices/pushtoken', function(ctx) {
-            var result = device.saveiOSPushToken(ctx);
-            response.content = result;
-            log.debug("Result >>>>>> " + result);
-            if (result == null) {
-                response.status = 404;
-            } else {
-                response.status = 200;
-            }
-        });
+
 		router.post('devices/{deviceid}', function(ctx){
 		    var result = device.updateiOSTokens(ctx);
 		});
@@ -171,8 +162,6 @@ var device = (function () {
             print(result);
             response.status = 200;
         });
-
-
 
 
 		router.get('pending/devices/{udid}/operations', function(ctx){

@@ -3,6 +3,7 @@ var current_user = session.get('mdmConsoleUser');
 var current_user_roles =undefined;
 if(current_user!=undefined){
 	current_user_roles = current_user.roles;
+
 }
 var absolute = require ('modules/absolute.js').mvc;
 var goose = require('modules/goose.js').goose;
@@ -54,14 +55,16 @@ var notification = new notificationModule();
 
 
 if(db==null || db==undefined){
-	db = new Database(dbconfig.server,dbconfig.username,dbconfig.password);
+	db = new Database("EMM_DB");
 	application.put('db',db);
 }
 var mvc = new absolute({
 	SERVER_URL:"/mdm/",
 	IGNORE:["acs.jag", "login.jag", "logout.jag", "devicelogin.jag"],
 	API:"api",
-	ROUTER: router
+	ROUTER: router,
+    AUTH_SUPPORT: true,
+    AUTH_USER_ROLES: current_user_roles
 });
 
 var userRouter = require('api/userRouter.js').user;
@@ -211,7 +214,8 @@ router.get('features', function(ctx){
     }
 });
 //Setting up the authorization roles
-router.setupRules(require('/config/route.json'));
+router.setupRules(require('/config/route.json').apiRoutes);
+mvc.setupRules(require('/config/route.json').pageRoutes);
 
 mvc.registerHelper('showActive', function(currentPage, page, options) {
   if(currentPage == page){

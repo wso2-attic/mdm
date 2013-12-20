@@ -38,7 +38,6 @@ configuration = function(appController) {
 		users : users,
 		groups : groups
 	};
-	context.auth_roles = ['Internal/everyone'];
 	return context;
 };
 

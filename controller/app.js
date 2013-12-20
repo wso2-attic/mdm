@@ -68,7 +68,7 @@ index = function(){
 		if(user.isAdmin){
 			response.sendRedirect('console/dashboard');
 		}else{
-			response.sendRedirect(appInfo().server_url + 'users/devices?user=' + userFeed.username);
+			response.sendRedirect(appInfo().server_url + 'users/devices?user=' + user.username);
 		}
 	}
 
@@ -107,7 +107,7 @@ navigation = function(role) {
                 {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-group"},
                 {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-lock"},
             ];
-        }else if(role == 'mdmadmin'){
+        }else if(role == 'Internal/mdmadmin'){
             topNavigation = [
                 {name : "Dashboard"	, link: appInfo().server_url + "console/dashboard", displayPage: "dashboard", icon: "icon-th-large"},
                 {name : "Configurations", link: appInfo().server_url + "users/configuration", displayPage: "configuration", icon:"icon-wrench"},
@@ -165,7 +165,7 @@ context = function() {
         }else if(currentUser.isMDMAdmin){
             contextData.user = {
                 name : "MDM Admin",
-                role : "mdmadmin"
+                role : "Internal/mdmadmin"
             };
         }else{
             contextData.user = {

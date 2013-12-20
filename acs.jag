@@ -29,12 +29,11 @@
             if (configs.ssoConfiguration.responseSigningEnabled) {
 
                 if (sso.client.validateSignature(samlRespObj, keyStoreProps)) {
+                    log.info("Saml object session ID :"+samlRespObj.sessionId);
                     var sessionObj = sso.client.decodeSAMLLoginResponse(samlRespObj, samlResponse, sessionId);
-
                     if (sessionObj.sessionIndex != null || sessionObj.sessionIndex != 'undefined') {
                         session.put("LOGGED_IN_USER", sessionObj.loggedInUser);
                         session.put("Loged", "true");
-
                         sso_sessions[sso_sessions[sessionObj.sessionIndex] = sessionObj.sessionId] = sessionObj.sessionIndex;
 
                             log.info('user is set :::' + sessionObj.loggedInUser);
@@ -63,7 +62,7 @@
 								var isMDMAdmin = false;
 								var isAdmin = false;
 								for (var i = 0; i < parsedRoles.length; i++) {
-									if(parsedRoles[i] == 'mdmadmin') {
+									if(parsedRoles[i] == 'Internal/mdmadmin') {
 										isMDMAdmin = true;
 										break;
 									}
@@ -77,6 +76,19 @@
 								userFeed.isAdmin = isAdmin;
 								session.put("mdmConsoleUserLogin", "true");
 								session.put("mdmConsoleUser", userFeed);
+
+                                log.info("test policy moduleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+                                var entitlement = require('policy').entitlement;
+
+                                session.put("entitlement",entitlement);
+                                session.get("entitlement").login();
+
+                                var groupModule = require('/modules/group.js').group;
+                                var group = new groupModule(db);
+                                if(!group.roleExists("Internal/mdmadmin")){
+                                    var userList = new Array();
+                                    group.addGroup({'name':'Internal/mdmadmin','users':userList});
+                                }
 
 								var appController =require('/controller/app.js');
 								if(isAdmin){

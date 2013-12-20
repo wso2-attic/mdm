@@ -34,6 +34,7 @@ var notification = (function () {
     module.prototype = {
         constructor: module,
         getNotifications: function(ctx){
+        	var tenantID = common.getTenantID();
             var result = db.query("SELECT * FROM notifications WHERE device_id = ? ORDER BY id DESC LIMIT 10", ctx.deviceid);
 
             var notifications = new Array();
@@ -50,7 +51,6 @@ var notification = (function () {
         },
         addIosNotification: function(ctx){
             //log.info("IOS Notification >>>>>"+stringify(ctx));
-
             var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
             var notifications = db.query("SELECT message, feature_code, device_id FROM notifications WHERE id = ?", identifier);
             var recivedDate =  common.getCurrentDateTime();
