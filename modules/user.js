@@ -136,9 +136,7 @@ var user = (function () {
                 var proxy_user = {};
                 var tenantUser = carbon.server.tenantUser(ctx.userid);
                 var um = userManager(tenantUser.tenantId);
-                log.info('start');
                 var user = um.getUser(tenantUser.username);
-                log.info('end');
                 var claims = [claimEmail, claimFirstName, claimLastName];
                 var claimResult = user.getClaimsForSet(claims,null);
                 proxy_user.email = claimResult.get(claimEmail);
@@ -155,6 +153,7 @@ var user = (function () {
                 return error;
             }
         },
+        //Deprecated
         getAllUsers: function(ctx){
             var tenantId = common.getTenantID();
             var users_list = Array();
@@ -169,7 +168,7 @@ var user = (function () {
                     var claimResult = user.getClaimsForSet(claims,null);
                     var proxy_user = {};
                     proxy_user.username = users[i];
-                    proxy_user.email = claimResult.get(claimEmail);
+                    proxy_user.email = proxy_user.username;
                     proxy_user.firstName = claimResult.get(claimFirstName);
                     proxy_user.lastName = claimResult.get(claimLastName);
                     proxy_user.mobile = claimResult.get(claimMobile);

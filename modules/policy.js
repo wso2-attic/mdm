@@ -223,7 +223,7 @@ var policy = (function () {
             return array;
         },
         getUsersByPolicy:function(ctx){
-            var allUsers = user.getAllUsers(ctx);
+            var allUsers = user.getAllUserNames(ctx);
             var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ?",ctx.policyid);
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
