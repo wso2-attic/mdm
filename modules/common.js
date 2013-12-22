@@ -1,15 +1,20 @@
 var log = new Log();
 var getTenantID = function() {
-
-	if (session.get("mdmConsoleUser") && session.get("mdmConsoleUser").tenantId != 0) {
-        var tenantID = session.get("mdmConsoleUser").tenantId;
-        log.info("Tenant IDD :"+tenantID);
-        return tenantID;
-	} else {
-	    return "-1234";
-	}
+	if(!(typeof session === "undefined")){
+		if (session.get("mdmConsoleUser") && session.get("mdmConsoleUser").tenantId != 0) {
+	        var tenantID = session.get("mdmConsoleUser").tenantId;
+	        log.info("Tenant IDD :"+tenantID);
+	        return tenantID;
+		} else {
+		    return "-1234";
+		}
+	}	
 }
-
+var getTenantIDFromEmail = function(email){
+    var carbon = require('carbon');
+    var tenantUser = carbon.server.tenantUser(email);
+    return tenantUser.tenantId;
+}
 var removePrivateRole = function(roleList){
     var roles = new Array();
     for(var i = 0; i<roleList.length; i++){
@@ -280,7 +285,7 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else if(operationCode == "510A") {
 		
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_APPLICATION;
-		paramMap.put("Identifier", data.identifier);
+		paramMap.put("Identifier", data.identity);
 		
 	} else if(operationCode == "529A") {
 		

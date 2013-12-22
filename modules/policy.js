@@ -14,7 +14,6 @@ var policy = (function () {
     var device;
 
     var common = require("common.js");
-	var tenantID = common.getTenantID();
 
     var configs = {
         CONTEXT: "/"
@@ -99,7 +98,7 @@ var policy = (function () {
             policyId = policy[0].id;
             if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
                 log.info("Content >>>>>"+stringify( ctx.policyData));
-                result = db.query("UPDATE policies SET content= ?,type = ? WHERE name = ? AND tenant_id = ?",ctx.policyData, ctx.policyType, ctx.policyName, tenantID);
+                result = db.query("UPDATE policies SET content= ?,type = ? WHERE name = ? AND tenant_id = ?",ctx.policyData, ctx.policyType, ctx.policyName, common.getTenantID());
                 log.info("Result >>>>>>>"+result);
                 this.enforcePolicy({"policyid":policyId});
             }else{
@@ -108,28 +107,28 @@ var policy = (function () {
             return result;
         },
         addPolicy: function(ctx){
-            var existingPolicies =  db.query("SELECT * from  policies WHERE name = ? AND tenant_id = ?",ctx.policyName, tenantID);
+            var existingPolicies =  db.query("SELECT * from  policies WHERE name = ? AND tenant_id = ?",ctx.policyName, common.getTenantID());
             if(existingPolicies != undefined && existingPolicies != null && existingPolicies[0] != undefined && existingPolicies[0] != null ){
                 return 409;
             }
-            var result = db.query("insert into policies (name,content,type,category, tenant_id) values (?,?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType, ctx.category, tenantID);
+            var result = db.query("insert into policies (name,content,type,category, tenant_id) values (?,?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType, ctx.category, common.getTenantID());
             log.info("Result >>>>>>>"+result);
             return 201;
         },
         getAllPoliciesForMDM:function(ctx){
-            var result = db.query("SELECT * FROM policies where category = 1 AND tenant_id = ?", tenantID);
+            var result = db.query("SELECT * FROM policies where category = 1 AND tenant_id = ?", common.getTenantID());
             return result;
         },
         getAllPoliciesForMAM:function(ctx){
-            var result = db.query("SELECT * FROM policies where category = 2 AND tenant_id = ?", tenantID);
+            var result = db.query("SELECT * FROM policies where category = 2 AND tenant_id = ?", common.getTenantID());
             return result;
         },
         getPolicy:function(ctx){
-            var result = db.query("SELECT * FROM policies where id = ? AND tenant_id = ?",ctx.policyid, tenantID);
+            var result = db.query("SELECT * FROM policies where id = ? AND tenant_id = ?",ctx.policyid, common.getTenantID());
             return result[0];
         },
         deletePolicy:function(ctx){
-            var result = db.query("DELETE FROM policies where id = ? AND tenant_id = ?",ctx.policyid, tenantID);
+            var result = db.query("DELETE FROM policies where id = ? AND tenant_id = ?",ctx.policyid, common.getTenantID());
             db.query("DELETE FROM group_policy_mapping where policy_id = ?",ctx.policyid);
             return result;
         },
@@ -286,13 +285,13 @@ var policy = (function () {
         },
         enforcePolicy:function(ctx){
             var policyId =  ctx.policyid;
-            var policies = db.query("SELECT * from policies where id = ? AND tenant_id = ?",String(policyId), tenantID);
+            var policies = db.query("SELECT * from policies where id = ? AND tenant_id = ?",String(policyId), common.getTenantID());
             var payLoad = parse(policies[0].content);
 
             var users1 = db.query("SELECT * from user_policy_mapping where policy_id=?",String(policyId));
 
             for(var i = 0;i<users1.length;i++){
-                var devices1 = db.query("SELECT * from devices where user_id = ? AND tenant_id = ?",users1[i].user_id, tenantID);
+                var devices1 = db.query("SELECT * from devices where user_id = ? AND tenant_id = ?",users1[i].user_id, common.getTenantID());
                 for(var j = 0;j<devices1.length;j++){
                     device.sendToDevice({'deviceid':devices1[j].id,'operation':'POLICY','data':payLoad});
                 }
@@ -300,7 +299,7 @@ var policy = (function () {
             var platforms =  db.query("SELECT * from platform_policy_mapping where policy_id=?",String(policyId));
             for(var i = 0;i<platforms.length;i++){
                 if(platforms[i].platform_id == 'android'){
-                    var devices2 = db.query("SELECT * from devices where platform_id = ? AND tenant_id = ?",String(1), tenantID);
+                    var devices2 = db.query("SELECT * from devices where platform_id = ? AND tenant_id = ?",String(1), common.getTenantID());
                     for(var j=0;j<devices2.length;j++){
                         var tempId = getPolicyIdFromDevice(devices2[j].id);
                         if(tempId == policyId){
@@ -323,7 +322,7 @@ var policy = (function () {
             for(var i = 0;i<groups.length;i++){
                 var users2 = group.getUsersOfGroup({'groupid':groups[i].group_id});
                 for(var j=0;j<users2.length;j++){
-                    var devices4 = db.query("SELECT * from devices where user_id = ? AND tenant_id = ?",users2[j].username, tenantID);
+                    var devices4 = db.query("SELECT * from devices where user_id = ? AND tenant_id = ?",users2[j].username, common.getTenantID());
                     for(var k = 0;k<devices4.length;k++){
                         var tempId = getPolicyIdFromDevice(devices4[k].id);
                         if(tempId == policyId){
