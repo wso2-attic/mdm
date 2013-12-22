@@ -5,11 +5,15 @@ var webconsole = (function () {
     var groupModule = require('group.js').group;
     var group = '';
 
+    var userModule = require('user.js').user;
+    var user = '';
+
     var routes = new Array();
     var log = new Log();
     var db;
     var module = function (dbs) {
         group = new groupModule();
+        user = new userModule();
         db = dbs;
         //mergeRecursive(configs, conf);
     };
@@ -78,6 +82,30 @@ var webconsole = (function () {
                 arrRole.push(objRole);
             }
             return arrRole;
+        },
+        getAllUsers: function(ctx){
+            var paging = ctx.iDisplayStart||0;
+            var pageSize = 10;
+            var all_users = user.getAllUserNames();
+            var totalRecords = all_users.length;
+            var upperBound = (paging+1)*pageSize;
+            var lowerBound =  upperBound - pageSize;
+            var Paginate = require('/modules/paginate.js').Paginate;
+            var pager =  new Paginate(all_users, pageSize);
+            var paginated_users = pager.page(paging);
+            
+            var dataArray = new Array();
+            for (var i = paginated_users.length - 1; i >= 0; i--) {
+                var username = paginated_users[i];
+                var userObj = user.getUser({"userid": username});
+                dataArray.push(userObj);
+            };
+            var finalObj = {};
+            finalObj.sEcho = ctx.sEcho;
+            finalObj.iTotalRecords = totalRecords
+            finalObj.iTotalDisplayRecords = pageSize;
+            finalObj.aaData = dataArray;
+            return finalObj;
         },
         getDevices:function(ctx){//return device information
             log.info("User name :"+ctx.username);
