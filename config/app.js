@@ -10,8 +10,6 @@ if(db==null || db==undefined){
     application.put('db',db);
 }
 
-
-
 var app_TENANT_CONFIGS = 'tenant.configs';
 var app_carbon = require('carbon');
 var app_configs = require('mdm.js').config();
