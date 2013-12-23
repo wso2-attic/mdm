@@ -110,11 +110,6 @@
                 'Internal/everyone'
             ]
         },
-        "/mdm/api/notifications": {
-            'POST': [
-                'Internal/everyone'
-            ]
-        },
         "/mdm/api/refresh/devices/{deviceid}/{operation}": {
             'GET': [
                 'Internal/everyone'
