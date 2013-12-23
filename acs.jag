@@ -97,7 +97,7 @@
 								var isMDMAdmin = false;
 								var isAdmin = false;
 								for (var i = 0; i < parsedRoles.length; i++) {
-									if(parsedRoles[i] == 'mdmadmin') {
+									if(parsedRoles[i] == 'Internal/mdmadmin') {
 										isMDMAdmin = true;
 										break;
 									}
@@ -125,9 +125,9 @@
 
                                 var groupModule = require('/modules/group.js').group;
                                 var group = new groupModule(db);
-                                if(!group.roleExists("mdmadmin")){
+                                if(!group.roleExists("Internal/mdmadmin")){
                                     var userList = new Array();
-                                    group.addGroup({'name':'mdmadmin','users':userList});
+                                    group.addGroup({'name':'Internal/mdmadmin','users':userList});
                                 }
 
 								var appController =require('/controller/app.js');

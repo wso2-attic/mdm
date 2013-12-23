@@ -34,7 +34,7 @@
 
 
      <div class="container">
-	 <form class="form-signin">
+	 <form class="form-signin" action="enroll" method="post" >
 		<h3>License Agreement</h3>
 		<p><%
 			var getResource =  function(name){
@@ -46,8 +46,12 @@
 			};
 			print(getResource('license/license.txt'));
 		%></p>
-		 <a href="deviceloginsign.html" class="btn btn-lg btn-primary btn-block" type="submit">I Accept</a>
-	</form>
+		 <button class="btn btn-lg btn-primary btn-block" >I Accept</a>
+		 
+	     <input name="username" type="hidden" value="<% print(request.getParameter('username')); %>" />
+	     <input name="password" type="hidden" value="<% print(request.getParameter('password')); %>" />  
+	     <input name="byod" type="hidden" value="1" />  
+	 </form>
      </div>
 
 

@@ -4,6 +4,6 @@
 	var iosMdm = new iosMdmModule();
 	var log = new Log();
 
-	iosMdm.extractDeviceTokens(request.getInputStream());
+	var messageType = iosMdm.extractDeviceTokens(request.getInputStream());
 	
 %>

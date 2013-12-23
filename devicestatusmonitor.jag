@@ -1,0 +1,18 @@
+<%
+    var username = request.getParameter("username");
+	var responseObj = {};
+	responseObj.status = false;
+	responseObj.udid = "";
+	
+	var udidResult = db.query("SELECT user_id, udid FROM device_pending WHERE user_id = ? && udid IS NOT NULL && request_status = 1", username);
+	
+	if(udidResult != null && udidResult != undefined && udidResult[0] != null && udidResult[0] != undefined) {
+		responseObj.status = true;
+		responseObj.udid = udidResult[0].udid;
+	}
+	
+	udidResult = null;
+	
+	print(stringify(responseObj));
+
+%>

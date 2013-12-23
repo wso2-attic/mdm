@@ -77,7 +77,7 @@ var device = (function () {
     function getPolicyPayLoad(deviceId,category){
         var devices = db.query("SELECT * from devices where id = "+deviceId);
         var username = devices[0].user_id;//username for pull policy payLoad
-
+		var tenantID = devices[0].tenant_id;
         var platforms = db.query("select platforms.type_name from devices,platforms where platforms.id = devices.platform_id AND devices.id = "+deviceId);
         var platformName = platforms[0].type_name;//platform name for pull policy payLoad
 
@@ -95,7 +95,7 @@ var device = (function () {
             return obj;
         }
 
-        var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",category,platformName);
+        var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",category,platformName, tenantID);
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
             var policyPayLoad = parse(ppresult[0].data);
             obj.payLoad = policyPayLoad;
@@ -103,7 +103,7 @@ var device = (function () {
             return obj;
         }
 
-        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",category,role);
+        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ?",category,role, tenantID);
         if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
             var policyPayLoad = parse(gpresult[0].data);
             obj.payLoad = policyPayLoad;
@@ -191,6 +191,7 @@ var device = (function () {
         var payLoad = stringify(ctx.data);
         var deviceId = ctx.deviceid;
         var operationName = ctx.operation;
+        var tenantID = common.getTenantID();
 
         var devices = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", deviceId+"");
         if(devices == undefined || devices == null || devices[0]== undefined || devices[0] == null ){
@@ -221,7 +222,7 @@ var device = (function () {
             }
         }
         var currentDate = common.getCurrentDateTime();
-        db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description) values(?, ?, ?, 'P', ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription);
+        db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description, tenant_id) values(?, ?, ?, 'P', ?, ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription, tenantID);
         var lastRecord = db.query("SELECT LAST_INSERT_ID()");
         var lastRecordJson = lastRecord[0];
         var token = lastRecordJson["LAST_INSERT_ID()"];
@@ -237,7 +238,8 @@ var device = (function () {
     <!-- iOs specific functions-->
     function invokeInitialFunctions(ctx) {
         var db = application.get('db');
-        var devices = db.query("SELECT * FROM devices WHERE udid = " + stringify(ctx.deviceid));
+        var tenantID = common.getTenantID();
+        var devices = db.query("SELECT * FROM devices WHERE udid = ?" ,stringify(ctx.deviceid));
         var deviceID = devices[0].id;
         var userId = devices[0].user_id;
 
@@ -255,6 +257,7 @@ var device = (function () {
 
     function sendMessageToIOSDevice(ctx){
         log.debug("CTX >>>>>"+stringify(ctx));
+        var tenantID = common.getTenantID();
         var message = stringify(ctx.data);
 
         //Filter the policy depending on Device
@@ -339,8 +342,8 @@ var device = (function () {
         log.debug("notifyExists >>>>> " + stringify(notifyExists[0]));
         if (notifyExists[0].count == 0) {
             log.debug("insert into notifications!!!!!!!!!!!");
-            db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description) values( ?, '1', ?, 'P', ?, ?, ?, ?)",
-                ctx.deviceid, message, datetime, featureCode, userId, featureDescription);
+            db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description, tenant_id) values( ?, '1', ?, 'P', ?, ?, ?, ?, ?)",
+                ctx.deviceid, message, datetime, featureCode, userId, featureDescription, tenantID);
         }
 
         var sendToAPNS = null;
@@ -384,12 +387,13 @@ var device = (function () {
 
     function checkPendingOperations() {
         //This function is not used anymore..  this can be removed during refactoring
+        var tenantID = common.getTenantID();
         var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' AND device_id IN (SELECT id FROM devices WHERE platform_id IN (SELECT id FROM platforms WHERE type_name = 'iOS')) ORDER BY sent_date DESC;");
 
         for(var i = 0; i < pendingOperations.length; i++) {
 
             var deviceId = pendingOperations[i].device_id;
-            var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", deviceId);
+            var devices = db.query("SELECT reg_id FROM devices WHERE id = ? AND tenant_id = ?", deviceId,tenantID);
 
             if(devices != null && devices[0] != null && devices != undefined && devices[0] != undefined) {
                 var regId = devices[0].reg_id;
@@ -411,6 +415,7 @@ var device = (function () {
 
     function policyFiltering(ctx) {
         //This function is used to filter policy based on the platform
+        var tenantID = common.getTenantID();
         log.debug("policyFiltering >>>>>"+stringify(ctx));
 
         var device_id = String(ctx.deviceid);
@@ -455,6 +460,7 @@ var device = (function () {
             return message;
         },
         sendToDevice: function(ctx){
+        	var tenantID = common.getTenantID();
             log.debug("MSG format :"+stringify(ctx.data));
             log.debug(ctx.deviceid);
             log.debug(ctx.operation);
@@ -478,6 +484,7 @@ var device = (function () {
         getFeaturesFromDevice: function(ctx){
             var role = ctx.role;
             var deviceId =  ctx.deviceid;
+            var tenantID = common.getTenantID();
             log.debug("Test Role :"+role);
             var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id", stringify(deviceId));
 
@@ -505,7 +512,8 @@ var device = (function () {
             return obj;
         },
         sendMsgToUserDevices: function(ctx){
-            var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ?", ctx.userid);
+        	var tenantID = common.getTenantID();
+            var device_list = db.query("SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ? AND tenant_id = ?", ctx.userid, tenantID);
             var succeeded="";
             var failed="";
             for(var i=0; i<device_list.length; i++){
@@ -521,14 +529,14 @@ var device = (function () {
         sendMsgToGroupDevices :function(ctx){
             var succeeded="";
             var failed="";
-
+			var tenantID = common.getTenantID();
             var userList = group.getUsersOfGroup();
 
             for(var i = 0; i < userList.length; i++) {
 
                 var objUser = {};
 
-                var result = db.query("SELECT id FROM devices WHERE user_id = ? AND tenant_id = ?", String(userList[i].email), common.getTenantID());
+                var result = db.query("SELECT id FROM devices WHERE user_id = ? AND tenant_id = ?", String(userList[i].email), tenantID);
 
                 for(var j = 0; j < result.length; j++) {
 
@@ -575,9 +583,11 @@ var device = (function () {
             }
         },
         changeDeviceState:function(deviceId,state){
+        	var tenantID = common.getTenantID();
             db.query("UPDATE devices SET status = ? WHERE id = ?",state,stringify(deviceId));
         },
         getCurrentDeviceState:function(deviceId){
+        	var tenantID = common.getTenantID();
             var result = db.query("select status from devices where id = ?",stringify(deviceId));
             if(result != undefined && result != null && result[0] != undefined && result[0] != null){
                 return result[0].status;
@@ -646,7 +656,7 @@ var device = (function () {
                     }
                     return true;
                 }else{
-                    db.query("UPDATE devices SET deleted = 0 WHERE reg_id = ?", ctx.regid);
+                    db.query("UPDATE devices SET deleted = 0 WHERE reg_id = ? AND tenant_id = ?", ctx.regid, tenantId);
                     return true;
                 }
             }else{
@@ -700,7 +710,7 @@ var device = (function () {
             return true;
         },
         getPendingOperationsFromDevice: function(ctx){
-
+			
             var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
 
             if(deviceList[0]!=null) {
@@ -799,35 +809,36 @@ var device = (function () {
                 tokenProperties["unlockToken"] = ctx.unlockToken;
                 tokenProperties["magicToken"] = ctx.magicToken;
 
-//                var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
-//                	stringify(properties), stringify(tokenProperties), ctx.deviceid);
+                // var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
 
+                var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);  
 
-                var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);
                 if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
-
-                    var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
-
-                    if(devicePendingResult != null && devicePendingResult != undefined && devicePendingResult[0] != null && devicePendingResult[0] != undefined) {
-                        devicePendingResult = devicePendingResult[0]
-                        var updateResult = db.query("UPDATE devices SET tenant_id = ?, user_id = ?, platform_id = ?, reg_id =? , properties = ?, status = ?, byod = ?, vendor = ?, udid = ?  WHERE udid = ?",
-                            devicePendingResult.tenant_id, devicePendingResult.user_id, devicePendingResult.platform_id, stringify(tokenProperties), stringify(properties), devicePendingResult.status,
-                            devicePendingResult.byod, devicePendingResult.vendor, devicePendingResult.udid, ctx.deviceid);
-                    }
+                	
+                	var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
+	                   
+	                if(devicePendingResult != null && devicePendingResult != undefined && devicePendingResult[0] != null && devicePendingResult[0] != undefined) {
+	                	devicePendingResult = devicePendingResult[0]
+	                	var updateResult = db.query("UPDATE devices SET tenant_id = ?, user_id = ?, platform_id = ?, reg_id =? , properties = ?, status = ?, byod = ?, vendor = ?, udid = ?  WHERE udid = ?",
+	                		devicePendingResult.tenant_id, devicePendingResult.user_id, devicePendingResult.platform_id, stringify(tokenProperties), stringify(properties), devicePendingResult.status, 
+	                		devicePendingResult.byod, devicePendingResult.vendor, devicePendingResult.udid, ctx.deviceid);
+	                }
+	                
+	                db.query("UPDATE device_pending SET request_status = 1 WHERE user_id = ? && udid IS NOT NULL", devicePendingResult.user_id);
 
                 } else {
-                    //Copy record from temporary table into device table and delete the record from the temporary table
-                    var updateResult = db.query("INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) " +
-                        "SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
-                        stringify(tokenProperties), stringify(properties), ctx.deviceid);
+                	//Copy record from temporary table into device table and delete the record from the temporary table
+	                var updateResult = db.query("INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) " +
+	                    "SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
+	                    stringify(tokenProperties), stringify(properties), ctx.deviceid);
+	                
+	                db.query("UPDATE device_pending SET request_status = 1 WHERE udid = ?", ctx.deviceid);
                 }
 
-                db.query("DELETE FROM device_pending WHERE udid = ?", ctx.deviceid);
-
                 if(updateResult != null && updateResult != undefined && updateResult == 1) {
-
-                    setTimeout(function(){invokeInitialFunctions(ctx)}, 2000);
-
+                    	
+					setTimeout(function(){invokeInitialFunctions(ctx)}, 2000);
+                    	
                     return true;
                 }
             }

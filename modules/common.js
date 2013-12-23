@@ -1,7 +1,7 @@
 var log = new Log();
 var getTenantID = function() {
 
-	if (session.get("mdmConsoleUser").tenantId != 0) {
+	if (session.get("mdmConsoleUser") && session.get("mdmConsoleUser").tenantId != 0) {
         var tenantID = session.get("mdmConsoleUser").tenantId;
         log.info("Tenant IDD :"+tenantID);
         return tenantID;
