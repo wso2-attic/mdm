@@ -613,7 +613,7 @@ var device = (function () {
         },
         registerAndroid: function(ctx){
             var log = new Log();
-            ctx.email = ctx.email+"@carbon.super";
+          //  ctx.email = ctx.email+"@carbon.super";
             var tenantUser = carbon.server.tenantUser(ctx.email);
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;

@@ -331,6 +331,10 @@ var user = (function () {
 
         /*Get all devices belongs to particular user*/
 		getDevices: function(obj){
+            log.info("begin");
+            log.info(String(obj.userid));
+            log.info(common.getTenantID());
+            log.info("end");
 			var devices = db.query("SELECT * FROM devices WHERE user_id= ? AND tenant_id = ?", String(obj.userid), common.getTenantID());
 			return devices;
 		}
