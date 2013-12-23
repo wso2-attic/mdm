@@ -112,33 +112,35 @@ var device = (function () {
         }
         return null;
     }
+    function getXMLRequestString(role,action,operationName){
+        var xmlRequest = <Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" CombinedDecision="false" ReturnPolicyIdList="false">
+            <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+                <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" IncludeInResult="false">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">{action}</AttributeValue>
+                </Attribute>
+            </Attributes>
+            <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+                <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" IncludeInResult="false">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">{role}</AttributeValue>
+                </Attribute>
+            </Attributes>
+            <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" IncludeInResult="false">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">{operationName}</AttributeValue>
+                </Attribute>
+            </Attributes>
+        </Request>;
+        return xmlRequest;
+    }
     function checkPermission(role, deviceId, operationName, that){
-        var policy = require('policy').policy;
-        policy.init();
-        var decision = null;
-        var action = 'POST';
-        if(role == 'admin'){
-            log.debug("subject :"+role);
-            log.debug("action :"+action);
-            log.debug("resource :"+operationName);
-            decision = policy.getDecision(operationName, action, role, "");
-            log.debug("Test decision :"+decision);
-        }else if(role == 'mdmadmin'){
-            log.debug("Test2");
-            decision = policy.getDecision(operationName, action, role, "");
-        }else{
-            log.debug("Test3");
-            var result = db.query("select * from devices where id ="+deviceId);
-            var userId = result[0].user_id;
-            var roleList = user.getUserRoles({'username':userId});
-            for(var i = 0;i<roleList.length;i++){
-                var decision = policy.getDecision(operationName,action,roleList[i],"");
-                log.debug("Test decision :"+decision);
-                if(decision=="Permit"){
-                    break;
-                }
-            }
-        }
+        log.info("checkPermission1");
+        var entitlement = session.get("entitlement");
+        log.info("checkPermission2");
+        var stub = entitlement.setEntitlementServiceParameters();
+        log.info("checkPermission3"+stub);
+        var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
+        log.info("d :"+decision.toString().substring(28,34));
+        decision = decision.toString().substring(28,34);
         if(decision=="Permit"){
             return true;
 
@@ -147,6 +149,7 @@ var device = (function () {
         }
 
     }
+
     function policyByOsType(jsonData,os){
         for(var n=0;n<jsonData.length;n++){
             if(jsonData[n].code == '509B'||jsonData[n].code == '528B'){
@@ -227,7 +230,7 @@ var device = (function () {
         log.info(token);
         log.info(payLoad);
         var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
-       // log.info(gcmMSG);
+        log.info(gcmMSG);
         return true;
     }
 
@@ -487,6 +490,9 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
+                log.info("Test1");
+                log.info(checkPermission(role,deviceId, featureList[i].name, this));
+                log.info("Test2");
                 featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
                 //featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){

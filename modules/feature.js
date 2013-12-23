@@ -30,8 +30,7 @@ var feature = (function () {
     function setFlag(list,groupId){
         log.info("Test Group >>>>>>>>>>"+groupId);
         try{
-            var entitlement = require("policy").entitlement;
-            entitlement.login();
+            var entitlement = session.get("entitlement");
             var stub = entitlement.setEntitlementPolicyAdminServiceParameters();
             var result = entitlement.readExistingPolicy(stub,groupId);
             var languages = new XML('<xml>'+result+'</xml>');
