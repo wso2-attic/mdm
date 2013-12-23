@@ -228,7 +228,7 @@ var policy = (function () {
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
                 for(var i =0; i < allUsers.length;i++){
                     var element = {};
-                    element.name = allUsers[i].username;
+                    element.name = allUsers[i];
                     element.available = false;
                     array[i] = element;
                 }
@@ -236,20 +236,19 @@ var policy = (function () {
                 for(var i =0; i < allUsers.length;i++){
                     var element = {};
                     for(var j=0 ;j< result.length;j++){
-                        log.info(allUsers[i].username+" "+result[j].user_id);
+                        log.info(allUsers[i]+" "+result[j].user_id);
                         if(allUsers[i].username==result[j].user_id){
-                            element.name = allUsers[i].username;
+                            element.name = allUsers[i];
                             element.available = true;
                             break;
                         }else{
-                            element.name = allUsers[i].username;
+                            element.name = allUsers[i];
                             element.available = false;
                         }
                     }
                     array[i] = element;
                 }
             }
-
             return array;
         },
         getPlatformsByPolicy:function(ctx){
