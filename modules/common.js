@@ -10,6 +10,12 @@ var getTenantID = function() {
 	}
 }
 
+var getTenantIDFromEmail = function(email){
+    var carbon = require('carbon');
+    var tenantUser = carbon.server.tenantUser(email);
+    return tenantUser.tenantId;
+}
+
 var removePrivateRole = function(roleList){
     var roles = new Array();
     for(var i = 0; i<roleList.length; i++){
