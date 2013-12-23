@@ -242,7 +242,7 @@ var device = (function () {
     function invokeInitialFunctions(ctx) {
         var db = application.get('db');
         var tenantID = common.getTenantID();
-        var devices = db.query("SELECT * FROM devices WHERE udid = ?" ,stringify(ctx.deviceid));
+        var devices = db.query("SELECT * FROM devices WHERE udid = ?" ,ctx.deviceid);
         var deviceID = devices[0].id;
         var userId = devices[0].user_id;
 
