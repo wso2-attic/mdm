@@ -1,107 +1,77 @@
 <%
-var current_user = session.get('mdmConsoleUser');
-var current_user_roles =undefined;
-if(current_user!=undefined){
+//Module objects
+var absolute = require ('modules/absolute.js').mvc;
+var goose = require('modules/goose.js').goose;
+var deviceModule = require('modules/device.js').device;
+var userModule = require('modules/user.js').user;
+var notificationModule = require('modules/notification.js').notification;
+var storeModule = require('modules/store.js').store;
+var mamModule = require('modules/mam.js').mam;
+var webconsoleModule = require('modules/webconsole.js').webconsole;
+var dashboardModule = require('modules/dashboard.js').dashboard;
+var featureModule = require('modules/feature.js').feature;
+
+// Routers
+var userRouter = require('api/userRouter.js').user;
+var featureRouter = require('api/featureRouter.js').feature;
+var permissionRouter = require('api/permissionRouter.js').permission;
+var policyRouter = require('api/policyRouter.js').policy;
+var deviceRouter = require('api/deviceRouter.js').device;
+var notificationRouter = require('api/notificationRouter.js').notification;
+var groupRouter = require('api/groupRouter.js').group;
+
+var GOOSE_CONFIGS = {
+    CONTEXT : "/mdm/api/", 
+    AUTH_SUPPORT : true, 
+    AUTH_USER_ROLES : current_user_roles
+};
+var ABSOLUTE_CONFIGS = {
+    SERVER_URL:"/mdm/",
+    IGNORE:["acs.jag", "login.jag", "logout.jag", "devicelogin.jag"],
+    API:"api",
+    ROUTER: router,
+    AUTH_SUPPORT: true,
+    AUTH_USER_ROLES: current_user_roles
+};
+var MDM_USER_SESSION = "mdmConsoleUser";
+var DB_SESSION = "db";
+
+var log =new Log();
+var configs = require('config/mdm.js').config();
+var db = getDatabase();
+
+var current_user = session.get(MDM_USER_SESSION);
+var current_user_roles = undefined;
+if(current_user != undefined){
 	current_user_roles = current_user.roles;
 
 }
-var absolute = require ('modules/absolute.js').mvc;
-var goose = require('modules/goose.js').goose;
-var router = new goose({CONTEXT: "/mdm/api/", AUTH_SUPPORT: true, AUTH_USER_ROLES:current_user_roles});
-var log =new Log();
-var configs = require('config/mdm.js').config();
-var db = application.get('db');
 
-var deviceModule = require('modules/device.js').device;
+var router = new goose(GOOSE_CONFIGS);
+var mvc = new absolute(ABSOLUTE_CONFIGS);
+
+//Setting up the authorization roles
+router.setupRules(require('/config/route.json').apiRoutes);
+mvc.setupRules(require('/config/route.json').pageRoutes);
+
 var device = new deviceModule();
-
-var userModule = require('modules/user.js').user;
 var user = new userModule();
-
-var notificationModule = require('modules/notification.js').notification;
 var notification = new notificationModule();
-
-
-/*setInterval(
- function(ctx){
- //monitorPolicy(ctx);
- }
- ,100000);*/
-
-
-
- function monitorPolicy(ctx){
-   /*  log.info("bye");
-    var result = db.query("SELECT * from devices");
-
-    for(var i=0; i<result.length; i++){
-        log.info("hi");
-        var deviceId = result[i].id;
-        var operation = 'MONITORING';
-        var data = {};
-        var userId = result[i].user_id;
-        var roles = user.getUserRoles({'username':userId});
-        var roleList = parse(roles);
-        log.info(roleList[0]);
-        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",roleList[0]);
-        log.info("Policy Payload :"+gpresult[0].data);
-        var jsonData = parse(gpresult[0].data);
-        var obj = {};
-        obj.type = gpresult[0].type;
-        obj.policies = jsonData;
-        device.sendToDevice({'deviceid':deviceId,'operation':operation,'data':obj});
-    } */
- }
-
-
-if(db==null || db==undefined){
-	db = new Database("EMM_DB");
-	application.put('db',db);
-}
-var mvc = new absolute({
-	SERVER_URL:"/mdm/",
-	IGNORE:["acs.jag", "login.jag", "logout.jag", "devicelogin.jag"],
-	API:"api",
-	ROUTER: router,
-    AUTH_SUPPORT: true,
-    AUTH_USER_ROLES: current_user_roles
-});
-
-var userRouter = require('api/userRouter.js').user;
-var userRouterInstance = new userRouter(db,router);
-
-var featureRouter = require('api/featureRouter.js').feature;
-var featureRouterInstance = new featureRouter(db,router);
-
-var permissionRouter = require('api/permissionRouter.js').permission;
-var permissionRouterInstance = new permissionRouter(db,router);
-
-var policyRouter = require('api/policyRouter.js').policy;
-var policyRouterInstance = new policyRouter(db,router);
-
-var deviceRouter = require('api/deviceRouter.js').device;
-var deviceRouterInstance = new deviceRouter(db, router);
-
-var notificationRouter = require('api/notificationRouter.js').notification;
-var notificationRouterInstance = new notificationRouter(db, router);
-
-var webconsoleModule = require('modules/webconsole.js').webconsole;
 var webconsole = new webconsoleModule(db);
-
-var dashboardModule = require('modules/dashboard.js').dashboard;
 var dashboard = new dashboardModule(db);
-
-var featureModule = require('modules/feature.js').feature;
 var feature = new featureModule(db);
-
-var storeModule = require('modules/store.js').store;
 var store = new storeModule(db);
-
-var mamModule = require('modules/mam.js').mam;
 var mam = new mamModule(db);
 
-var groupRouter = require('api/groupRouter.js').group;
+var userRouterInstance = new userRouter(db,router);
+var featureRouterInstance = new featureRouter(db,router);
+var permissionRouterInstance = new permissionRouter(db,router);
+var policyRouterInstance = new policyRouter(db,router);
+var deviceRouterInstance = new deviceRouter(db, router);
+var notificationRouterInstance = new notificationRouter(db, router);
 var groupRouterInstance = new groupRouter(db,router);
+
+
 
 
 router.post('store/users/devices', function(ctx){
@@ -191,7 +161,6 @@ router.get('dashboard/policies/compliance', function(ctx){
     }
 });
 
-
 router.get('webconsole/devices', function(ctx){
     var result = webconsole.getDevicesCountAndUserCountForAllGroups(ctx);
 	response.content = result;
@@ -219,9 +188,7 @@ router.get('features', function(ctx){
         response.status = 404;
     }
 });
-//Setting up the authorization roles
-router.setupRules(require('/config/route.json').apiRoutes);
-mvc.setupRules(require('/config/route.json').pageRoutes);
+
 
 mvc.registerHelper('showActive', function(currentPage, page, options) {
   if(currentPage == page){
@@ -299,5 +266,18 @@ mvc.registerHelper('elipsis', function(maxLength, context, options) {
 });
 
 mvc.route(request);
+
+var getDatabase = function(){
+    var db = application.get(DB_SESSION);
+    if(db){
+        try{
+            db = new Database("EMM_DB");
+            application.put(DB_SESSION,db);
+        }catch(e){
+            log.error(e);
+        }
+    }
+}
+
 
 %>
