@@ -1,3 +1,5 @@
+var common = require('/modules/common.js');
+var db = common.getDatabase();
 var log = new Log();
 
 var androidConfig = require('android.json');
