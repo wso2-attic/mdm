@@ -125,7 +125,7 @@ var permission = (function () {
             }catch(e){
                 log.info(e);
             }
-
+            // log.info(xacml);
             entitlement.addPolicy(xacmlFile,entitlementPolicyAdminService,group);
 
             return "success";

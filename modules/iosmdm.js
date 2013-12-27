@@ -187,27 +187,13 @@ var iosmdm = (function() {
 					ctx.id = commandUUID;
 					notification.discardOldNotifications(ctx);
 
-//                    if (pendingExist != true) {
-//                        log.debug("Pending Exist >>>>>>> FALSE");
-//                        return;
-//                    }
-//                    log.debug("Pending Exist >>>>>>> TRUE");
-
 				} else if (("Error").equals(apnsStatus.getStatus())) {
 					log.error("Error " + apnsStatus.getError());
-
 					var ctx = {};
 					ctx.error = "Error";
 					ctx.data = apnsStatus.getError();
 					ctx.msgID = commandUUID;
-
                     var pendingExist = notification.addIosNotification(ctx);
-
-//                    if (pendingExist != true) {
-//                        log.debug("Pending Exist >>>>>>> FALSE");
-//                        return;
-//                    }
-//                    log.debug("Pending Exist >>>>>>> TRUE");
 				}
 
 				var ctx = {};

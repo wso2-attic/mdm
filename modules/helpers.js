@@ -1,3 +1,4 @@
+//Used to register helper functions to absolute mvc framework
 var registerHelpers = function(mvc){
   mvc.registerHelper('showActive', function(currentPage, page, options) {
     if(currentPage == page){
