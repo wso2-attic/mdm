@@ -1,7 +1,0 @@
-<%
-var log = new Log();
-/*var policy = require("policy");
-var entitlementPolicyAdminServiceStub = policy.entitlement.setEntitlementPolicyAdminServiceParameters();
-policy.entitlement.login();
-log.info(policy.entitlement.readExistingPolicy(entitlementPolicyAdminServiceStub,"Engineering-Android-CAMERA-MUTE-PASSCODEPOLICY-INFORMATION-INFO-MESSAGING-NOTIFICATION"));*/
-%>

@@ -26,7 +26,7 @@ var GOOSE_CONFIGS = {
 };
 var ABSOLUTE_CONFIGS = {
     SERVER_URL:"/mdm/",
-    IGNORE:["acs.jag", "login.jag", "logout.jag", "devicelogin.jag"],
+    IGNORE:[],
     API:"api",
     AUTH_SUPPORT: true
 };
