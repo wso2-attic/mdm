@@ -6,7 +6,6 @@ var androidConfig = require('android.json');
 var gcm = require('gcm').gcm;
 gcm.setApiKey(androidConfig.api_key);
 
-
 var app_TENANT_CONFIGS = 'tenant.configs';
 var app_carbon = require('carbon');
 var app_configs = require('mdm.js').config();

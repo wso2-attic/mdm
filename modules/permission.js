@@ -118,8 +118,8 @@ var permission = (function () {
             file.close();
 
             var entitlement = session.get("entitlement");
-
             var entitlementPolicyAdminService = entitlement.setEntitlementPolicyAdminServiceParameters();
+
             try{
                 entitlement.removePolicy(group,entitlementPolicyAdminService);
             }catch(e){
