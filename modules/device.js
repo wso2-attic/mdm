@@ -258,7 +258,8 @@ var device = (function () {
 
     function sendMessageToIOSDevice(ctx){
         log.debug("CTX >>>>>"+stringify(ctx));
-        var tenantID = common.getTenantID();
+        var deviceID = ctx.deviceid;
+        var tenantID = common.getTenantIDFromDevice(deviceID);
         var message = stringify(ctx.data);
 
         //Filter the policy depending on Device
