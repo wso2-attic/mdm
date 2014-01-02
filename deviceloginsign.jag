@@ -43,16 +43,7 @@
         </div>
 		<button type="button" class="btn btn-lg btn-primary btn-block" onclick="onClickSubmit()">Sign in</button>
 		<br />
-		<!--
-	    <div class="mdm-message text-center">
-		<div class="raw">
-			Make sure you download the root certificate
-		</div>
-		<div class="raw">
-			<a href="ca">Download</a>
-		</div>
-	    </div>
-	    -->
+
       </form>
       
       <form id="enrollsuccess" method="post" action="enrollsuccess" >
