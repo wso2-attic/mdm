@@ -53,6 +53,11 @@
 	     <input name="byod" type="hidden" value="1" />  
 	 </form>
      </div>
+     
+     <form id="enrollsuccess" method="post" action="enrollsuccess" >
+	   	<input type="hidden" id="enrollsuccessusername" name="username" />
+	   	<input type="hidden" id="enrollsuccessudid" name="udid" />
+	 </form>
 
 
     <!-- Bootstrap core JavaScript
@@ -80,8 +85,10 @@
 	        		
 	        		if(parsedResponse.status) {
 		        		clearInterval(monitor);
-		        		window.location.href = "enrollsuccess?username=" + $("#uname").val() +
-		        			"&udid=" + parsedResponse.udid;
+		        		$('#enrollsuccessusername').val($("#uname").val());
+		        		$('#enrollsuccessudid').val(parsedResponse.udid);
+
+		        		$("#enrollsuccess").submit();
 	        		}
 	
 	        	}
