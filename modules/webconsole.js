@@ -98,7 +98,12 @@ var webconsole = (function () {
             for (var i = paginated_users.length - 1; i >= 0; i--) {
                 var username = paginated_users[i];
                 var userObj = user.getUser({"userid": username});
-                dataArray.push(userObj);
+
+               // var proxyObj = [userObj.email, userObj.firstName, userObj.lastName, "", ""];
+
+                var proxyObj = [userObj.email, userObj.firstName, userObj.lastName, userObj.user_type, " "];
+
+                dataArray.push(proxyObj);
             };
             var finalObj = {};
             finalObj.sEcho = ctx.sEcho;
