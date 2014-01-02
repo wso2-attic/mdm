@@ -133,17 +133,13 @@ var device = (function () {
         return xmlRequest;
     }
     function checkPermission(role, deviceId, operationName, that){
-        log.info("checkPermission1");
         var entitlement = session.get("entitlement");
-        log.info("checkPermission2");
         var stub = entitlement.setEntitlementServiceParameters();
-        log.info("checkPermission3"+stub);
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
         log.info("d :"+decision.toString().substring(28,34));
         decision = decision.toString().substring(28,34);
         if(decision=="Permit"){
             return true;
-
         }else{
             return false;
         }
@@ -191,7 +187,7 @@ var device = (function () {
         var payLoad = stringify(ctx.data);
         var deviceId = ctx.deviceid;
         var operationName = ctx.operation;
-        var tenantID = common.getTenantID();
+        var tenantID = common.getTenantIDFromDevice(deviceId);
 
         var devices = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", deviceId+"");
         if(devices == undefined || devices == null || devices[0]== undefined || devices[0] == null ){

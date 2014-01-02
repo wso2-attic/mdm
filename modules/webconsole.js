@@ -184,6 +184,7 @@ var webconsole = (function () {
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else{
+                log.info("test block");
                 result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date   from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && devices.tenant_id ="+common.getTenantID());
                 var totalRecords = result.length;
                 var upperBound = (ctx.iDisplayStart+1)*totalDisplayRecords;
