@@ -13,12 +13,7 @@ $(document).ready(function() {
                       null,
                       null,
                       null,
-                      {                         
-                        "fnRender": function (oObj)                              
-                        {                           
-                            return "";
-                        }
-                      },
+                      null,
                       
                       {                         
                         "fnRender": function (oObj)                              
