@@ -117,7 +117,8 @@ var permission = (function () {
 
             file.close();
 
-            var entitlement = session.get("entitlement");
+            var entitlement = require('policy').entitlement;
+            entitlement.login();
 
             var entitlementPolicyAdminService = entitlement.setEntitlementPolicyAdminServiceParameters();
             try{
