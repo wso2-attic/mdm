@@ -31,7 +31,7 @@
     },
     "device": {
         "android_location": "/mdm/mdm.apk",
-        "ios_location": "%https.ip%/mdm/devicelogin"
+        "ios_location": "%https.ip%/mdm/certificate"
     },
     "mam": {
         "store_location": "%https.ip%/store/"
