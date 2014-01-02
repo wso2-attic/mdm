@@ -1,5 +1,39 @@
 <%
 (function () {
+    var SAML_RESPONSE_TOKEN_SESSION_KEY = "SAML_TOKEN";
+    var SAML_ASSERTION_TOKEN_SESSION_KEY = "SAML_ASSERTION_TOKEN";
+    var SSO_NAME = "SSORelyingParty.Name";
+
+    var getToken = function (){
+        if(session.get(SAML_RESPONSE_TOKEN_SESSION_KEY)){
+            return session.get(SAML_RESPONSE_TOKEN_SESSION_KEY);
+        } else if(session.get(SAML_ASSERTION_TOKEN_SESSION_KEY)){
+            return session.get(SAML_ASSERTION_TOKEN_SESSION_KEY);
+        } else {
+            return null;
+        }
+    };
+
+    var getBackendCookie = function (samlToken) {
+        log.info("SAML token :"+samlToken);
+        var token = getToken();
+        log.info(token);
+        var token = null;
+        var encodedToken = token && token.replace(/>/g, '&gt;').replace(/</g,'&lt;');
+        var xhr = new XMLHttpRequest();
+        xhr.setRequestHeader('SOAPAction', 'urn:login');
+        xhr.setRequestHeader('Content-Type', 'application/soap+xml');
+        var endPoint = "https://localhost:9443/admin/services/"+"SAML2SSOAuthenticationService";
+        xhr.open("POST", endPoint);
+        var payload = '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sso="http://sso.saml2.authenticator.identity.carbon.wso2.org" xmlns:xsd="http://dto.sso.saml2.authenticator.identity.carbon.wso2.org/xsd"><soap:Header/><soap:Body><sso:login><sso:authDto><xsd:response>'+samlToken+'</xsd:response></sso:authDto></sso:login></soap:Body></soap:Envelope>';
+        xhr.send(payload);
+        var cookieString = xhr.getResponseHeader("Set-Cookie");
+        log.info("COOKIE String :"+cookieString);
+        //var cookie = cookieString.split(";")[0];
+        //return cookie.toString().substring(11);
+        return cookieString;
+    };
+
     var log = new Log(),
             configs = require('config/mdm.js').config(),
             samlResponse = request.getParameter('SAMLResponse'),
@@ -31,6 +65,7 @@
                 if (sso.client.validateSignature(samlRespObj, keyStoreProps)) {
                     log.info("Saml object session ID :"+samlRespObj.sessionId);
                     var sessionObj = sso.client.decodeSAMLLoginResponse(samlRespObj, samlResponse, sessionId);
+
                     if (sessionObj.sessionIndex != null || sessionObj.sessionIndex != 'undefined') {
                         session.put("LOGGED_IN_USER", sessionObj.loggedInUser);
                         session.put("Loged", "true");
@@ -77,11 +112,16 @@
 								session.put("mdmConsoleUserLogin", "true");
 								session.put("mdmConsoleUser", userFeed);
 
-                                log.info("test policy moduleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+
                                 var entitlement = require('policy').entitlement;
+                                var backEndCookie = getBackendCookie(samlResponse);
+                                 log.info("BackEnd Cookie :"+backEndCookie);
+                                entitlement.setAuthCookie(backEndCookie);
+
+
 
                                 session.put("entitlement",entitlement);
-                                session.get("entitlement").login();
+                              //  session.put("epas_stub",entitlementPolicyAdminService);
 
                                 var groupModule = require('/modules/group.js').group;
                                 var group = new groupModule(db);

@@ -130,6 +130,8 @@ var iosmdm = (function() {
 
 					device.updateiOSTokens(tokenProperties);
 				}
+				
+				return checkinMessageType.getMessageType();
 
 			} catch (e) {
 				log.error(e);
@@ -148,8 +150,6 @@ var iosmdm = (function() {
 				var apnsStatus = plistExtractor.extractAPNSResponse(contentString);
 
 				var commandUUID = apnsStatus.getCommandUUID();
-
-                log.debug("APNSTATUS >>>>> " + apnsStatus.getStatus());
 
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
 					log.error("Acknowledged >>>>>>>>>>>>>>>>" + apnsStatus.getOperation());
@@ -225,7 +225,6 @@ var iosmdm = (function() {
 
                 //End of all Notifications pending for the device
                 var datetime =  common.getCurrentDateTime();
-                log.debug("UPDATE device_awake status >>>>>>>> ");
                 db.query("UPDATE device_awake JOIN devices ON devices.id = device_awake.device_id SET device_awake.status = 'P', device_awake.processed_date = ? WHERE devices.udid = ? AND device_awake.status = 'S'", datetime, apnsStatus.getUdid());
 
                 return null;

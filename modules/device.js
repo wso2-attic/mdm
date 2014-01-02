@@ -114,34 +114,35 @@ var device = (function () {
         }
         return null;
     }
+    function getXMLRequestString(role,action,operationName){
+        var xmlRequest = <Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" CombinedDecision="false" ReturnPolicyIdList="false">
+            <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+                <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" IncludeInResult="false">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">{action}</AttributeValue>
+                </Attribute>
+            </Attributes>
+            <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+                <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" IncludeInResult="false">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">{role}</AttributeValue>
+                </Attribute>
+            </Attributes>
+            <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                <Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" IncludeInResult="false">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">{operationName}</AttributeValue>
+                </Attribute>
+            </Attributes>
+        </Request>;
+        return xmlRequest;
+    }
     function checkPermission(role, deviceId, operationName, that){
-        var policy = require('policy').policy;
-        var tenantID = common.getTenantID();
-        policy.init();
-        var decision = null;
-        var action = 'POST';
-        if(role == 'admin'){
-            log.debug("subject :"+role);
-            log.debug("action :"+action);
-            log.debug("resource :"+operationName);
-            decision = policy.getDecision(operationName, action, role, "");
-            log.debug("Test decision :"+decision);
-        }else if(role == 'Internal/mdmadmin'){
-            log.debug("Test2");
-            decision = policy.getDecision(operationName, action, role, "");
-        }else{
-            log.debug("Test3");
-            var result = db.query("select * from devices where id = ?" ,deviceId);
-            var userId = result[0].user_id;
-            var roleList = user.getUserRoles({'username':userId});
-            for(var i = 0;i<roleList.length;i++){
-                var decision = policy.getDecision(operationName,action,roleList[i],"");
-                log.debug("Test decision :"+decision);
-                if(decision=="Permit"){
-                    break;
-                }
-            }
-        }
+        log.info("checkPermission1");
+        var entitlement = session.get("entitlement");
+        log.info("checkPermission2");
+        var stub = entitlement.setEntitlementServiceParameters();
+        log.info("checkPermission3"+stub);
+        var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
+        log.info("d :"+decision.toString().substring(28,34));
+        decision = decision.toString().substring(28,34);
         if(decision=="Permit"){
             return true;
 
@@ -150,6 +151,7 @@ var device = (function () {
         }
 
     }
+
     function policyByOsType(jsonData,os){
         for(var n=0;n<jsonData.length;n++){
             if(jsonData[n].code == '509B'||jsonData[n].code == '528B'){
@@ -500,6 +502,9 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
+                log.info("Test1");
+                log.info(checkPermission(role,deviceId, featureList[i].name, this));
+                log.info("Test2");
                 featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
                 //featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
@@ -809,35 +814,36 @@ var device = (function () {
                 tokenProperties["unlockToken"] = ctx.unlockToken;
                 tokenProperties["magicToken"] = ctx.magicToken;
 
-//                var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
-//                	stringify(properties), stringify(tokenProperties), ctx.deviceid);
+                // var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
 
+                var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);  
 
-                var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);
                 if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
-
-                    var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
-
-                    if(devicePendingResult != null && devicePendingResult != undefined && devicePendingResult[0] != null && devicePendingResult[0] != undefined) {
-                        devicePendingResult = devicePendingResult[0]
-                        var updateResult = db.query("UPDATE devices SET tenant_id = ?, user_id = ?, platform_id = ?, reg_id =? , properties = ?, status = ?, byod = ?, vendor = ?, udid = ?  WHERE udid = ?",
-                            devicePendingResult.tenant_id, devicePendingResult.user_id, devicePendingResult.platform_id, stringify(tokenProperties), stringify(properties), devicePendingResult.status,
-                            devicePendingResult.byod, devicePendingResult.vendor, devicePendingResult.udid, ctx.deviceid);
-                    }
+                	
+                	var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
+	                   
+	                if(devicePendingResult != null && devicePendingResult != undefined && devicePendingResult[0] != null && devicePendingResult[0] != undefined) {
+	                	devicePendingResult = devicePendingResult[0]
+	                	var updateResult = db.query("UPDATE devices SET tenant_id = ?, user_id = ?, platform_id = ?, reg_id =? , properties = ?, status = ?, byod = ?, vendor = ?, udid = ?  WHERE udid = ?",
+	                		devicePendingResult.tenant_id, devicePendingResult.user_id, devicePendingResult.platform_id, stringify(tokenProperties), stringify(properties), devicePendingResult.status, 
+	                		devicePendingResult.byod, devicePendingResult.vendor, devicePendingResult.udid, ctx.deviceid);
+	                }
+	                
+	                db.query("UPDATE device_pending SET request_status = 1 WHERE user_id = ? && udid IS NOT NULL", devicePendingResult.user_id);
 
                 } else {
-                    //Copy record from temporary table into device table and delete the record from the temporary table
-                    var updateResult = db.query("INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) " +
-                        "SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
-                        stringify(tokenProperties), stringify(properties), ctx.deviceid);
+                	//Copy record from temporary table into device table and delete the record from the temporary table
+	                var updateResult = db.query("INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) " +
+	                    "SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
+	                    stringify(tokenProperties), stringify(properties), ctx.deviceid);
+	                
+	                db.query("UPDATE device_pending SET request_status = 1 WHERE udid = ?", ctx.deviceid);
                 }
 
-                db.query("DELETE FROM device_pending WHERE udid = ?", ctx.deviceid);
-
                 if(updateResult != null && updateResult != undefined && updateResult == 1) {
-
-                    setTimeout(function(){invokeInitialFunctions(ctx)}, 2000);
-
+                    	
+					setTimeout(function(){invokeInitialFunctions(ctx)}, 2000);
+                    	
                     return true;
                 }
             }
