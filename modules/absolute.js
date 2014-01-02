@@ -65,7 +65,6 @@ var mvc = (function () {
 		var allowFlag = true;
 		for (var i = configs.CLIENT_JS_FOLDER.length - 1; i >= 0; i--) {
 			var loc = configs.CLIENT_JS_FOLDER[i];
-			log.info(resourceURL +"  "+ loc);
 			if(resourceURL.indexOf(loc) == 0){
 				allowFlag = false;
 			}
@@ -148,6 +147,8 @@ var mvc = (function () {
 	            return 'application/octet-stream';    
 	        case 'ttf':
 	            return 'application/octet-stream'; 
+	        case 'hbs':
+	            return 'text/x-handlebars-template'; 
 	        case 'txt':
 	        	return 'text/plain';
 	        case 'json':

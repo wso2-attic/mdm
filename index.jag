@@ -203,6 +203,12 @@ router.get('webconsole/listDevices', function(ctx){
     print(result);
 });
 
+router.get('webconsole/allUsers', function(ctx){
+    var result = webconsole.getAllUsers(ctx);
+    //response.content = result;
+    print(result);
+});
+
 
 router.get('features', function(ctx){
     var result = feature.getAllFeatures(ctx);

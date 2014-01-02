@@ -9,6 +9,8 @@ var device = (function () {
     var groupModule = require('group.js').group;
     var group = '';
 
+    var tenantID = common.getTenantID();
+
 
     var configs = {
         CONTEXT: "/"
@@ -95,7 +97,7 @@ var device = (function () {
             return obj;
         }
 
-        var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",category,platformName, tenantID);
+        var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",category,platformName, common.getTenantIDFromEmail(username));
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
             var policyPayLoad = parse(ppresult[0].data);
             obj.payLoad = policyPayLoad;
@@ -103,7 +105,7 @@ var device = (function () {
             return obj;
         }
 
-        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ?",category,role, tenantID);
+        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ?",category,role, common.getTenantIDFromEmail(username));
         if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
             var policyPayLoad = parse(gpresult[0].data);
             obj.payLoad = policyPayLoad;
@@ -188,12 +190,15 @@ var device = (function () {
         var deviceId = ctx.deviceid;
         var operationName = ctx.operation;
         var tenantID = common.getTenantIDFromDevice(deviceId);
-
         var devices = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", deviceId+"");
         if(devices == undefined || devices == null || devices[0]== undefined || devices[0] == null ){
             return false;
         }
         var userID = devices[0].user_id;
+        if(tenantID==null){
+            tenantID = common.getTenantIDFromEmail(userID);
+            log.info(tenantID);
+        }
         var osVersion = devices[0].os_version;
         var platformId = devices[0].platform_id;
         var regId = devices[0].reg_id;
@@ -235,7 +240,7 @@ var device = (function () {
     function invokeInitialFunctions(ctx) {
         var db = application.get('db');
         var tenantID = common.getTenantID();
-        var devices = db.query("SELECT * FROM devices WHERE udid = ?" ,stringify(ctx.deviceid));
+        var devices = db.query("SELECT * FROM devices WHERE udid = ?" ,ctx.deviceid);
         var deviceID = devices[0].id;
         var userId = devices[0].user_id;
 
@@ -339,7 +344,7 @@ var device = (function () {
         if (notifyExists[0].count == 0) {
             log.debug("insert into notifications!!!!!!!!!!!");
             db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description, tenant_id) values( ?, '1', ?, 'P', ?, ?, ?, ?, ?)",
-                ctx.deviceid, message, datetime, featureCode, userId, featureDescription, tenantID);
+                ctx.deviceid, message, datetime, featureCode, userId, featureDescription, common.getTenantIDFromEmail(userId));
         }
 
         var sendToAPNS = null;
@@ -594,6 +599,7 @@ var device = (function () {
         <!-- android specific functions -->
         getSenderId: function(ctx){
             var androidConfig = require('/config/android.json');
+            log.info(androidConfig);
             return androidConfig.sender_id;
         },
         isRegistered: function(ctx){
@@ -628,7 +634,6 @@ var device = (function () {
                     var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer","private_kasun:wso2mobile.com");
                     var roles = common.removeNecessaryElements(roleList,removeRoles);
                     var role = roles[0];
-
                     db.query("INSERT INTO devices (tenant_id, os_version, created_date, properties, reg_id, status, deleted, user_id, platform_id, vendor, udid, wifi_mac) VALUES(?, ?, ?, ?, ?,'A','0', ?, ?, ?,'0', ?);", tenantId, ctx.osversion, createdDate, ctx.properties, ctx.regid, userId, platformId, ctx.vendor, ctx.mac);
                     var devices = db.query("SELECT * FROM devices WHERE reg_id = ?", ctx.regid);
                     var deviceID = devices[0].id;

@@ -373,7 +373,11 @@ function loadNotifications(tabId, deviceId) {
 		success : function(notifications) {
 
 			for ( i = 0; i < notifications.length; i++) {
-				notifications[i].received_data = JSON.parse(notifications[i].received_data);
+				if(notifications[i].received_data){
+					if(notifications[i].received_data.length>0){
+						notifications[i].received_data = JSON.parse(notifications[i].received_data);
+					}
+				}
 			}
 
 			$.get('../client/partials/users/notifications.hbs', function(teplateData) {

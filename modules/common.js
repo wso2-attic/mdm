@@ -10,13 +10,11 @@ var getTenantID = function() {
         }
     }
 }
-
 var getTenantIDFromEmail = function(email){
     var carbon = require('carbon');
     var tenantUser = carbon.server.tenantUser(email);
     return tenantUser.tenantId;
 }
-
 var getTenantIDFromDevice = function(deviceID){
     var result = db.query("SELECT * FROM devices where id = ?",deviceID);
     if(typeof (result) !== 'undefined' && result !== null && typeof (result[0]) !== 'undefined' && result[0] !== null){
@@ -25,7 +23,6 @@ var getTenantIDFromDevice = function(deviceID){
         return null;
     }
 }
-
 var removePrivateRole = function(roleList){
     var roles = new Array();
     for(var i = 0; i<roleList.length; i++){
@@ -296,7 +293,7 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else if(operationCode == "510A") {
 		
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_APPLICATION;
-		paramMap.put("Identifier", data.identifier);
+		paramMap.put("Identifier", data.identity);
 		
 	} else if(operationCode == "529A") {
 		

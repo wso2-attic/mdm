@@ -43,16 +43,12 @@
         </div>
 		<button type="button" class="btn btn-lg btn-primary btn-block" onclick="onClickSubmit()">Sign in</button>
 		<br />
-		<!--
-	    <div class="mdm-message text-center">
-		<div class="raw">
-			Make sure you download the root certificate
-		</div>
-		<div class="raw">
-			<a href="ca">Download</a>
-		</div>
-	    </div>
-	    -->
+
+      </form>
+      
+      <form id="enrollsuccess" method="post" action="enrollsuccess" >
+      	<input type="hidden" id="enrollsuccessusername" name="username" />
+      	<input type="hidden" id="enrollsuccessudid" name="udid" />
       </form>
 
 
@@ -88,8 +84,10 @@
 	        		
 	        		if(parsedResponse.status) {
 		        		clearInterval(monitor);
-		        		window.location.href = "enrollsuccess?username=" + $("#uname").val() +
-		        			"&udid=" + parsedResponse.udid;
+		        		$('#enrollsuccessusername').val($("#uname").val());
+		        		$('#enrollsuccessudid').val(parsedResponse.udid);
+
+		        		$("#enrollsuccess").submit();
 	        		}
 
 	        	}
