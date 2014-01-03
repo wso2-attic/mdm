@@ -25,7 +25,7 @@
 
         var recordPresent = db.query("SELECT id FROM device_pending WHERE token = ?", username);
         log.debug(recordPresent);
-        if (recordPresent) {
+        if (recordPresent.length > 0) {
             log.debug("1");
             db.query("UPDATE device_pending SET user_id = ?, byod = ? WHERE token = ?", username, byod, username);
         } else {
