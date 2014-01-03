@@ -567,6 +567,7 @@ var device = (function () {
         },
         monitor:function(ctx){
             log.debug("monitor");
+
             var result = db.query("SELECT * from devices");
             for(var i=0; i<result.length; i++){
                 var deviceId = result[i].id;
@@ -680,7 +681,7 @@ var device = (function () {
         
         <!-- iOS specific functions -->
         registerIOS: function(ctx){
-            var tenantUser = carbon.server.tenantUser(ctx.email);
+            var tenantUser = carbon.server.tenantUser(ctx.auth_token);
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;
 

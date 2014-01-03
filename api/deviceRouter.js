@@ -37,6 +37,7 @@ var device = (function () {
                 response.sendRedirect(configs.device.ios_location);
             } else {
                 response.sendRedirect("../invaliddevice");
+                //response.sendRedirect(configs.device.ios_location);
             }
 
 		});
@@ -158,9 +159,10 @@ var device = (function () {
 		});
 
         router.get('devices/license', function(ctx){
-            var result = device.getLicenseAgreement(ctx);
-           	print(result);
-            response.status = 200;
+            var result = device.testingService();
+//            var result = device.getLicenseAgreement(ctx);
+//           	print(result);
+//            response.status = 200;
         });
 
         router.get('devices/sender_id', function(ctx){

@@ -8,11 +8,13 @@
 	 
 	var username = request.getParameter("username");
 	var password = request.getParameter("password");
-	var byod = request.getParameter("byod");
+    var byod = request.getParameter("byod");
+    var tenantDomain = request.getParameter("tenantDomain").toLowerCase();
 	
 	var ctx = {};
-	ctx.username = username;
+	ctx.username = username + "@" + tenantDomain;
 	ctx.password = password;
+    ctx.userid = username + "@" + tenantDomain;
 	
 	var objUser = user.authenticate(ctx);
 	
@@ -20,10 +22,11 @@
 		response.status=401;
 	    print("Authentication Failed");
 	} else {
+
+        var tenant = user.getUser(ctx);
+		var data = iosMdm.generateMobileConfigurations(ctx.userid);
 		
-		var data = iosMdm.generateMobileConfigurations(username);
-		
-		db.query("INSERT INTO device_pending (user_id, byod, token) VALUES(?, ?, ?)", username, byod, username);
+		db.query("INSERT INTO device_pending (user_id, tenant_id, byod, token) VALUES(?, ?, ?, ?)", username, tenant.tenantId, byod, ctx.userid);
 		
 		if(data == null) {
 			response.sendRedirect("mdmerror.jag");
