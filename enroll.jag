@@ -25,15 +25,21 @@
 
         var tenant = user.getUser(ctx);
 		var data = iosMdm.generateMobileConfigurations(ctx.userid);
-		
-		db.query("INSERT INTO device_pending (user_id, tenant_id, byod, token) VALUES(?, ?, ?, ?)", username, tenant.tenantId, byod, ctx.userid);
-		
+
+		//db.query("INSERT INTO device_pending (user_id, tenant_id, byod, token) VALUES(?, ?, ?, ?)", username, tenant.tenantId, byod, ctx.userid);
+        var recordPresent = db.query("SELECT id FROM device_pending WHERE token = ?", ctx.userid);
+        log.debug(recordPresent);
+        if (recordPresent.length > 0) {
+            db.query("UPDATE device_pending SET user_id = ?, tenant_id= ?, byod = ? WHERE token = ?", username, tenant.tenantId, byod, ctx.userid);
+        } else {
+            db.query("INSERT INTO device_pending (user_id, tenant_id, byod, token) VALUES(?, ?, ?, ?)", username, tenant.tenantId, byod, ctx.userid);
+        }
+
 		if(data == null) {
 			response.sendRedirect("mdmerror.jag");
 		}
 	
 		response.contentType = "application/x-apple-aspen-config";
-		
 		var byteArrayInputStream = new Packages.java.io.ByteArrayInputStream(data);
 		print(new Stream(byteArrayInputStream)); 
 	}
