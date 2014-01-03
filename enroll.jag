@@ -22,9 +22,14 @@
 	} else {
 		
 		var data = iosMdm.generateMobileConfigurations(username);
-		
-		db.query("INSERT INTO device_pending (user_id, byod, token) VALUES(?, ?, ?)", username, byod, username);
-		
+
+        var recordPresent = db.query("SELECT count(*) as count FROM device_pending WHERE token = ?", username);
+        if (recordPresent) {
+            db.query("UPDATE INTO device_pending SET user_id = ?, byod = ? WHERE token = ?", username, byod, username);
+        } else {
+            db.query("INSERT INTO device_pending (user_id, byod, token) VALUES(?, ?, ?)", username, byod, username);
+        }
+
 		if(data == null) {
 			response.sendRedirect("mdmerror.jag");
 		}
