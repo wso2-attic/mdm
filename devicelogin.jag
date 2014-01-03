@@ -48,9 +48,10 @@
 		%></p>
 
 		 <button type="button" class="btn btn-lg btn-primary btn-block" onclick="onClickSubmit()">I Accept</button>
+	     <input name="tenantDomain" id="domain" type="hidden" value="<% print(request.getParameter('tenantDomain')); %>" />
 	     <input name="username" id="uname" type="hidden" value="<% print(request.getParameter('username')); %>" />
-	     <input name="password" id="password" type="hidden" value="<% print(request.getParameter('password')); %>" />  
-	     <input name="byod" type="hidden" value="1" />  
+	     <input name="password" id="password" type="hidden" value="<% print(request.getParameter('password')); %>" />
+         <input name="byod" type="hidden" value="1" />
 	 </form>
      </div>
      

@@ -351,7 +351,36 @@ var user = (function () {
             log.info("end");
 			var devices = db.query("SELECT * FROM devices WHERE user_id= ? AND tenant_id = ?", String(obj.userid), common.getTenantID());
 			return devices;
-		}
+		},
+
+        //To get the tenant name using the tenant domain
+        getTenantNameByUser: function() {
+            var carbon = require('carbon');
+            log.debug("Username >>>>> " + arguments[0]);
+            var tenantUser = carbon.server.tenantUser(arguments[0]);
+            var tenantDomain = tenantUser.domain;
+            log.debug("Domain >>>>>>> " + tenantDomain);
+
+            return this.getTenantName(tenantDomain);
+        },
+
+        getTenantNameFromID: function (){
+            var ctx = {};
+            ctx.tenantId = arguments[0];
+            var tenantDomain = carbon.server.tenantDomain(ctx);
+            log.debug("Domain >>>>>>> " + tenantDomain);
+
+            return this.getTenantName(tenantDomain);
+        },
+
+        getTenantName: function() {
+            try {
+                var tenantConfig = require('/config/tenants/' + arguments[0] + '.json');
+                return tenantConfig.name;
+            } catch(e) {
+                return "WSO2";
+            }
+        }
 
 
     };
