@@ -23,7 +23,7 @@
 		
 		var data = iosMdm.generateMobileConfigurations(username);
 
-        var recordPresent = db.query("SELECT count(*) as count FROM device_pending WHERE token = ?", username);
+        var recordPresent = db.query("SELECT id FROM device_pending WHERE token = ?", username);
         log.debug(recordPresent);
         if (recordPresent) {
             log.debug("1");
