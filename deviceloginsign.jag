@@ -35,8 +35,8 @@
 
       <form class="form-signin" action="enroll" id="authform" method="post" >
         <h2 class="form-signin-heading">Please sign in</h2>
-        <input name="username" id="uname" type="text" class="form-control" placeholder="Email address" autofocus value="admin@admin.com">
-        <input name="password" id="password" type="password" class="form-control" placeholder="Password" value="admin">       
+        <input name="username" id="uname" type="text" class="form-control" placeholder="Email address">
+        <input name="password" id="password" type="password" class="form-control" placeholder="Password">
         <div style="padding-bottom: 20px; padding-top: 10px">
         <input name="byod" id="byod" type="radio" value="0" /> Company Owned
         <input name="byod" type="radio" value="1" checked="checked"  /> Personal Device        

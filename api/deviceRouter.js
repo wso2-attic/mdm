@@ -34,8 +34,8 @@ var device = (function () {
             } else if (userAgent.indexOf("iPod") > 0){
                 response.sendRedirect(configs.device.ios_location);
             } else {
-                //response.sendRedirect("../invaliddevice");
-                response.sendRedirect(configs.device.ios_location);
+                response.sendRedirect("../invaliddevice");
+                //response.sendRedirect(configs.device.ios_location);
             }
 
 		});
