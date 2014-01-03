@@ -24,9 +24,12 @@
 		var data = iosMdm.generateMobileConfigurations(username);
 
         var recordPresent = db.query("SELECT count(*) as count FROM device_pending WHERE token = ?", username);
+        log.debug(recordPresent);
         if (recordPresent) {
-            db.query("UPDATE INTO device_pending SET user_id = ?, byod = ? WHERE token = ?", username, byod, username);
+            log.debug("1");
+            db.query("UPDATE device_pending SET user_id = ?, byod = ? WHERE token = ?", username, byod, username);
         } else {
+            log.debug("2");
             db.query("INSERT INTO device_pending (user_id, byod, token) VALUES(?, ?, ?)", username, byod, username);
         }
 
