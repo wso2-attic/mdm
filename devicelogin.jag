@@ -35,8 +35,8 @@
 
      <div class="container">
 	 <form class="form-signin" action="enroll" method="post" id="authform" >
-		<h3>License Agreement</h3>
-		<p><%
+		<h3 class="text-center">License Agreement</h3>
+		<p style="text-align:justify;"><%
 var getResource =  function(name){
     var f = new File(name);
     f.open("r");
