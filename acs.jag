@@ -77,12 +77,6 @@
 								session.put("mdmConsoleUserLogin", "true");
 								session.put("mdmConsoleUser", userFeed);
 
-                                log.info("test policy moduleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-                                var entitlement = require('policy').entitlement;
-
-                                session.put("entitlement",entitlement);
-                                session.get("entitlement").login();
-
                                 var groupModule = require('/modules/group.js').group;
                                 var group = new groupModule(db);
                                 if(!group.roleExists("Internal/mdmadmin")){

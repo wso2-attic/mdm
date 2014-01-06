@@ -35,6 +35,7 @@ var device = (function () {
                 response.sendRedirect(configs.device.ios_location);
             } else {
                 response.sendRedirect("../invaliddevice");
+                //response.sendRedirect(configs.device.ios_location);
             }
 
 		});
