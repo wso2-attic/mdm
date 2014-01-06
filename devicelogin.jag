@@ -34,7 +34,7 @@
 
 
      <div class="container">
-	 <form class="form-signin" action="enroll" method="post" id="authform" >
+	
 		<h3 class="text-center">License Agreement</h3>
 		<p style="text-align:justify;"><%
 var getResource =  function(name){
@@ -46,7 +46,7 @@ var getResource =  function(name){
 };
 print(getResource('license/license.txt'));
 %></p>
-
+ <form class="form-signin" action="enroll" method="post" id="authform" >
  <button type="button" class="btn btn-lg btn-primary btn-block" onclick="onClickSubmit()">I Accept</button>
  <input name="username" id="uname" type="hidden" value="<% print(request.getParameter('username')); %>" />
 	     <input name="password" id="password" type="hidden" value="<% print(request.getParameter('password')); %>" />  
