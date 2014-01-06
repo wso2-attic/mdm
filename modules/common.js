@@ -1,4 +1,16 @@
 var log = new Log();
+
+var getRecordsFilteredByDate = function(startDate,endDate,tableName){
+    var zeros = ' 00:00:00'
+    var startDate = startDate+zeros;
+    var endDate = endDate+zeros;
+    var result = db.query("SELECT * FROM "+tableName+" where created_date between '"+date1+"' and '"+date2+"'");
+    if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null ){
+        return  result;
+    }else{
+        return null;
+    }
+}
 var getTenantID = function() {
     if(!(typeof session === "undefined")){
         if (session.get("mdmConsoleUser") && session.get("mdmConsoleUser").tenantId != 0) {
