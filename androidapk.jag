@@ -34,7 +34,7 @@
 
 
      <div class="container">
-     		<p class="text-center">If you are not registered with WSO2Mobile MDM please download Android Agent</p>
+     		<p class="text-center">If you are not registered with WSO2Mobile MDM please download the Android Agent. IF you have already download the Android Agent please register yourself.</p>
 	 	 <button type="button" class="btn btn-lg btn-primary btn-block">Download Android Agent</button>
 	 </div>
 
