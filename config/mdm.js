@@ -16,9 +16,9 @@ var config;
             } else if ((typeof value === 'string') && value.indexOf('%http.ip%') > -1) {
                 return value.replace('%http.ip%', 'http://' + localIP + ':' + httpPort);
             }else if ((typeof value === 'string') && value.indexOf('%https.host%') > -1) {
-                return value.replace('%https.host%', 'http://' + host + ':' + httpPort);
+                return value.replace('%https.host%', 'https://' + host);
             }else if ((typeof value === 'string') && value.indexOf('%http.host%') > -1) {
-                return value.replace('%http.host%', 'http://' + host + ':' + httpPort);
+                return value.replace('%http.host%', 'http://' + host);
             }
             return  value;
         });
