@@ -378,7 +378,8 @@ var user = (function () {
                 var tenantConfig = require('/config/tenants/' + arguments[0] + '.json');
                 return tenantConfig.name;
             } catch(e) {
-                return "WSO2";
+                var tenantConfig = require('/config/tenants/carbon.super.json');
+                return tenantConfig.name;;
             }
         }
 
