@@ -386,10 +386,10 @@ var user = (function () {
 
         getTenantName: function() {
             try {
-                var tenantConfig = require('/config/tenants/' + arguments[0] + '.json');
+                var tenantConfig = require('/config/tenants/' + arguments[0] + '/config.json');
                 return tenantConfig.name;
             } catch(e) {
-                var tenantConfig = require('/config/tenants/carbon.super.json');
+                var tenantConfig = require('/config/tenants/default/config.json');
                 return tenantConfig.name;;
             }
         }
