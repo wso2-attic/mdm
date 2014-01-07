@@ -1,14 +1,24 @@
 var appConfig = getAppConfig();
 var apiConfig = getApiConfig();
-var uiConfig = getUIConfig();
+
+var uiConfig = getUIConfig('default');
+
+$.get('/mdm/console/info').done(function(data) {
+			tenantDomain = JSON.parse(data).tenantDomain;
+			var uiConfig = getUIConfig('default');
+		}).fail(function() {
+
+});
+
+
 
 function getAppConfig(){
 	var appConfig = loadTextFileAjaxSync("/mdm/config/config.json", "application/json");	
 	return JSON.parse(appConfig);
 }
 
-function getUIConfig(){
-	var uiConfig = loadTextFileAjaxSync("/mdm/config/ui.json", "application/json");	
+function getUIConfig(tenantDomain){
+	var uiConfig = loadTextFileAjaxSync("/mdm/config/tenants/" + tenantDomain +  "/ui.json", "application/json");	
 	return JSON.parse(uiConfig);
 }
 
@@ -58,6 +68,7 @@ getServiceURLs = function(item){
 	var tenantId = null;
 	$.get('/mdm/console/info').done(function(data) {
 			tenantId = JSON.parse(data).tenantId;
+			
 		}).fail(function() {
 
 	});

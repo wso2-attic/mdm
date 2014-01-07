@@ -7,12 +7,12 @@ var log = new Log();
 var userModule = require('/modules/user.js').user;
 var userM = new userModule(db);
 
-var ui = require('../config/ui.json');
+
 
 if(session.get("mdmConsoleUserLogin") != null){
 	var userSession = session.get("mdmConsoleUser");
-	var tenatDomain = userM.getTenantDomainFromID(userSession.tenantDomain);
-	print(tenatDomain);
+	var tenatDomain = userSession.tenantDomain;
+	ui = require('../config/tenants/' + tenatDomain + '/ui.json');
 }
 
 
