@@ -24,9 +24,9 @@ context = function() {
 		resourcePath: uiConfig.MDM_UI_URI + "themes/" + uiConfig.MDM_THEME + "/img/",
 		serverURL: uiConfig.MDM_API_URI,
 		appsImageService: uiConfig.APPS_IMAGE_SERVICE
-	}
+	};
 	return appDefault;
-}
+};
 
 
 
@@ -71,7 +71,7 @@ getServiceURLs = function(item){
 		return serverURL + String.format.apply(this, arguments);
 	}	
 
-}
+};
 
 
 
@@ -86,6 +86,9 @@ String.format = function() {
 }
 
 
+$('.datepicker').datepickerbt({
+				format: 'dd-mm-yyyy'
+			});
 
 
 $.noty.defaults = {

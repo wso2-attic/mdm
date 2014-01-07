@@ -1,9 +1,9 @@
 /* =========================================================
- * bootstrap-datepicker.js
- * Repo: https://github.com/eternicode/bootstrap-datepicker/
- * Demo: http://eternicode.github.io/bootstrap-datepicker/
- * Docs: http://bootstrap-datepicker.readthedocs.org/
- * Forked from http://www.eyecon.ro/bootstrap-datepicker
+ * bootstrap-datepickerbt.js
+ * Repo: https://github.com/eternicode/bootstrap-datepickerbt/
+ * Demo: http://eternicode.github.io/bootstrap-datepickerbt/
+ * Docs: http://bootstrap-datepickerbt.readthedocs.org/
+ * Forked from http://www.eyecon.ro/bootstrap-datepickerbt
  * =========================================================
  * Started by Stefan Petre; improvements by Andrew Rowls + contributors
  *
@@ -35,7 +35,7 @@
 
 	// Picker object
 
-	var Datepicker = function(element, options) {
+	var DatepickerBt = function(element, options) {
 		var that = this;
 
 		this._process_options(options);
@@ -53,13 +53,13 @@
 		this._attachEvents();
 
 		if(this.isInline) {
-			this.picker.addClass('datepicker-inline').appendTo(this.element);
+			this.picker.addClass('datepickerbt-inline').appendTo(this.element);
 		} else {
-			this.picker.addClass('datepicker-dropdown dropdown-menu');
+			this.picker.addClass('datepickerbt-dropdown dropdown-menu');
 		}
 
 		if (this.o.rtl){
-			this.picker.addClass('datepicker-rtl');
+			this.picker.addClass('datepickerbt-rtl');
 			this.picker.find('.prev i, .next i')
 						.toggleClass('icon-arrow-left icon-arrow-right');
 		}
@@ -92,8 +92,8 @@
 		}
 	};
 
-	Datepicker.prototype = {
-		constructor: Datepicker,
+	DatepickerBt.prototype = {
+		constructor: DatepickerBt,
 
 		_process_options: function(opts){
 			// Store raw options for reference
@@ -242,7 +242,7 @@
 					}]
 				];
 			}
-			else if (this.element.is('div')) {  // inline datepicker
+			else if (this.element.is('div')) {  // inline datepickerbt
 				this.isInline = true;
 			}
 			else {
@@ -262,7 +262,7 @@
 				}],
 				[$(document), {
 					'mousedown touchstart': $.proxy(function (e) {
-						// Clicked outside the datepicker, hide it
+						// Clicked outside the datepickerbt, hide it
 						if (!(
 							this.element.is(e.target) ||
 							this.element.find(e.target).length ||
@@ -340,7 +340,7 @@
 			this._detachEvents();
 			this._detachSecondaryEvents();
 			this.picker.remove();
-			delete this.element.data().datepicker;
+			delete this.element.data().datepickerbt;
 			if (!this.isInput) {
 				delete this.element.data().date;
 			}
@@ -430,12 +430,12 @@
 				top = offset.top;
 
 			this.picker.removeClass(
-				'datepicker-orient-top datepicker-orient-bottom '+
-				'datepicker-orient-right datepicker-orient-left'
+				'datepickerbt-orient-top datepickerbt-orient-bottom '+
+				'datepickerbt-orient-right datepickerbt-orient-left'
 			);
 
 			if (this.o.orientation.x !== 'auto') {
-				this.picker.addClass('datepicker-orient-' + this.o.orientation.x);
+				this.picker.addClass('datepickerbt-orient-' + this.o.orientation.x);
 				if (this.o.orientation.x === 'right')
 					left -= calendarWidth - width;
 			}
@@ -443,7 +443,7 @@
 			// edge, fudge it sideways
 			else {
 				// Default to left
-				this.picker.addClass('datepicker-orient-left');
+				this.picker.addClass('datepickerbt-orient-left');
 				if (offset.left < 0)
 					left -= offset.left - visualPadding;
 				else if (offset.left + calendarWidth > windowWidth)
@@ -462,7 +462,7 @@
 				else
 					yorient = 'bottom';
 			}
-			this.picker.addClass('datepicker-orient-' + yorient);
+			this.picker.addClass('datepickerbt-orient-' + yorient);
 			if (yorient === 'top')
 				top += height;
 			else
@@ -524,13 +524,13 @@
 			if(this.o.calendarWeeks){
 				var cell = '<th class="cw">&nbsp;</th>';
 				html += cell;
-				this.picker.find('.datepicker-days thead tr:first-child').prepend(cell);
+				this.picker.find('.datepickerbt-days thead tr:first-child').prepend(cell);
 			}
 			while (dowCnt < this.o.weekStart + 7) {
 				html += '<th class="dow">'+dates[this.o.language].daysMin[(dowCnt++)%7]+'</th>';
 			}
 			html += '</tr>';
-			this.picker.find('.datepicker-days thead').append(html);
+			this.picker.find('.datepickerbt-days thead').append(html);
 		},
 
 		fillMonths: function(){
@@ -539,7 +539,7 @@
 			while (i < 12) {
 				html += '<span class="month">'+dates[this.o.language].monthsShort[i++]+'</span>';
 			}
-			this.picker.find('.datepicker-months td').html(html);
+			this.picker.find('.datepickerbt-months td').html(html);
 		},
 
 		setRange: function(range){
@@ -596,7 +596,7 @@
 				endMonth = this.o.endDate !== Infinity ? this.o.endDate.getUTCMonth() : Infinity,
 				currentDate = this.date && this.date.valueOf(),
 				tooltip;
-			this.picker.find('.datepicker-days thead th.datepicker-switch')
+			this.picker.find('.datepickerbt-days thead th.datepickerbt-switch')
 						.text(dates[this.o.language].months[month]+' '+year);
 			this.picker.find('tfoot th.today')
 						.text(dates[this.o.language].today)
@@ -660,10 +660,10 @@
 				}
 				prevMonth.setUTCDate(prevMonth.getUTCDate()+1);
 			}
-			this.picker.find('.datepicker-days tbody').empty().append(html.join(''));
+			this.picker.find('.datepickerbt-days tbody').empty().append(html.join(''));
 			var currentYear = this.date && this.date.getUTCFullYear();
 
-			var months = this.picker.find('.datepicker-months')
+			var months = this.picker.find('.datepickerbt-months')
 						.find('th:eq(1)')
 							.text(year)
 							.end()
@@ -683,7 +683,7 @@
 
 			html = '';
 			year = parseInt(year/10, 10) * 10;
-			var yearCont = this.picker.find('.datepicker-years')
+			var yearCont = this.picker.find('.datepickerbt-years')
 								.find('th:eq(1)')
 									.text(year + '-' + (year + 9))
 									.end()
@@ -738,7 +738,7 @@
 				switch(target[0].nodeName.toLowerCase()) {
 					case 'th':
 						switch(target[0].className) {
-							case 'datepicker-switch':
+							case 'datepickerbt-switch':
 								this.showMode(1);
 								break;
 							case 'prev':
@@ -1000,15 +1000,15 @@
 			}
 			/*
 				vitalets: fixing bug of very special conditions:
-				jquery 1.7.1 + webkit + show inline datepicker in bootstrap popover.
-				Method show() does not set display css correctly and datepicker is not shown.
+				jquery 1.7.1 + webkit + show inline datepickerbt in bootstrap popover.
+				Method show() does not set display css correctly and datepickerbt is not shown.
 				Changed to .css('display', 'block') solve the problem.
 				See https://github.com/vitalets/x-editable/issues/37
 
 				In jquery 1.7.2+ everything works fine.
 			*/
-			//this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
-			this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).css('display', 'block');
+			//this.picker.find('>div').hide().filter('.datepickerbt-'+DPGlobal.modes[this.viewMode].clsName).show();
+			this.picker.find('>div').hide().filter('.datepickerbt-'+DPGlobal.modes[this.viewMode].clsName).css('display', 'block');
 			this.updateNavArrows();
 		}
 	};
@@ -1019,10 +1019,10 @@
 		delete options.inputs;
 
 		$(this.inputs)
-			.datepicker(options)
+			.datepickerbt(options)
 			.bind('changeDate', $.proxy(this.dateUpdated, this));
 
-		this.pickers = $.map(this.inputs, function(i){ return $(i).data('datepicker'); });
+		this.pickers = $.map(this.inputs, function(i){ return $(i).data('datepickerbt'); });
 		this.updateDates();
 	};
 	DateRangePicker.prototype = {
@@ -1037,7 +1037,7 @@
 			});
 		},
 		dateUpdated: function(e){
-			var dp = $(e.target).data('datepicker'),
+			var dp = $(e.target).data('datepickerbt'),
 				new_date = dp.getUTCDate(),
 				i = $.inArray(e.target, this.inputs),
 				l = this.inputs.length;
@@ -1059,7 +1059,7 @@
 		},
 		remove: function(){
 			$.map(this.pickers, function(p){ p.remove(); });
-			delete this.element.data().datepicker;
+			delete this.element.data().datepickerbt;
 		}
 	};
 
@@ -1095,15 +1095,15 @@
 		return out;
 	}
 
-	var old = $.fn.datepicker;
-	$.fn.datepicker = function ( option ) {
+	var old = $.fn.datepickerbt;
+	$.fn.datepickerbt = function ( option ) {
 		var args = Array.apply(null, arguments);
 		args.shift();
 		var internal_return,
 			this_return;
 		this.each(function () {
 			var $this = $(this),
-				data = $this.data('datepicker'),
+				data = $this.data('datepickerbt'),
 				options = typeof option == 'object' && option;
 			if (!data) {
 				var elopts = opts_from_el(this, 'date'),
@@ -1116,10 +1116,10 @@
 					var ropts = {
 						inputs: opts.inputs || $this.find('input').toArray()
 					};
-					$this.data('datepicker', (data = new DateRangePicker(this, $.extend(opts, ropts))));
+					$this.data('datepickerbt', (data = new DateRangePicker(this, $.extend(opts, ropts))));
 				}
 				else{
-					$this.data('datepicker', (data = new Datepicker(this, opts)));
+					$this.data('datepickerbt', (data = new DatepickerBt(this, opts)));
 				}
 			}
 			if (typeof option == 'string' && typeof data[option] == 'function') {
@@ -1134,7 +1134,7 @@
 			return this;
 	};
 
-	var defaults = $.fn.datepicker.defaults = {
+	var defaults = $.fn.datepickerbt.defaults = {
 		autoclose: false,
 		beforeShowDay: $.noop,
 		calendarWeeks: false,
@@ -1154,13 +1154,13 @@
 		todayHighlight: false,
 		weekStart: 0
 	};
-	var locale_opts = $.fn.datepicker.locale_opts = [
+	var locale_opts = $.fn.datepickerbt.locale_opts = [
 		'format',
 		'rtl',
 		'weekStart'
 	];
-	$.fn.datepicker.Constructor = Datepicker;
-	var dates = $.fn.datepicker.dates = {
+	$.fn.datepickerbt.Constructor = DatepickerBt;
+	var dates = $.fn.datepickerbt.dates = {
 		en: {
 			days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
 			daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -1224,13 +1224,13 @@
 							date.setUTCDate(date.getUTCDate() + dir);
 							break;
 						case 'm':
-							date = Datepicker.prototype.moveMonth.call(Datepicker.prototype, date, dir);
+							date = DatepickerBt.prototype.moveMonth.call(DatepickerBt.prototype, date, dir);
 							break;
 						case 'w':
 							date.setUTCDate(date.getUTCDate() + dir * 7);
 							break;
 						case 'y':
-							date = Datepicker.prototype.moveYear.call(Datepicker.prototype, date, dir);
+							date = DatepickerBt.prototype.moveYear.call(DatepickerBt.prototype, date, dir);
 							break;
 					}
 				}
@@ -1333,29 +1333,29 @@
 		headTemplate: '<thead>'+
 							'<tr>'+
 								'<th class="prev">&laquo;</th>'+
-								'<th colspan="5" class="datepicker-switch"></th>'+
+								'<th colspan="5" class="datepickerbt-switch"></th>'+
 								'<th class="next">&raquo;</th>'+
 							'</tr>'+
 						'</thead>',
 		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',
 		footTemplate: '<tfoot><tr><th colspan="7" class="today"></th></tr><tr><th colspan="7" class="clear"></th></tr></tfoot>'
 	};
-	DPGlobal.template = '<div class="datepicker">'+
-							'<div class="datepicker-days">'+
+	DPGlobal.template = '<div class="datepickerbt">'+
+							'<div class="datepickerbt-days">'+
 								'<table class=" table-condensed">'+
 									DPGlobal.headTemplate+
 									'<tbody></tbody>'+
 									DPGlobal.footTemplate+
 								'</table>'+
 							'</div>'+
-							'<div class="datepicker-months">'+
+							'<div class="datepickerbt-months">'+
 								'<table class="table-condensed">'+
 									DPGlobal.headTemplate+
 									DPGlobal.contTemplate+
 									DPGlobal.footTemplate+
 								'</table>'+
 							'</div>'+
-							'<div class="datepicker-years">'+
+							'<div class="datepickerbt-years">'+
 								'<table class="table-condensed">'+
 									DPGlobal.headTemplate+
 									DPGlobal.contTemplate+
@@ -1364,14 +1364,14 @@
 							'</div>'+
 						'</div>';
 
-	$.fn.datepicker.DPGlobal = DPGlobal;
+	$.fn.datepickerbt.DPGlobal = DPGlobal;
 
 
 	/* DATEPICKER NO CONFLICT
 	* =================== */
 
-	$.fn.datepicker.noConflict = function(){
-		$.fn.datepicker = old;
+	$.fn.datepickerbt.noConflict = function(){
+		$.fn.datepickerbt = old;
 		return this;
 	};
 
@@ -1380,18 +1380,18 @@
 	* ================== */
 
 	$(document).on(
-		'focus.datepicker.data-api click.datepicker.data-api',
-		'[data-provide="datepicker"]',
+		'focus.datepickerbt.data-api click.datepickerbt.data-api',
+		'[data-provide="datepickerbt"]',
 		function(e){
 			var $this = $(this);
-			if ($this.data('datepicker')) return;
+			if ($this.data('datepickerbt')) return;
 			e.preventDefault();
 			// component click requires us to explicitly show it
-			$this.datepicker('show');
+			$this.datepickerbt('show');
 		}
 	);
 	$(function(){
-		$('[data-provide="datepicker-inline"]').datepicker();
+		$('[data-provide="datepickerbt-inline"]').datepickerbt();
 	});
 
 }( window.jQuery ));
