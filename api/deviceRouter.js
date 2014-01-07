@@ -157,10 +157,10 @@ var device = (function () {
 		});
 
         router.get('devices/license', function(ctx){
-            var result = device.testingService();
-//            var result = device.getLicenseAgreement(ctx);
-//           	print(result);
-//            response.status = 200;
+            //var result = device.testingService();
+            var result = device.getLicenseAgreement(ctx);
+           	print(result);
+            response.status = 200;
         });
 
         router.get('devices/sender_id', function(ctx){

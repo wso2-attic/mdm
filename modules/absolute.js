@@ -1,4 +1,4 @@
-var Handle = require("handlebars").Handlebars;
+var Handle = require("/modules/handlebars.js").Handlebars;
 var appRedirect = "App Redirected";
 var mvc = (function () {
 	var configs= {
