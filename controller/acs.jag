@@ -88,7 +88,7 @@
 								userFeed.firstName = objUser["firstName"];
 								userFeed.lastName = objUser["lastName"];
 								userFeed.mobile = objUser["mobile"];
-								userFeed.tenentDomain = user.getTenantDomainFromID(stringify(objUser["tenantId"]));
+								userFeed.tenantDomain = user.getTenantDomainFromID(stringify(objUser["tenantId"]));
 	                            log.info("TestTTTTTTTTTT"+objUser["roles"]);
 								var parsedRoles = parse(objUser["roles"]);
 								userFeed.roles = parsedRoles;

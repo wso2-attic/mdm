@@ -11,7 +11,7 @@ var ui = require('../config/ui.json');
 
 if(session.get("mdmConsoleUserLogin") != null){
 	var userSession = session.get("mdmConsoleUser");
-	var tenetDomain = userM.getTenantDomainFromID(userSession.tenantId);
+	var tenatDomain = userM.getTenantDomainFromID(userSession.tenatDomain);
 	print(tenetDomain);
 }
 
