@@ -111,8 +111,16 @@ var mdm_reports = (function () {
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
-            var result = db.query("SELECT devices.user_id,platforms.name, devices.os_version, devices.created_date, devices.status  FROM devices,platforms where platforms.type ="+ctx.platformType+" && platforms.id = devices.platform_id  &&  devices.created_date between '"+startDate+"' and '"+endDate+"' and  devices.tenant_id = "+common.getTenantID());
+            var result = [];
+            if(typeof ctx.platformType !== 'undefined' && ctx.platformType !== 0){
+                result = db.query("SELECT devices.user_id, devices.properties, platforms.name as platform_name, devices.os_version, devices.created_date, devices.status  FROM devices,platforms where platforms.type ="+ctx.platformType+" && platforms.id = devices.platform_id  &&  devices.created_date between '"+startDate+"' and '"+endDate+"' and  devices.tenant_id = "+common.getTenantID());
+            }else{
+                result = db.query("SELECT devices.user_id, devices.properties, platforms.name as platform_name, devices.os_version, devices.created_date, devices.status  FROM devices, platforms where devices.created_date between '"+startDate+"' and '"+endDate+"' and  devices.tenant_id = "+common.getTenantID()+"&& devices.platform_id = platforms.id");
+            }
             if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null ){
+                for(var i=0; i< result.length;i++){
+                    result[i].imei = parse(result[i].properties).imei;
+                }
                 return  result;
             }else{
                 return null;
@@ -122,7 +130,7 @@ var mdm_reports = (function () {
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
-            var result = db.query("select * from notifications where feature_code = '501P' && devide_id ="+ctx.deviceID+"&& received_date between '"+startDate+"' and '"+endDate+"' and tenent_id = "+common.getTenantID());
+            var result = db.query("select * from notifications where feature_code = '501P' && devices_id ="+ctx.deviceID+"&& received_date between '"+startDate+"' and '"+endDate+"' and tenent_id = "+common.getTenantID());
             var stateChangesArray = getComplianceStateChanges(result);
             return stateChangesArray;
         }

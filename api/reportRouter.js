@@ -5,7 +5,7 @@ var reports = (function () {
         var report = new reportModule(db);
         router.get('mdm_reports/devices/registration', function(ctx){
             var reports = report.getDevicesByRegisteredDate(ctx);
-            if(reports[0]!=null){
+            if(typeof reports !== 'undefined' && reports !== null && typeof reports[0]!== 'undefined' && reports[0]!== null){
                 response.content = reports;
                 response.status = 200;
             }else{
