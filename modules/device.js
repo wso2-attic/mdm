@@ -98,6 +98,7 @@ var device = (function () {
         }
 
         var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",category,platformName, common.getTenantIDFromEmail(username));
+        log.info(ppresult);
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
             var policyPayLoad = parse(ppresult[0].data);
             obj.payLoad = policyPayLoad;
@@ -575,6 +576,7 @@ var device = (function () {
                 this.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
                 this.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
                 var mdmPolicy = getPolicyPayLoad(deviceId,1);
+                log.info("Policy Payload :"+mdmPolicy);
                 if(mdmPolicy != undefined && mdmPolicy != null){
                     if(mdmPolicy.payLoad != undefined && mdmPolicy.payLoad != null && mdmPolicy.type != undefined && mdmPolicy.type != null){
                         var obj = {};
