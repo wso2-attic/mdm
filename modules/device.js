@@ -456,14 +456,7 @@ var device = (function () {
         constructor: module,
         <!-- common functions -->
         getLicenseAgreement: function(ctx){
-            var path = "/license/license.txt";
-            var file = new File(path);
-            file.open("r");
-            var message = "";
-            message = file.readAll();
-            // print(message);
-            file.close();
-            return message;
+            return (user.getLicenseByDomain(ctx.domain));
         },
         sendToDevice: function(ctx){
         	var tenantID = common.getTenantID();
