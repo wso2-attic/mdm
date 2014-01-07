@@ -40,9 +40,24 @@
     </div>
 
   	<%
-var username = request.getParameter("username");
-db.query("DELETE FROM device_pending WHERE user_id = ?", username);
-%>
+	    var username = request.getParameter("username");
+		db.query("DELETE FROM device_pending WHERE user_id = ?", username);
+	
+	%>
+  	
+    <script>
+		function openAgentApp() {
+			setTimeout(function(){ window.location.href = "wso2agent://" + getParameterByName("udid"); }, 2000);			    
+		}
+		
+		function getParameterByName(name) {
+		    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+		    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		        results = regex.exec(location.search);
+		    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+	</script>
 
-</body>
+  </body>
+
 </html>

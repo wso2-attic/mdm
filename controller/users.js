@@ -15,28 +15,11 @@ var notification = new notificationModule(db);
 
 configuration = function(appController) {
 	context = appController.context();
-	
-	try {
-        var users = user.getUsersByType({type:context.contextData.user.role});
-        log.info("Users >>>>>>>"+stringify(users));
-	} catch(e) {
-		log.info(e);
-		var users = [];
-	}
-	try {
-		var groups = group.getAllGroups({});
-	} catch(e) {
-		log.info(e);
-		var groups = [];
-	}
-	
 	context.title = context.title + " | Configuration";
 	context.page = "configuration";
 	context.jsFile = "users/configuration.js";
 	context.data = {
-		configOption : "users",
-		users : users,
-		groups : groups
+		configOption : "users"
 	};
 	return context;
 };
