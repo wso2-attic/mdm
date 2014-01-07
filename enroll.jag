@@ -12,9 +12,17 @@
     var tenantDomain = request.getParameter("tenantDomain").toLowerCase();
 	
 	var ctx = {};
-	ctx.username = username + "@" + tenantDomain;
+	// tenantDomain comes as null string
+	if(tenantDomain!='null'){
+		log.info('bb');
+		ctx.username = username + "@" + tenantDomain;
+		ctx.userid = username + "@" + tenantDomain;
+	}else{
+		ctx.username = username;
+		ctx.userid = username;
+	}
 	ctx.password = password;
-    ctx.userid = username + "@" + tenantDomain;
+    
 	
 	var objUser = user.authenticate(ctx);
 	
