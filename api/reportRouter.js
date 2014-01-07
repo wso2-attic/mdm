@@ -20,5 +20,3 @@ var mdm_reports = (function () {
     // return module
     return module;
 })();
-
-
