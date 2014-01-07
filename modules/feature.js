@@ -114,35 +114,3 @@ var feature = (function () {
     };
     return module;
 })();
-
-var treeData = [
-    {title: "Operations", value: "OPERATIONS", isFolder: true, key: "1",
-        children: [
-            {title: "Screen Lock", value: "LOCK"},
-            {title: "Wipe", value: "WIPE"},
-            {title: "Clear Password", value: "CLEARPASSWORD"},
-            {title: "Camera", value: "CAMERA"},
-            {title: "Mute", value: "MUTE"},
-            {title: "Encrypt", value: "ENCRYPT"}
-        ]
-    },
-    {title: "Configurations", value: "CONFIGURATIONS", isFolder: true, key: "1",
-        children: [
-
-            {title: "Passcode Policy", value: "PASSCODEPOLICY"},
-            {title: "Email Configuration", value: "EMAIL"},
-            {title: "Google Calendar", value: "GOOGLECALANDAR"},
-            {title: "LDAP Configuration", value: "LDAP"}
-        ]
-    },
-    {title: "Information", value: "INFORMATION", isFolder: true, key: "1",
-        children: [
-            {title: "Device Information", value: "INFO"},
-        ]
-    },
-    {title: "Messaging", value: "MESSAGING", isFolder: true, key: "1",
-        children: [
-            {title: "Messaging", value: "NOTIFICATION"}
-        ]
-    }
-];

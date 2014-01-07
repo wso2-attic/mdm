@@ -1,6 +1,6 @@
 <%
 (function(){
-    var dataConfi = require('config/mdm.js').config(),
+    var dataConfi = require('/config/mdm.js').config(),
             sso = require("sso"),
             process = require("process"),
             sessionId = session.getId(),
