@@ -10,9 +10,12 @@
             relayState = '/mdm',
             encodedSAMLAuthRequest = sso.client.getEncodedSAMLAuthRequest(dataConfi.ssoConfiguration.issuer),
             log = new Log();
-
-            postUrl = "https://" + host;
-
+    if(host=="localhost"){
+      var postUrl = "https://" + process.getProperty('carbon.local.ip') + ":" + process.getProperty('https.port');
+    }else{
+      var postUrl = "https://" + host;
+    }
+    log.info(postUrl);
     if (!session.get("mdmConsoleUserLogin")) {
         %>
 

@@ -815,15 +815,8 @@ var device = (function () {
                 tokenProperties["magicToken"] = ctx.magicToken;
 
                 // var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
-<<<<<<< HEAD
 
                 var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);  
-
-=======
-
-                var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);
-
->>>>>>> wso2dep
                 if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
                 	
                 	var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
