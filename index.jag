@@ -174,5 +174,4 @@ router.get('features', function(ctx){
 
 helpers.registerHelpers(mvc);
 mvc.route(request);
-
 %>

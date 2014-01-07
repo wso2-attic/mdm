@@ -67,7 +67,7 @@ logout = function(appController){
 	
 };
 
-dashboard = function(appController){		
+dashboard = function(appController){
 	context = appController.context();
 	context.title = context.title + " | Dashboard";	
 	context.jsFile= "console/dashboard.js";
