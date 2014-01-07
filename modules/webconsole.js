@@ -128,7 +128,7 @@ var webconsole = (function () {
             var totalDisplayRecords = 10;
 
             if(byod!= undefined && byod != null && byod != '' && platformId!= undefined && platformId != null && platformId != ''){
-                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices, platforms  where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && byod ="+byod+" && platform_id = "+platformId);
+                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices, platforms  where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && devices.tenant_id = "+common.getTenantID()+"byod ="+byod+" && platform_id = "+platformId);
                 log.info("TTT"+stringify(result[0].d));
                 var totalRecords = result.length;
                 var upperBound = (ctx.iDisplayStart+1)*totalDisplayRecords;
@@ -157,7 +157,7 @@ var webconsole = (function () {
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else if(byod!= undefined && byod != null && byod != '' ){
-                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && byod ="+byod);
+                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && devices.tenant_id = "+common.getTenantID()+" && byod ="+byod);
                 var totalRecords = result.length;
                 var upperBound = (ctx.iDisplayStart+1) *totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;
@@ -185,7 +185,7 @@ var webconsole = (function () {
                 return finalObj;
             }else if(platformId!= undefined && platformId != null && platformId != ''){
                 log.info("test platform"+platformId);
-                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && platform_id = "+platformId);
+                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && devices.tenant_id ="+common.getTenantID()+"&& platform_id = "+platformId);
 
                 var totalRecords = result.length;
                 log.info("totalDisplayRecords"+totalDisplayRecords);
@@ -217,7 +217,8 @@ var webconsole = (function () {
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else{
-                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date   from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%'");
+                log.info("test block");
+                result = db.query("select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date   from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%"+userId+"%' && devices.tenant_id ="+common.getTenantID());
                 var totalRecords = result.length;
                 var upperBound = (ctx.iDisplayStart+1)*totalDisplayRecords;
                 var lowerBound =  upperBound - totalDisplayRecords;

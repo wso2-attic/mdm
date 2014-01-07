@@ -1,24 +1,39 @@
 var log = new Log();
-var getTenantID = function() {
-	if(!(typeof session === "undefined")){
-		if (session.get("mdmConsoleUser") && session.get("mdmConsoleUser").tenantId != 0) {
-	        var tenantID = session.get("mdmConsoleUser").tenantId;
-	        return tenantID;
-		} else {
-		    return "-1234";
-		}
-	}	
-}
-var getTenantIDFromEmail = function(email){
-    var carbon = require('carbon');
-    var tenantUser = carbon.server.tenantUser(email);
-    return tenantUser.tenantId;
-}
 
+var getRecordsFilteredByDate = function(startDate,endDate,tableName){
+    var zeros = ' 00:00:00'
+    var startDate = startDate+zeros;
+    var endDate = endDate+zeros;
+    var result = db.query("SELECT * FROM "+tableName+" where created_date between '"+date1+"' and '"+date2+"'");
+    if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null ){
+        return  result;
+    }else{
+        return null;
+    }
+}
+var getTenantID = function() {
+    if(!(typeof session === "undefined")){
+        if (session.get("mdmConsoleUser") && session.get("mdmConsoleUser").tenantId != 0) {
+            var tenantID = session.get("mdmConsoleUser").tenantId;
+            log.info("Tenant IDD :"+tenantID);
+            return tenantID;
+        } else {
+            return "-1234";
+        }
+    }
+}
 var getTenantIDFromEmail = function(email){
     var carbon = require('carbon');
     var tenantUser = carbon.server.tenantUser(email);
     return tenantUser.tenantId;
+}
+var getTenantIDFromDevice = function(deviceID){
+    var result = db.query("SELECT * FROM devices where id = ?",deviceID);
+    if(typeof (result) !== 'undefined' && result !== null && typeof (result[0]) !== 'undefined' && result[0] !== null){
+        return result[0].tenant_id;
+    }else{
+        return null;
+    }
 }
 var removePrivateRole = function(roleList){
     var roles = new Array();

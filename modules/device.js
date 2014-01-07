@@ -135,17 +135,13 @@ var device = (function () {
         return xmlRequest;
     }
     function checkPermission(role, deviceId, operationName, that){
-        log.info("checkPermission1");
         var entitlement = session.get("entitlement");
-        log.info("checkPermission2");
         var stub = entitlement.setEntitlementServiceParameters();
-        log.info("checkPermission3"+stub);
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
         log.info("d :"+decision.toString().substring(28,34));
         decision = decision.toString().substring(28,34);
         if(decision=="Permit"){
             return true;
-
         }else{
             return false;
         }
@@ -193,7 +189,7 @@ var device = (function () {
         var payLoad = stringify(ctx.data);
         var deviceId = ctx.deviceid;
         var operationName = ctx.operation;
-        var tenantID = common.getTenantID();
+        var tenantID = common.getTenantIDFromDevice(deviceId);
         var devices = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", deviceId+"");
         if(devices == undefined || devices == null || devices[0]== undefined || devices[0] == null ){
             return false;
@@ -262,7 +258,8 @@ var device = (function () {
 
     function sendMessageToIOSDevice(ctx){
         log.debug("CTX >>>>>"+stringify(ctx));
-        var tenantID = common.getTenantID();
+        var deviceID = ctx.deviceid;
+        var tenantID = common.getTenantIDFromDevice(deviceID);
         var message = stringify(ctx.data);
 
         //Filter the policy depending on Device
@@ -570,6 +567,7 @@ var device = (function () {
         },
         monitor:function(ctx){
             log.debug("monitor");
+
             var result = db.query("SELECT * from devices");
             for(var i=0; i<result.length; i++){
                 var deviceId = result[i].id;
@@ -619,7 +617,7 @@ var device = (function () {
         },
         registerAndroid: function(ctx){
             var log = new Log();
-            ctx.email = ctx.email+"@carbon.super";
+          //  ctx.email = ctx.email+"@carbon.super";
             var tenantUser = carbon.server.tenantUser(ctx.email);
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;
@@ -683,7 +681,7 @@ var device = (function () {
         
         <!-- iOS specific functions -->
         registerIOS: function(ctx){
-            var tenantUser = carbon.server.tenantUser(ctx.email);
+            var tenantUser = carbon.server.tenantUser(ctx.auth_token);
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;
 

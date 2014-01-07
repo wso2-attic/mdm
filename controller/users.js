@@ -123,10 +123,13 @@ devices = function(appController) {
 	}
 
 	try {
+        log.info("hi1 :"+userId);
 		var devices = user.getDevices({
 			"userid" : userId
 		});
+        log.info("hi22222"+devices);
 	} catch(e) {
+        log.info(e);
 		var devices = [];
 	}
 	

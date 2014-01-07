@@ -20,6 +20,7 @@ var notification = (function () {
 		});
 
 		router.post('notifications', function(ctx){
+            log.info("Android notification router");
 		    var result = notification.addNotification(ctx);
 		});
 

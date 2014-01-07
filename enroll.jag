@@ -8,11 +8,13 @@
 	 
 	var username = request.getParameter("username");
 	var password = request.getParameter("password");
-	var byod = request.getParameter("byod");
+    var byod = request.getParameter("byod");
+    var tenantDomain = request.getParameter("tenantDomain").toLowerCase();
 	
 	var ctx = {};
-	ctx.username = username;
+	ctx.username = username + "@" + tenantDomain;
 	ctx.password = password;
+    ctx.userid = username + "@" + tenantDomain;
 	
 	var objUser = user.authenticate(ctx);
 	
@@ -20,17 +22,17 @@
 		response.status=401;
 	    print("Authentication Failed");
 	} else {
-		
-		var data = iosMdm.generateMobileConfigurations(username);
 
-        var recordPresent = db.query("SELECT id FROM device_pending WHERE token = ?", username);
+        var tenant = user.getUser(ctx);
+		var data = iosMdm.generateMobileConfigurations(ctx.userid);
+
+		//db.query("INSERT INTO device_pending (user_id, tenant_id, byod, token) VALUES(?, ?, ?, ?)", username, tenant.tenantId, byod, ctx.userid);
+        var recordPresent = db.query("SELECT id FROM device_pending WHERE token = ?", ctx.userid);
         log.debug(recordPresent);
         if (recordPresent.length > 0) {
-            log.debug("1");
-            db.query("UPDATE device_pending SET user_id = ?, byod = ? WHERE token = ?", username, byod, username);
+            db.query("UPDATE device_pending SET user_id = ?, tenant_id= ?, byod = ? WHERE token = ?", username, tenant.tenantId, byod, ctx.userid);
         } else {
-            log.debug("2");
-            db.query("INSERT INTO device_pending (user_id, byod, token) VALUES(?, ?, ?)", username, byod, username);
+            db.query("INSERT INTO device_pending (user_id, tenant_id, byod, token) VALUES(?, ?, ?, ?)", username, tenant.tenantId, byod, ctx.userid);
         }
 
 		if(data == null) {
@@ -38,7 +40,6 @@
 		}
 	
 		response.contentType = "application/x-apple-aspen-config";
-		
 		var byteArrayInputStream = new Packages.java.io.ByteArrayInputStream(data);
 		print(new Stream(byteArrayInputStream)); 
 	}

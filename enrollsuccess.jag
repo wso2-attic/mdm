@@ -21,9 +21,24 @@
     <![endif]-->
   </head>
 
-  <body onLoad="openAgentApp()">
-  	You have successfully registered in MDM. 
-  	
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">WSO2Mobile MDM Registration</a>
+        </div>
+
+    </div>
+
+
+    <div class="container">
+        <h3>
+	        <br /><br />
+	        <p align = "center">You have successfully registered in MDM. </p>
+        </h3>
+    </div>
+
   	<%
 	    var username = request.getParameter("username");
 		db.query("DELETE FROM device_pending WHERE user_id = ?", username);
@@ -44,4 +59,5 @@
 	</script>
 
   </body>
+
 </html>
