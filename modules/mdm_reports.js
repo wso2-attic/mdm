@@ -105,10 +105,13 @@ var mdm_reports = (function () {
     module.prototype = {
         constructor: module,
         getDevicesByRegisteredDate:function(ctx){
+            ctx.startDate =  '2013-12-23';
+            ctx.endDate = '2013-12-24';
+            ctx.platformType = 1;
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
-            var result = db.query("SELECT * FROM devices where platform_id = %"+ctx.platformID+"% && created_date between '"+startDate+"' and '"+endDate+"' and tenent_id = "+common.getTenantID());
+            var result = db.query("SELECT devices.user_id,platforms.name, devices.os_version, devices.created_date, devices.status  FROM devices,platforms where platforms.type ="+ctx.platformType+" && platforms.id = devices.platform_id  &&  devices.created_date between '"+startDate+"' and '"+endDate+"' and  devices.tenant_id = "+common.getTenantID());
             if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null ){
                 return  result;
             }else{

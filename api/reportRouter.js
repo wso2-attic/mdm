@@ -1,4 +1,4 @@
-var mdm_reports = (function () {
+var reports = (function () {
 
     var module = function (db,router) {
         var reportModule = require('modules/mdm_reports.js').mdm_reports;
