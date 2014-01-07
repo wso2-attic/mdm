@@ -408,6 +408,15 @@ var user = (function () {
                 file.close();
             }
             return message;
+        },
+        
+        getTenantDomainFromID: function() {
+        	if (arguments[0] == "-1234") {
+        		return "default";
+        	}
+        	var carbon = require('carbon');
+            var tenantUser = carbon.server.tenantUser(arguments[0]);
+            return tenantUser.domain;
         }
     };
     return module;

@@ -24,14 +24,15 @@
 
 						<div class="raw-fluid" style="margin-left: -25px">
 							
+							<form method="post" enctype="multipart/form-data">
 
 							<div class="span2 operation-filter">
 								<div class="control-group">
 									<label class="control-label" for="inputLastName">Start Date</label>
 									<div class="controls">
 										   
-										 <div class="input-append date datepicker" id="startdate" name="startdate" data-date="12-02-2012" data-date-format="dd-mm-yyyy">
-				<input class="span2" size="16" type="text" value="12-02-2012">
+										 <div class="input-append date datepicker"  data-date="12-02-2012" data-date-format="dd-mm-yyyy">
+				<input id="startdate" name="startdate" class="span2" size="16" type="text" value="12-02-2012">
 				<span class="add-on"><i class="icon-th"></i></span>
 			  </div>
 									  
@@ -45,8 +46,8 @@
 									<label class="control-label" for="inputLastName">End Date</label>
 									<div class="controls">
 										   
-										 <div class="input-append date datepicker" id="enddate" name="enddate" data-date="12-02-2012" data-date-format="dd-mm-yyyy">
-				<input class="span2" size="16" type="text" value="12-02-2012">
+										 <div class="input-append date datepicker"  data-date="12-02-2012" data-date-format="dd-mm-yyyy">
+				<input id="enddate" name="enddate" class="span2" size="16" type="text" value="12-02-2012">
 				<span class="add-on"><i class="icon-th"></i></span>
 			  </div>
 									  
@@ -58,11 +59,10 @@
 								<div class="control-group">
 									<label class="control-label" for="inputEmail">Device Type</label>
 									<div class="controls">
-										<select id="inputOS"  >
-											<option value="">--All--</option>
+										<select id="platform" name="platform"  >
+											<option value="0">--All--</option>
 											<option value="1">Android</option>
-											<option value="3">iPad</option>
-											<option value="2">iPhone</option>
+											<option value="2">iOS</option>
 										</select>
 									</div>
 								</div>
@@ -73,10 +73,12 @@
 								<div class="control-group">
 									<label class="control-label" for="inputPassword" >&nbsp;</label>
 									<div class="controls">
-										<a class="btn btn-orange" id="btn-find" href="#" ><i class="icon-search icon-white"></i> Find</a>
+										<button class="btn btn-orange" type="sumbit" >Find</button>
 									</div>
 								</div>
 							</div>
+							
+							</form>
 							
 							
 						</div>		
