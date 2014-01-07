@@ -1,7 +1,8 @@
 <%
 	var iosMdmModule = require('/modules/iosmdm.js').iosmdm;
 	var userModule = require('/modules/user.js').user;
-	var db = application.get('db');
+	var common = require('/modules/common.js');
+	var db = common.getDatabase();
 	var user = new userModule(db);
 	var iosMdm = new iosMdmModule();
 	var log = new Log();

@@ -7,8 +7,6 @@ var feature = new featureModule(db);
 var policyModule = require('/modules/policy.js').policy;
 var policy = new policyModule(db);
 
-var mamModule = require('/modules/mam.js').mam;
-var mam = new mamModule(db);
 
 var userModule = require('/modules/user.js').user;
 var user = new userModule(db);
@@ -191,12 +189,6 @@ add = function(appController){
 	}catch(e){
 		var features = [];
 	}
-	
-	try{
-		var installedApps = mam.getInstallAppList({});
-	}catch(e){
-		var installedApps = [];
-	}
 		
 	context.jsFile= "policies/add.js";
 	context.title = context.title + " | Configuration";	
@@ -204,8 +196,7 @@ add = function(appController){
 	context.data = {
 			configOption : "policies",
 			groups: groups,
-			features: features,
-			installedApps: installedApps
+			features: features
 	};
 	return context;
 };

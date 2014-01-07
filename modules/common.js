@@ -1,3 +1,5 @@
+var DB_SESSION = "db";
+
 var log = new Log();
 
 var getRecordsFilteredByDate = function(startDate,endDate,tableName){
@@ -335,4 +337,36 @@ var loadPayload = function(identifier , operationCode, data) {
 	}
 			
 	return responseData;
+}
+
+/* 
+	Function that returns a DB object for the caller
+*/
+var getDatabase = function(){
+    var db = application.get(DB_SESSION);
+    if(!db){
+        try{
+            db = new Database("EMM_DB");
+            application.put(DB_SESSION,db);
+        }catch(e){
+            log.error(e);
+        }
+    }
+    return db;
+}
+
+/*
+    An exception handling function capable of calling the called function 
+    with the current
+    context.
+*/
+var handleError = function(that, ctx, block){
+    try{
+        block.call(that, ctx);
+        response.status = 200;
+    }catch(e){
+        print("Unexpected Error happened");
+        response.status = 500;
+        log.error(e);
+    }
 }

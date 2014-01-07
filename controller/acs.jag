@@ -32,7 +32,7 @@
     };
 
     var log = new Log(),
-            configs = require('config/mdm.js').config(),
+            configs = require('/config/mdm.js').config(),
             samlResponse = request.getParameter('SAMLResponse'),
 			process = require('process');
             sessionId = session.getId(),

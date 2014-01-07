@@ -3,7 +3,6 @@
 	var common = require('/modules/common.js');
 	var iosMdm = new iosMdmModule();
 	var log = new Log();
-	log.info('inside');
 
 	var signedData = iosMdm.handleProfileRequest(request.getInputStream());
 		
