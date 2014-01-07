@@ -392,9 +392,23 @@ var user = (function () {
                 var tenantConfig = require('/config/tenants/default/config.json');
                 return tenantConfig.name;;
             }
+        },
+
+        getLicenseByDomain: function() {
+            var message = "";
+            var file = new File("/config/tenants/" + arguments[0] + '/license.txt');
+            if (file.isExists()){
+                file.open("r");
+                message = file.readAll();
+                file.close();
+            } else {
+                file = new File("/config/tenants/default/license.txt");
+                file.open("r");
+                message = file.readAll();
+                file.close();
+            }
+            return message;
         }
-
-
     };
     return module;
 })();

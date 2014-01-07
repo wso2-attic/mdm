@@ -37,14 +37,10 @@
 	 <form class="form-signin" action="enroll" method="post" id="authform" >
 		<h3>License Agreement</h3>
 		<p><%
-			var getResource =  function(name){
-				var f = new File(name);
-				f.open("r");
-				var cont = f.readAll();
-				f.close();
-				return cont;
-			};
-			print(getResource('license/license.txt'));
+            var userModule = require('/modules/user.js').user;
+            var db = application.get('db');
+            var user = new userModule(db);
+            print(user.getLicenseByDomain(request.getParameter('tenantDomain')));
 		%></p>
 
 		 <button type="button" class="btn btn-lg btn-primary btn-block" onclick="onClickSubmit()">I Accept</button>
