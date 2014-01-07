@@ -1,7 +1,8 @@
 <%
 	var iosMdmModule = require('/modules/iosmdm.js').iosmdm;
 	var userModule = require('/modules/user.js').user;
-	var db = application.get('db');
+	var common = require('/modules/common.js');
+	var db = common.getDatabase();
 	var user = new userModule(db);
 	var iosMdm = new iosMdmModule();
 	var log = new Log();
@@ -12,10 +13,16 @@
     var tenantDomain = request.getParameter("tenantDomain").toLowerCase();
 	
 	var ctx = {};
-	ctx.username = username + "@" + tenantDomain;
-	ctx.password = password;
-    ctx.userid = username + "@" + tenantDomain;
-	
+
+    if (tenantDomain.trim() != ""){
+        ctx.username = username + "@" + tenantDomain;
+        ctx.userid = username + "@" + tenantDomain;
+    } else {
+        ctx.username = username;
+        ctx.userid = username;
+    }
+    ctx.password = password;
+
 	var objUser = user.authenticate(ctx);
 	
 	if(objUser == null){

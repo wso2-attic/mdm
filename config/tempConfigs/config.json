@@ -30,7 +30,7 @@
         "emailTemplate": "\nYou have been registered to the WSO2Mobile MDM. Below is the link to enroll.\n \n"
     },
     "device": {
-        "android_location": "/mdm/mdm.apk",
+        "android_location": "/mdm/resources/mdm.apk",
         "ios_location": "%https.ip%/mdm/certificate"
     },
     "mam": {

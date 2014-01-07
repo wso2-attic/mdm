@@ -89,15 +89,19 @@ var device = (function () {
         var role = roles[0];//role name for pull policy payLoad
 
         var obj = {};
-        var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",category,String(username));
+        var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",category,String(username));
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
             var policyPayLoad = parse(upresult[0].data);
             obj.payLoad = policyPayLoad;
             obj.type = upresult[0].type;
             return obj;
         }
+        log.info(category);
+        log.info(platformName);
+        log.info(common.getTenantIDFromEmail(username));
 
-        var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",category,platformName, common.getTenantIDFromEmail(username));
+        var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",category,platformName, common.getTenantIDFromEmail(username));
+        log.info(ppresult);
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
             var policyPayLoad = parse(ppresult[0].data);
             obj.payLoad = policyPayLoad;
@@ -105,7 +109,7 @@ var device = (function () {
             return obj;
         }
 
-        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ?",category,role, common.getTenantIDFromEmail(username));
+        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ?",category,role, common.getTenantIDFromEmail(username));
         if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
             var policyPayLoad = parse(gpresult[0].data);
             obj.payLoad = policyPayLoad;
@@ -575,6 +579,7 @@ var device = (function () {
                 this.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
                 this.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
                 var mdmPolicy = getPolicyPayLoad(deviceId,1);
+                log.info("Policy Payload :"+mdmPolicy);
                 if(mdmPolicy != undefined && mdmPolicy != null){
                     if(mdmPolicy.payLoad != undefined && mdmPolicy.payLoad != null && mdmPolicy.type != undefined && mdmPolicy.type != null){
                         var obj = {};
@@ -815,7 +820,6 @@ var device = (function () {
                 // var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
 
                 var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);  
-
                 if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
                 	
                 	var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
@@ -828,6 +832,8 @@ var device = (function () {
 	                }
 	                
 	                db.query("UPDATE device_pending SET request_status = 1 WHERE user_id = ? && udid IS NOT NULL", devicePendingResult.user_id);
+
+                    db.query("UPDATE device_pending SET request_status = 1 WHERE user_id = ? && udid IS NOT NULL", devicePendingResult.user_id);
 
                 } else {
                 	//Copy record from temporary table into device table and delete the record from the temporary table

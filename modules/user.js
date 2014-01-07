@@ -59,7 +59,16 @@ var user = (function () {
 			um.addRole("Internal/private_"+indexUser, [username], arrPermission);
 		}
 	}			
-	
+	var getUserType = function(user_roles){
+        for (var i = user_roles.length - 1; i >= 0; i--) {
+            var role = user_roles[i];
+            if(role=='admin'|| role=='Internal/mdmadmin'|| role=='mamadmin'){
+                return "Administrator";
+            }else{
+                return "User";
+            }
+        };
+    }
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
             try {
@@ -137,6 +146,7 @@ var user = (function () {
                 var tenantUser = carbon.server.tenantUser(ctx.userid);
                 var um = userManager(tenantUser.tenantId);
                 var user = um.getUser(tenantUser.username);
+                var user_roles = user.getRoles();
                 var claims = [claimEmail, claimFirstName, claimLastName];
                 var claimResult = user.getClaimsForSet(claims,null);
                 proxy_user.email = claimResult.get(claimEmail);
@@ -145,7 +155,8 @@ var user = (function () {
                 proxy_user.mobile = claimResult.get(claimMobile);
                 proxy_user.username = tenantUser.username;
                 proxy_user.tenantId = tenantUser.tenantId;
-                proxy_user.roles = stringify(user.getRoles());
+                proxy_user.roles = stringify(user_roles);
+                proxy_user.user_type = getUserType(user_roles);
                 return proxy_user;
             } catch(e) {
                 log.error(e);
@@ -375,15 +386,29 @@ var user = (function () {
 
         getTenantName: function() {
             try {
-                var tenantConfig = require('/config/tenants/' + arguments[0] + '.json');
+                var tenantConfig = require('/config/tenants/' + arguments[0] + '/config.json');
                 return tenantConfig.name;
             } catch(e) {
-                var tenantConfig = require('/config/tenants/carbon.super.json');
+                var tenantConfig = require('/config/tenants/default/config.json');
                 return tenantConfig.name;;
             }
+        },
+
+        getLicenseByDomain: function() {
+            var message = "";
+            var file = new File("/config/tenants/" + arguments[0] + '/license.txt');
+            if (file.isExists()){
+                file.open("r");
+                message = file.readAll();
+                file.close();
+            } else {
+                file = new File("/config/tenants/default/license.txt");
+                file.open("r");
+                message = file.readAll();
+                file.close();
+            }
+            return message;
         }
-
-
     };
     return module;
 })();

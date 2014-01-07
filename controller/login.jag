@@ -1,16 +1,21 @@
 <%
 (function(){
-    var dataConfi = require('config/mdm.js').config(),
+    var dataConfi = require('/config/mdm.js').config(),
             sso = require("sso"),
             process = require("process"),
             sessionId = session.getId(),
             requestURI,
             requestedPage = request.getParameter("requestedPage"),
+            host = process.getProperty('server.host'),
             relayState = '/mdm',
             encodedSAMLAuthRequest = sso.client.getEncodedSAMLAuthRequest(dataConfi.ssoConfiguration.issuer),
             log = new Log();
-            postUrl = "https://" + process.getProperty('carbon.local.ip') + ":" + process.getProperty('https.port');
-
+    if(host=="localhost"){
+      var postUrl = "https://" + process.getProperty('carbon.local.ip') + ":" + process.getProperty('https.port');
+    }else{
+      var postUrl = "https://" + host;
+    }
+    log.info(postUrl);
     if (!session.get("mdmConsoleUserLogin")) {
         %>
 
@@ -35,3 +40,4 @@
 }());
 
 %>
+
