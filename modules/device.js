@@ -815,7 +815,6 @@ var device = (function () {
                 // var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
 
                 var userResultExist = db.query("SELECT user_id FROM devices WHERE udid = ?", ctx.deviceid);  
-
                 if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
                 	
                 	var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
@@ -828,6 +827,8 @@ var device = (function () {
 	                }
 	                
 	                db.query("UPDATE device_pending SET request_status = 1 WHERE user_id = ? && udid IS NOT NULL", devicePendingResult.user_id);
+
+                    db.query("UPDATE device_pending SET request_status = 1 WHERE user_id = ? && udid IS NOT NULL", devicePendingResult.user_id);
 
                 } else {
                 	//Copy record from temporary table into device table and delete the record from the temporary table

@@ -35,8 +35,8 @@
 
       <form class="form-signin" action="enroll" id="authform" method="post" >
         <h2 class="form-signin-heading">Please sign in</h2>
-        <input name="tenantDomain" id="domain" type="text" class="form-control" placeholder="Domain" autofocus value="wso2.com">
-        <input name="username" id="uname" type="text" class="form-control" placeholder="Email address" autofocus value="niranjan@wso2.com">
+        <input name="username" id="uname" type="text" class="form-control" placeholder="Email address" autofocus>
+        <input name="password" id="password" type="password" class="form-control" placeholder="Password">       
         <input name="password" id="password" type="password" class="form-control" placeholder="Password" autofocus value="abc123">
         <div style="padding-bottom: 20px; padding-top: 10px">
         <input name="byod" id="byod" type="radio" value="0" /> Company Owned
