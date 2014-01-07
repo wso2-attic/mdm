@@ -53,6 +53,11 @@
 	     <input name="byod" type="hidden" value="1" />  
 	 </form>
      </div>
+     
+     <form id="enrollsuccess" method="post" action="enrollsuccess" >
+	   	<input type="hidden" id="enrollsuccessusername" name="username" />
+	   	<input type="hidden" id="enrollsuccessudid" name="udid" />
+	 </form>
 
 
     <!-- Bootstrap core JavaScript

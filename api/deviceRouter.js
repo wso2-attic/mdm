@@ -23,15 +23,13 @@ var device = (function () {
 
 
 		router.get('device_enroll', function(ctx){
-		    var userAgent= request.getHeader("User-Agent");
+            var userAgent= request.getHeader("User-Agent");
 
-		    var android = userAgent.indexOf("Android");
-
-		    if (userAgent.indexOf("Android") > 0) {
-		        response.sendRedirect(configs.HTTP_URL+configs.device.android_location);
-		    } else if (userAgent.indexOf("iPhone") > 0) {
-		        response.sendRedirect(configs.device.ios_location);
-		    } else if (userAgent.indexOf("iPad") > 0){
+            if (userAgent.indexOf("Android") > 0) {
+                response.sendRedirect(configs.device.android_location);
+            } else if (userAgent.indexOf("iPhone") > 0) {
+                response.sendRedirect(configs.device.ios_location);
+            } else if (userAgent.indexOf("iPad") > 0){
                 response.sendRedirect(configs.device.ios_location);
             } else if (userAgent.indexOf("iPod") > 0){
                 response.sendRedirect(configs.device.ios_location);

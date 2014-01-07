@@ -1,23 +1,35 @@
 var selectedUser = null;
 
+//$.fn.dataTableExt.sErrMode = 'ignore';
+
 $(document).ready(function() {
 	oTable = $('#main-table').dataTable({
 		"sDom" : "<'row-fluid'<'tabel-filter-group span8'T><'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
 		"iDisplayLength" : 10,		
 		"bStateSave" : false,
-		 "aoColumnDefs": [
-					  {
-					     bSortable: false,
-					     aTargets: [ -1 ]
-					  }
-		],
-		"oTableTools" : {
-			"aButtons" : ["copy", "print", {
-				"sExtends" : "collection",
-				"sButtonText" : 'Save <span class="caret" />',
-				"aButtons" : ["csv", "xls", "pdf"]
-			}]
-		}
+		
+		  aoColumns: [
+                      
+                      null,
+                      null,
+                      null,
+                      null,
+                      
+                      {                         
+                        "fnRender": function (oObj)                              
+                        {                           
+                            return '<a href="view?user='+ oObj.aData[0] +'" data-item="'+ oObj.aData[0] +'" title="View User"><i class="icon-user"> </i> View Roles</a>&nbsp;' +
+                                '<a href="/mdm/users/assign_groups?user='+ oObj.aData[0] +'" class="btn-assign-roles" data-item="'+ oObj.aData[0] +'" title="Assign Roles"><i class="icon-edit"> </i> Assign Roles</a>&nbsp;' + 
+                                '<a href="#" class="btn-invite" data-item="'+ oObj.aData[0] +'" title="Invite"><i class="icon-envelope"> </i> Invite</a>&nbsp;';
+                        }
+                      },
+                       
+
+                   ],	
+		
+		
+		"sAjaxSource" : "/mdm/api/webconsole/allUsers",
+		
 	});
 	
 	

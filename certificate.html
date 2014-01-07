@@ -33,41 +33,37 @@
 </div>
 
 
-<div class="container">
 
-    <br /><h4>
-    <p align = "center">The Root Certificate needs to be downloaded to your device before you can enroll to the MDM.<br/>
-    <a href = "ca">Click Here to download the Root Certificate</a></p>
-    <br /><br />
-    <p align = "center">After downloading the Root Certificate to your device, <a href = "deviceloginsign">Click here to go to the MDM Login Page</a></p>
+  <div class="container">
 
-    </h4>
-    <!--
-    <form class="form-signin" action="enroll" >
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <input name="username" type="text" class="form-control" placeholder="Email address" autofocus>
-        <input name="password" type="password" class="form-control" placeholder="Password">
-        <div style="padding-bottom: 20px; padding-top: 10px">
-            <input name="byod" type="radio" value="0" /> Company Owned
-            <input name="byod" type="radio" value="1" checked="checked"  /> Personal Device
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        <br />
-        <div class="mdm-message text-center">
-            <div class="raw">
-                Make sure you download the root certificate
-            </div>
-            <div class="raw">
-                <a href="ca">Download</a>
-            </div>
-        </div>
+    <form id="certificate" method="get" action="ca">
+
+        <br /><br /><h4>
+            <p align = "center">The Root Certificate needs to be downloaded to your device before you can enroll to the MDM.<br/><br />
+                <button class="btn btn-lg btn-primary btn-block">Download the Root Certificate</button>
+
+            </p>
+            <br /><br />
+        </h4>
     </form>
-    -->
+
+    <form id="devicelogin" method="get" action="deviceloginsign">
+        <h4>
+            <p align = "center">After downloading the Root Certificate to your device,
+                <br /><br />
+                <button class="btn btn-lg btn-primary btn-block">MDM Login Page</button>
+            </p>
+
+        </h4>
+
+    </form>
+  </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/mdm/assets/boostrap3/js/jquery.js"></script>
     <script src="/mdm/assets/boostrap3/js/bootstrap.min.js"></script>
+
 </body>
 </html>
