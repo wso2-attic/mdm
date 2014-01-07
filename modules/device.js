@@ -89,18 +89,14 @@ var device = (function () {
         var role = roles[0];//role name for pull policy payLoad
 
         var obj = {};
-        var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",category,String(username));
+        var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ? && policies.tenant_id = ?",category,String(username), tenantID);
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
             var policyPayLoad = parse(upresult[0].data);
             obj.payLoad = policyPayLoad;
             obj.type = upresult[0].type;
             return obj;
         }
-        log.info(category);
-        log.info(platformName);
-        log.info(common.getTenantIDFromEmail(username));
-
-        var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",category,platformName, common.getTenantIDFromEmail(username));
+        var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",category,platformName, tenantID );
         log.info(ppresult);
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
             var policyPayLoad = parse(ppresult[0].data);
@@ -109,7 +105,7 @@ var device = (function () {
             return obj;
         }
 
-        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ?",category,role, common.getTenantIDFromEmail(username));
+        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ?",category,role, tenantID);
         if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
             var policyPayLoad = parse(gpresult[0].data);
             obj.payLoad = policyPayLoad;
@@ -619,7 +615,7 @@ var device = (function () {
             var tenantUser = carbon.server.tenantUser(ctx.email);
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;
-
+            log.info("tenant idddddddd"+tenantId);
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);//from device platform comes as iOS and Android then convert into platform id to save in device table
             var platformId = platforms[0].id;
 

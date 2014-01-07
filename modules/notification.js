@@ -233,15 +233,16 @@ var notification = (function () {
             }
         },
         addNotification: function(ctx){
-			log.info("Android Notification >>>>>"+stringify(ctx));
-			log.info("CTX>>>>>>>>>>>>>>>>>>" + ctx.msgID);
+			log.info("Android Notification all >>>>>"+stringify(ctx));
+			log.info("CTX>>>>>>>>>>>>>>>>>> msg id " + ctx.msgID);
+            log.info("Android Notification >>>>> data"+ctx.data);
             var recivedDate = common.getCurrentDateTime();
             var result = db.query("select * from notifications where id = '"+ctx.msgID+"'");
             var deviceId =  result[0].device_id;
             var featureCode =  result[0].feature_code;
             if(featureCode == "501P"){
                 try{
-                    db.query("DELETE FROM notifications WHERE device_id = ? AND status='R' AND feature_code = ?",deviceId,featureCode);
+                   // db.query("DELETE FROM notifications WHERE device_id = ? AND status='R' AND feature_code = ?",deviceId,featureCode);
                 }catch(e){
                     log.info(e);
                 }

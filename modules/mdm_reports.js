@@ -49,7 +49,7 @@ var mdm_reports = (function () {
             if(receivedData[i].code == 'notrooted'){
                 var obj = {};
                 obj.name = 'Not Rooted';
-                obj.status = arrayFromDatabase[i].status;
+                obj.status = receivedData[i].status;
                 newArray.push(obj);
                 if(obj.status == false){
                     log.info(obj.status);
@@ -58,12 +58,12 @@ var mdm_reports = (function () {
                 }
 
             }else{
-                var featureCode = arrayFromDatabase[i].code;
+                var featureCode = receivedData[i].code;
                 try{
                     var obj = {};
                     var features = db.query("SELECT * FROM features WHERE code= '"+featureCode+"'");
                     obj.name = features[0].description;
-                    obj.status = arrayFromDatabase[i].status;
+                    obj.status = receivedData[i].status;
                     newArray.push(obj);
                     if(obj.status == false){
                         var currentState = device.getCurrentDeviceState(ctx.deviceid);
@@ -127,12 +127,19 @@ var mdm_reports = (function () {
             }
         },
         getComplianceStatus:function(ctx){
+            ctx.startDate =  '2013-12-23';
+             ctx.endDate = '2014-12-24';
+            ctx.deviceID = 1038;
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
-            var result = db.query("select * from notifications where feature_code = '501P' && devices_id ="+ctx.deviceID+"&& received_date between '"+startDate+"' and '"+endDate+"' and tenent_id = "+common.getTenantID());
-            var stateChangesArray = getComplianceStateChanges(result);
-            return stateChangesArray;
+            var result = db.query("select * from notifications where feature_code = '501P' && device_id ="+ctx.deviceID+"&& received_date between '"+startDate+"' and '"+endDate+"' and tenant_id = "+common.getTenantID());
+            if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null){
+                var stateChangesArray = getComplianceStateChanges(result);
+                return stateChangesArray;
+            }else{
+                return null;
+            }
         }
     };
     return module;
