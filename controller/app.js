@@ -1,8 +1,20 @@
-var ui = require('../config/ui.json');
+
 var config = require('/config/mdm.js').config();
 
 var configApis = require('../config/apis.json');
 var log = new Log();
+
+var userModule = require('/modules/user.js').user;
+var userM = new userModule(db);
+
+
+
+if(session.get("mdmConsoleUserLogin") != null){
+	var userSession = session.get("mdmConsoleUser");
+	var tenatDomain = userSession.tenantDomain;
+	ui = require('../config/tenants/' + tenatDomain + '/ui.json');
+}
+
 
 /*
 	Basic Application Info

@@ -23,6 +23,7 @@ login = function(appController){
 					userFeed.firstName = objUser["firstName"];
 					userFeed.lastName = objUser["lastName"];
 					userFeed.mobile = objUser["mobile"];
+					userFeed.tenentDomain = user.getTenantDomainFromID(stringify(objUser["tenantId"]));
 					var parsedRoles = parse(objUser["roles"]);
 					var isMDMAdmin = false;
 					var isMAdmin = false;
