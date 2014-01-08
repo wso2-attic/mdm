@@ -56,28 +56,11 @@
 							</div>
 							
 							
-							
 							<div class="span2 operation-filter">
 								<div class="control-group">
-									<label class="control-label" for="inputEmail">Username</label>
+									<label class="control-label" for="inputEmail">IMEI</label>
 									<div class="controls">
-										<input id="username" name="username" class="span2" size="16" type="text" value="{{data.inputData.username}}" >
-									</div>
-								</div>
-							</div>
-							
-							
-
-							<div class="span2 operation-filter">
-								<div class="control-group">
-									<label class="control-label" for="inputEmail">Status</label>
-									<div class="controls">
-										<select id="status" name="status" >
-											<option {{#compare data.inputData.status ''}}selected="selected"{{/compare}} value="">--All--</option>
-											<option {{#compare data.inputData.status 'PV'}}selected="selected"{{/compare}} value="PV">Policy Violated</option>
-											<option {{#compare data.inputData.status 'B'}}selected="selected"{{/compare}} value="B">Blocked</option>
-											<option {{#compare data.inputData.status 'A'}}selected="selected"{{/compare}} value="A">Active</option>
-										</select>
+										<input id="deviceid" class="span2" size="20" name="deviceid" type="text" value="{{data.inputData.deviceId}}" readonly >
 									</div>
 								</div>
 							</div>
@@ -117,7 +100,7 @@
 										{{#data.results}}
 											<tr>
 												<td>{{user_id}}</td>
-												<td><a href="devices_status?startdate={{../data.inputData.startdate}}&enddate={{../data.inputData.startdate}}&deviceid={{imei}}">{{imei}}</a></td>
+												<td>{{imei}}</td>
 												<td>{{platform_name}}</td>
 												<td>{{os_version}}</td>
 												<td>{{status}}</td>

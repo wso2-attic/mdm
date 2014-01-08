@@ -75,3 +75,36 @@ devices_complience = function(appController){
 	return context;	
 	
 };
+
+
+devices_status = function(appController){	
+	
+	    var results = null; 
+	
+	
+		
+		var startdate = request.getParameter('startdate');
+		var enddate = request.getParameter('enddate');
+		var deviceId = request.getParameter('deviceid');
+		
+		//print(startdate + enddate + username + status);
+		
+		var reportResults = report.getComplianceStatus({startDate: startdate, endDate: enddate, deviceID: deviceId});
+		
+		//print(reportResults);
+		
+		results = reportResults;
+	
+	
+		
+	context = appController.context();
+	context.title = context.title + " | Reports";	
+	context.jsFile= "reports/reports.js";
+	context.page = "reports";
+	context.data = {
+		results: results,
+		inputData : {startdate: startdate, enddate: enddate, deviceId: deviceId}		
+	};
+	return context;	
+	
+};
