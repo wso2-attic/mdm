@@ -9,8 +9,12 @@ var selectedDevice = null;
 
 
 $(document).ready(function() {
-	var tabId = $('#device-tab-heading-0').data("tabId");
-	var deviceId = $('#device-tab-heading-0').data("deviceId");
+	
+	var selTab = getURLParameter('tab');
+	//alert(selTab);
+	
+	var tabId = $('#device-tab-heading-' + selTab).data("tabId");
+	var deviceId = $('#device-tab-heading-' + selTab).data("deviceId");
 	
 	var selDevice = window.location.hash;
 	selDevice = selDevice.replace("#device-tab-",""); 
