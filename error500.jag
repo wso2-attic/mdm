@@ -13,7 +13,11 @@
 		<header>
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-		
+				<ul class="nav pull-right">					
+				<li class="dropdown">
+					<a href="/mdm/logout">Logout</a>
+			    </li>
+			    </ul>
 			</div>
 	
 		</div>
