@@ -129,11 +129,11 @@ var mdm_reports = (function () {
             }
         },
         getDevicesByComplianceState:function(ctx){
-             ctx.startDate =  '2013-12-23';
-             ctx.endDate = '2014-12-24';
-             ctx.platformType = 1;
-             ctx.username = "gayan@wso2.com";
-             ctx.status = "PV";
+            // ctx.startDate =  '2013-12-23';
+           //  ctx.endDate = '2014-12-24';
+           //  ctx.platformType = 1;
+           //  ctx.username = "admin@admin.com";
+             ctx.status = "A";
              var zeros = ' 00:00:00';
              var startDate = ctx.startDate+zeros;
              var endDate = ctx.endDate+zeros;
