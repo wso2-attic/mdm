@@ -98,7 +98,7 @@ String.format = function() {
 
 
 $('.datepicker').datepickerbt({
-				format: 'dd-mm-yyyy'
+				format: 'yyyy-mm-dd'
 			});
 
 

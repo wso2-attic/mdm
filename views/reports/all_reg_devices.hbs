@@ -31,8 +31,8 @@
 									<label class="control-label" for="inputLastName">Start Date</label>
 									<div class="controls">
 										   
-										 <div class="input-append date datepicker"  data-date="12-02-2012" data-date-format="dd-mm-yyyy">
-				<input id="startdate" name="startdate" class="span2" size="16" type="text" value="12-02-2012">
+										 <div class="input-append date datepicker"  data-date="" data-date-format="yyyy-mm-dddd">
+				<input id="startdate" name="startdate" class="span2" size="16" type="text" value="{{data.inputData.startdate}}"  >
 				<span class="add-on"><i class="icon-th"></i></span>
 			  </div>
 									  
@@ -46,8 +46,8 @@
 									<label class="control-label" for="inputLastName">End Date</label>
 									<div class="controls">
 										   
-										 <div class="input-append date datepicker"  data-date="12-02-2012" data-date-format="dd-mm-yyyy">
-				<input id="enddate" name="enddate" class="span2" size="16" type="text" value="12-02-2012">
+										 <div class="input-append date datepicker"  data-date="" data-date-format="yyyy-mm-dddd">
+				<input id="enddate" name="enddate" class="span2" size="16" type="text" value="{{data.inputData.enddate}}" >
 				<span class="add-on"><i class="icon-th"></i></span>
 			  </div>
 									  
@@ -57,12 +57,12 @@
 
 							<div class="span2 operation-filter">
 								<div class="control-group">
-									<label class="control-label" for="inputEmail">Device Type</label>
+									<label class="control-label" for="inputEmail">Platform</label>
 									<div class="controls">
-										<select id="platform" name="platform"  >
-											<option value="0">--All--</option>
-											<option value="1">Android</option>
-											<option value="2">iOS</option>
+										<select id="platform" name="platform" >
+											<option {{#compare data.inputData.platform '0'}}selected="selected"{{/compare}} value="0">--All--</option>
+											<option {{#compare data.inputData.platform '1'}}selected="selected"{{/compare}} value="1">Android</option>
+											<option {{#compare data.inputData.platform '2'}}selected="selected"{{/compare}} value="2">iOS</option>
 										</select>
 									</div>
 								</div>
@@ -91,17 +91,26 @@
 								<table cellpadding="0" cellspacing="0" border="0"
 								class="table table-striped table-bordered" id="main-table">
 									<thead>
-										<tr>											
-											<th style="display: none">Id</th>
-											<th>IMEI</th>
+										<tr>
 											<th>Username</th>
+											<th>IMEI</th>
 											<th>Platform</th>
 											<th>OS version</th>
-											<th>Name</th>											
+											<th>Registered Date</th>
+											<th>Status</th>											
 										</tr>
 									</thead>
 									<tbody>
-
+										{{#data.results}}
+											<tr>
+												<td>{{user_id}}</td>
+												<td>{{imei}}</td>
+												<td>{{platform_name}}</td>
+												<td>{{os_version}}</td>
+												<td>{{created_date}}</td>
+												<td>{{status}}</td>
+											</tr>
+										{{/data.results}}
 									</tbody>									
 								</table>
 								

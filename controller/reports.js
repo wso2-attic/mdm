@@ -6,7 +6,6 @@ index = function(appController){
 	
 	context = appController.context();
 	context.title = context.title + " | Reports";	
-	context.jsFile= "console/dashboard.js";
 	context.page = "reports";
 	context.data = {		
 	};
@@ -17,7 +16,7 @@ index = function(appController){
 
 all_reg_devices = function(appController){	
 	
-	
+	var results = null; 
 	
 	if(request.getMethod() == 'POST'){
 		
@@ -25,19 +24,19 @@ all_reg_devices = function(appController){
 		var enddate = request.getParameter('enddate');
 		var platform = request.getParameter('platform');
 		
-		var result = report.getDevicesByRegisteredDate({startdate: startdate, enddate: enddate, platform : platform});
+		var reportResults = report.getDevicesByRegisteredDate({startDate: startdate, endDate: enddate, platformType : platform});
 		
-		print(result);
-		
-		print(startdate + enddate + platform);
+		results = reportResults;
 	}
 	
 		
 	context = appController.context();
 	context.title = context.title + " | Reports";	
-	context.jsFile= "console/dashboard.js";
+	context.jsFile= "reports/reports.js";
 	context.page = "reports";
-	context.data = {		
+	context.data = {
+		results: results,
+		inputData : {startdate: startdate, enddate: enddate, platform : platform}		
 	};
 	return context;	
 	
