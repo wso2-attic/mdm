@@ -51,9 +51,14 @@ devices_complience = function(appController){
 		
 		var startdate = request.getParameter('startdate');
 		var enddate = request.getParameter('enddate');
-		var platform = request.getParameter('platform');
+		var username = request.getParameter('username');
+		var status = request.getParameter('status');
 		
-		var reportResults = report.getDevicesByRegisteredDate({startDate: startdate, endDate: enddate, platformType : platform});
+		//print(startdate + enddate + username + status);
+		
+		var reportResults = report.getDevicesByComplianceState({startDate: startdate, endDate: enddate, username: username, status: status});
+		
+		print(reportResults);
 		
 		results = reportResults;
 	}
@@ -65,7 +70,7 @@ devices_complience = function(appController){
 	context.page = "reports";
 	context.data = {
 		results: results,
-		inputData : {startdate: startdate, enddate: enddate, platform : platform}		
+		inputData : {startdate: startdate, enddate: enddate, username: username, status: status}		
 	};
 	return context;	
 	
