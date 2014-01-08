@@ -1,11 +1,8 @@
-
+var ui = require('../config/tenants/default/ui.json');
 var config = require('/config/mdm.js').config();
 
 var configApis = require('../config/apis.json');
 var log = new Log();
-
-var userModule = require('/modules/user.js').user;
-var userM = new userModule(db);
 
 
 
@@ -14,6 +11,14 @@ if(session.get("mdmConsoleUserLogin") != null){
 	var tenatDomain = userSession.tenantDomain;
 	ui = require('../config/tenants/' + tenatDomain + '/ui.json');
 }
+
+
+if(session.get("mdmConsoleUserLogin") != null){
+	var userSession = session.get("mdmConsoleUser");
+	var tenatDomain = userSession.tenantDomain;
+	ui = require('../config/tenants/' + tenatDomain + '/ui.json');
+}
+
 
 
 /*
@@ -112,8 +117,8 @@ navigation = function(role) {
             topNavigation = [
                 {name : "Dashboard"	, link: appInfo().server_url + "console/dashboard", displayPage: "dashboard", icon: "icon-th-large"},
                 {name : "Configurations", link: appInfo().server_url + "users/configuration", displayPage: "configuration", icon:"icon-wrench"},
-                {name : "Management"	, link: appInfo().server_url + "devices/management", displayPage: "management", icon:"icon-briefcase"}, 
-                {name : "Reports"	, link: appInfo().server_url + "reports/", displayPage: "reports", icon:"icon-bar-chart"}               
+                {name : "Management"	, link: appInfo().server_url + "devices/management", displayPage: "management", icon:"icon-briefcase"},
+                 {name : "Reports"	, link: appInfo().server_url + "reports/", displayPage: "reports", icon:"icon-bar-chart"}               
             ];
             var configNavigation =	[
                 {name : "Users", link: appInfo().server_url + "users/configuration", displayPage: "users", icon:"icon-user"},
@@ -125,13 +130,12 @@ navigation = function(role) {
                 {name : "Dashboard"	, link: appInfo().server_url + "console/dashboard", displayPage: "dashboard", icon: "icon-th-large"},
                 {name : "Configurations", link: appInfo().server_url + "users/configuration", displayPage: "configuration", icon:"icon-wrench"},
                 {name : "Management"	, link: appInfo().server_url + "devices/management", displayPage: "management", icon:"icon-briefcase"},
-                {name : "Reports"	, link: appInfo().server_url + "reports/", displayPage: "reports", icon:"icon-bar-chart"}
+                 {name : "Reports"	, link: appInfo().server_url + "reports/", displayPage: "reports", icon:"icon-bar-chart"}
             ];
             var configNavigation =	[
                 {name : "Users", link: appInfo().server_url + "users/configuration", displayPage: "users", icon:"icon-user"},
                 {name : "Roles", link: appInfo().server_url + "roles/configuration", displayPage: "roles", icon:"icon-group"},
                 {name : "Policies", link: appInfo().server_url + "policies/configuration", displayPage: "policies", icon:"icon-lock"},
-                
             ];
         }else{
             topNavigation = [
