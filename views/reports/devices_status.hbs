@@ -60,7 +60,8 @@
 								<div class="control-group">
 									<label class="control-label" for="inputEmail">IMEI</label>
 									<div class="controls">
-										<input id="deviceid" class="span2" size="20" name="deviceid" type="text" value="{{data.inputData.deviceId}}" readonly >
+										<input id="imei" class="span2" size="20" name="imei" type="text" value="{{data.inputData.imei}}" readonly >
+										<input id="deviceid"  name="deviceid" type="hidden" value="{{data.inputData.deviceId}}"  >
 									</div>
 								</div>
 							</div>
@@ -90,20 +91,20 @@
 									<thead>
 										<tr>
 											<th>Username</th>
-											<th>IMEI</th>
-											<th>Platform</th>
-											<th>OS version</th>
-											<th>Status</th>											
+											<th>Date</th>
+											<th>Description</th>
+											<th>Current Status</th>											
 										</tr>
 									</thead>
 									<tbody>
 										{{#data.results}}
 											<tr>
-												<td>{{user_id}}</td>
-												<td>{{imei}}</td>
-												<td>{{platform_name}}</td>
-												<td>{{os_version}}</td>
-												<td>{{status}}</td>
+												<td>{{userID}}</td>
+												<td>{{timeStamp}}</td>
+												<td>{{#resons}}
+													{{name}} {{#if status}}<span style="color:green">(not violated)</span>. {{else}}<span style="color:red">(violated)</span>{{/if}}
+													{{/resons}}</td>
+												<td>{{current_status}}</td>
 											</tr>
 										{{/data.results}}
 									</tbody>									

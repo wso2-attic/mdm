@@ -86,12 +86,13 @@ devices_status = function(appController){
 		var startdate = request.getParameter('startdate');
 		var enddate = request.getParameter('enddate');
 		var deviceId = request.getParameter('deviceid');
+		var imei = request.getParameter('imei');
 		
 		//print(startdate + enddate + username + status);
 		
 		var reportResults = report.getComplianceStatus({startDate: startdate, endDate: enddate, deviceID: deviceId});
 		
-		print(reportResults);
+		//print(reportResults);
 		
 		results = reportResults;
 	
@@ -103,7 +104,7 @@ devices_status = function(appController){
 	context.page = "reports";
 	context.data = {
 		results: results,
-		inputData : {startdate: startdate, enddate: enddate, deviceId: deviceId}		
+		inputData : {startdate: startdate, enddate: enddate, deviceId: deviceId, imei: imei}		
 	};
 	return context;	
 	
