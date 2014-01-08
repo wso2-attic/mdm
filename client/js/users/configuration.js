@@ -16,6 +16,7 @@ $(document).ready(function() {
                       null,
                       
                       {                         
+                        "sWidth": "40%",
                         "fnRender": function (oObj)                              
                         {                           
                            
