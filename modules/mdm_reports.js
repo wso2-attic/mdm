@@ -51,12 +51,6 @@ var mdm_reports = (function () {
                 obj.name = 'Not Rooted';
                 obj.status = receivedData[i].status;
                 newArray.push(obj);
-                if(obj.status == false){
-                    log.info(obj.status);
-                    log.info(ctx.deviceid);
-                    device.changeDeviceState(ctx.deviceid, "C");
-                }
-
             }else{
                 var featureCode = receivedData[i].code;
                 try{
@@ -65,13 +59,6 @@ var mdm_reports = (function () {
                     obj.name = features[0].description;
                     obj.status = receivedData[i].status;
                     newArray.push(obj);
-                    if(obj.status == false){
-                        var currentState = device.getCurrentDeviceState(ctx.deviceid);
-                        if(currentState == 'A'){
-                            device.changeDeviceState(ctx.deviceid,"PV");
-                        }
-                    }
-
                 }catch(e){
                     log.info(e);
                 }
@@ -107,9 +94,6 @@ var mdm_reports = (function () {
     module.prototype = {
         constructor: module,
         getDevicesByRegisteredDate:function(ctx){
-            //ctx.startDate =  '2013-12-23';
-            //ctx.endDate = '2014-12-24';
-            //ctx.platformType = 1;
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
@@ -129,11 +113,6 @@ var mdm_reports = (function () {
             }
         },
         getDevicesByComplianceState:function(ctx){
-
-
-
-
-
              var zeros = ' 00:00:00';
              var startDate = ctx.startDate+zeros;
              var endDate = ctx.endDate+zeros;
@@ -148,9 +127,12 @@ var mdm_reports = (function () {
              }
         },
         getComplianceStatus:function(ctx){
-            ctx.startDate =  '2013-12-23';
-             ctx.endDate = '2014-12-24';
-            ctx.deviceID = 1038;
+            log.info("Elaaaaaaaaaaa"+ctx.startDate);
+             log.info(ctx.endDate);
+             log.info(ctx.deviceID);
+           //  ctx.startDate =  '2013-12-23';
+           //  ctx.endDate = '2014-12-24';
+           //  ctx.deviceID = 1038;
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
