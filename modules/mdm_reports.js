@@ -67,7 +67,14 @@ var mdm_reports = (function () {
         return newArray;
     }
     function getComplianceStateChanges(result,deviceID){
-
+        var currentState = device.getCurrentDeviceState(parseInt(deviceID));
+        if(currentState == 'A'){
+            currentState = "Active";
+        }else if(currentState == 'PV'){
+            currentState = "Policy Violated";
+        }else{
+            currentState = "Blocked";
+        }
         var state = getComplianceStateFromReceivedData(parse(result[0].received_data));
         var array = new Array();
         var obj = {};
@@ -75,7 +82,7 @@ var mdm_reports = (function () {
         obj.timeStamp = common.getFormattedDate(result[0].received_date);
         obj.resons = getComplianceInfoFromReceivedData(parse(result[0].received_data));
         obj.status = state;
-        obj.current_status = device.getCurrentDeviceState(parseInt(deviceID));
+        obj.current_status = currentState;
         array.push(obj);
 
         for(var i = 1; i<result.length;i++){
@@ -86,7 +93,7 @@ var mdm_reports = (function () {
                 obj.timeStamp = common.getFormattedDate(result[i].received_date);
                 obj.resons = getComplianceInfoFromReceivedData(parse(result[i].received_data));
                 obj.status = state;
-                obj.current_status = device.getCurrentDeviceState(parseInt(deviceID));
+                obj.current_status = currentState;
                 array.push(obj);
             }
         }
@@ -95,11 +102,12 @@ var mdm_reports = (function () {
     module.prototype = {
         constructor: module,
         getDevicesByRegisteredDate:function(ctx){
+            log.info("Platform IDDDDDDDD :"+ctx.platformType);
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
             var result = [];
-            if(typeof ctx.platformType !== 'undefined' && ctx.platformType !== 0){
+            if(typeof ctx.platformType !== 'undefined' && parse(ctx.platformType) !== 0){
                 result = db.query("SELECT devices.user_id, devices.properties, platforms.name as platform_name, devices.os_version, devices.created_date, devices.status  FROM devices,platforms where platforms.type ="+ctx.platformType+" && platforms.id = devices.platform_id  &&  devices.created_date between '"+startDate+"' and '"+endDate+"' and  devices.tenant_id = "+common.getTenantID());
             }else{
                 result = db.query("SELECT devices.user_id, devices.properties, platforms.name as platform_name, devices.os_version, devices.created_date, devices.status  FROM devices, platforms where devices.created_date between '"+startDate+"' and '"+endDate+"' and  devices.tenant_id = "+common.getTenantID()+"&& devices.platform_id = platforms.id");
@@ -121,6 +129,13 @@ var mdm_reports = (function () {
              if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null ){
                  for(var i=0; i< result.length;i++){
                      result[i].imei = parse(result[i].properties).imei;
+                     if(result[i].status == 'A'){
+                        result[i].status = 'Active';
+                     }else if(result[i].status == 'PV'){
+                        result[i].status = 'Policy Violated';
+                     }else{
+                        result[i].status = 'Blocked';
+                     }
                  }
                  return  result;
              }else{
@@ -128,12 +143,6 @@ var mdm_reports = (function () {
              }
         },
         getComplianceStatus:function(ctx){
-            log.info("Elaaaaaaaaaaa"+ctx.startDate);
-            log.info(ctx.endDate);
-            log.info(ctx.deviceID);
-           //  ctx.startDate =  '2013-12-23';
-           //  ctx.endDate = '2014-12-24';
-           //  ctx.deviceID = 1038;
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
