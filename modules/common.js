@@ -17,7 +17,7 @@ var getTenantID = function() {
     if(!(typeof session === "undefined")){
         if (session.get("mdmConsoleUser") && session.get("mdmConsoleUser").tenantId != 0) {
             var tenantID = session.get("mdmConsoleUser").tenantId;
-            log.info("Tenant IDD :"+tenantID);
+            //log.info("Tenant IDD :"+tenantID);
             return tenantID;
         } else {
             return "-1234";

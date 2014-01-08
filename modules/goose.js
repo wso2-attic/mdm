@@ -118,23 +118,23 @@ var goose = (function () {
 			for (var property in routes){
 				if(routes.hasOwnProperty(property)){
 					var routeObject = routes[property];
-					log.debug("Goose Router Object"+stringify(routeObject));
+					//log.debug("Goose Router Object"+stringify(routeObject));
 	                var routeAction = routeObject.action;
 	                var route = routeObject.route;
 	                var verb = routeObject.verb;
 	                var uriMatcher = new URIMatcher(request.getRequestURI());
-					log.debug('--------Request URI--------'+request.getRequestURI());
+					//log.debug('--------Request URI--------'+request.getRequestURI());
 	                if (uriMatcher.match(route) && request.getMethod() == verb) {
-						log.debug('--------Goose Match--------');
+						//log.debug('--------Goose Match--------');
 						if(configs.AUTH_SUPPORT){
 							if(routeObject.roles!=undefined){
 								if(configs.AUTH_USER_ROLES==undefined){
-									 log.debug("--------Goose Auth Error (User roles not found)--------");
+									 //log.debug("--------Goose Auth Error (User roles not found)--------");
 									 response.sendError(403);
 									 return;
 								}
-								log.debug('--------Goose Route roles--------'+routeObject.roles);
-								log.debug('--------Goose User roles--------'+configs.AUTH_USER_ROLES);
+								//log.debug('--------Goose Route roles--------'+routeObject.roles);
+								//log.debug('--------Goose User roles--------'+configs.AUTH_USER_ROLES);
 								var authState = isArrayOverlap(configs.AUTH_USER_ROLES, routeObject.roles);
 								if(!authState){
 									 log.debug("--------Goose Auth Error (User roles doesn't match with route roles)--------");
@@ -142,35 +142,35 @@ var goose = (function () {
 									 return;
 								}
 							}else{
-								log.debug("--------Goose Auth No Rules found for route--------");
+								//log.debug("--------Goose Auth No Rules found for route--------");
 							}
 						}
 	                    
 						var elements = uriMatcher.elements();
 	                    var ctx = elements;
-	                    log.debug("--------Goose Verb --------" + verb);
-	                    log.debug("--------Goose Route --------" + route);
-						log.debug("--------Goose Elements --------");
-						log.debug(elements);
+	                    //log.debug("--------Goose Verb --------" + verb);
+	                    //log.debug("--------Goose Route --------" + route);
+						//log.debug("--------Goose Elements --------");
+						//log.debug(elements);
 						
 						var jResult = {};
 						if(verb=="GET"){
 							jResult = request.getAllParameters('UTF-8');
 						}else{
 							jResult = request.getAllParameters('UTF-8');
-							log.debug("--------Goose ContentType --------"+request.getContentType());
+							//log.debug("--------Goose ContentType --------"+request.getContentType());
 							if(request.getContentType().indexOf('application/json') !== -1){
 								mergeRecursive(jResult,request.getContent());
 							}
 						}
 						ctx.files = request.getAllFiles();
 						
-						log.debug("--------Goose parsed data--------- ");
-						log.debug(jResult);
+						//log.debug("--------Goose parsed data--------- ");
+						//log.debug(jResult);
 	                    ctx = mergeRecursive(jResult,ctx);
 	
-						log.debug("--------Goose final data--------- ");
-						log.debug(jResult);
+						//log.debug("--------Goose final data--------- ");
+						//log.debug(jResult);
 	                    routeAction(ctx);
 						matched = true;
 	                    break;
