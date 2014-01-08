@@ -110,7 +110,7 @@ var mvc = (function () {
 			var partial = partials[i];
 			partial.open('r');
 			Handle.registerPartial(partial.getName().split('.')[0], partial.readAll());
-			log.debug("Handle registered template -"+partial.getName().split('.')[0]);
+			//log.debug("Handle registered template -"+partial.getName().split('.')[0]);
 			partial.close();
 		}
 	}
@@ -159,7 +159,7 @@ var mvc = (function () {
 	}
 	//Call
 	function callAPI(request){
-		log.debug("Router process ");
+		//log.debug("Router process ");
 		configs.ROUTER.process(request);
 	}
 	//Check if API route is provided and 
@@ -168,7 +168,7 @@ var mvc = (function () {
 		if(configs.API==undefined){
 			return false;
 		}
-		log.debug("K "+pageParams[0]);
+		//log.debug("K "+pageParams[0]);
 		return pageParams[0]== configs.API;
 	}
 	
@@ -199,14 +199,14 @@ var mvc = (function () {
 				} 
 			};
 			
-			log.debug("Request url: "+reqURL);
-			log.debug("Page url: "+pageURL);
+			//log.debug("Request url: "+reqURL);
+			//log.debug("Page url: "+pageURL);
 			if(configs.AUTH_SUPPORT){
 				if(rules[pageURL] && configs.AUTH_USER_ROLES){
 					if(rules[pageURL]!=undefined && rules[pageURL].length>0){
 						var authState = isArrayOverlap(configs.AUTH_USER_ROLES, rules[pageURL]);
 						if(!authState){
-							 log.debug("--------Absolute Auth Error (User roles doesn't match with route roles)--------");
+							 //log.debug("--------Absolute Auth Error (User roles doesn't match with route roles)--------");
 							 response.sendError(403);
 							 return;
 						}
@@ -234,7 +234,7 @@ var mvc = (function () {
 			}
 			var viewName = view;
 			view = view+"."+configs.ENGINE;
-			log.debug("View "+ view);
+			//log.debug("View "+ view);
 			
 			//App controller
 			var appController;
@@ -260,7 +260,7 @@ var mvc = (function () {
 
 				if(isExists('/controller/'+controller+".js") && require('/controller/'+controller+".js")[viewName] !=undefined){
 					context = require('/controller/'+controller+".js")[viewName](appController);
-					log.debug("Current context "+context);
+					//log.debug("Current context "+context);
 				}		
 				//Extracting the layout from the controller
 				var layout;

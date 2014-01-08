@@ -233,9 +233,9 @@ var notification = (function () {
             }
         },
         addNotification: function(ctx){
-			log.info("Android Notification all >>>>>"+stringify(ctx));
-			log.info("CTX>>>>>>>>>>>>>>>>>> msg id " + ctx.msgID);
-            log.info("Android Notification >>>>> data"+ctx.data);
+			log.debug("Android Notification all >>>>>"+stringify(ctx));
+			log.debug("CTX>>>>>>>>>>>>>>>>>> msg id " + ctx.msgID);
+            log.debug("Android Notification >>>>> data"+ctx.data);
             var recivedDate = common.getCurrentDateTime();
             var result = db.query("select * from notifications where id = '"+ctx.msgID+"'");
             var deviceId =  result[0].device_id;
@@ -247,7 +247,7 @@ var notification = (function () {
                     log.info(e);
                 }
             }
-            var messageIDs = db.query("SELECT * from devices where id=?",ctx.msgID);
+            var messageIDs = db.query("SELECT * from notifications where id=?",ctx.msgID);
             if(typeof messageIDs !== 'undefined' && messageIDs !== null && typeof messageIDs[0] !== 'undefined' && messageIDs[0]!== null){
                 db.query("UPDATE notifications SET status='R', received_data = ? , received_date = ? WHERE id = ?", ctx.data, recivedDate, ctx.msgID);
             }
