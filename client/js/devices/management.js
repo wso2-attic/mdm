@@ -26,7 +26,7 @@ oTable = $('#main-table').dataTable({
                       {                         
                         "fnRender": function (oObj)                              
                         {                           
-                            return "<a href='/mdm/users/devices?user="  + oObj.aData[2] + "&tab=" + oObj.iDataRow + "#device-tab-"+ oObj.aData[0]+"'>"+  oObj.aData[2] +"</a>";
+                            return "<a href='/mdm/users/devices?user="  + oObj.aData[2] + "#device-tab-"+ oObj.aData[0]+"'>"+  oObj.aData[2] +"</a>";
                         }
                       },
                       
