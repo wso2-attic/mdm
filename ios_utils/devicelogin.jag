@@ -27,22 +27,42 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
       
         <div class="navbar-header">         
-          <a class="navbar-brand" href="#">WSO2Mobile MDM Registration</a>
+          <a class="navbar-brand" href="#">MDM Registration</a>
         </div>   
      
     </div>
 
 
      <div class="container">
-	 <form class="form-signin" action="enroll" method="post" id="authform" >
+	
 		<h3>License Agreement</h3>
-		<p><%
+		<p style="text-align:justify;"><%
             var userModule = require('/modules/user.js').user;
             var db = application.get('db');
             var user = new userModule(db);
-            print(user.getLicenseByDomain(request.getParameter('tenantDomain')));
-		%></p>
 
+            var username = request.getParameter("username");
+            var password = request.getParameter("password");
+            var tenantDomain = request.getParameter("tenantDomain").toLowerCase();
+
+            var ctx = {};
+            if (tenantDomain.trim() != ""){
+                ctx.username = username + "@" + tenantDomain;
+                ctx.userid = username + "@" + tenantDomain;
+            } else {
+                ctx.username = username;
+                ctx.userid = username;
+            }
+            ctx.password = password;
+            var objUser = user.authenticate(ctx);
+            if (objUser == null) {
+                response.sendRedirect("authfailed");
+            } else {
+                print(user.getLicenseByDomain(tenantDomain));
+            }
+
+		%></p>
+ 	<form class="form-signin" action="enroll" method="post" id="authform" >
 		 <button type="button" class="btn btn-lg btn-primary btn-block" onclick="onClickSubmit()">I Accept</button>
 	     <input name="tenantDomain" id="domain" type="hidden" value="<% print(request.getParameter('tenantDomain')); %>" />
 	     <input name="username" id="uname" type="hidden" value="<% print(request.getParameter('username')); %>" />
