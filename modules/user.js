@@ -424,8 +424,10 @@ var user = (function () {
         		return "default";
         	}
         	var carbon = require('carbon');
-            var tenantUser = carbon.server.tenantUser(arguments[0]);
-            return tenantUser.domain;
+            var ctx = {};
+            ctx.tenantId = arguments[0];
+            var tenantDomain = carbon.server.tenantDomain(ctx);
+            return tenantDomain;
         }
     };
     return module;
