@@ -107,9 +107,6 @@ var mdm_reports = (function () {
     module.prototype = {
         constructor: module,
         getDevicesByRegisteredDate:function(ctx){
-            //ctx.startDate =  '2013-12-23';
-            //ctx.endDate = '2014-12-24';
-            //ctx.platformType = 1;
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
@@ -129,11 +126,6 @@ var mdm_reports = (function () {
             }
         },
         getDevicesByComplianceState:function(ctx){
-
-
-
-
-
              var zeros = ' 00:00:00';
              var startDate = ctx.startDate+zeros;
              var endDate = ctx.endDate+zeros;
@@ -148,9 +140,6 @@ var mdm_reports = (function () {
              }
         },
         getComplianceStatus:function(ctx){
-            ctx.startDate =  '2013-12-23';
-             ctx.endDate = '2014-12-24';
-            ctx.deviceID = 1038;
             var zeros = ' 00:00:00';
             var startDate = ctx.startDate+zeros;
             var endDate = ctx.endDate+zeros;
