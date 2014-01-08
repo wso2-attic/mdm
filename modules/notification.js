@@ -249,7 +249,6 @@ var notification = (function () {
             }
             var messageIDs = db.query("SELECT * from notifications where id=?",ctx.msgID);
             if(typeof messageIDs !== 'undefined' && messageIDs !== null && typeof messageIDs[0] !== 'undefined' && messageIDs[0]!== null){
-                log.debug("Niranjan");
                 db.query("UPDATE notifications SET status='R', received_data = ? , received_date = ? WHERE id = ?", ctx.data, recivedDate, ctx.msgID);
             }
         },
