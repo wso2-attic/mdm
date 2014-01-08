@@ -7,7 +7,7 @@
 				<div class="block">
 					<div class="block-header">
 						<div class="block-header-title pull-left">
-							Devices Compliance Monitoring
+							Devices Compliance Monitoring {{#data.results.0.current_status}}(Current Status: {{this}}){{/data.results.0.current_status}}
 						</div>
 						
 							<div class="pull-right">
@@ -93,7 +93,7 @@
 											<th>Username</th>
 											<th>Date</th>
 											<th>Description</th>
-											<th>Current Status</th>											
+											<th>Status</th>											
 										</tr>
 									</thead>
 									<tbody>
@@ -102,9 +102,9 @@
 												<td>{{userID}}</td>
 												<td>{{timeStamp}}</td>
 												<td>{{#resons}}
-													{{name}} {{#if status}}<span style="color:green">(Complience)</span>. {{else}}<span style="color:red">(violated)</span>{{/if}}
+													{{name}} {{#if status}}<span style="color:green">(Complience)</span>. {{else}}<span style="color:red">(Violated)</span>{{/if}}
 													{{/resons}}</td>
-												<td>{{current_status}}</td>
+												<td>{{#if status}}<span style="color:green">Complience</span>{{else}}<span style="color:red">Violated</span>{{/if}}</td>
 											</tr>
 										{{/data.results}}
 									</tbody>									
