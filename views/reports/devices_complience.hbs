@@ -54,15 +54,29 @@
 									</div>
 								</div>
 							</div>
+							
+							
+							
+							<div class="span2 operation-filter">
+								<div class="control-group">
+									<label class="control-label" for="inputEmail">Username</label>
+									<div class="controls">
+										<input id="username" name="username" class="span2" size="16" type="text" value="{{data.inputData.username}}" >
+									</div>
+								</div>
+							</div>
+							
+							
 
 							<div class="span2 operation-filter">
 								<div class="control-group">
-									<label class="control-label" for="inputEmail">Platform</label>
+									<label class="control-label" for="inputEmail">Status</label>
 									<div class="controls">
-										<select id="platform" name="platform" >
-											<option {{#compare data.inputData.platform '0'}}selected="selected"{{/compare}} value="0">--All--</option>
-											<option {{#compare data.inputData.platform '1'}}selected="selected"{{/compare}} value="1">Android</option>
-											<option {{#compare data.inputData.platform '2'}}selected="selected"{{/compare}} value="2">iOS</option>
+										<select id="status" name="status" >
+											<option {{#compare data.inputData.status ''}}selected="selected"{{/compare}} value="">--All--</option>
+											<option {{#compare data.inputData.status 'PV'}}selected="selected"{{/compare}} value="PV">Policy Violated</option>
+											<option {{#compare data.inputData.status 'B'}}selected="selected"{{/compare}} value="B">Blocked</option>
+											<option {{#compare data.inputData.status 'A'}}selected="selected"{{/compare}} value="A">Active</option>
 										</select>
 									</div>
 								</div>
