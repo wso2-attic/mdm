@@ -54,11 +54,11 @@ devices_complience = function(appController){
 		var username = request.getParameter('username');
 		var status = request.getParameter('status');
 		
-		print(startdate + enddate + username + status);
+		//print(startdate + enddate + username + status);
 		
 		var reportResults = report.getDevicesByComplianceState({startDate: startdate, endDate: enddate, username: username, status: status});
 		
-		print(reportResults);
+		//print(reportResults);
 		
 		results = reportResults;
 	}
