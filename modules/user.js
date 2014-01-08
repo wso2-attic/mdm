@@ -396,16 +396,20 @@ var user = (function () {
 
         getLicenseByDomain: function() {
             var message = "";
-            var file = new File("/config/tenants/" + arguments[0] + '/license.txt');
-            if (file.isExists()){
+            if (arguments[0].trim() == "") {
+                var file = new File("/config/tenants/default/license.txt");
                 file.open("r");
                 message = file.readAll();
                 file.close();
             } else {
-                file = new File("/config/tenants/default/license.txt");
-                file.open("r");
-                message = file.readAll();
-                file.close();
+                var file = new File("/config/tenants/" + arguments[0] + '/license.txt');
+                if (file.isExists()){
+                    file.open("r");
+                    message = file.readAll();
+                    file.close();
+                } else {
+                    message = "400";
+                }
             }
             return message;
         },
