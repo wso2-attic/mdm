@@ -91,7 +91,7 @@ devices_status = function(appController){
 		
 		var reportResults = report.getComplianceStatus({startDate: startdate, endDate: enddate, deviceID: deviceId});
 		
-		//print(reportResults);
+		print(reportResults);
 		
 		results = reportResults;
 	
