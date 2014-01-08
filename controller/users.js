@@ -140,8 +140,8 @@ devices = function(appController) {
 	}
 
 	for (var i = 0; i < devices.length; i++) {
-		
-		
+
+
 		/*try{
 			var appList = notification.getLastRecord({deviceid: devices[i].id , operation: "502A"}).received_data;
 			devices[i].appList = parse(appList);
@@ -170,8 +170,8 @@ devices = function(appController) {
 		} catch(e) {
 				
 		}
-		
-	
+
+
 		
 		devices[i].properties = JSON.parse(devices[i].properties);
 		try {
