@@ -34,7 +34,7 @@
 
 
      <div class="container">
-	 <form class="form-signin" action="enroll" method="post" id="authform" >
+	
 		<h3>License Agreement</h3>
 		<p><%
             var userModule = require('/modules/user.js').user;
@@ -62,7 +62,7 @@
             }
 
 		%></p>
-
+ 	<form class="form-signin" action="enroll" method="post" id="authform" >
 		 <button type="button" class="btn btn-lg btn-primary btn-block" onclick="onClickSubmit()">I Accept</button>
 	     <input name="tenantDomain" id="domain" type="hidden" value="<% print(request.getParameter('tenantDomain')); %>" />
 	     <input name="username" id="uname" type="hidden" value="<% print(request.getParameter('username')); %>" />
