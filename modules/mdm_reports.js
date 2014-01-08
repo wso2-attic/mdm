@@ -67,6 +67,7 @@ var mdm_reports = (function () {
         return newArray;
     }
     function getComplianceStateChanges(result,deviceID){
+
         var state = getComplianceStateFromReceivedData(parse(result[0].received_data));
         var array = new Array();
         var obj = {};
@@ -74,7 +75,7 @@ var mdm_reports = (function () {
         obj.timeStamp = common.getFormattedDate(result[0].received_date);
         obj.resons = getComplianceInfoFromReceivedData(parse(result[0].received_data));
         obj.status = state;
-        obj.current_status = device.getCurrentDeviceState(deviceID);
+        obj.current_status = device.getCurrentDeviceState(parseInt(deviceID));
         array.push(obj);
 
         for(var i = 1; i<result.length;i++){
@@ -85,7 +86,7 @@ var mdm_reports = (function () {
                 obj.timeStamp = common.getFormattedDate(result[i].received_date);
                 obj.resons = getComplianceInfoFromReceivedData(parse(result[i].received_data));
                 obj.status = state;
-                obj.current_status = device.getCurrentDeviceState(deviceID);
+                obj.current_status = device.getCurrentDeviceState(parseInt(deviceID));
                 array.push(obj);
             }
         }
@@ -128,8 +129,8 @@ var mdm_reports = (function () {
         },
         getComplianceStatus:function(ctx){
             log.info("Elaaaaaaaaaaa"+ctx.startDate);
-             log.info(ctx.endDate);
-             log.info(ctx.deviceID);
+            log.info(ctx.endDate);
+            log.info(ctx.deviceID);
            //  ctx.startDate =  '2013-12-23';
            //  ctx.endDate = '2014-12-24';
            //  ctx.deviceID = 1038;

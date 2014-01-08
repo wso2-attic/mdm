@@ -585,7 +585,7 @@ var device = (function () {
         },
         getCurrentDeviceState:function(deviceId){
         	var tenantID = common.getTenantID();
-            var result = db.query("select status from devices where id = ?",stringify(deviceId));
+            var result = db.query("select status from devices where id = ",String(deviceId));
             if(result != undefined && result != null && result[0] != undefined && result[0] != null){
                 return result[0].status;
             }else{
