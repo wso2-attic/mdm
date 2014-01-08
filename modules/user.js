@@ -377,10 +377,18 @@ var user = (function () {
             var tenantDomain = tenantUser.domain;
             log.debug("Domain >>>>>>> " + tenantDomain);
 
+            if (tenantDomain == "carbon.super") {
+                return this.getTenantName("default");
+            }
+
             return this.getTenantName(tenantDomain);
         },
 
         getTenantNameFromID: function (){
+            if (arguments[0] == "-1234") {
+                return this.getTenantName("default");
+            }
+
             var ctx = {};
             ctx.tenantId = arguments[0];
             var tenantDomain = carbon.server.tenantDomain(ctx);
