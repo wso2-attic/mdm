@@ -84,7 +84,7 @@ var mdm_reports = (function () {
         var array = new Array();
         var obj = {};
         obj.userID =  result[0].user_id;
-        obj.timeStamp = result[0].received_date;
+        obj.timeStamp = common.getFormattedDate(result[0].received_date);
         obj.resons = getComplianceInfoFromReceivedData(parse(result[0].received_data));
         obj.status = state;
         array.push(obj);
@@ -93,9 +93,9 @@ var mdm_reports = (function () {
             if(getComplianceStateFromReceivedData(parse(result[i].received_data)) !== state){
                 state = getComplianceStateFromReceivedData(parse(result[i].received_data));
                 var obj = {};
-                obj.userID =  result[0].user_id;
-                obj.timeStamp = result[0].received_date;
-                obj.resons = getComplianceInfoFromReceivedData(parse(result[0].received_data));
+                obj.userID =  result[i].user_id;
+                obj.timeStamp = common.getFormattedDate(result[i].received_date);
+                obj.resons = getComplianceInfoFromReceivedData(parse(result[i].received_data));
                 obj.status = state;
                 array.push(obj);
             }
