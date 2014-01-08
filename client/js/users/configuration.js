@@ -16,8 +16,10 @@ $(document).ready(function() {
                       null,
                       
                       {                         
+                        "sWidth": "40%",
                         "fnRender": function (oObj)                              
                         {                           
+                           
                             return '<a href="view?user='+ oObj.aData[0] +'" data-item="'+ oObj.aData[0] +'" title="View User"><i class="icon-user"> </i> View Roles</a>&nbsp;' +
                                 '<a href="/mdm/users/assign_groups?user='+ oObj.aData[0] +'" class="btn-assign-roles" data-item="'+ oObj.aData[0] +'" title="Assign Roles"><i class="icon-edit"> </i> Assign Roles</a>&nbsp;' + 
                                 '<a href="#" class="btn-invite" data-item="'+ oObj.aData[0] +'" title="Invite"><i class="icon-envelope"> </i> Invite</a>&nbsp;';
@@ -62,7 +64,8 @@ $(".add-group-link").click(function() {
 
 });
 
-$(".btn-item-remove").click(function() {
+//$(".btn-item-remove").click(function() {
+$( "#main-table" ).on( "click", ".btn-item-remove", function() {
 	var item = $(this).data("item");
 		
 	noty({
@@ -124,8 +127,8 @@ $(".btn-item-remove").click(function() {
 
 
 
-$(".btn-invite").click(function() {
-	
+//$(".btn-invite").click(function() {
+$( "#main-table" ).on( "click", ".btn-invite", function() {
 	var item = $(this).data("item");
 		
 	noty({
