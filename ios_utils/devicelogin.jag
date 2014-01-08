@@ -40,7 +40,27 @@
             var userModule = require('/modules/user.js').user;
             var db = application.get('db');
             var user = new userModule(db);
-            print(user.getLicenseByDomain(request.getParameter('tenantDomain')));
+
+            var username = request.getParameter("username");
+            var password = request.getParameter("password");
+            var tenantDomain = request.getParameter("tenantDomain").toLowerCase();
+
+            var ctx = {};
+            if (tenantDomain.trim() != ""){
+                ctx.username = username + "@" + tenantDomain;
+                ctx.userid = username + "@" + tenantDomain;
+            } else {
+                ctx.username = username;
+                ctx.userid = username;
+            }
+            ctx.password = password;
+            var objUser = user.authenticate(ctx);
+            if (objUser == null) {
+                response.sendRedirect("mdmerror");
+            } else {
+                print(user.getLicenseByDomain(tenantDomain));
+            }
+
 		%></p>
 
 		 <button type="button" class="btn btn-lg btn-primary btn-block" onclick="onClickSubmit()">I Accept</button>

@@ -315,7 +315,12 @@ var user = (function () {
         authenticate: function(ctx){
 			ctx.username = ctx.username;
 			log.info("username "+ctx.username);
-			var authStatus = server().authenticate(ctx.username, ctx.password);
+            try {
+                var authStatus = server().authenticate(ctx.username, ctx.password);
+            } catch (e){
+                return null;
+            }
+
 			log.info(">>auth "+authStatus);
 			if(!authStatus) {
 				return null;
