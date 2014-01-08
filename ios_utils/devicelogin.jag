@@ -36,7 +36,7 @@
      <div class="container">
 	
 		<h3>License Agreement</h3>
-		<p><%
+		<p style="text-align:justify;"><%
             var userModule = require('/modules/user.js').user;
             var db = application.get('db');
             var user = new userModule(db);
