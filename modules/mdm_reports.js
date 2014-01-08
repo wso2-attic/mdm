@@ -137,9 +137,15 @@ var mdm_reports = (function () {
              var zeros = ' 00:00:00';
              var startDate = ctx.startDate+zeros;
              var endDate = ctx.endDate+zeros;
-             var result = db.query("SELECT devices.properties, devices.user_id, devices.os_version, platforms.type_name as platform from devices, platforms WHERE devices.created_date between '"+ctx.startDate+"' AND '"+ctx.endDate+"'AND devices.user_id like '%"+ctx.username+"%' AND status like '%"+ctx.status+"%' AND devices.tenant_id ="+common.getTenantID()+" AND devices.platform_id = platforms.id");
-             log.info("RRRRResult :"+result);
-             return result;
+             var result = db.query("SELECT devices.id, devices.properties, devices.user_id, devices.os_version, platforms.type_name as platform from devices, platforms WHERE devices.created_date between '"+ctx.startDate+"' AND '"+ctx.endDate+"'AND devices.user_id like '%"+ctx.username+"%' AND status like '%"+ctx.status+"%' AND devices.tenant_id ="+common.getTenantID()+" AND devices.platform_id = platforms.id");
+             if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null ){
+                 for(var i=0; i< result.length;i++){
+                     result[i].imei = parse(result[i].properties).imei;
+                 }
+                 return  result;
+             }else{
+                 return null;
+             }
         },
         getComplianceStatus:function(ctx){
             ctx.startDate =  '2013-12-23';
