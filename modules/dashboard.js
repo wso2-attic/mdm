@@ -6,6 +6,7 @@ var dashboard = (function () {
     var log = new Log();
     var db;
     var common = require("/modules/common.js");
+    var sqlscripts = require('/sqlscripts/mysql.js');
     
     var module = function (dbs) {
         db = dbs;
@@ -35,7 +36,7 @@ var dashboard = (function () {
         
         getDeviceCountByOS: function(ctx){      	 	 
           	var tenantID = common.getTenantID();
-          	var finalResult = db.query("SELECT platforms.type_name as label, ROUND((count(devices.id)/(select count(id) from devices))*100,0) as data from platforms, devices where devices.platform_id = platforms.id AND devices.tenant_id = ? group by type", tenantID);
+          	var finalResult = db.query(sqlscripts.devices.select2, tenantID);
                        
             
             
@@ -53,8 +54,8 @@ var dashboard = (function () {
         
         getDeviceCountByOwnership: function(ctx){
             var tenantID = common.getTenantID();
-            var allDeviceCount = db.query("select count(id) as count from devices where tenant_id = ?", tenantID);
-	        var allByodCount = db.query("select count(id) as count from devices where byod=1 AND tenant_id = ?", tenantID);
+            var allDeviceCount = db.query(sqlscripts.devices.select3, tenantID);
+	        var allByodCount = db.query(sqlscripts.devices.select4, tenantID);
 	        var finalResult =  [{"label" : "Personal", "data" : allByodCount[0].count}, {"label" : "Corporate", "data" : allDeviceCount[0].count - allByodCount[0].count}];   
             
                        
@@ -71,8 +72,8 @@ var dashboard = (function () {
         
          getAndroidDeviceCountByOwnership: function(ctx){
             var tenantID = common.getTenantID();
-            var allDeviceCount = db.query("select count(id) as count from devices where tenant_id = ?", tenantID);
-	        var allByodCount = db.query("select count(id) as count from devices where byod=1 AND tenant_id = ?", tenantID);
+            var allDeviceCount = db.query(sqlscripts.devices.select3, tenantID);
+	        var allByodCount = db.query(sqlscripts.devices.select4, tenantID);
 	        var finalResult =  [{"label" : "Personal", "data" : allByodCount[0].count}, {"label" : "Corporate", "data" : allDeviceCount[0].count - allByodCount[0].count}];   
             return finalResult;            
       

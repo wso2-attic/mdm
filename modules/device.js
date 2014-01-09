@@ -8,6 +8,7 @@ var device = (function () {
     var user = '';
     var groupModule = require('group.js').group;
     var group = '';
+    var sqlscripts = require('/sqlscripts/mysql.js');
 
     var tenantID = common.getTenantID();
 
@@ -190,7 +191,12 @@ var device = (function () {
         var deviceId = ctx.deviceid;
         var operationName = ctx.operation;
         var tenantID = common.getTenantIDFromDevice(deviceId);
-        var devices = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", deviceId+"");
+
+        //SQL check
+        //var devices = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", deviceId+"");
+        var devices = db.query(sqlscripts.devices.select6, deviceId);
+        select6
+
         if(devices == undefined || devices == null || devices[0]== undefined || devices[0] == null ){
             return false;
         }
@@ -240,7 +246,7 @@ var device = (function () {
     function invokeInitialFunctions(ctx) {
         var db = application.get('db');
         var tenantID = common.getTenantID();
-        var devices = db.query("SELECT * FROM devices WHERE udid = ?" ,ctx.deviceid);
+        var devices = db.query(sqlscripts.devices.select7 ,ctx.deviceid);
         var deviceID = devices[0].id;
         var userId = devices[0].user_id;
 
@@ -283,7 +289,10 @@ var device = (function () {
             }
         }
 
-        var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
+        //SQL Check
+        //var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
+        var devices = db.query(sqlscripts.devices.select8, ctx.deviceid);
+
         if(devices == null || devices == undefined || devices[0] == null || devices[0] == undefined) {
             return;
         }
@@ -313,7 +322,10 @@ var device = (function () {
         log.error("device token : "+ deviceToken);
         log.error("magic token : "+ pushMagicToken);
 
-        var users = db.query("SELECT user_id FROM devices WHERE id = ?", ctx.deviceid+"");
+        //SQL Check
+        //var users = db.query("SELECT user_id FROM devices WHERE id = ?", ctx.deviceid+"");
+        var users = db.query(sqlscripts.devices.select9, ctx.deviceid);
+
         var userId = users[0].user_id;
 
 
@@ -395,7 +407,7 @@ var device = (function () {
         for(var i = 0; i < pendingOperations.length; i++) {
 
             var deviceId = pendingOperations[i].device_id;
-            var devices = db.query("SELECT reg_id FROM devices WHERE id = ? AND tenant_id = ?", deviceId,tenantID);
+            var devices = db.query(sqlscripts.devices.select10, deviceId,tenantID);
 
             if(devices != null && devices[0] != null && devices != undefined && devices[0] != undefined) {
                 var regId = devices[0].reg_id;
@@ -459,7 +471,11 @@ var device = (function () {
             log.debug("MSG format :"+stringify(ctx.data));
             log.debug(ctx.deviceid);
             log.debug(ctx.operation);
-            var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
+
+            //SQL Check
+            //var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
+            var devices = db.query(sqlscripts.devices.select11, ctx.deviceid);
+
             var platformID = devices[0].platform_id;
             if(platformID==1){
                 return sendMessageToAndroidDevice(ctx);
@@ -481,7 +497,10 @@ var device = (function () {
             var deviceId =  ctx.deviceid;
             var tenantID = common.getTenantID();
             log.debug("Test Role :"+role);
-            var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id", stringify(deviceId));
+
+            //SQL Check
+            //var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id", stringify(deviceId));
+            var featureList = db.query(sqlscripts.devices.select12, stringify(deviceId));
 
             var obj = new Array();
             for(var i=0; i<featureList.length; i++){
@@ -495,8 +514,8 @@ var device = (function () {
                 log.info("Test1");
                 // log.info(checkPermission(role,deviceId, featureList[i].name, this));
                 log.info("Test2");
-                //featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
-                featureArr["enable"] = true;
+                featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
+                //featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
 
                 }else{
@@ -681,18 +700,7 @@ var device = (function () {
 
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
-
             var createdDate = common.getCurrentDateTime();
-
-            /*
-             var devicesCheckUDID = db.query("SELECT * FROM devices WHERE udid = ?", ctx.udid);
-             if(devicesCheckUDID != undefined && devicesCheckUDID != null && devicesCheckUDID[0] != undefined && devicesCheckUDID[0] != null){
-             db.query("Update devices SET reg_id = ? WHERE udid = ?", ctx.regid, ctx.udid);
-             }else{
-             db.query("INSERT INTO devices (tenant_id, os_version, created_date, properties, reg_id, status, deleted, user_id, platform_id, vendor, udid) VALUES(?, ?, ?, ?, ?, 'A', '0', ?, ?, ?, ?)",
-             tenantId, ctx.osversion, createdDate, stringify(ctx.properties), ctx.regid, userId, platformId, ctx.vendor, ctx.udid);
-             }*/
-
             var devicesCheckUDID = db.query("SELECT * FROM device_pending WHERE token = ?", ctx.auth_token);
 
             //Save device data into temporary table

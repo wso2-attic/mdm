@@ -6,6 +6,7 @@ var notification = (function () {
     var log = new Log();
     var db;
 	var common = require("/modules/common.js");
+    var sqlscripts = require('/sqlscripts/mysql.js');
     var deviceModule = require('device.js').device;
     var device;
     var module = function (dbs) {
@@ -117,21 +118,7 @@ var notification = (function () {
 
                     if(pendingExist) {
 
-                        /*
-                        var message = stringify(ctx.data);
-                        var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", device_id + "");
-                        var regId = devices[0].reg_id;
-                        var regIdJsonObj = parse(regId);
-                        var pushMagicToken = regIdJsonObj.magicToken;
-                        var deviceToken = regIdJsonObj.token;
-                        try {
-                            common.initAPNS(deviceToken, pushMagicToken);
-                        } catch (e) {
-                            log.error(e);
-                        }
-                        */
                         return true;
-
                     } else {
                     	
 	                	for(var i = 0; i < parsedReceivedData.length; i++) {

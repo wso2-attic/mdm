@@ -14,6 +14,7 @@ var policy = (function () {
     var device;
 
     var common = require("common.js");
+    var sqlscripts = require('/sqlscripts/mysql.js');
 
     var configs = {
         CONTEXT: "/"
@@ -66,7 +67,11 @@ var policy = (function () {
         return  jsonData;
     }
     function getPolicyIdFromDevice(deviceId){
-        var devices = db.query("SELECT * from devices where id = ?",String(deviceId));
+
+        //SQL Check
+        //var devices = db.query("SELECT * from devices where id = ?",String(deviceId));
+        var devices = db.query(sqlscripts.devices.select1, String(deviceId));
+
         var userId = devices[0].user_id;
         var platform = '';
         if(devices[0].platform_id == 1){
@@ -333,10 +338,10 @@ var policy = (function () {
 
         },
         getPolicyPayLoad:function(deviceId,category){
-            var devices = db.query("SELECT * from devices where id = ?" ,deviceId);
+            var devices = db.query(sqlscripts.devices.select1 ,deviceId);
             var username = devices[0].user_id;//username for pull policy payLoad
 
-            var platforms = db.query("select platforms.type_name from devices,platforms where platforms.id = devices.platform_id AND devices.id = ?" ,deviceId);
+            var platforms = db.query(sqlscripts.devices.select5 ,deviceId);
             var platformName = platforms[0].type_name;//platform name for pull policy payLoad
 
             var roleList = user.getUserRoles({'username':username});
