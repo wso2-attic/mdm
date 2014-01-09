@@ -705,15 +705,21 @@ var device = (function () {
             var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
             var platformId = platforms[0].id;
             var createdDate = common.getCurrentDateTime();
-            var devicesCheckUDID = db.query("SELECT * FROM device_pending WHERE token = ?", ctx.auth_token);
+            var devicesCheckUDID = db.query(sqlscripts.device_pending.select1, ctx.auth_token);
 
             //Save device data into temporary table
             if(devicesCheckUDID != undefined && devicesCheckUDID != null && devicesCheckUDID[0] != undefined && devicesCheckUDID[0] != null){
-                db.query("UPDATE device_pending SET tenant_id = ?, user_id = ?, platform_id = ?, properties = ?, created_date = ?, status = 'A', vendor = ?, udid = ? WHERE token = ?",
-                    tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
+
+                //SQL Check
+                //db.query("UPDATE device_pending SET tenant_id = ?, user_id = ?, platform_id = ?, properties = ?, created_date = ?, status = 'A', vendor = ?, udid = ? WHERE token = ?",
+                //    tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
+                db.query(sqlscripts.device_pending.update1, tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
             } else {
-                db.query("INSERT INTO device_pending (tenant_id, user_id, platform_id, properties, created_date, status, vendor, udid, token) VALUES(?, ?, ?, ?, ?, 'A', ?, ?, ?)",
-                    tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
+
+                //SQL Check
+                //db.query("INSERT INTO device_pending (tenant_id, user_id, platform_id, properties, created_date, status, vendor, udid, token) VALUES(?, ?, ?, ?, ?, 'A', ?, ?, ?)",
+                //    tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
+                db.query(sqlscripts.device_pending.insert1, tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
             }
 
             return true;
@@ -796,7 +802,10 @@ var device = (function () {
         updateiOSTokens: function(ctx){
 
             //var result = db.query("SELECT properties FROM devices WHERE udid = " + stringify(ctx.deviceid));
-            var result = db.query("SELECT properties, user_id FROM device_pending WHERE udid = " + stringify(ctx.deviceid));
+
+            //SQL Check - injection
+            //var result = db.query("SELECT properties, user_id FROM device_pending WHERE udid = " + stringify(ctx.deviceid));
+            var result = db.query(sqlscripts.device_pending.select2, ctx.deviceid);
 
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
 
@@ -823,7 +832,7 @@ var device = (function () {
                 var userResultExist = db.query(sqlscripts.devices.select21, ctx.deviceid);
                 if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
                 	
-                	var devicePendingResult = db.query("SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?", ctx.deviceid);
+                	var devicePendingResult = db.query(sqlscripts.device_pending.select3, ctx.deviceid);
 	                   
 	                if(devicePendingResult != null && devicePendingResult != undefined && devicePendingResult[0] != null && devicePendingResult[0] != undefined) {
 	                	devicePendingResult = devicePendingResult[0]
@@ -837,9 +846,9 @@ var device = (function () {
 
 	                }
 	                
-	                db.query("UPDATE device_pending SET request_status = 1 WHERE user_id = ? && udid IS NOT NULL", devicePendingResult.user_id);
+	                //db.query(sqlscripts.device_pending.update2, devicePendingResult.user_id);
 
-                    db.query("UPDATE device_pending SET request_status = 1 WHERE user_id = ? && udid IS NOT NULL", devicePendingResult.user_id);
+                    db.query(sqlscripts.device_pending.update2, devicePendingResult.user_id);
 
                 } else {
                 	//Copy record from temporary table into device table and delete the record from the temporary table
@@ -849,7 +858,7 @@ var device = (function () {
 	                //    stringify(tokenProperties), stringify(properties), ctx.deviceid);
                     var updateResult = db.query(sqlscripts.devices.insert2, stringify(tokenProperties), stringify(properties), ctx.deviceid);
 	                
-	                db.query("UPDATE device_pending SET request_status = 1 WHERE udid = ?", ctx.deviceid);
+	                db.query(sqlscripts.device_pending.update3, ctx.deviceid);
                 }
 
                 if(updateResult != null && updateResult != undefined && updateResult == 1) {

@@ -5,6 +5,7 @@ var iosmdm = (function() {
 	var db = application.get('db');
 	var device = new deviceModule(db);
 	var common = require("/modules/common.js");
+    var sqlscripts = require('/sqlscripts/mysql.js');
 	var notificationModule = require('/modules/notification.js').notification;
 	var notification = new notificationModule(db);
     var userModule = require('user.js').user;
@@ -75,9 +76,9 @@ var iosmdm = (function() {
                 log.debug("profileResponse.challengeToken >>>>>>>>>> " + profileResponse.challengeToken);
 
                 if (profileResponse.challengeToken != null) {
-                    db.query("UPDATE device_pending SET udid = ? WHERE token = ?", profileResponse.udid, profileResponse.challengeToken);
+                    db.query(sqlscripts.device_pending.update4, profileResponse.udid, profileResponse.challengeToken);
                 }
-                var devices = db.query("SELECT tenant_id FROM device_pending WHERE udid = ?", profileResponse.udid);
+                var devices = db.query(sqlscripts.device_pending.select4, profileResponse.udid);
                 log.debug("device.tenant_id >>>>>>>>>> " + devices[0].tenant_id);
 
                 var tenantName = user.getTenantNameFromID(devices[0].tenant_id);
