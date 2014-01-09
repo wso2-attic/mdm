@@ -295,7 +295,7 @@ var policy = (function () {
             var users1 = db.query("SELECT * from user_policy_mapping where policy_id=?",String(policyId));
 
             for(var i = 0;i<users1.length;i++){
-                var devices1 = db.query("SELECT * from devices where user_id = ? AND tenant_id = ?",users1[i].user_id, common.getTenantID());
+                var devices1 = db.query(sqlscripts.devices.select26, users1[i].user_id, common.getTenantID());
                 for(var j = 0;j<devices1.length;j++){
                     device.sendToDevice({'deviceid':devices1[j].id,'operation':'POLICY','data':payLoad});
                 }
@@ -303,7 +303,11 @@ var policy = (function () {
             var platforms =  db.query("SELECT * from platform_policy_mapping where policy_id=?",String(policyId));
             for(var i = 0;i<platforms.length;i++){
                 if(platforms[i].platform_id == 'android'){
-                    var devices2 = db.query("SELECT * from devices where platform_id = ? AND tenant_id = ?",String(1), common.getTenantID());
+
+                    //SQL Check
+                    //var devices2 = db.query("SELECT * from devices where platform_id = ? AND tenant_id = ?",String(1), common.getTenantID());
+                    var devices2 = db.query(sqlscripts.devices.select36, common.getTenantID());
+
                     for(var j=0;j<devices2.length;j++){
                         var tempId = getPolicyIdFromDevice(devices2[j].id);
                         if(tempId == policyId){
@@ -312,7 +316,11 @@ var policy = (function () {
                     }
 
                 }else{
-                    var devices3 = db.query("SELECT * from devices where platform_id > ?",String(1));
+
+                    //SQL Check
+                    //var devices3 = db.query("SELECT * from devices where platform_id > ?",String(1));
+                    var devices3 = db.query(sqlscripts.devices.select37);
+
                     for(var j=0;j<devices3.length;j++){
                         var tempId = getPolicyIdFromDevice(devices3[j].id);
                         if(tempId == policyId){
@@ -326,7 +334,7 @@ var policy = (function () {
             for(var i = 0;i<groups.length;i++){
                 var users2 = group.getUsersOfGroup({'groupid':groups[i].group_id});
                 for(var j=0;j<users2.length;j++){
-                    var devices4 = db.query("SELECT * from devices where user_id = ? AND tenant_id = ?",users2[j].username, common.getTenantID());
+                    var devices4 = db.query(sqlscripts.devices.select26, users2[j].username, common.getTenantID());
                     for(var k = 0;k<devices4.length;k++){
                         var tempId = getPolicyIdFromDevice(devices4[k].id);
                         if(tempId == policyId){

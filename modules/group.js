@@ -6,7 +6,7 @@ var group = (function () {
 	var log = new Log();
 	var db;
 
-
+    var sqlscripts = require('/sqlscripts/mysql.js');
 	var common = require('common.js');
     var claimEmail = "http://wso2.org/claims/emailaddress";
     var claimFirstName = "http://wso2.org/claims/givenname";
@@ -195,7 +195,7 @@ var group = (function () {
 					proxy_user.mobile = claimResult.get(claimMobile);
 					proxy_user.tenantId = tenantId;
 					proxy_user.roles = user.getRoles();
-					var resultDeviceCount = db.query("SELECT COUNT(id) AS device_count FROM devices WHERE user_id = ? AND tenant_id = ?", users[i], proxy_user.tenantId);
+					var resultDeviceCount = db.query(sqlscripts.devices.select25, users[i], proxy_user.tenantId);
 					proxy_user.no_of_devices = resultDeviceCount[0].device_count;
 					users_list.push(proxy_user);
 				}

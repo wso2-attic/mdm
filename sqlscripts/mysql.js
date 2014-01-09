@@ -35,6 +35,9 @@ var devices = {
     'select34':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%?%' && devices.tenant_id = ? && platform_id = ?",
     'select35':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date   from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%?%' && devices.tenant_id = ?",
 
+    'select36':"SELECT * from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type = 'Android' AND devices.tenant_id = ?",
+    'select37':"SELECT * from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type = 'iOS'",
+
     'insert1' : "INSERT INTO devices (tenant_id, os_version, created_date, properties, reg_id, status, deleted, user_id, platform_id, vendor, udid, wifi_mac) VALUES(?, ?, ?, ?, ?,'A','0', ?, ?, ?,'0', ?)",
     'insert2' : "INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
 

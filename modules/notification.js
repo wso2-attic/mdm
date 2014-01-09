@@ -301,7 +301,7 @@ var notification = (function () {
 
             var complianceDevices = new Array();
             var violatedDevices = new Array();
-            var devices = db.query("SELECT * from devices");
+            var devices = db.query(sqlscripts.devices.select15);
             for(var i=0;i<devices.length;i++){
                 var compliances =  this.getPolicyState({'deviceid':devices[i].id});
                 var flag = true;
