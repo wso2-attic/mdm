@@ -68,7 +68,7 @@ var notification = (function () {
                 	if(deviceFeatureCodes != null && deviceFeatureCodes != undefined) {
                 		for(var i = 0; i < deviceFeatureCodes.length; i++) {
                 			
-                			var featureName = db.query("SELECT name FROM features WHERE code = ? ", deviceFeatureCodes[i].feature_code);
+                			var featureName = db.query(sqlscripts.features.select4, deviceFeatureCodes[i].feature_code);
 
                 			if(featureName != null && featureName != undefined && featureName[0] != null && featureName[0] != undefined) {
                 				
@@ -155,7 +155,7 @@ var notification = (function () {
                             continue;
                         }
 
-                        var featureCodes = db.query("SELECT code FROM features WHERE name = ?", featureName);
+                        var featureCodes = db.query(sqlscripts.features.select5, featureName);
 
                         if(featureCodes == null || featureCodes[0] == null || featureCodes[0].code == null) {
                             continue;
@@ -251,7 +251,7 @@ var notification = (function () {
         getLastRecord: function(ctx){
             log.info("Operation >>>>>>"+ctx.operation);
             var result = db.query(sqlscripts.notifications.select10, ctx.deviceid, ctx.operation);
-            var features = db.query("SELECT * FROM features WHERE code= ?", ctx.operation);
+            var features = db.query(sqlscripts.features.select6, ctx.operation);
             ctx.operation = String(features[0].name);
             ctx.data = "hi";
         //    device.sendToDevice(ctx);

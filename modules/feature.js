@@ -6,6 +6,7 @@ var feature = (function () {
     var log = new Log();
     var db;
     var common = require("/modules/common.js");
+    var sqlscripts = require('/sqlscripts/mysql.js');
     var module = function (dbs) {
         db = dbs;
         //mergeRecursive(configs, conf);
@@ -105,7 +106,11 @@ var feature = (function () {
                 obj.value = featureGroupList[i].name;
                 obj.isFolder = true;
                 obj.key = featureGroupList[i].id;
-                obj.children = setFlag(db.query("SELECT name as value, description as title from features where group_id = ?",stringify(featureGroupList[i].id)),ctx.groupid);
+
+                //SQL Check
+                //obj.children = setFlag(db.query("SELECT name as value, description as title from features where group_id = ?",stringify(featureGroupList[i].id)),ctx.groupid);
+                obj.children = setFlag(db.query(sqlscripts.features.select3, stringify(featureGroupList[i].id)),ctx.groupid);
+
                 array[i] = obj;
             }
             log.debug(array);

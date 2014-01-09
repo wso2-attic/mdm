@@ -209,7 +209,7 @@ var device = (function () {
         var platformId = devices[0].platform_id;
         var regId = devices[0].reg_id;
 
-        var features = db.query("SELECT * FROM features WHERE name LIKE ?", ctx.operation);
+        var features = db.query(sqlscripts.features.select1, ctx.operation);
         if(features == undefined || features == null || features[0]== undefined || features[0] == null ){
             return false;
         }
@@ -333,7 +333,9 @@ var device = (function () {
 
         log.error("Test operation"+ctx.operation);
 
-        var features = db.query("SELECT id, code, description FROM features WHERE name LIKE ?", ctx.operation+"");
+        //SQL Check
+        //var features = db.query("SELECT id, code, description FROM features WHERE name LIKE ?", ctx.operation+"");
+        var features = db.query(sqlscripts.features.select2, ctx.operation);
 
         if(features == null || features == undefined || features[0] == null || features[0] == undefined) {
             return false;
