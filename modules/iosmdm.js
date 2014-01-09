@@ -186,7 +186,7 @@ var iosmdm = (function() {
 					} else if ("NeedsRedemption" == apnsStatus.getState()) {
 						log.error("NeedsRedemption >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 						
-						var notifications = db.query("SELECT device_id, message FROM notifications WHERE id = ?", commandUUID);
+						var notifications = db.query(sqlscripts.notifications.select4, commandUUID);
 						var device_id = notifications[0].device_id;
 						var message = notifications[0].message;
 						message = parse(message);

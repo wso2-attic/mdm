@@ -36,7 +36,7 @@ var notification = (function () {
         constructor: module,
         getNotifications: function(ctx){
         	var tenantID = common.getTenantID();
-            var result = db.query("SELECT * FROM notifications WHERE device_id = ? ORDER BY id DESC LIMIT 10", ctx.deviceid);
+            var result = db.query(sqlscripts.notifications.select5, ctx.deviceid);
 
             var notifications = new Array();
             for (i=0; i<result.length; i++){
@@ -53,7 +53,7 @@ var notification = (function () {
         addIosNotification: function(ctx){
             //log.info("IOS Notification >>>>>"+stringify(ctx));
             var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
-            var notifications = db.query("SELECT message, feature_code, device_id FROM notifications WHERE id = ?", identifier);
+            var notifications = db.query(sqlscripts.notifications.select6, identifier);
             var recivedDate =  common.getCurrentDateTime();
             
             if(notifications != null &&  notifications[0] != null) {
@@ -88,7 +88,10 @@ var notification = (function () {
                     var notificationId = identifier.split("-")[0];
                     var policySequence = identifier.split("-")[1];
 					
-                    var pendingFeatureCodeList = db.query("SELECT received_data, device_id FROM notifications WHERE id = ?", notificationId + "");
+                    //SQL Check
+                    //var pendingFeatureCodeList = db.query("SELECT received_data, device_id FROM notifications WHERE id = ?", notificationId + "");
+                    var pendingFeatureCodeList = db.query(sqlscripts.notifications.select7, notificationId);
+
                     var received_data = pendingFeatureCodeList[0].received_data;
                     var device_id = pendingFeatureCodeList[0].device_id;
                     var targetOperationData = (parse(received_data))[parseInt(policySequence)];
@@ -114,10 +117,14 @@ var notification = (function () {
                         parsedReceivedData[i] = receivedObject;
                     }
 
-                    db.query("UPDATE notifications SET received_data= ? , received_date = ? WHERE id = ?", stringify(parsedReceivedData) + "", recivedDate + "", notificationId);
+                    //SQL Check
+                    //db.query("UPDATE notifications SET received_data= ? , received_date = ? WHERE id = ?", stringify(parsedReceivedData) + "", recivedDate + "", notificationId);
+                    db.query(sqlscripts.notifications.update4, stringify(parsedReceivedData), recivedDate, notificationId);
+
+
+
 
                     if(pendingExist) {
-
                         return true;
                     } else {
                     	
@@ -125,8 +132,7 @@ var notification = (function () {
 	                        var receivedObject = parsedReceivedData[i];
 	                        db.query("INSERT INTO policy_device_profiles (device_id, feature_code) VALUES (?, ?)", device_id, receivedObject.message.code);
 	                    }
- 
-                        db.query("UPDATE notifications SET status='R' WHERE id = ?", notificationId);
+                        db.query(sqlscripts.notifications.update5, notificationId);
                         
                         var ctx = {};
                         ctx.id = notificationId;
@@ -191,7 +197,7 @@ var notification = (function () {
                     try{
                         log.info("dddddddddddddd :"+device_id);
                         log.info("ffffffffffff :"+featureCode);
-                        db.query("DELETE FROM notifications WHERE device_id = ? AND status='R' AND feature_code = ?",device_id,"501P");
+                        db.query(sqlscripts.notifications.delete2, device_id,"501P");
                     }catch(e){
                         log.info(e);
                     }
@@ -211,8 +217,11 @@ var notification = (function () {
                     	var osVersion = dataObj["OSVersion"];
                     	var wifiMac = dataObj["WiFiMAC"];
                     	
-                    	var notifications = db.query("SELECT device_id FROM notifications WHERE id = ?", identifier + "");
-                    	var deviceId = notifications[0].device_id;
+                    	//SQL Check
+                        //var notifications = db.query("SELECT device_id FROM notifications WHERE id = ?", identifier + "");
+                        var notifications = db.query(sqlscripts.notifications.select8, identifier);
+
+                        var deviceId = notifications[0].device_id;
 
                     	device.updateDeviceProperties(deviceId, osVersion, deviceName, wifiMac);
                     }
@@ -236,12 +245,12 @@ var notification = (function () {
             }
             var messageIDs = db.query("SELECT * from notifications where id=?",ctx.msgID);
             if(typeof messageIDs !== 'undefined' && messageIDs !== null && typeof messageIDs[0] !== 'undefined' && messageIDs[0]!== null){
-                db.query("UPDATE notifications SET status='R', received_data = ? , received_date = ? WHERE id = ?", ctx.data, recivedDate, ctx.msgID);
+                db.query(sqlscripts.notifications.update6, ctx.data, recivedDate, ctx.msgID);
             }
         },
         getLastRecord: function(ctx){
             log.info("Operation >>>>>>"+ctx.operation);
-            var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, ctx.operation);
+            var result = db.query(sqlscripts.notifications.select10, ctx.deviceid, ctx.operation);
             var features = db.query("SELECT * FROM features WHERE code= ?", ctx.operation);
             ctx.operation = String(features[0].name);
             ctx.data = "hi";
@@ -253,7 +262,7 @@ var notification = (function () {
         },
         getPolicyState: function(ctx){
             
-            var result = db.query("SELECT DISTINCT * FROM notifications WHERE received_data IS NOT NULL && device_id = ? && feature_code= ?", ctx.deviceid, '501P');
+            var result = db.query(sqlscripts.notifications.select10, ctx.deviceid, '501P');
             // log.info("RRR"+stringify(result[0].received_data));
             var newArray = new Array();
             if(result == null || result == undefined ||result.length == 0) {
@@ -365,7 +374,7 @@ var notification = (function () {
         	var featureCode = currentOperation[0].feature_code;
         	var userId = currentOperation[0].user_id;
         	
-        	db.query("UPDATE notifications SET status = 'D' WHERE device_id = ? AND feature_code = ? AND user_id = ? AND status = 'P'", deviceId, featureCode, userId);
+        	db.query(sqlscripts.notifications.update1, deviceId, featureCode, userId);
         }
 
     };

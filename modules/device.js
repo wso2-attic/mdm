@@ -223,13 +223,13 @@ var device = (function () {
          }*/
         if(featureCode == "501P"){
             try{
-                db.query("DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",deviceId,featureCode);
+                db.query(sqlscripts.notifications.delete1, deviceId,featureCode);
             }catch (e){
                 log.info(e);
             }
         }
         var currentDate = common.getCurrentDateTime();
-        db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id ,feature_description, tenant_id) values(?, ?, ?, 'P', ?, ?, ?, ?, ?)", deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription, tenantID);
+        db.query(sqlscripts.notifications.insert1, deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription, tenantID);
         var lastRecord = db.query("SELECT LAST_INSERT_ID()");
         var lastRecordJson = lastRecord[0];
         var token = lastRecordJson["LAST_INSERT_ID()"];
@@ -344,7 +344,7 @@ var device = (function () {
         if(featureCode == "501P"){
             try{
                 log.info("Test2");
-                db.query("DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",ctx.deviceid,featureCode);
+                db.query(sqlscripts.notifications.delete1, ctx.deviceid,featureCode);
                 log.info("Test3");
             }catch (e){
                 log.info(e);
@@ -352,12 +352,11 @@ var device = (function () {
         }
 
         //Check if the feature code is a monitoring and status is "A" or "P"
-        var notifyExists = db.query("SELECT count(*) as count FROM notifications JOIN features ON notifications.feature_code = features.code WHERE notifications.device_id = ? AND notifications.feature_code = ? AND features.monitor = 1 AND (notifications.status = 'A' OR notifications.status = 'P')", ctx.deviceid, featureCode);
+        var notifyExists = db.query(sqlscripts.notifications.select1, ctx.deviceid, featureCode);
         log.debug("notifyExists >>>>> " + stringify(notifyExists[0]));
         if (notifyExists[0].count == 0) {
             log.debug("insert into notifications!!!!!!!!!!!");
-            db.query("INSERT INTO notifications (device_id, group_id, message, status, sent_date, feature_code, user_id, feature_description, tenant_id) values( ?, '1', ?, 'P', ?, ?, ?, ?, ?)",
-                ctx.deviceid, message, datetime, featureCode, userId, featureDescription, common.getTenantIDFromEmail(userId));
+            db.query(sqlscripts.notifications.insert2, ctx.deviceid, message, datetime, featureCode, userId, featureDescription, common.getTenantIDFromEmail(userId));
         }
 
         var sendToAPNS = null;
@@ -402,7 +401,7 @@ var device = (function () {
     function checkPendingOperations() {
         //This function is not used anymore..  this can be removed during refactoring
         var tenantID = common.getTenantID();
-        var pendingOperations = db.query("SELECT id, device_id FROM notifications WHERE status = 'P' AND device_id IN (SELECT id FROM devices WHERE platform_id IN (SELECT id FROM platforms WHERE type_name = 'iOS')) ORDER BY sent_date DESC;");
+        var pendingOperations = db.query(sqlscripts.notifications.select2);
 
         for(var i = 0; i < pendingOperations.length; i++) {
 
@@ -730,7 +729,10 @@ var device = (function () {
 
             if(deviceList[0]!=null) {
                 var deviceID = String(deviceList[0].id);
-                var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE (notifications.status='P' OR notifications.status = 'A') AND notifications.device_id = ? ORDER BY sent_date DESC", deviceID+"");
+
+                //SQL Check
+                //var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE (notifications.status='P' OR notifications.status = 'A') AND notifications.device_id = ? ORDER BY sent_date DESC", deviceID+"");
+                var pendingFeatureCodeList=db.query(sqlscripts.notifications.select3, deviceID);
 
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
                     var id = pendingFeatureCodeList[0].id;
@@ -753,7 +755,9 @@ var device = (function () {
                                 arrEmptyReceivedData.push(receivedObject);
                             }
 
-                            db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(arrEmptyReceivedData), id+"");
+                            //SQL Check
+                            //db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(arrEmptyReceivedData), id+"");
+                            db.query(sqlscripts.notifications.update2, stringify(arrEmptyReceivedData), id);
 
                             received_data = parse(stringify(arrEmptyReceivedData));
                         } else {
@@ -777,7 +781,9 @@ var device = (function () {
                                     received_data[i].status = "skipped";
                                 }
 
-                                db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(received_data), id+"");
+                                //SQL Check
+                                //db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(received_data), id+"");
+                                db.query(sqlscripts.notifications.update2, stringify(received_data), id);
 
                                 if(counter > 3) {
                                     continue;
@@ -788,7 +794,11 @@ var device = (function () {
                         }
 
                     } else {
-                        db.query("UPDATE notifications SET status='C' WHERE id = ?", id+"");
+
+                        //SQL Check
+                        //db.query("UPDATE notifications SET status='C' WHERE id = ?", id+"");
+                        db.query(sqlscripts.notifications.update3, id);
+
                     }
 
                     return pendingFeatureCodeList[0];
