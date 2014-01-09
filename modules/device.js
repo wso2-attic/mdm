@@ -362,7 +362,7 @@ var device = (function () {
 
         var sendToAPNS = null;
         //var lastApnsTime = db.query("SELECT TIMESTAMPDIFF(SECOND, min(sent_date), CURRENT_TIMESTAMP()) as seconds FROM notifications WHERE status = 'A' AND device_id = ?", ctx.deviceid);
-        var lastApnsTime = db.query("SELECT TIMESTAMPDIFF(SECOND, min(sent_date), CURRENT_TIMESTAMP()) as seconds FROM device_awake WHERE status = 'S' AND device_id = ?", ctx.deviceid);
+        var lastApnsTime = db.query(sqlscripts.device_awake.select1, ctx.deviceid);
         log.debug("lastApnsTime >>>>>>>>> " + stringify(lastApnsTime[0]));
         if (lastApnsTime != null && lastApnsTime[0] != null && lastApnsTime != undefined && lastApnsTime[0] != undefined) {
             //1 hr = 60 * 60 = 3600 seconds
@@ -382,7 +382,7 @@ var device = (function () {
                 log.debug("sendMessageToIOSDevice >>>>>>>> common.initAPNS");
                 common.initAPNS(deviceToken, pushMagicToken);
             } catch (e) {
-                db.query("UPDATE device_awake SET status = 'E', processed_date = ? WHERE device_id = ? AND status = 'S'", datetime, ctx.deviceid);
+                db.query(sqlscripts.device_awake.update1, datetime, ctx.deviceid);
                 log.error(e);
                 return;
             }
@@ -390,9 +390,9 @@ var device = (function () {
 
             log.debug("sendToAPNS value >>>>>>>>> " + sendToAPNS);
             if (sendToAPNS == "INSERT") {
-                db.query("INSERT INTO device_awake (device_id, sent_date, call_count, status) VALUES(?,?,1,'S')", ctx.deviceid, datetime);
+                db.query(sqlscripts.device_awake.insert1, ctx.deviceid, datetime);
             } else if (sendToAPNS == "UPDATE") {
-                db.query("UPDATE device_awake SET sent_date = ?, call_count = call_count + 1 WHERE device_id = ? AND status = 'S'", datetime, ctx.deviceid);
+                db.query(sqlscripts.device_awake.update2, datetime, ctx.deviceid);
             }
         }
 
@@ -876,7 +876,7 @@ var device = (function () {
             sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});
 
             if(ctx.udid != null){
-                db.query("UPDATE device_awake JOIN devices ON devices.id = device_awake.device_id SET device_awake.status = 'D' WHERE devices.udid = ? AND device_awake.status = 'S'", ctx.udid);
+                db.query(sqlscripts.device_awake.update3, ctx.udid);
                 var result = db.query(sqlscripts.devices.delete2, ctx.udid);
                 if(result == 1){
                     return true;
