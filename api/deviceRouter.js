@@ -26,7 +26,7 @@ var device = (function () {
             var userAgent= request.getHeader("User-Agent");
 
             if (userAgent.indexOf("Android") > 0) {
-                response.sendRedirect(configs.device.android_location);
+                response.sendRedirect("/mdm/androidapk");
             } else if (userAgent.indexOf("iPhone") > 0) {
                 response.sendRedirect(configs.device.ios_location);
             } else if (userAgent.indexOf("iPad") > 0){
