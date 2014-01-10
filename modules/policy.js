@@ -167,12 +167,12 @@ var policy = (function () {
             var policyId = ctx.policyid;
 
             for(var i = 0; i< deletedUsers.length;i++){
-                var result = db.query("DELETE FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ? && user_policy_mapping.user_id = ? ",policyId,deletedUsers[i]);
+                var result = db.query(sqlscripts.user_policy_mapping.delete1, policyId,deletedUsers[i]);
                 log.info("Result1 >>>>>"+result);
             }
             for(var i = 0; i< newUsers.length;i++){
                 try{
-                    var result =db.query(" INSERT INTO user_policy_mapping (user_id,policy_id) VALUES (?,?)",newUsers[i],policyId);
+                    var result =db.query(sqlscripts.user_policy_mapping.insert1, newUsers[i],policyId);
                     log.info("Result2 >>>>>"+result);
                 }catch(e){
                     log.info("ERROR Occured >>>>>");
@@ -232,7 +232,7 @@ var policy = (function () {
         },
         getUsersByPolicy:function(ctx){
             var allUsers = user.getAllUserNames(ctx);
-            var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ?",ctx.policyid);
+            var result = db.query(sqlscripts.user_policy_mapping.select1, ctx.policyid);
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
                 for(var i =0; i < allUsers.length;i++){
