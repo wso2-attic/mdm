@@ -55,7 +55,7 @@ var mdm_reports = (function () {
                 var featureCode = receivedData[i].code;
                 try{
                     var obj = {};
-                    var features = db.query("SELECT * FROM features WHERE code= '"+featureCode+"'");
+                    var features = db.query("SELECT * FROM features WHERE code= ?",featureCode);
                     obj.name = features[0].description;
                     obj.status = receivedData[i].status;
                     newArray.push(obj);
