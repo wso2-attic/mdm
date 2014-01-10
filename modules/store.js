@@ -12,6 +12,7 @@ var store = (function () {
     };
     var userModule = require('user.js').user;
     var user = new userModule();
+    var sqlscripts = require('/sqlscripts/mysql.js');
 
     function mergeRecursive(obj1, obj2) {
         for (var p in obj2) {
@@ -71,6 +72,8 @@ var store = (function () {
                	var userID = user.getUser({userid:ctx.data.email}).id;
                var devices = db.query("select * from devices where devices.user_id="+userID);
            //    ctx.data.platform = "iOS";
+
+               //SQL check - injection
                 var platforms = db.query("select * from platforms where type_name ='"+ctx.data.platform+"'");
                // platformId = platforms[0].id;
 

@@ -510,7 +510,10 @@ var device = (function () {
             var obj = new Array();
             for(var i=0; i<featureList.length; i++){
                 var featureArr = {};
-                var ftype = db.query("SELECT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id= ?", stringify(featureList[i].id));
+
+                //SQL Check
+                //var ftype = db.query("SELECT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id= ?", stringify(featureList[i].id));
+                var ftype = db.query(sqlscripts.featuretype.select1, stringify(featureList[i].id));
 
                 featureArr["name"] = featureList[i].name;
                 featureArr["feature_code"] = featureList[i].code;
@@ -644,7 +647,7 @@ var device = (function () {
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;
             log.info("tenant idddddddd"+tenantId);
-            var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);//from device platform comes as iOS and Android then convert into platform id to save in device table
+            var platforms = db.query(sqlscripts.platforms.select1, ctx.platform);//from device platform comes as iOS and Android then convert into platform id to save in device table
             var platformId = platforms[0].id;
 
             var createdDate =  common.getCurrentDateTime();
@@ -707,7 +710,7 @@ var device = (function () {
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;
 
-            var platforms = db.query("SELECT id FROM platforms WHERE name = ?", ctx.platform);
+            var platforms = db.query(sqlscripts.platforms.select1, ctx.platform);
             var platformId = platforms[0].id;
             var createdDate = common.getCurrentDateTime();
             var devicesCheckUDID = db.query(sqlscripts.device_pending.select1, ctx.auth_token);

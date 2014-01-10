@@ -80,7 +80,10 @@ var feature = (function () {
             var obj = new Array();
             for(var i=0; i<featureList.length; i++){
                 var featureArr = {};
+
+                //SQL Check - injection
                 var ftype = db.query("SELECT DISTINCT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id="+featureList[i].id);
+
                 log.error(featureList[i]);
                 featureArr["name"] = featureList[i].name;
                 featureArr["feature_code"] = featureList[i].code;
@@ -98,7 +101,7 @@ var feature = (function () {
 
         getAllFeaturesForRoles: function(ctx){
             var array = new Array();
-            var featureGroupList = db.query("SELECT * from featuregroup where name IN ('MDM_OPERATION','MDM_CONFIGURATION','MMM')");
+            var featureGroupList = db.query(sqlscripts.featuregroup.select1);
 
             for(var i = 0;i<featureGroupList.length;i++){
                 var obj = {};

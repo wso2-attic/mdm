@@ -63,7 +63,7 @@ var notification = (function () {
 
                 if(featureCode == "500P") {
 
-                	var deviceFeatureCodes = db.query("SELECT id, feature_code FROM policy_device_profiles WHERE device_id = ? ", device_id);
+                	var deviceFeatureCodes = db.query(sqlscripts.policy_device_profiles.select1, device_id);
                 	
                 	if(deviceFeatureCodes != null && deviceFeatureCodes != undefined) {
                 		for(var i = 0; i < deviceFeatureCodes.length; i++) {
@@ -80,7 +80,7 @@ var notification = (function () {
                     			device.invokeMessageToIOSDevice({'deviceid':device_id, 'operation': "REMOVEPROFILE", 'data': data});
                 			}
                 			
-                			db.query("DELETE FROM policy_device_profiles WHERE id = ? ", deviceFeatureCodes[i].id );
+                			db.query(sqlscripts.policy_device_profiles.delete1, deviceFeatureCodes[i].id );
                 			
                 		}
                 	}
@@ -130,7 +130,7 @@ var notification = (function () {
                     	
 	                	for(var i = 0; i < parsedReceivedData.length; i++) {
 	                        var receivedObject = parsedReceivedData[i];
-	                        db.query("INSERT INTO policy_device_profiles (device_id, feature_code) VALUES (?, ?)", device_id, receivedObject.message.code);
+	                        db.query(sqlscripts.policy_device_profiles.insert1, device_id, receivedObject.message.code);
 	                    }
                         db.query(sqlscripts.notifications.update5, notificationId);
                         

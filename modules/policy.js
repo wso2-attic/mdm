@@ -138,7 +138,7 @@ var policy = (function () {
         },
         deletePolicy:function(ctx){
             var result = db.query(sqlscripts.policies.delete1, ctx.policyid, common.getTenantID());
-            db.query("DELETE FROM group_policy_mapping where policy_id = ?",ctx.policyid);
+            db.query(sqlscripts.group_policy_mapping.delete1, ctx.policyid);
             return result;
         },
         assignGroupsToPolicy:function(ctx){
@@ -149,12 +149,12 @@ var policy = (function () {
             var policyId = ctx.policyid;
 
             for(var i = 0; i< deletedGroups.length;i++){
-                var result = db.query("DELETE FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? && group_policy_mapping.group_id = ? ",policyId,deletedGroups[i]);
+                var result = db.query(sqlscripts.group_policy_mapping.delete2, policyId,deletedGroups[i]);
                 log.info("Result1 >>>>>"+result);
             }
             for(var i = 0; i< newGroups.length;i++){
                 try{
-                    var result =db.query(" INSERT INTO group_policy_mapping (group_id,policy_id) VALUES (?,?)",newGroups[i],policyId);
+                    var result =db.query(sqlscripts.group_policy_mapping.insert1, newGroups[i],policyId);
                     log.info("Result2 >>>>>"+result);
                 }catch(e){
                     log.info("ERROR Occured >>>>>");
@@ -185,12 +185,12 @@ var policy = (function () {
             var policyId = ctx.policyid;
 
             for(var i = 0; i< deletedPlatforms.length;i++){
-                var result = db.query("DELETE FROM platform_policy_mapping WHERE platform_policy_mapping.policy_id = ? && platform_policy_mapping.platform_id = ? ",policyId,deletedPlatforms[i]);
+                var result = db.query(sqlscripts.platform_policy_mapping.delete1, policyId,deletedPlatforms[i]);
                 log.info("Result1 >>>>>"+result);
             }
             for(var i = 0; i< newPlatforms.length;i++){
                 try{
-                    var result =db.query(" INSERT INTO platform_policy_mapping (platform_id,policy_id) VALUES (?,?)",newPlatforms[i],policyId);
+                    var result =db.query(sqlscripts.platform_policy_mapping.insert1, newPlatforms[i],policyId);
                     log.info("Result2 >>>>>"+result);
                 }catch(e){
                     log.info("ERROR Occured >>>>>");
@@ -201,7 +201,7 @@ var policy = (function () {
             var totalGroups = group.getAllGroups({});
             var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer");
             var allGroups = common.removeNecessaryElements(totalGroups,removeRoles);
-            var result = db.query("SELECT * FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ? ",ctx.policyid);
+            var result = db.query(sqlscripts.group_policy_mapping.select1,ctx.policyid);
 
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
@@ -262,7 +262,7 @@ var policy = (function () {
         },
         getPlatformsByPolicy:function(ctx){
             var allPlatforms =new Array('android','ios');
-            var result = db.query("SELECT * FROM platform_policy_mapping WHERE platform_policy_mapping.policy_id = ? ",ctx.policyid);
+            var result = db.query(sqlscripts.platform_policy_mapping.select1, ctx.policyid);
 
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
