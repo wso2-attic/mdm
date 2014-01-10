@@ -97,7 +97,7 @@ var device = (function () {
             obj.type = upresult[0].type;
             return obj;
         }
-        var ppresult = db.query("SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",category,platformName, tenantID );
+        var ppresult = db.query(sqlscripts.policies.select2, category,platformName, tenantID );
         log.info(ppresult);
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
             var policyPayLoad = parse(ppresult[0].data);
@@ -106,7 +106,7 @@ var device = (function () {
             return obj;
         }
 
-        var gpresult = db.query("SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where policies.category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ?",category,role, tenantID);
+        var gpresult = db.query(sqlscripts.policies.select3, category,role, tenantID);
         if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
             var policyPayLoad = parse(gpresult[0].data);
             obj.payLoad = policyPayLoad;
