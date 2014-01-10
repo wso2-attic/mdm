@@ -222,10 +222,11 @@ var policy = (function () {
             return array;
         },
         getUsersByPolicy:function(ctx){
-            var allUsers = user.getAllUserNames(ctx);
+            var allUsers = user.getAllUsers(ctx);
             var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ?",ctx.policyid);
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
+                log.info("Test1");
                 for(var i =0; i < allUsers.length;i++){
                     var element = {};
                     element.name = allUsers[i];
