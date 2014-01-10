@@ -79,9 +79,10 @@ var permission = (function () {
 
         assignPermissionToGroup: function(ctx){
             var log = new Log();
-
             var group = ctx.selectedGroup;
-
+            if(group.indexOf("Internal")!==-1){
+                group = group.substring(9);
+            }
             var featureList = ctx.featureList;
 
             var xacml = null;
@@ -121,7 +122,7 @@ var permission = (function () {
             var entitlementPolicyAdminService = entitlement.setEntitlementPolicyAdminServiceParameters();
 
             try{
-                entitlement.removePolicy(group,entitlementPolicyAdminService);
+                log.info(entitlement.removePolicy(group,entitlementPolicyAdminService));
             }catch(e){
                 log.info(e);
             }
