@@ -172,7 +172,7 @@ var device = (function () {
         for (var i = deviceOsVersion.length; i < 4; i++) {
             deviceOsVersion += "0";
         }
-        var platformFeatures = db.query("SELECT id, template, min_version FROM platformfeatures WHERE (platform_id = ? AND feature_id = ?)",platformId, featureId);
+        var platformFeatures = db.query(sqlscripts.platformfeatures.select1, platformId, featureId);
         var minVersion = platformFeatures[0].min_version;
         minVersion = minVersion.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, "");
         for (var i = minVersion.length; i < 4; i++) {
@@ -445,7 +445,11 @@ var device = (function () {
         log.debug("Policy codes before: " + messageArray.length);
         while (i < messageArray.length) {
             log.debug("Policy code: " + messageArray[i].code);
-            deviceFeature = db.query("SELECT count(*) as count FROM platformfeatures JOIN devices ON platformfeatures.platform_id = devices.platform_id JOIN features ON platformfeatures.feature_id = features.id WHERE devices.id = ? AND features.code = ?", device_id, messageArray[i].code + "");
+
+            //SQL Check
+            //deviceFeature = db.query("SELECT count(*) as count FROM platformfeatures JOIN devices ON platformfeatures.platform_id = devices.platform_id JOIN features ON platformfeatures.feature_id = features.id WHERE devices.id = ? AND features.code = ?", device_id, messageArray[i].code + "");
+            deviceFeature = db.query(sqlscripts.platformfeatures.select2, device_id, messageArray[i].code);
+
             log.debug("Device Feature: " + deviceFeature[0].count);
             if (deviceFeature[0].count == 0) {
                 //feature not available for the platform
