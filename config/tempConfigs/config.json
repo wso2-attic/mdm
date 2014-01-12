@@ -39,6 +39,8 @@
         "store_location": "%https.ip%/store/"
     },
     "touchdown": {
-
+        "available":"false",
+        "domain":"",
+        "server":""
     }
 }
