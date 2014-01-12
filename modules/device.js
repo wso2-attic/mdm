@@ -591,6 +591,8 @@ var device = (function () {
             db.query(sqlscripts.devices.update1, state, stringify(deviceId));
         },
         getCurrentDeviceState:function(deviceId){
+
+            log.debug("Niranjan Testinjjjj");
         	var tenantID = common.getTenantID();
 
             //SQL Check -injection
@@ -865,7 +867,6 @@ var device = (function () {
         getCurrentDeviceState:function(deviceId){
 
             var result = db.query(sqlscripts.devices.select16, stringify(deviceId));
-
             if(result != undefined && result != null && result[0] != undefined && result[0] != null){
                 return result[0].status;
             }else{
