@@ -7,6 +7,7 @@ var webconsole = (function () {
 
     var userModule = require('user.js').user;
     var user = '';
+    var sqlscripts = require('/sqlscripts/mysql.js');
 
     var routes = new Array();
     var log = new Log();
@@ -74,8 +75,7 @@ var webconsole = (function () {
                 objRole.no_of_users = userList.length;
                 var deviceCountAll = 0;
                 for(var j = 0; j < userList.length; j++) {
-                    var resultDeviceCount = db.query("SELECT COUNT(id) AS device_count FROM devices WHERE user_id = ? AND tenant_id = ?",
-                        String(userList[j]), common.getTenantID());
+                    var resultDeviceCount = db.query(sqlscripts.devices.select25, String(userList[j]), common.getTenantID());
                     deviceCountAll += parseInt(resultDeviceCount[0].device_count);
                 }
                 objRole.no_of_devices = deviceCountAll;

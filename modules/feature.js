@@ -75,7 +75,7 @@ var feature = (function () {
         constructor: module,
         getAllFeatures: function(ctx){
         	var tenantID = common.getTenantID();
-            var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND features.id = platformfeatures.feature_id AND devices.tenant_id = ?;", tenantID);
+            var featureList = db.query(sqlscripts.devices.select24, tenantID);
 
             var obj = new Array();
             for(var i=0; i<featureList.length; i++){
@@ -110,8 +110,6 @@ var feature = (function () {
                 obj.isFolder = true;
                 obj.key = featureGroupList[i].id;
 
-                //SQL Check
-                //obj.children = setFlag(db.query("SELECT name as value, description as title from features where group_id = ?",stringify(featureGroupList[i].id)),ctx.groupid);
                 obj.children = setFlag(db.query(sqlscripts.features.select3, stringify(featureGroupList[i].id)),ctx.groupid);
 
                 array[i] = obj;

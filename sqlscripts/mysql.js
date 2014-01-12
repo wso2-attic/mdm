@@ -34,6 +34,7 @@ var devices = {
     'select33':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices, platforms where platforms.id = devices.platform_id && devices.user_id like '%?%' && devices.tenant_id = ? && byod = ?",
     'select34':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%?%' && devices.tenant_id = ? && platform_id = ?",
     'select35':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date   from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%?%' && devices.tenant_id = ?",
+    'select36':"select * from devices where user_id = ?",
 
     'select36':"SELECT * from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type = 'Android' AND devices.tenant_id = ?",
     'select37':"SELECT * from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type = 'iOS'",
@@ -57,13 +58,19 @@ var device_pending = {
     'select2' : "SELECT properties, user_id FROM device_pending WHERE udid = ?",
     'select3' : "SELECT tenant_id, user_id, platform_id, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
     'select4' : "SELECT tenant_id FROM device_pending WHERE udid = ?",
+    'select5' : "SELECT user_id, udid FROM device_pending WHERE user_id = ? && udid IS NOT NULL && request_status = 1",
+    'select6' : "SELECT id FROM device_pending WHERE token = ?",
 
     'insert1' : "INSERT INTO device_pending (tenant_id, user_id, platform_id, properties, created_date, status, vendor, udid, token) VALUES(?, ?, ?, ?, ?, 'A', ?, ?, ?)",
+    'insert2' : "INSERT INTO device_pending (user_id, tenant_id, byod, token) VALUES(?, ?, ?, ?)",
 
     'update1' : "UPDATE device_pending SET tenant_id = ?, user_id = ?, platform_id = ?, properties = ?, created_date = ?, status = 'A', vendor = ?, udid = ? WHERE token = ?",
     'update2' : "UPDATE device_pending SET request_status = 1 WHERE user_id = ? && udid IS NOT NULL",
     'update3' : "UPDATE device_pending SET request_status = 1 WHERE udid = ?",
-    'update4' : "UPDATE device_pending SET udid = ? WHERE token = ?"
+    'update4' : "UPDATE device_pending SET udid = ? WHERE token = ?",
+    'update5' : "UPDATE device_pending SET user_id = ?, tenant_id= ?, byod = ? WHERE token = ?",
+
+    'delete1' : "DELETE FROM device_pending WHERE user_id = ?"
 };
 
 var device_awake = {
@@ -101,6 +108,7 @@ var notifications = {
     'update5' : "UPDATE notifications SET status='R' WHERE id = ?",
     'update6' : "UPDATE notifications SET status='R', received_data = ? , received_date = ? WHERE id = ?",
 
+
     'delete1' : "DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",
     'delete2' : "DELETE FROM notifications WHERE device_id = ? AND status='R' AND feature_code = ?"
 };
@@ -129,6 +137,7 @@ var policies = {
     'select12': "SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",
     'select13': "SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",
     'select14': "SELECT * from  policies WHERE name = ? AND tenant_id = ?",
+    'select15': "SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ? && policies.tenant_id = ?",
 
     'insert1' : "insert into policies (name,content,type,category, tenant_id) values (?,?,?,?,?)",
 

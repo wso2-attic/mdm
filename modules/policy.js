@@ -68,10 +68,7 @@ var policy = (function () {
     }
     function getPolicyIdFromDevice(deviceId){
 
-        //SQL Check
-        //var devices = db.query("SELECT * from devices where id = ?",String(deviceId));
         var devices = db.query(sqlscripts.devices.select1, String(deviceId));
-
         var userId = devices[0].user_id;
         var platform = '';
         if(devices[0].platform_id == 1){
@@ -92,10 +89,7 @@ var policy = (function () {
         var roles = common.removeNecessaryElements(roleList,removeRoles);
         var role = roles[0];
 
-        //SQL Check
-        //var gpresult = db.query("SELECT policies.id as id FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",role+'');
         var gpresult = db.query(sqlscripts.policies.select6, role);
-
         return gpresult[0].id;
     }
     module.prototype = {
@@ -203,6 +197,8 @@ var policy = (function () {
             var allGroups = common.removeNecessaryElements(totalGroups,removeRoles);
             var result = db.query(sqlscripts.group_policy_mapping.select1,ctx.policyid);
 
+            log.debug("Testing Roles >>>>>> " + result);
+
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
                 for(var i =0; i < allGroups.length;i++){
@@ -227,12 +223,12 @@ var policy = (function () {
                     array[i] = element;
                 }
             }
-            log.info("TEst >>>"+stringify(array));
             return array;
         },
         getUsersByPolicy:function(ctx){
             var allUsers = user.getAllUserNames(ctx);
             var result = db.query(sqlscripts.user_policy_mapping.select1, ctx.policyid);
+
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
                 for(var i =0; i < allUsers.length;i++){
@@ -246,6 +242,8 @@ var policy = (function () {
                     var element = {};
                     for(var j=0 ;j< result.length;j++){
                         log.info(allUsers[i]+" "+result[j].user_id);
+                        log.debug("Users >>>> " + allUsers[i]);
+                        log.debug("Array >>>> " + result[j].user_id);
                         if(allUsers[i].username==result[j].user_id){
                             element.name = allUsers[i];
                             element.available = true;
@@ -294,24 +292,22 @@ var policy = (function () {
         enforcePolicy:function(ctx){
             var policyId =  ctx.policyid;
 
-            //SQL Check
-            //var policies = db.query("SELECT * from policies where id = ? AND tenant_id = ?",String(policyId), common.getTenantID());
             var policies = db.query(sqlscripts.policies.select10, String(policyId), common.getTenantID());
-
             var payLoad = parse(policies[0].content);
-            var users1 = db.query("SELECT * from user_policy_mapping where policy_id=?",String(policyId));
+
+            var users1 = db.query(sqlscripts.user_policy_mapping.select1, String(policyId));
             for(var i = 0;i<users1.length;i++){
                 var devices1 = db.query(sqlscripts.devices.select26, users1[i].user_id, common.getTenantID());
                 for(var j = 0;j<devices1.length;j++){
                     device.sendToDevice({'deviceid':devices1[j].id,'operation':'POLICY','data':payLoad});
                 }
             }
-            var platforms =  db.query("SELECT * from platform_policy_mapping where policy_id=?",String(policyId));
+
+            var platforms =  db.query(sqlscripts.platform_policy_mapping.select1,String(policyId));
+
             for(var i = 0;i<platforms.length;i++){
                 if(platforms[i].platform_id == 'android'){
 
-                    //SQL Check
-                    //var devices2 = db.query("SELECT * from devices where platform_id = ? AND tenant_id = ?",String(1), common.getTenantID());
                     var devices2 = db.query(sqlscripts.devices.select36, common.getTenantID());
 
                     for(var j=0;j<devices2.length;j++){
@@ -323,8 +319,6 @@ var policy = (function () {
 
                 }else{
 
-                    //SQL Check
-                    //var devices3 = db.query("SELECT * from devices where platform_id > ?",String(1));
                     var devices3 = db.query(sqlscripts.devices.select37);
 
                     for(var j=0;j<devices3.length;j++){
@@ -336,7 +330,9 @@ var policy = (function () {
                 }
 
             }
-            var groups =  db.query("SELECT * from group_policy_mapping where policy_id=?",String(policyId));
+
+            var groups =  db.query(sqlscripts.group_policy_mapping.select1, String(policyId));
+
             for(var i = 0;i<groups.length;i++){
                 var users2 = group.getUsersOfGroup({'groupid':groups[i].group_id});
                 for(var j=0;j<users2.length;j++){
@@ -363,8 +359,6 @@ var policy = (function () {
             var roles = common.removeNecessaryElements(roleList,removeRoles);
             var role = roles[0];//role name for pull policy payLoad
 
-            //SQL check
-            //var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",category,String(username));
             var upresult = db.query(sqlscripts.policies.select11, category,String(username));
 
             if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){

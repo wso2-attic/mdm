@@ -88,8 +88,6 @@ var notification = (function () {
                     var notificationId = identifier.split("-")[0];
                     var policySequence = identifier.split("-")[1];
 					
-                    //SQL Check
-                    //var pendingFeatureCodeList = db.query("SELECT received_data, device_id FROM notifications WHERE id = ?", notificationId + "");
                     var pendingFeatureCodeList = db.query(sqlscripts.notifications.select7, notificationId);
 
                     var received_data = pendingFeatureCodeList[0].received_data;
@@ -117,12 +115,7 @@ var notification = (function () {
                         parsedReceivedData[i] = receivedObject;
                     }
 
-                    //SQL Check
-                    //db.query("UPDATE notifications SET received_data= ? , received_date = ? WHERE id = ?", stringify(parsedReceivedData) + "", recivedDate + "", notificationId);
                     db.query(sqlscripts.notifications.update4, stringify(parsedReceivedData), recivedDate, notificationId);
-
-
-
 
                     if(pendingExist) {
                         return true;
@@ -201,7 +194,8 @@ var notification = (function () {
                     }catch(e){
                         log.info(e);
                     }
-                    db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", stringify(formattedData) +"", recivedDate+"", identifier);
+
+                    db.query(sqlscripts.notifications.update6, stringify(formattedData), recivedDate, identifier);
 
                 } else {
                     var policySeperator = identifier.indexOf("-");
@@ -217,12 +211,8 @@ var notification = (function () {
                     	var osVersion = dataObj["OSVersion"];
                     	var wifiMac = dataObj["WiFiMAC"];
                     	
-                    	//SQL Check
-                        //var notifications = db.query("SELECT device_id FROM notifications WHERE id = ?", identifier + "");
-                        var notifications = db.query(sqlscripts.notifications.select8, identifier);
-
+                    	var notifications = db.query(sqlscripts.notifications.select8, identifier);
                         var deviceId = notifications[0].device_id;
-
                     	device.updateDeviceProperties(deviceId, osVersion, deviceName, wifiMac);
                     }
                 }
@@ -243,7 +233,8 @@ var notification = (function () {
                     log.info(e);
                 }
             }
-            var messageIDs = db.query("SELECT * from notifications where id=?",ctx.msgID);
+
+            var messageIDs = db.query(sqlscripts.notifications.select9, ctx.msgID);
             if(typeof messageIDs !== 'undefined' && messageIDs !== null && typeof messageIDs[0] !== 'undefined' && messageIDs[0]!== null){
                 db.query(sqlscripts.notifications.update6, ctx.data, recivedDate, ctx.msgID);
             }
@@ -285,7 +276,10 @@ var notification = (function () {
                    var featureCode = arrayFromDatabase[i].code;
                    try{
                        var obj = {};
+
+                       //SQL check - injection
                        var features = db.query("SELECT * FROM features WHERE code= '"+featureCode+"'");
+
                        obj.name = features[0].description;
                        obj.status = arrayFromDatabase[i].status;
                        newArray.push(obj);
@@ -363,7 +357,7 @@ var notification = (function () {
             return array;
         }, discardOldNotifications:function(ctx) {
         	
-        	var currentOperation = db.query("SELECT received_date, device_id, feature_code, user_id FROM notifications WHERE id = ? AND feature_code != '500P' AND feature_code != '529A' ", parseInt(ctx.id));
+        	var currentOperation = db.query(sqlscripts.notifications.select11, parseInt(ctx.id));
         	
         	if(currentOperation == null || currentOperation[0] == null || currentOperation == undefined || currentOperation[0] == undefined) {
         		return;

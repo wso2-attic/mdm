@@ -7,7 +7,7 @@ var getRecordsFilteredByDate = function(startDate,endDate,tableName){
     var zeros = ' 00:00:00'
     var startDate = startDate+zeros;
     var endDate = endDate+zeros;
-    var result = db.query("SELECT * FROM "+tableName+" where created_date between '"+date1+"' and '"+date2+"'");
+
     if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null ){
         return  result;
     }else{

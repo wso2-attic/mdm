@@ -209,7 +209,7 @@ var user = (function () {
             return users_list;
         },
         deleteUser: function(ctx){
-            var result = db.query("select * from devices where user_id = ?",ctx.userid);
+            var result = db.query(sqlscripts.devices.select36, ctx.userid);
             log.info("Result :"+result);
             if(result != undefined && result != null && result != '' && result[0].length != undefined && result[0].length != null && result[0].length > 0){
                 return 404;
@@ -328,15 +328,10 @@ var user = (function () {
 			}
 			var user =  this.getUser({'userid': ctx.username});
 
-            //SQL Check
-            //var result = db.query("SELECT COUNT(id) AS record_count FROM tenantplatformfeatures WHERE tenant_id = ?",  stringify(user.tenantId));
             var result = db.query(sqlscripts.tenantplatformfeatures.select1,  stringify(user.tenantId));
-
             if(result[0].record_count == 0) {
 				for(var i = 1; i < 13; i++) {
 
-                    //SQL check
-                    //var result = db.query("INSERT INTO tenantplatformfeatures (tenant_id, platformFeature_Id) VALUES (?, ?)", stringify(user.tenantId), i);
                     var result = db.query(sqlscripts.tenantplatformfeatures.select2, stringify(user.tenantId), i);
 				}
 			}
@@ -373,8 +368,10 @@ var user = (function () {
             log.info(String(obj.userid));
             log.info(common.getTenantID());
             log.info("end");
-			var devices = db.query("SELECT * FROM devices WHERE user_id= ? AND tenant_id = ?", String(obj.userid), common.getTenantID());
-			return devices;
+
+            var devices = db.query(sqlscripts.devices.select26, String(obj.userid), common.getTenantID());
+
+            return devices;
 		},
 
         //To get the tenant name using the tenant domain

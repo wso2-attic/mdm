@@ -78,19 +78,26 @@ var device = (function () {
         return obj1;
     }
     function getPolicyPayLoad(deviceId,category){
+
+        //SQL Check - injection
         var devices = db.query("SELECT * from devices where id = "+deviceId);
+
         var username = devices[0].user_id;//username for pull policy payLoad
 		var tenantID = devices[0].tenant_id;
-        var platforms = db.query("select platforms.type_name from devices,platforms where platforms.id = devices.platform_id AND devices.id = "+deviceId);
-        var platformName = platforms[0].type_name;//platform name for pull policy payLoad
 
+        //SQL Check - injection
+        var platforms = db.query("select platforms.type_name from devices,platforms where platforms.id = devices.platform_id AND devices.id = "+deviceId);
+
+        var platformName = platforms[0].type_name;//platform name for pull policy payLoad
         var roleList = user.getUserRoles({'username':username});
         var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer","private_kasun:wso2mobile.com");
         var roles = common.removeNecessaryElements(roleList,removeRoles);
         var role = roles[0];//role name for pull policy payLoad
 
         var obj = {};
-        var upresult = db.query("SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ? && policies.tenant_id = ?",category,String(username), tenantID);
+
+        var upresult = db.query(sqlscripts.policies.select15, category,String(username), tenantID);
+
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
             var policyPayLoad = parse(upresult[0].data);
             obj.payLoad = policyPayLoad;
@@ -192,10 +199,7 @@ var device = (function () {
         var operationName = ctx.operation;
         var tenantID = common.getTenantIDFromDevice(deviceId);
 
-        //SQL check
-        //var devices = db.query("SELECT reg_id, os_version, platform_id, user_id FROM devices WHERE id = ?", deviceId+"");
         var devices = db.query(sqlscripts.devices.select6, deviceId);
-        select6
 
         if(devices == undefined || devices == null || devices[0]== undefined || devices[0] == null ){
             return false;
@@ -289,8 +293,6 @@ var device = (function () {
             }
         }
 
-        //SQL Check
-        //var devices = db.query("SELECT reg_id FROM devices WHERE id = ?", ctx.deviceid+"");
         var devices = db.query(sqlscripts.devices.select8, ctx.deviceid);
 
         if(devices == null || devices == undefined || devices[0] == null || devices[0] == undefined) {
@@ -322,19 +324,12 @@ var device = (function () {
         log.error("device token : "+ deviceToken);
         log.error("magic token : "+ pushMagicToken);
 
-        //SQL Check
-        //var users = db.query("SELECT user_id FROM devices WHERE id = ?", ctx.deviceid+"");
         var users = db.query(sqlscripts.devices.select9, ctx.deviceid);
-
         var userId = users[0].user_id;
-
-
         var datetime =  common.getCurrentDateTime();
 
         log.error("Test operation"+ctx.operation);
 
-        //SQL Check
-        //var features = db.query("SELECT id, code, description FROM features WHERE name LIKE ?", ctx.operation+"");
         var features = db.query(sqlscripts.features.select2, ctx.operation);
 
         if(features == null || features == undefined || features[0] == null || features[0] == undefined) {
@@ -446,8 +441,6 @@ var device = (function () {
         while (i < messageArray.length) {
             log.debug("Policy code: " + messageArray[i].code);
 
-            //SQL Check
-            //deviceFeature = db.query("SELECT count(*) as count FROM platformfeatures JOIN devices ON platformfeatures.platform_id = devices.platform_id JOIN features ON platformfeatures.feature_id = features.id WHERE devices.id = ? AND features.code = ?", device_id, messageArray[i].code + "");
             deviceFeature = db.query(sqlscripts.platformfeatures.select2, device_id, messageArray[i].code);
 
             log.debug("Device Feature: " + deviceFeature[0].count);
@@ -477,8 +470,6 @@ var device = (function () {
             log.debug(ctx.deviceid);
             log.debug(ctx.operation);
 
-            //SQL Check
-            //var devices = db.query("SELECT platform_id FROM devices WHERE id = ?", ctx.deviceid+"");
             var devices = db.query(sqlscripts.devices.select11, ctx.deviceid);
 
             var platformID = devices[0].platform_id;
@@ -503,16 +494,12 @@ var device = (function () {
             var tenantID = common.getTenantID();
             log.debug("Test Role :"+role);
 
-            //SQL Check
-            //var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id", stringify(deviceId));
             var featureList = db.query(sqlscripts.devices.select12, stringify(deviceId));
 
             var obj = new Array();
             for(var i=0; i<featureList.length; i++){
                 var featureArr = {};
 
-                //SQL Check
-                //var ftype = db.query("SELECT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id= ?", stringify(featureList[i].id));
                 var ftype = db.query(sqlscripts.featuretype.select1, stringify(featureList[i].id));
 
                 featureArr["name"] = featureList[i].name;
@@ -557,9 +544,6 @@ var device = (function () {
             for(var i = 0; i < userList.length; i++) {
 
                 var objUser = {};
-
-                //SQL Check
-                //var result = db.query("SELECT id FROM devices WHERE user_id = ? AND tenant_id = ?", String(userList[i].email), tenantID);
                 var result = db.query(sqlscripts.devices.select14, String(userList[i].email), tenantID);
 
                 for(var j = 0; j < result.length; j++) {
@@ -610,13 +594,14 @@ var device = (function () {
         },
         changeDeviceState:function(deviceId,state){
         	var tenantID = common.getTenantID();
-            //SQL Check
-            //db.query("UPDATE devices SET status = ? WHERE id = ?",state,stringify(deviceId));
             db.query(sqlscripts.devices.update1, state, stringify(deviceId));
         },
         getCurrentDeviceState:function(deviceId){
         	var tenantID = common.getTenantID();
+
+            //SQL Check -injection
             var result = db.query("select status from devices where id = ",String(deviceId));
+
             if(result != undefined && result != null && result[0] != undefined && result[0] != null){
                 return result[0].status;
             }else{
@@ -653,7 +638,7 @@ var device = (function () {
             var createdDate =  common.getCurrentDateTime();
 
             if(ctx.regid!=null){
-                var result = db.query("SELECT * FROM devices WHERE reg_id= ?", ctx.regid);
+                var result = db.query(sqlscripts.devices.select19, ctx.regid);
 
                 if(result[0]==null){
 
@@ -718,15 +703,9 @@ var device = (function () {
             //Save device data into temporary table
             if(devicesCheckUDID != undefined && devicesCheckUDID != null && devicesCheckUDID[0] != undefined && devicesCheckUDID[0] != null){
 
-                //SQL Check
-                //db.query("UPDATE device_pending SET tenant_id = ?, user_id = ?, platform_id = ?, properties = ?, created_date = ?, status = 'A', vendor = ?, udid = ? WHERE token = ?",
-                //    tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
                 db.query(sqlscripts.device_pending.update1, tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
             } else {
 
-                //SQL Check
-                //db.query("INSERT INTO device_pending (tenant_id, user_id, platform_id, properties, created_date, status, vendor, udid, token) VALUES(?, ?, ?, ?, ?, 'A', ?, ?, ?)",
-                //    tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
                 db.query(sqlscripts.device_pending.insert1, tenantId, userId, platformId, stringify(ctx.properties), createdDate, ctx.vendor, ctx.udid, ctx.auth_token);
             }
 
@@ -734,13 +713,11 @@ var device = (function () {
         },
         getPendingOperationsFromDevice: function(ctx){
 			
+            //SQL check - injection
             var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
 
             if(deviceList[0]!=null) {
                 var deviceID = String(deviceList[0].id);
-
-                //SQL Check
-                //var pendingFeatureCodeList=db.query("SELECT feature_code ,message, id, received_data FROM notifications WHERE (notifications.status='P' OR notifications.status = 'A') AND notifications.device_id = ? ORDER BY sent_date DESC", deviceID+"");
                 var pendingFeatureCodeList=db.query(sqlscripts.notifications.select3, deviceID);
 
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
@@ -764,10 +741,7 @@ var device = (function () {
                                 arrEmptyReceivedData.push(receivedObject);
                             }
 
-                            //SQL Check
-                            //db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(arrEmptyReceivedData), id+"");
                             db.query(sqlscripts.notifications.update2, stringify(arrEmptyReceivedData), id);
-
                             received_data = parse(stringify(arrEmptyReceivedData));
                         } else {
                             received_data = parse(received_data);
@@ -790,8 +764,6 @@ var device = (function () {
                                     received_data[i].status = "skipped";
                                 }
 
-                                //SQL Check
-                                //db.query("UPDATE notifications SET received_data = ? WHERE id = ?", stringify(received_data), id+"");
                                 db.query(sqlscripts.notifications.update2, stringify(received_data), id);
 
                                 if(counter > 3) {
@@ -804,8 +776,6 @@ var device = (function () {
 
                     } else {
 
-                        //SQL Check
-                        //db.query("UPDATE notifications SET status='C' WHERE id = ?", id+"");
                         db.query(sqlscripts.notifications.update3, id);
 
                     }
@@ -856,25 +826,15 @@ var device = (function () {
 	                if(devicePendingResult != null && devicePendingResult != undefined && devicePendingResult[0] != null && devicePendingResult[0] != undefined) {
 	                	devicePendingResult = devicePendingResult[0]
 
-                        //SQL Check
-	                	//var updateResult = db.query("UPDATE devices SET tenant_id = ?, user_id = ?, platform_id = ?, reg_id =? , properties = ?, status = ?, byod = ?, vendor = ?, udid = ?  WHERE udid = ?",
-	                	//	devicePendingResult.tenant_id, devicePendingResult.user_id, devicePendingResult.platform_id, stringify(tokenProperties), stringify(properties), devicePendingResult.status,
-	                	//	devicePendingResult.byod, devicePendingResult.vendor, devicePendingResult.udid, ctx.deviceid);
                         var updateResult = db.query(sqlscripts.devices.update3, devicePendingResult.tenant_id, devicePendingResult.user_id, devicePendingResult.platform_id, stringify(tokenProperties), stringify(properties), devicePendingResult.status,
                             devicePendingResult.byod, devicePendingResult.vendor, devicePendingResult.udid, ctx.deviceid);
 
 	                }
 	                
-	                //db.query(sqlscripts.device_pending.update2, devicePendingResult.user_id);
-
-                    db.query(sqlscripts.device_pending.update2, devicePendingResult.user_id);
+	                db.query(sqlscripts.device_pending.update2, devicePendingResult.user_id);
 
                 } else {
                 	//Copy record from temporary table into device table and delete the record from the temporary table
-                    //SQL Check
-	                //var updateResult = db.query("INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) " +
-	                //    "SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
-	                //    stringify(tokenProperties), stringify(properties), ctx.deviceid);
                     var updateResult = db.query(sqlscripts.devices.insert2, stringify(tokenProperties), stringify(properties), ctx.deviceid);
 	                
 	                db.query(sqlscripts.device_pending.update3, ctx.deviceid);
@@ -911,23 +871,17 @@ var device = (function () {
         },
         updateDeviceProperties:function(deviceId, osVersion, deviceName, wifiMac) {
 
-            //SQL Check
-            //var deviceResult = db.query("SELECT properties FROM devices WHERE id = ?", deviceId + "");
             var deviceResult = db.query(sqlscripts.devices.select22, deviceId);
 
             var properties = deviceResult[0].properties;
         	properties = parse(parse(stringify(properties)));
         	properties["device"] = deviceName;
 
-            //SQL Check
-            //db.query("UPDATE devices SET os_version = ?, properties = ?, wifi_mac = ? WHERE id = ?", osVersion, stringify(properties), wifiMac, deviceId + "");
             db.query(sqlscripts.devices.update4, osVersion, stringify(properties), wifiMac, deviceId + "");
 
         },
         getCurrentDeviceState:function(deviceId){
 
-            //SQL Check
-            //var result = db.query("select status from devices where id = ?",stringify(deviceId));
             var result = db.query(sqlscripts.devices.select16, stringify(deviceId));
 
             if(result != undefined && result != null && result[0] != undefined && result[0] != null){
@@ -957,8 +911,6 @@ var device = (function () {
             }
             return null;
 
-            //SQL Check
-            //db.query("UPDATE devices SET os_version = ?, properties = ? WHERE id = ?", osVersion, stringify(properties), deviceId + "");
             db.query(sqlscripts.devices.update6, osVersion, stringify(properties), deviceId);
 
         }
