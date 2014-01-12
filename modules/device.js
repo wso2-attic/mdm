@@ -135,6 +135,8 @@ var device = (function () {
         return xmlRequest;
     }
     function checkPermission(role, deviceId, operationName, that){
+        log.info(role);
+        log.info(operationName);
         var entitlement = session.get("entitlement");
         var stub = entitlement.setEntitlementServiceParameters();
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);

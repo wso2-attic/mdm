@@ -24,9 +24,9 @@
         "keyStoreName": "/repository/resources/security/wso2carbon.jks"
     },
     "email": {
-        "companyName": "",
-        "senderAddress": "",
-        "emailPassword": "",
+        "companyName": "wso2",
+        "senderAddress": "gayan@wso2mobile.com",
+        "emailPassword": "0382291704",
         "emailTemplate": "\nYou have been registered to the WSO2Mobile MDM. Below is the link to enroll.\n \n"
     },
     "device": {
