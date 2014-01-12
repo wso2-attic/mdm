@@ -79,14 +79,12 @@ var device = (function () {
     }
     function getPolicyPayLoad(deviceId,category){
 
-        //SQL Check - injection
-        var devices = db.query("SELECT * from devices where id = "+deviceId);
+        var devices = db.query(sqlscripts.devices.select1, deviceId);
 
         var username = devices[0].user_id;//username for pull policy payLoad
 		var tenantID = devices[0].tenant_id;
 
-        //SQL Check - injection
-        var platforms = db.query("select platforms.type_name from devices,platforms where platforms.id = devices.platform_id AND devices.id = "+deviceId);
+        var platforms = db.query(sqlscripts.devices.select5, deviceId);
 
         var platformName = platforms[0].type_name;//platform name for pull policy payLoad
         var roleList = user.getUserRoles({'username':username});
@@ -221,10 +219,6 @@ var device = (function () {
         var featureId = features[0].id;
         var featureDescription = features[0].description;
 
-        /*var versionCompatibility = versionComparison(osVersion, platformId, featureId);
-         if(versionCompatibility == false){
-         return false;
-         }*/
         if(featureCode == "501P"){
             try{
                 db.query(sqlscripts.notifications.delete1, deviceId,featureCode);
@@ -234,7 +228,10 @@ var device = (function () {
         }
         var currentDate = common.getCurrentDateTime();
         db.query(sqlscripts.notifications.insert1, deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription, tenantID);
-        var lastRecord = db.query("SELECT LAST_INSERT_ID()");
+
+        //SQL Check
+        var lastRecord = db.query(sqlscripts.general.select1);
+
         var lastRecordJson = lastRecord[0];
         var token = lastRecordJson["LAST_INSERT_ID()"];
         log.info(regId);
@@ -597,7 +594,9 @@ var device = (function () {
         	var tenantID = common.getTenantID();
 
             //SQL Check -injection
-            var result = db.query("select status from devices where id = ",String(deviceId));
+            //var result = db.query("select status from devices where id = ",String(deviceId));
+            var result = db.query(sqlscripts.devices.select16 ,String(deviceId));
+            log.debug("getCurrentDeviceState: SQL Check - injection >>>>>>>>> " + stringify(result));
 
             if(result != undefined && result != null && result[0] != undefined && result[0] != null){
                 return result[0].status;
@@ -650,18 +649,12 @@ var device = (function () {
                     sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
                     sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
 
+                    log.debug("Niranjan");
                     var mdmPolicy = getPolicyPayLoad(deviceID,1);
-                //    var mamPolicy = getPolicyPayLoad(deviceID,2);
 
                     if(mdmPolicy != undefined && mdmPolicy != null){
                         if(mdmPolicy.payLoad != undefined && mdmPolicy.payLoad != null){
                             sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': mdmPolicy.payLoad});
-                           /* if(mamPolicy != undefined && mamPolicy != null){
-                                var mdmPolicyPayload = mdmPolicy.payLoad;
-                                var mamPolicyPayload = mamPolicy.payLoad;
-                                var policyPayload = mdmPolicyPayload.concat(mamPolicyPayload);
-                                sendMessageToDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': policyPayload});
-                            }*/
                         }
                     }
                     return true;
@@ -709,10 +702,8 @@ var device = (function () {
             return true;
         },
         getPendingOperationsFromDevice: function(ctx){
-			
-            //SQL check - injection
-            var deviceList = db.query("SELECT id FROM devices WHERE udid = " + ctx.udid);
 
+            var deviceList = db.query(sqlscripts.devices.select20, parse(ctx.udid));
             if(deviceList[0]!=null) {
                 var deviceID = String(deviceList[0].id);
                 var pendingFeatureCodeList=db.query(sqlscripts.notifications.select3, deviceID);
@@ -787,8 +778,6 @@ var device = (function () {
         },
         updateiOSTokens: function(ctx){
 
-            //SQL Check - injection
-            //var result = db.query("SELECT properties, user_id FROM device_pending WHERE udid = " + stringify(ctx.deviceid));
             var result = db.query(sqlscripts.device_pending.select2, ctx.deviceid);
 
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {

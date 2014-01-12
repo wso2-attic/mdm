@@ -81,9 +81,7 @@ var feature = (function () {
             for(var i=0; i<featureList.length; i++){
                 var featureArr = {};
 
-                //SQL Check - injection
-                var ftype = db.query("SELECT DISTINCT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id="+featureList[i].id);
-
+                var ftype = db.query(sqlscripts.featuretype.select2, featureList[i].id);
                 log.error(featureList[i]);
                 featureArr["name"] = featureList[i].name;
                 featureArr["feature_code"] = featureList[i].code;

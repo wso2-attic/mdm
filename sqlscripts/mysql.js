@@ -1,3 +1,7 @@
+var general = {
+    'select1' : "SELECT LAST_INSERT_ID()"
+};
+
 var devices = {
     'select1' :"SELECT * FROM devices where id = ?",
     'select2' :"SELECT platforms.type_name as label, ROUND((count(devices.id)/(select count(id) from devices))*100,0) as data from platforms, devices where devices.platform_id = platforms.id AND devices.tenant_id = ? group by type",
@@ -30,10 +34,10 @@ var devices = {
     'select29':"select * from devices where devices.user_id = ?",
     'select30':"select platforms.type_name as platform from devices, platforms where platforms.id = devices.platform_id && devices.id = ?",
     'select31':"select * from devices where devices.user_id = ? and devices.platform_id = ?",
-    'select32':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices, platforms where platforms.id = devices.platform_id && devices.user_id like '%?%' && devices.tenant_id = ? && byod = ? && platform_id = ?",
-    'select33':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices, platforms where platforms.id = devices.platform_id && devices.user_id like '%?%' && devices.tenant_id = ? && byod = ?",
-    'select34':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%?%' && devices.tenant_id = ? && platform_id = ?",
-    'select35':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date   from devices,platforms where platforms.id = devices.platform_id && devices.user_id like '%?%' && devices.tenant_id = ?",
+    'select32':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices, platforms where platforms.id = devices.platform_id && devices.user_id like ? && devices.tenant_id = ? && byod = ? && platform_id = ?",
+    'select33':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices, platforms where platforms.id = devices.platform_id && devices.user_id like ? && devices.tenant_id = ? && byod = ?",
+    'select34':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id && devices.user_id like ? && devices.tenant_id = ? && platform_id = ?",
+    'select35':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date   from devices,platforms where platforms.id = devices.platform_id && devices.user_id like ? && devices.tenant_id = ?",
     'select36':"select * from devices where user_id = ?",
 
     'select36':"SELECT * from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type = 'Android' AND devices.tenant_id = ?",
@@ -108,7 +112,6 @@ var notifications = {
     'update5' : "UPDATE notifications SET status='R' WHERE id = ?",
     'update6' : "UPDATE notifications SET status='R', received_data = ? , received_date = ? WHERE id = ?",
 
-
     'delete1' : "DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",
     'delete2' : "DELETE FROM notifications WHERE device_id = ? AND status='R' AND feature_code = ?"
 };
@@ -161,7 +164,7 @@ var platformfeatures = {
 
 var featuretype = {
     'select1' : "SELECT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id= ?",
-    'select2' : "SELECT DISTINCT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id= ?"
+    'select2' : "SELECT DISTINCT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id = ?"
 };
 
 var platforms = {

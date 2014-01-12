@@ -201,7 +201,7 @@ var notification = (function () {
                     var policySeperator = identifier.indexOf("-");
 
                     if(policySeperator == -1) {
-                        db.query("UPDATE notifications SET status='R', received_data= ? , received_date = ? WHERE id = ?", ctx.data+"", recivedDate+"", identifier);
+                        db.query(sqlscripts.notifications.update6, ctx.data, recivedDate, identifier);
                     }
                     
                     if(featureCode == "500A") {
@@ -223,7 +223,12 @@ var notification = (function () {
 			log.debug("CTX>>>>>>>>>>>>>>>>>> msg id " + ctx.msgID);
             log.debug("Android Notification >>>>> data"+ctx.data);
             var recivedDate = common.getCurrentDateTime();
-            var result = db.query("select * from notifications where id = '"+ctx.msgID+"'");
+
+            //SQL Check - injection
+            //var result = db.query("select * from notifications where id = '"+ctx.msgID+"'");
+            var result = db.query(sqlscripts.notifications.select9, ctx.msgID);
+            log.debug("addNotification: SQL Check - injection >>>>>>>>> " + stringify(result));
+
             var deviceId =  result[0].device_id;
             var featureCode =  result[0].feature_code;
 
@@ -271,7 +276,9 @@ var notification = (function () {
                        var obj = {};
 
                        //SQL check - injection
-                       var features = db.query("SELECT * FROM features WHERE code= '"+featureCode+"'");
+                       //var features = db.query("SELECT * FROM features WHERE code= '"+featureCode+"'");
+                       var features = db.query(sqlscripts.features.select6, featureCode);
+                       log.debug("getPolicyState: SQL Check - injection >>>>>>>>> " + stringify(features));
 
                        obj.name = features[0].description;
                        obj.status = arrayFromDatabase[i].status;
