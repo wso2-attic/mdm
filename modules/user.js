@@ -436,6 +436,15 @@ var user = (function () {
             ctx.tenantId = arguments[0];
             var tenantDomain = carbon.server.tenantDomain(ctx);
             return tenantDomain;
+        },
+        getTouchDownConfig: function(ctx) {
+            var data = {};
+            data.userid = ctx.user_id;
+            data.domain = config.touchdown.domain;
+            data.email = ctx.user_id;
+            data.server = config.touchdown.server;
+
+            return data;
         }
     };
     return module;
