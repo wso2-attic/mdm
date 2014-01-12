@@ -357,7 +357,6 @@ var device = (function () {
         }
 
         var sendToAPNS = null;
-        //var lastApnsTime = db.query("SELECT TIMESTAMPDIFF(SECOND, min(sent_date), CURRENT_TIMESTAMP()) as seconds FROM notifications WHERE status = 'A' AND device_id = ?", ctx.deviceid);
         var lastApnsTime = db.query(sqlscripts.device_awake.select1, ctx.deviceid);
         log.debug("lastApnsTime >>>>>>>>> " + stringify(lastApnsTime[0]));
         if (lastApnsTime != null && lastApnsTime[0] != null && lastApnsTime != undefined && lastApnsTime[0] != undefined) {
@@ -382,8 +381,6 @@ var device = (function () {
                 log.error(e);
                 return;
             }
-            //db.query("UPDATE notifications SET status = 'A' WHERE device_id = ? AND status = 'P'", ctx.deviceid);
-
             log.debug("sendToAPNS value >>>>>>>>> " + sendToAPNS);
             if (sendToAPNS == "INSERT") {
                 db.query(sqlscripts.device_awake.insert1, ctx.deviceid, datetime);
@@ -790,8 +787,6 @@ var device = (function () {
         },
         updateiOSTokens: function(ctx){
 
-            //var result = db.query("SELECT properties FROM devices WHERE udid = " + stringify(ctx.deviceid));
-
             //SQL Check - injection
             //var result = db.query("SELECT properties, user_id FROM device_pending WHERE udid = " + stringify(ctx.deviceid));
             var result = db.query(sqlscripts.device_pending.select2, ctx.deviceid);
@@ -815,8 +810,6 @@ var device = (function () {
                 tokenProperties["token"] = ctx.token;
                 tokenProperties["unlockToken"] = ctx.unlockToken;
                 tokenProperties["magicToken"] = ctx.magicToken;
-
-                // var updateResult = db.query("UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
 
                 var userResultExist = db.query(sqlscripts.devices.select21, ctx.deviceid);
                 if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
