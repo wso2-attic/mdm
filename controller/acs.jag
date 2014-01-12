@@ -15,9 +15,7 @@
     };
 
     var getBackendCookie = function (samlToken) {
-        log.info("SAML token :"+samlToken);
         var token = getToken();
-        log.info(token);
         var token = null;
         var encodedToken = token && token.replace(/>/g, '&gt;').replace(/</g,'&lt;');
         var xhr = new XMLHttpRequest();
@@ -112,7 +110,6 @@
 
                                 var entitlement = require('policy').entitlement;
                                 var backEndCookie = getBackendCookie(samlResponse);
-                                 log.info("BackEnd Cookie :"+backEndCookie);
                                 entitlement.setAuthCookie(backEndCookie);
 
                                 session.put("entitlement",entitlement);
