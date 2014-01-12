@@ -345,7 +345,7 @@ var user = (function () {
             subject = "MDM Enrollment";
 
             var email = require('email');
-            var sender = new email.Sender("smtp.gmail.com", "25", config.email.senderAddress, config.email.emailPassword, "tls");
+            var sender = new email.Sender(config.email.smtp, config.email.port, config.email.senderAddress, config.email.emailPassword, "tls");
             sender.from = config.email.senderAddress;
 
             log.info("Email sent to -> "+ctx.username);

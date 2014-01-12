@@ -24,6 +24,8 @@
         "keyStoreName": "/repository/resources/security/wso2carbon.jks"
     },
     "email": {
+        "smtp":"smtp.gmail.com",
+        "port":"25",
         "companyName": "WSO2",
         "senderAddress": "",
         "emailPassword": "",
@@ -35,5 +37,8 @@
     },
     "mam": {
         "store_location": "%https.ip%/store/"
+    },
+    "touchdown": {
+
     }
 }
