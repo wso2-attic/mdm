@@ -403,7 +403,7 @@ var user = (function () {
                 return tenantConfig.name;
             } catch(e) {
                 var tenantConfig = require('/config/tenants/default/config.json');
-                return tenantConfig.name;;
+                return tenantConfig.name;
             }
         },
 
@@ -439,10 +439,17 @@ var user = (function () {
         },
         getTouchDownConfig: function(ctx) {
             var data = {};
+            var domain = this.getTenantDomainFromID(ctx.tenant_id);
+            try {
+                var tenantConfig = require('/config/tenants/' + domain + '/config.json');
+            } catch(e) {
+                var tenantConfig = require('/config/tenants/default/config.json');
+            }
+
             data.userid = ctx.user_id;
-            data.domain = config.touchdown.domain;
+            data.domain = tenantConfig.touchdown.domain;
             data.email = ctx.user_id;
-            data.server = config.touchdown.server;
+            data.server = tenantConfig.touchdown.server;
 
             return data;
         }
