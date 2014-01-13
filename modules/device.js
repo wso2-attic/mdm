@@ -144,16 +144,23 @@ var device = (function () {
         log.info(role);
         log.info(operationName);
         var entitlement = session.get("entitlement");
-        var stub = entitlement.setEntitlementServiceParameters();
-        var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
-        log.info("d :"+decision.toString().substring(28,34));
-        decision = decision.toString().substring(28,34);
-        if(decision=="Permit"){
-            return true;
-        }else{
-            return false;
-        }
+        try{
+            var stub = entitlement.setEntitlementServiceParameters();
+            var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
 
+            log.info("d :"+decision.toString().substring(28,34));
+            decision = decision.toString().substring(28,34);
+            if(decision=="Permit"){
+                return true;
+            }else{
+                return false;
+            }
+        }catch(e){
+            if(session.get("mdmConsoleUserLogin") == null){
+                response.sendRedirect(appInfo().server_url + "login");
+                throw require('/modules/absolute.js').appRedirect;
+            }
+        }
     }
 
     function policyByOsType(jsonData,os){
