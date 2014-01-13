@@ -592,22 +592,6 @@ var device = (function () {
         	var tenantID = common.getTenantID();
             db.query(sqlscripts.devices.update1, state, stringify(deviceId));
         },
-        getCurrentDeviceState:function(deviceId){
-
-            log.debug("Niranjan Testinjjjj");
-        	var tenantID = common.getTenantID();
-
-            //SQL Check -injection
-            //var result = db.query("select status from devices where id = ",String(deviceId));
-            var result = db.query(sqlscripts.devices.select16 ,String(deviceId));
-            log.debug("getCurrentDeviceState: SQL Check - injection >>>>>>>>> " + stringify(result));
-
-            if(result != undefined && result != null && result[0] != undefined && result[0] != null){
-                return result[0].status;
-            }else{
-                return null;
-            }
-        },
         <!-- android specific functions -->
         getSenderId: function(ctx){
             var androidConfig = require('/config/android.json');
