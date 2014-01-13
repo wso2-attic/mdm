@@ -345,7 +345,7 @@ var user = (function () {
             subject = "MDM Enrollment";
 
             var email = require('email');
-            var sender = new email.Sender("smtp.gmail.com", "25", config.email.senderAddress, config.email.emailPassword, "tls");
+            var sender = new email.Sender(config.email.smtp, config.email.port, config.email.senderAddress, config.email.emailPassword, "tls");
             sender.from = config.email.senderAddress;
 
             log.info("Email sent to -> "+ctx.username);
@@ -403,7 +403,7 @@ var user = (function () {
                 return tenantConfig.name;
             } catch(e) {
                 var tenantConfig = require('/config/tenants/default/config.json');
-                return tenantConfig.name;;
+                return tenantConfig.name;
             }
         },
 
@@ -436,6 +436,22 @@ var user = (function () {
             ctx.tenantId = arguments[0];
             var tenantDomain = carbon.server.tenantDomain(ctx);
             return tenantDomain;
+        },
+        getTouchDownConfig: function(ctx) {
+            var data = {};
+            var domain = this.getTenantDomainFromID(ctx.tenant_id);
+            try {
+                var tenantConfig = require('/config/tenants/' + domain + '/config.json');
+            } catch(e) {
+                var tenantConfig = require('/config/tenants/default/config.json');
+            }
+
+            data.userid = ctx.user_id;
+            data.domain = tenantConfig.touchdown.domain;
+            data.email = ctx.user_id;
+            data.server = tenantConfig.touchdown.server;
+
+            return data;
         }
     };
     return module;
