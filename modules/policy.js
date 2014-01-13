@@ -222,23 +222,21 @@ var policy = (function () {
             return array;
         },
         getUsersByPolicy:function(ctx){
-            var allUsers = user.getAllUsers(ctx);
+            var allUsers = user.getAllUserNames(ctx);
             var result = db.query("SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ?",ctx.policyid);
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
-                log.info("Test1");
                 for(var i =0; i < allUsers.length;i++){
                     var element = {};
                     element.name = allUsers[i];
                     element.available = false;
-                    array[i] = element;
+                    array.push(element);
                 }
             }else{
                 for(var i =0; i < allUsers.length;i++){
                     var element = {};
                     for(var j=0 ;j< result.length;j++){
-                        log.info(allUsers[i]+" "+result[j].user_id);
-                        if(allUsers[i].username==result[j].user_id){
+                        if(allUsers[i]==result[j].user_id){
                             element.name = allUsers[i];
                             element.available = true;
                             break;
@@ -247,7 +245,7 @@ var policy = (function () {
                             element.available = false;
                         }
                     }
-                    array[i] = element;
+                    array.push(element);
                 }
             }
             return array;
