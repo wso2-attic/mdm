@@ -142,6 +142,7 @@ var user = (function () {
             return proxy_user;
         },
         getUser: function(ctx){
+            log.info("Get User :"+stringify(ctx));
             try {
                 var proxy_user = {};
                 var tenantUser = carbon.server.tenantUser(ctx.userid);
@@ -383,7 +384,7 @@ var user = (function () {
             log.debug("Domain >>>>>>> " + tenantDomain);
 
             if (tenantDomain == "carbon.super") {
-                return this.getTenantName("default");
+                return this.getTenantName("carbon.super");
             }
 
             return this.getTenantName(tenantDomain);
@@ -391,7 +392,7 @@ var user = (function () {
 
         getTenantNameFromID: function (){
             if (arguments[0] == "-1234") {
-                return this.getTenantName("default");
+                return this.getTenantName("carbon.super");
             }
 
             var ctx = {};
@@ -414,27 +415,28 @@ var user = (function () {
 
         getLicenseByDomain: function() {
             var message = "";
+            var domain;
             if (arguments[0].trim() == "") {
-                var file = new File("/config/tenants/default/license.txt");
+                domain = "carbon.super";
+            } else {
+                domain = arguments[0];
+            }
+
+            var file = new File("/config/tenants/" + domain + '/license.txt');
+            if (file.isExists()){
                 file.open("r");
                 message = file.readAll();
                 file.close();
             } else {
-                var file = new File("/config/tenants/" + arguments[0] + '/license.txt');
-                if (file.isExists()){
-                    file.open("r");
-                    message = file.readAll();
-                    file.close();
-                } else {
-                    message = "400";
-                }
+                message = "400";
             }
+
             return message;
         },
         
         getTenantDomainFromID: function() {
         	if (arguments[0] == "-1234") {
-        		return "default";
+        		return "carbon.super";
         	}
         	var carbon = require('carbon');
             var ctx = {};
