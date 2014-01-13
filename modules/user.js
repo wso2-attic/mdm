@@ -62,7 +62,7 @@ var user = (function () {
 	var getUserType = function(user_roles){
         for (var i = user_roles.length - 1; i >= 0; i--) {
             var role = user_roles[i];
-            if(role=='admin'|| role=='Internal/mdmadmin'|| role=='mamadmin'){
+            if(role=='admin'|| role=='Internal/mdmadmin'|| role=='Internal/mamadmin'){
                 return "Administrator";
             }else{
                 return "User";
