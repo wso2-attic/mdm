@@ -84,6 +84,8 @@ var webconsole = (function () {
             return arrRole;
         },
         getAllUsers: function(ctx){
+            ctx.type = 'admin';
+            var type = ctx.type;
             var paging = ctx.iDisplayStart||0;
             var pageSize = 10;
             var all_users = user.getAllUserNames();
@@ -98,11 +100,38 @@ var webconsole = (function () {
             for (var i = paginated_users.length - 1; i >= 0; i--) {
                 var username = paginated_users[i];
                 var userObj = user.getUser({"userid": username+"@"+user.getTenantDomainFromID(common.getTenantID())});
+                var proxyObj = [userObj.email, userObj.firstName, userObj.lastName];
 
-               // var proxyObj = [userObj.email, userObj.firstName, userObj.lastName, "", ""];
-
-                var proxyObj = [userObj.email, userObj.firstName, userObj.lastName, userObj.user_type, " "];
-
+                var roles = userObj.roles;
+                roles = parse(roles);
+                var flag = 0;
+                for(var j=0 ;j<roles.length;j++){
+                    log.info("Test iteration2"+roles[j]);
+                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'||roles[j]=='mamadmin'){
+                        flag = 1;
+                        break;
+                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'){
+                        flag = 2;
+                        break;
+                    }else{
+                        flag = 0;
+                    }
+                }
+                if(flag == 1){
+                    if(type == 'admin'){
+                        proxyObj.push('administrator');
+                        proxyObj.push('');
+                        proxyObj.push('');
+                    }
+                }else if(flag == 2) {;
+                    proxyObj.push('mam');
+                    proxyObj.push('');
+                    proxyObj.push('');
+                }else{
+                    proxyObj.push('user');
+                    proxyObj.push('');
+                    proxyObj.push('');
+                }
                 dataArray.push(proxyObj);
             };
             var finalObj = {};

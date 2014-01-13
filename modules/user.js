@@ -158,6 +158,7 @@ var user = (function () {
                 proxy_user.username = tenantUser.username;
                 proxy_user.tenantId = tenantUser.tenantId;
                 proxy_user.roles = stringify(user_roles);
+            //    proxy_user.roles = String(user_roles);
                 proxy_user.user_type = getUserType(user_roles);
                 return proxy_user;
             } catch(e) {
