@@ -637,9 +637,7 @@ var device = (function () {
                     sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
                     sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
 
-                    log.debug("Niranjan");
                     var mdmPolicy = getPolicyPayLoad(deviceID,1);
-
                     if(mdmPolicy != undefined && mdmPolicy != null){
                         if(mdmPolicy.payLoad != undefined && mdmPolicy.payLoad != null){
                             sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': mdmPolicy.payLoad});
