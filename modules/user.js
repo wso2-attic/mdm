@@ -7,6 +7,7 @@ var user = (function () {
 	var log = new Log();
 	var db;
 	var common = require("/modules/common.js");
+    var sqlscripts = require('/sqlscripts/mysql.js');
 	var carbon = require('carbon');
 	var server = function(){
 		return application.get("SERVER");
@@ -62,7 +63,7 @@ var user = (function () {
 	var getUserType = function(user_roles){
         for (var i = user_roles.length - 1; i >= 0; i--) {
             var role = user_roles[i];
-            if(role=='admin'|| role=='Internal/mdmadmin'|| role=='mamadmin'){
+            if(role=='admin'|| role=='Internal/mdmadmin'|| role=='Internal/mamadmin'){
                 return "Administrator";
             }else{
                 return "User";
@@ -208,7 +209,7 @@ var user = (function () {
             return users_list;
         },
         deleteUser: function(ctx){
-            var result = db.query("select * from devices where user_id = ?",ctx.userid);
+            var result = db.query(sqlscripts.devices.select36, ctx.userid);
             log.info("Result :"+result);
             if(result != undefined && result != null && result != '' && result[0].length != undefined && result[0].length != null && result[0].length > 0){
                 return 404;
@@ -326,10 +327,12 @@ var user = (function () {
 				return null;
 			}
 			var user =  this.getUser({'userid': ctx.username});
-			var result = db.query("SELECT COUNT(id) AS record_count FROM tenantplatformfeatures WHERE tenant_id = ?",  stringify(user.tenantId));
-			if(result[0].record_count == 0) {
+
+            var result = db.query(sqlscripts.tenantplatformfeatures.select1,  stringify(user.tenantId));
+            if(result[0].record_count == 0) {
 				for(var i = 1; i < 13; i++) {
-					var result = db.query("INSERT INTO tenantplatformfeatures (tenant_id, platformFeature_Id) VALUES (?, ?)", stringify(user.tenantId), i);
+
+                    var result = db.query(sqlscripts.tenantplatformfeatures.select2, stringify(user.tenantId), i);
 				}
 			}
 		    return user;
@@ -365,8 +368,10 @@ var user = (function () {
             log.info(String(obj.userid));
             log.info(common.getTenantID());
             log.info("end");
-			var devices = db.query("SELECT * FROM devices WHERE user_id= ? AND tenant_id = ?", String(obj.userid), common.getTenantID());
-			return devices;
+
+            var devices = db.query(sqlscripts.devices.select26, String(obj.userid), common.getTenantID());
+
+            return devices;
 		},
 
         //To get the tenant name using the tenant domain

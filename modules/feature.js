@@ -6,6 +6,7 @@ var feature = (function () {
     var log = new Log();
     var db;
     var common = require("/modules/common.js");
+    var sqlscripts = require('/sqlscripts/mysql.js');
     var module = function (dbs) {
         db = dbs;
         //mergeRecursive(configs, conf);
@@ -74,12 +75,13 @@ var feature = (function () {
         constructor: module,
         getAllFeatures: function(ctx){
         	var tenantID = common.getTenantID();
-            var featureList = db.query("SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND features.id = platformfeatures.feature_id AND devices.tenant_id = ?;", tenantID);
+            var featureList = db.query(sqlscripts.devices.select24, tenantID);
 
             var obj = new Array();
             for(var i=0; i<featureList.length; i++){
                 var featureArr = {};
-                var ftype = db.query("SELECT DISTINCT featuretype.name FROM featuretype, features WHERE features.type_id=featuretype.id AND features.id="+featureList[i].id);
+
+                var ftype = db.query(sqlscripts.featuretype.select2, featureList[i].id);
                 log.error(featureList[i]);
                 featureArr["name"] = featureList[i].name;
                 featureArr["feature_code"] = featureList[i].code;
@@ -99,7 +101,7 @@ var feature = (function () {
 
             log.info("getAllFeaturesForRoles");
             var array = new Array();
-            var featureGroupList = db.query("SELECT * from featuregroup where name IN ('MDM_OPERATION','MDM_CONFIGURATION','MMM')");
+            var featureGroupList = db.query(sqlscripts.featuregroup.select1);
 
             for(var i = 0;i<featureGroupList.length;i++){
                 var obj = {};
@@ -107,7 +109,9 @@ var feature = (function () {
                 obj.value = featureGroupList[i].name;
                 obj.isFolder = true;
                 obj.key = featureGroupList[i].id;
-                obj.children = setFlag(db.query("SELECT name as value, description as title from features where group_id = ?",stringify(featureGroupList[i].id)),ctx.groupid);
+
+                obj.children = setFlag(db.query(sqlscripts.features.select3, stringify(featureGroupList[i].id)),ctx.groupid);
+
                 array[i] = obj;
             }
             log.debug(array);

@@ -35,7 +35,6 @@ var device = (function () {
                 response.sendRedirect(configs.device.ios_location);
             } else {
                 response.sendRedirect("../invaliddevice");
-                //response.sendRedirect(configs.device.ios_location);
             }
 
 		});
@@ -51,7 +50,6 @@ var device = (function () {
 		    }else{
                 	var content = device.registerIOS(ctx);
 		    }
-
 		});
 
 		router.post('devices/unregister', function(ctx){
@@ -62,10 +60,6 @@ var device = (function () {
 		    var result = device.unRegisterIOS(ctx);
 		});
 
-		/*	router.post('devices/isregistered', function(ctx){
-		    var result = device.isRegistered(ctx);
-		});*/
-		
 		router.post('devices/AppInstall', function(ctx){
             ctx.operation = "INSTALLAPP";
 			for (var i = ctx['data'].length - 1; i >= 0; i--){
