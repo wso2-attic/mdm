@@ -142,6 +142,7 @@ var user = (function () {
             return proxy_user;
         },
         getUser: function(ctx){
+            log.info("Get User :"+stringify(ctx));
             try {
                 var proxy_user = {};
                 var tenantUser = carbon.server.tenantUser(ctx.userid);
