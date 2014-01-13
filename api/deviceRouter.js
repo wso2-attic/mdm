@@ -62,10 +62,6 @@ var device = (function () {
 		    var result = device.unRegisterIOS(ctx);
 		});
 
-		/*	router.post('devices/isregistered', function(ctx){
-		    var result = device.isRegistered(ctx);
-		});*/
-		
 		router.post('devices/AppInstall', function(ctx){
             ctx.operation = "INSTALLAPP";
 			for (var i = ctx['data'].length - 1; i >= 0; i--){
@@ -85,38 +81,6 @@ var device = (function () {
 		});
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
-
-         /*   var policy = require('policy');
-            policy.policy.init();
-
-            var result = db.query("select * from devices where id ="+ctx.deviceid);
-            var userId = result[0].user_id;
-            log.info("Test User ID >>>>>"+userId);
-
-            var roleList = parse(user.getUserRoles({'username':userId}));
-
-            log.info("Role List >>>>>>>>"+roleList[0]);
-
-             for(var i = 0;i<roleList.length;i++){
-                var resource = roleList[i]+"/"+ctx.operation
-                var action = request.getMethod();
-                var subject = 'Admin';
-                log.info("Resource >>>>>>>"+resource);
-                var decision = policy.policy.getDecision(resource,action,subject,"");
-                if(decision=="Permit"){
-                    break;
-                }
-             }
-             log.info("Test Decision >>>>>>>>>>>>>>"+decision);
-             if(decision=="Permit"){
-                response.status = 200;
-                response.content = "success";
-                var result = device.sendToDevice(ctx);
-
-             }else{
-                response.status = 404;
-                print("Not Allowed");
-             }*/
             if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
                 var state = device.getCurrentDeviceState();
                 if(state == "A"){
