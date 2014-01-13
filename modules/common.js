@@ -1,12 +1,13 @@
 var DB_SESSION = "db";
 
 var log = new Log();
+var sqlscripts = require('/sqlscripts/mysql.js');
 
 var getRecordsFilteredByDate = function(startDate,endDate,tableName){
     var zeros = ' 00:00:00'
     var startDate = startDate+zeros;
     var endDate = endDate+zeros;
-    var result = db.query("SELECT * FROM "+tableName+" where created_date between '"+date1+"' and '"+date2+"'");
+
     if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null ){
         return  result;
     }else{
@@ -30,7 +31,7 @@ var getTenantIDFromEmail = function(email){
     return tenantUser.tenantId;
 }
 var getTenantIDFromDevice = function(deviceID){
-    var result = db.query("SELECT * FROM devices where id = ?",deviceID);
+    var result = db.query(sqlscripts.devices.select1, deviceID);
     if(typeof (result) !== 'undefined' && result !== null && typeof (result[0]) !== 'undefined' && result[0] !== null){
         return result[0].tenant_id;
     }else{

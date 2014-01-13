@@ -40,8 +40,9 @@
     </div>
 
   	<%
-	    var username = request.getParameter("username");
-		db.query("DELETE FROM device_pending WHERE user_id = ?", username);
+        var sqlscripts = require('/sqlscripts/mysql.js');
+        var username = request.getParameter("username");
+		db.query(sqlscripts.device_pending.delete1, username);
 	
 	%>
   	

@@ -35,7 +35,6 @@ var device = (function () {
                 response.sendRedirect(configs.device.ios_location);
             } else {
                 response.sendRedirect("../invaliddevice");
-                //response.sendRedirect(configs.device.ios_location);
             }
 
 		});
@@ -51,7 +50,6 @@ var device = (function () {
 		    }else{
                 	var content = device.registerIOS(ctx);
 		    }
-
 		});
 
 		router.post('devices/unregister', function(ctx){
@@ -81,6 +79,7 @@ var device = (function () {
 		});
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
+
             if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
                 var state = device.getCurrentDeviceState();
                 if(state == "A"){
