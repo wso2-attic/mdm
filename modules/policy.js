@@ -99,18 +99,37 @@ var policy = (function () {
             var result;
             var policy = db.query(sqlscripts.policies.select7, ctx.policyName);
             policyId = policy[0].id;
-            if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
+            if(ctx.category==1){
+                if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
                 log.info("Content >>>>>"+stringify( ctx.policyData));
                 result = db.query(sqlscripts.policies.update1, ctx.policyData, ctx.policyType, ctx.policyName, common.getTenantID());
                 log.info("Result >>>>>>>"+result);
                 this.enforcePolicy({"policyid":policyId});
-            }else{
-                result = this.addPolicy(ctx);
+                }else{
+                    result = this.addPolicy(ctx);
+                }
+            }else if(ctx.category==2){
+                var currentPolicy = policy[0];
+                if(currentPolicy){
+                    currentPolicy.content = parse(currentPolicy.content).concat(ctx.policyData);
+                    result = db.query(sqlscripts.policies.update1, currentPolicy.content, currentPolicy.type, currentPolicy.name, common.getTenantID());
+                    this.enforcePolicy({"policyid":currentPolicy.id});
+                }else{
+                    var defaultPolicy =  db.query(sqlscripts.policies.select14, 'default', common.getTenantID());
+                    if(defaultPolicy.length>0){
+                        defaultPolicy.content = parse(defaultPolicy.content).concat(ctx.policyData);
+                        result = db.query(sqlscripts.policies.update1, defaultPolicy.content, defaultPolicy.type, defaultPolicy.name, common.getTenantID());
+                        this.enforcePolicy({"policyid" : defaultPolicy.id});
+                    }else{
+                        throw "Default Policy not found";
+                    }
+                }
             }
             return result;
         },
         addPolicy: function(ctx){
             var existingPolicies =  db.query(sqlscripts.policies.select14, ctx.policyName, common.getTenantID());
+            // log.info(ctx);
             if(ctx.category==1){
                 if(existingPolicies != undefined && existingPolicies != null && existingPolicies[0] != undefined && existingPolicies[0] != null ){
                     return 409;
@@ -120,12 +139,27 @@ var policy = (function () {
             }else if(ctx.category==2){
                 var currentPolicy = existingPolicies[0];
                 if(currentPolicy){
-                    // currentPolicy.content =
+                    currentPolicy.content = parse(currentPolicy.content).concat(ctx.policyData);
+                    result = db.query(sqlscripts.policies.update1, currentPolicy.content, currentPolicy.type, currentPolicy.name, common.getTenantID());
+                    this.enforcePolicy({"policyid":currentPolicy.id});
                 }else{
-                    //bb
+                    var defaultPolicy =  db.query(sqlscripts.policies.select14, 'default', common.getTenantID());
+                    if(defaultPolicy.length>0){
+                        defaultPolicy.content = parse(defaultPolicy.content).concat(ctx.policyData);
+                        result = db.query(sqlscripts.policies.update1, defaultPolicy.content, defaultPolicy.type, defaultPolicy.name, common.getTenantID());
+                        this.enforcePolicy({"policyid" : defaultPolicy.id});
+                    }else{
+                        throw "Default Policy not found";
+                    }
                 }
             }
             return 201;
+        },
+        addDefaultPolicy: function(ctx){
+            var existingPolicies =  db.query(sqlscripts.policies.select14, 'default', common.getTenantID());
+            if(existingPolicies.length<0){
+                db.query(sqlscripts.policies.insert2, 'default', common.getTenantID());
+            }
         },
         getAllPoliciesForMDM:function(ctx){
             var result = db.query(sqlscripts.policies.select8, common.getTenantID());

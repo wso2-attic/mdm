@@ -155,11 +155,6 @@
                 'Internal/everyone'
             ]
         },
-        "/mdm/api/policies/{policyid}": {
-            'GET': [
-                'Internal/everyone'
-            ]
-        },
         "/mdm/api/policies/{policyid}/groups": {
             'PUT': [
                 'Internal/everyone'

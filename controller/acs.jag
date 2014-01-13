@@ -78,16 +78,13 @@
 							log.info("OBJECT U >>>>"+objUser);
 							if(objUser != null){
 								var userFeed = {};
-								log.info(typeof userFeed);
 								userFeed.tenantId = stringify(objUser["tenantId"]);
-								log.info("TenantID-"+userFeed.tenantId);
 								userFeed.username = objUser["username"];
 								userFeed.email = objUser["email"];
 								userFeed.firstName = objUser["firstName"];
 								userFeed.lastName = objUser["lastName"];
 								userFeed.mobile = objUser["mobile"];
 								userFeed.tenantDomain = user.getTenantDomainFromID(stringify(objUser["tenantId"]));
-	                            log.info("TestTTTTTTTTTT"+objUser["roles"]);
 								var parsedRoles = parse(objUser["roles"]);
 								userFeed.roles = parsedRoles;
 								var isMDMAdmin = false;
@@ -113,7 +110,7 @@
                                 entitlement.setAuthCookie(backEndCookie);
 
                                 session.put("entitlement",entitlement);
-                              //  session.put("epas_stub",entitlementPolicyAdminService);
+                                 //  session.put("epas_stub",entitlementPolicyAdminService);
 
                                 var groupModule = require('/modules/group.js').group;
                                 var group = new groupModule(db);
@@ -121,6 +118,12 @@
                                     var userList = new Array();
                                     group.addGroup({'name':'Internal/mdmadmin','users':userList});
                                 }
+
+                                //Making default policy
+                                var policyModule = require('/modules/policy.js').policy;
+                                var policy = new policyModule(db);
+
+                                policy.addDefaultPolicy();
 
 								var appController =require('/controller/app.js');
 								if(isAdmin){

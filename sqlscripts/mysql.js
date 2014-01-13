@@ -143,6 +143,7 @@ var policies = {
     'select15': "SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ? && policies.tenant_id = ?",
 
     'insert1' : "insert into policies (name,content,type,category, tenant_id) values (?,?,?,?,?)",
+    'insert2' : "insert into policies (name,content,type,category, tenant_id) values (?,'[]', 1, 1,?)",
 
     'update1' : "UPDATE policies SET content= ?,type = ? WHERE name = ? AND tenant_id = ?",
 

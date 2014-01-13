@@ -79,7 +79,6 @@ var device = (function () {
 		});
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
-
             if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
                 var state = device.getCurrentDeviceState();
                 if(state == "A"){
@@ -147,7 +146,7 @@ var device = (function () {
 		        response.status = 404;
 		    }
 		});
-
+		
 		router.post('devices/{deviceid}/AppInstall', function(ctx){
             ctx.operation = "INSTALLAPP";
 		    var result = device.sendToDevice(ctx);
