@@ -108,11 +108,20 @@ var policy = (function () {
         },
         addPolicy: function(ctx){
             var existingPolicies =  db.query("SELECT * from  policies WHERE name = ? AND tenant_id = ?",ctx.policyName, common.getTenantID());
-            if(existingPolicies != undefined && existingPolicies != null && existingPolicies[0] != undefined && existingPolicies[0] != null ){
-                return 409;
+            if(ctx.category==1){
+                if(existingPolicies != undefined && existingPolicies != null && existingPolicies[0] != undefined && existingPolicies[0] != null ){
+                    return 409;
+                }
+                var result = db.query("insert into policies (name,content,type,category, tenant_id) values (?,?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType, ctx.category, common.getTenantID());
+                log.info("Result >>>>>>>"+result);
+            }else if(ctx.category==2){
+                var currentPolicy = existingPolicies[0];
+                if(currentPolicy){
+                    // currentPolicy.content =
+                }else{
+                    //bb
+                }
             }
-            var result = db.query("insert into policies (name,content,type,category, tenant_id) values (?,?,?,?,?)",ctx.policyName,ctx.policyData,ctx.policyType, ctx.category, common.getTenantID());
-            log.info("Result >>>>>>>"+result);
             return 201;
         },
         getAllPoliciesForMDM:function(ctx){
