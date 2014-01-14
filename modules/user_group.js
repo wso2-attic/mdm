@@ -75,16 +75,17 @@ var user_group = (function () {
              var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer","Internal/mdmadmin");
              var allRoles = common.removeNecessaryElements(totalGroups,removeRoles);
              log.info("getRolesOfUserByAssignment :"+stringify(allRoles));
-            var userRoles = user.getUserRoles(ctx);
-            var array = new Array();
-            if(userRoles.length == 0){
+             var userRoles = user.getUserRoles(ctx);
+             log.info("User Roles"+stringify(userRoles));
+             var array = new Array();
+             if(userRoles.length == 0){
                 for(var i=0;i < allRoles.length;i++){
                     var obj = {};
                     obj.name = allRoles[i];
                     obj.available = false;
                     array.push(obj);
                 }
-            }else{
+             }else{
                 for(var i=0;i < allRoles.length;i++){
                     var obj = {};
                     for(var j=0;j< userRoles.length;j++){
@@ -99,8 +100,8 @@ var user_group = (function () {
                     }
                     array.push(obj);
                 }
-            }
-            return array;
+             }
+             return array;
         },/*
         getUsersOfRoleByAssignment :function(ctx){
             var usersOfGroup = group.getUsersOfGroup(ctx);

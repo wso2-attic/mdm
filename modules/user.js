@@ -233,7 +233,7 @@ var user = (function () {
             log.info("User Name >>>>>>>>>"+ctx.username);
             var tenantUser = carbon.server.tenantUser(ctx.username);
             var um = userManager(tenantUser.tenantId);
-            var roles = um.getRoleListOfUser(ctx.username);
+            var roles = um.getRoleListOfUser(tenantUser.username);
             var roleList = common.removePrivateRole(roles);
             return roleList;
         },
