@@ -19,10 +19,18 @@ $(document).ready(function() {
                         "sWidth": "40%",
                         "fnRender": function (oObj)                              
                         {                           
-                           
-                            return '<a href="view?user='+ oObj.aData[0] +'" data-item="'+ oObj.aData[0] +'" title="View User"><i class="icon-user"> </i> View Roles</a>&nbsp;' +
+                           if(oObj.aData[3] == 'administrator'){
+                           	 return '<a href="view?user='+ oObj.aData[0] +'" data-item="'+ oObj.aData[0] +'" title="View User"><i class="icon-user"> </i> View User</a>&nbsp;' +
+                                '<a href="/mdm/users/assign_groups?user='+ oObj.aData[0] +'" class="btn-assign-roles" data-item="'+ oObj.aData[0] +'" title="Assign Roles"><i class="icon-edit"> </i> Assign Roles</a>&nbsp;'; 
+                               
+                           	
+                           }else{
+                           	 return '<a href="view?user='+ oObj.aData[0] +'" data-item="'+ oObj.aData[0] +'" title="View User"><i class="icon-user"> </i> View User</a>&nbsp;' +
                                 '<a href="/mdm/users/assign_groups?user='+ oObj.aData[0] +'" class="btn-assign-roles" data-item="'+ oObj.aData[0] +'" title="Assign Roles"><i class="icon-edit"> </i> Assign Roles</a>&nbsp;' + 
                                 '<a href="#" class="btn-invite" data-item="'+ oObj.aData[0] +'" title="Invite"><i class="icon-envelope"> </i> Invite</a>&nbsp;';
+                           	
+                           }
+                           
                         }
                       },
                        
