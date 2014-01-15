@@ -48,9 +48,8 @@
         application.put('sso_sessions', {});
         sso_sessions = application.get('sso_sessions');
     }
-
+    log.info("BLAME1");
     if (samlResponse != null) {
-		log.info("sfsdf");
         samlRespObj = sso.client.getSamlObject(samlResponse);
         if (!sso.client.isLogoutResponse(samlRespObj)) {
 
@@ -74,8 +73,7 @@
 					        var userModule = require('/modules/user.js').user;
 							var db = application.get('db');
 							var user = new userModule(db);
-							var objUser = user.getUser({'userid': username});
-							log.info("OBJECT U >>>>"+objUser);
+							var objUser = user.getUser({'userid': username, login: true});
 							if(objUser != null){
 								var userFeed = {};
 								userFeed.tenantId = stringify(objUser["tenantId"]);
@@ -138,6 +136,7 @@
             }
 
         } else {
+            log.info("BLAME");
             session.invalidate();
             response.sendRedirect('/mdm');
         }
