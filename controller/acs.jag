@@ -48,7 +48,6 @@
         application.put('sso_sessions', {});
         sso_sessions = application.get('sso_sessions');
     }
-    log.info("BLAME1");
     if (samlResponse != null) {
         samlRespObj = sso.client.getSamlObject(samlResponse);
         if (!sso.client.isLogoutResponse(samlRespObj)) {
@@ -136,7 +135,6 @@
             }
 
         } else {
-            log.info("BLAME");
             session.invalidate();
             response.sendRedirect('/mdm');
         }
