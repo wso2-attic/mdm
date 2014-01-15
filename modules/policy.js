@@ -145,6 +145,7 @@ var policy = (function () {
                 }else{
                     var defaultPolicy =  db.query(sqlscripts.policies.select14, 'default', common.getTenantID());
                     if(defaultPolicy.length>0){
+                        defaultPolicy.content = [];
                         defaultPolicy.content = parse(defaultPolicy.content).concat(ctx.policyData);
                         result = db.query(sqlscripts.policies.update1, defaultPolicy.content, defaultPolicy.type, defaultPolicy.name, common.getTenantID());
                         this.enforcePolicy({"policyid" : defaultPolicy.id});

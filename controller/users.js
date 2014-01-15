@@ -80,7 +80,7 @@ view = function(appController) {
 	session.put('mdmConsoleSelectedUser', userId);
 	try {
 		var objUser = user.getUser({
-			"userid" : userId
+			"userid" : userId+"@"+user.getTenantDomainFromID(common.getTenantID())
 		});
 	} catch(e) {
 		var objUser = {};
@@ -89,7 +89,7 @@ view = function(appController) {
 	
 	try {
 		var groups = userG.getRolesOfUserByAssignment({
-			username : userId
+			username : userId+"@"+user.getTenantDomainFromID(common.getTenantID())
 
 		});
 	} catch(e) {       
