@@ -40,7 +40,19 @@ appInfo = function() {
 if(session.get("mdmConsoleUserLogin") == null && session.get("mdmConsoleUserLogin") != "true" && request.getRequestURI() != appInfo().server_url + "login"){
 	response.sendRedirect(appInfo().server_url + "login");
     throw require('/modules/absolute.js').appRedirect;
+}else{
+	
+	if(session.get("mdmConsoleUser")['isMDMAdmin'] == false | session.get("mdmConsoleUser")['isAdmin'] == false){
+	 var user = request.getParameter('user');
+	 if(request.getParameter('user') != null && request.getParameter('user') != session.get("mdmConsoleUser")['username']){
+		 response.sendError(403); 
+	 }
+ 	
+ 	}
+	
 }
+
+ 
 
 
 /*
