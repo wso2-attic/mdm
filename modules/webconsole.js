@@ -88,7 +88,13 @@ var webconsole = (function () {
             var type = ctx.type;
             var paging = ctx.iDisplayStart||0;
             var pageSize = 10;
-            var all_users = user.getAllUserNames();
+            var all_users;
+            if(ctx.groupid != null || ctx.groupid != undefined) {
+                all_users = user.getAllUserNamesByRole(ctx);
+            } else {
+                all_users = user.getAllUserNames();
+            }
+
             var totalRecords = all_users.length;
             var upperBound = (paging+1)*pageSize;
             var lowerBound =  upperBound - pageSize;
