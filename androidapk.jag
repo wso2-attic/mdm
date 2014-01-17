@@ -34,8 +34,9 @@
 
 
      <div class="container">
-     		<p class="text-center">If you are not registered with WSO2Mobile MDM please download the Android Agent. If you have already download the Android Agent please register yourself.</p>
+     		<p class="text-center">Please download the Android Agent to register to the MDM</p>
 	 	 <a href="client_app/MDMAgent1.0.apk" class="btn btn-lg btn-primary btn-block">Download Android Agent</a>
+	 	 <p class="text-center">If you have already downloaded the agent, please register to the MDM using the Agent.</p>
 	 </div>
 
 
