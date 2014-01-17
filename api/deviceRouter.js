@@ -104,6 +104,14 @@ var device = (function () {
                 	var content = device.registerIOS(ctx);
 		    }
 		});
+		
+		router.post('devices/pushtoken', function(ctx){
+		    var result = device.saveiOSPushToken(ctx);
+		});
+		
+		router.post('devices/location', function(ctx){
+		    var result = device.updateLocation(ctx);
+		});
 
 		router.post('devices/unregister', function(ctx){
 		    var result = device.unRegisterAndroid(ctx);
@@ -187,7 +195,6 @@ var device = (function () {
             print(result);
             response.status = 200;
         });
-
 
 		router.get('pending/devices/{udid}/operations', function(ctx){
 		    var result = device.getPendingOperationsFromDevice(ctx);

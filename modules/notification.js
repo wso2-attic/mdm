@@ -51,7 +51,7 @@ var notification = (function () {
             return notifications;
         },
         addIosNotification: function(ctx){
-            //log.info("IOS Notification >>>>>"+stringify(ctx));
+            
             var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
             var notifications = db.query(sqlscripts.notifications.select6, identifier);
             var recivedDate =  common.getCurrentDateTime();
