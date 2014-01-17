@@ -27,8 +27,8 @@ $(document).ready(function() {
                            }else{
                            	 return '<a href="view?user='+ oObj.aData[0] +'" data-item="'+ oObj.aData[0] +'" title="View User"><i class="icon-user"> </i> View User</a>&nbsp;' +
                                 '<a href="/mdm/users/assign_groups?user='+ oObj.aData[0] +'" class="btn-assign-roles" data-item="'+ oObj.aData[0] +'" title="Assign Roles"><i class="icon-edit"> </i> Assign Roles</a>&nbsp;' + 
-                                '<a href="#" class="btn-invite" data-item="'+ oObj.aData[0] +'" title="Invite"><i class="icon-envelope"> </i> Invite</a>&nbsp;';
-                           	
+                                '<a href="#" class="btn-invite" data-item="'+ oObj.aData[0] +'" title="Invite"><i class="icon-envelope"> </i> Invite</a>&nbsp;' +
+                           		 '<a href="#" class="btn-item-remove" data-item="'+ oObj.aData[0] +'" title="Remove"><i class="icon-remove"> </i> Remove</a>&nbsp;';
                            }
                            
                         }
@@ -94,16 +94,17 @@ $( "#main-table" ).on( "click", ".btn-item-remove", function() {
 			onClick : function($noty) {
 				
 				jQuery.ajax({
-					url : getServiceURLs("usersCRUD", item),
-					type : "DELETE",					
+					url : getServiceURLs("hasDevicesEnrolled", item),
+					type : "GET",					
 					contentType : "text/plain",
 					statusCode: {
 						400: function() {
 							noty({
-								text : 'Error occured!',
+								text : 'User cannot be deleted, since he has enrolled devices.',
 								'layout' : 'center',
 								'type': 'error'
 							});
+							$noty.close();		
 						},
 						500: function() {
 							noty({
@@ -113,11 +114,42 @@ $( "#main-table" ).on( "click", ".btn-item-remove", function() {
 							});
 						},
 						200: function() {
-							noty({
-								text : 'User is unassigned successfully!',
-								'layout' : 'center'
-							});
-							window.location.assign("configuration");
+							
+							
+								jQuery.ajax({
+									url : getServiceURLs("usersCRUD", item),
+									type : "DELETE",					
+									contentType : "text/plain",
+									statusCode: {
+										400: function() {
+											noty({
+												text : 'Error occured!',
+												'layout' : 'center',
+												'type': 'error'
+											});
+										},
+										500: function() {
+											noty({
+												text : 'Fatal error occured!',
+												'layout' : 'center',
+												'type': 'error'
+											});
+										},
+										200: function() {
+											noty({
+												text : 'User is unassigned successfully!',
+												'layout' : 'center'
+											});
+											window.location.assign("configuration");
+										}
+									}
+									
+							
+								}).done(function() {
+									$noty.close();					
+								});
+							
+							
 						}
 					}
 					
@@ -125,6 +157,9 @@ $( "#main-table" ).on( "click", ".btn-item-remove", function() {
 				}).done(function() {
 					$noty.close();					
 				});
+				
+				
+				
 			}
 			
 		}]
