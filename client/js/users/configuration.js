@@ -100,11 +100,10 @@ $( "#main-table" ).on( "click", ".btn-item-remove", function() {
 					statusCode: {
 						400: function() {
 							noty({
-								text : 'User cannot be deleted, since he has enrolled devices.',
+								text : 'Error occured!',
 								'layout' : 'center',
 								'type': 'error'
 							});
-							$noty.close();		
 						},
 						500: function() {
 							noty({
@@ -113,10 +112,17 @@ $( "#main-table" ).on( "click", ".btn-item-remove", function() {
 								'type': 'error'
 							});
 						},
-						200: function() {
-							
-							
-								jQuery.ajax({
+						200: function(dataResponse) {
+							if(dataResponse == "true"){
+								noty({
+									text : 'This user cannot be deleted. This user has enrolled devices.',
+									'layout' : 'center',
+									'type': 'error'
+								});
+							}else{
+								
+								
+						        jQuery.ajax({
 									url : getServiceURLs("usersCRUD", item),
 									type : "DELETE",					
 									contentType : "text/plain",
@@ -148,8 +154,9 @@ $( "#main-table" ).on( "click", ".btn-item-remove", function() {
 								}).done(function() {
 									$noty.close();					
 								});
-							
-							
+								
+								
+							}
 						}
 					}
 					
