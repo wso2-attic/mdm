@@ -244,8 +244,8 @@ var group = (function () {
             }
             var um = userManager(common.getTenantID());
             um.updateUserListOfRole(ctx.groupid , deletedUsers, newUsers);
-        }
-	getEffectiveRoleFromDeviceID:function(deviceID){
+        },
+	    getEffectiveRoleFromDeviceID:function(deviceID){
             var devices = db.query(sqlscripts.devices.select1,deviceID);
             var username = devices[0].user_id;//username for pull policy payLoad
             var tenantID = devices[0].tenant_id;
