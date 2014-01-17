@@ -7,8 +7,6 @@ var device = (function () {
 		var deviceModule = require('modules/device.js').device;
 		var device = new deviceModule(db);
 		user = new userModule(db);
-
-
         var validateDevice = function() {
 
             //Allow Android version 4.0.3 and above
@@ -66,7 +64,7 @@ var device = (function () {
                     return true;
                 }
             }
-	    return false;
+	        return false;
         }
 
         var checkOwnership = function(deviceID,username){
@@ -79,6 +77,7 @@ var device = (function () {
                 return false;
             }
         }
+
 
 		router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);
@@ -98,7 +97,7 @@ var device = (function () {
 		router.get('device_enroll', function(ctx){
             var userAgent= request.getHeader("User-Agent");
 
-            if (validateDevice(userAgent) == false) {
+            if (device.validateDevice(userAgent) == false) {
                 response.sendRedirect("../invaliddevice");
             } else if (userAgent.indexOf("Android") > 0) {
                 response.sendRedirect("/mdm/androidapk");
@@ -125,6 +124,14 @@ var device = (function () {
 		    }else{
                 	var content = device.registerIOS(ctx);
 		    }
+		});
+		
+		router.post('devices/pushtoken', function(ctx){
+		    var result = device.saveiOSPushToken(ctx);
+		});
+		
+		router.post('devices/location', function(ctx){
+		    var result = device.updateLocation(ctx);
 		});
 
 		router.post('devices/unregister', function(ctx){
@@ -223,7 +230,6 @@ var device = (function () {
             print(result);
             response.status = 200;
         });
-
 
 		router.get('pending/devices/{udid}/operations', function(ctx){
 		    var result = device.getPendingOperationsFromDevice(ctx);

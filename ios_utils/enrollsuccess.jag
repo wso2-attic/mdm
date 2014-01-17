@@ -14,6 +14,7 @@
     <link href="/mdm/assets/boostrap3/css/main.css" rel="stylesheet">
     <link href="/mdm/assets/boostrap3/css/signin.css" rel="stylesheet">
 
+    <script src="/mdm/assets/boostrap3/js/jquery.js"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="../../assets/js/html5shiv.js"></script>
@@ -21,7 +22,7 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body onload="openAgentApp()" >
 
     <div class="navbar navbar-inverse navbar-fixed-top">
 
@@ -39,6 +40,7 @@
         </h3>
     </div>
 
+    <input type="hidden" id="udid" name="udid" value='<% print (request.getParameter("udid")); %>' />
   	<%
         var sqlscripts = require('/sqlscripts/mysql.js');
         var username = request.getParameter("username");
@@ -48,14 +50,7 @@
   	
     <script>
 		function openAgentApp() {
-			setTimeout(function(){ window.location.href = "wso2agent://" + getParameterByName("udid"); }, 2000);			    
-		}
-		
-		function getParameterByName(name) {
-		    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-		    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-		        results = regex.exec(location.search);
-		    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+			setTimeout(function(){ window.location.href = "wso2agent://" + $("#udid").val(); }, 2000);			    
 		}
 	</script>
 

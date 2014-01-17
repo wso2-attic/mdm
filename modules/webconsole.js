@@ -88,7 +88,13 @@ var webconsole = (function () {
             var type = ctx.type;
             var paging = ctx.iDisplayStart||0;
             var pageSize = 10;
-            var all_users = user.getAllUserNames();
+            var all_users;
+            if(ctx.groupid != null || ctx.groupid != undefined) {
+                all_users = user.getAllUserNamesByRole(ctx);
+            } else {
+                all_users = user.getAllUserNames();
+            }
+
             var totalRecords = all_users.length;
             var upperBound = (paging+1)*pageSize;
             var lowerBound =  upperBound - pageSize;
@@ -100,7 +106,7 @@ var webconsole = (function () {
             for (var i = paginated_users.length - 1; i >= 0; i--) {
                 var username = paginated_users[i];
                 var userObj = user.getUser({"userid": username});
-                var proxyObj = [userObj.email, userObj.firstName, userObj.lastName];
+                var proxyObj = [username, userObj.firstName, userObj.lastName];
 
                 var roles = userObj.roles;
                 roles = parse(roles);
