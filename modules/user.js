@@ -214,6 +214,20 @@ var user = (function () {
             }
             return users_list;
         },
+        getAllUserNamesByRole: function(ctx) {
+            var tenantId = common.getTenantID();
+            var users_list = [];
+            if(tenantId){
+                var um = userManager(common.getTenantID());
+                var usersByRole = um.getUserListOfRole(ctx.groupid);
+                var removeUsers = new Array("wso2.anonymous.user","admin","admin@admin.com");
+                var users = common.removeNecessaryElements(usersByRole,removeUsers);
+                users_list = users;
+            }else {
+                print('Error in getting the tenantId from session');
+            }
+            return users_list;
+        },
         deleteUser: function(ctx){
             var result = db.query(sqlscripts.devices.select36, ctx.userid);
             log.info("Result :"+result);
@@ -287,10 +301,10 @@ var user = (function () {
                 var flag = 0;
                 for(var j=0 ;j<roles.length;j++){
                     log.info("Test iteration2"+roles[j]);
-                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'||roles[j]=='mamadmin'){
+                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'){
                         flag = 1;
                         break;
-                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'){
+                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'|| roles[j]=='mamadmin'){
                         flag = 2;
                         break;
                     }else{
@@ -313,6 +327,29 @@ var user = (function () {
             }
             return usersByType;
         },
+        hasDevicesenrolled: function(ctx){
+            //Check if user has any devices enrolled
+            try {
+                var tenantId = common.getTenantID();
+                if(tenantId){
+                    var devices = db.query("SELECT COUNT(*) as count FROM devices WHERE user_id = ? AND tenant_id = ?", ctx.userid, tenantId);
+                    if (devices != null && devices != undefined) {
+                        if (devices[0].count > 0) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    log.debug("Not able to get Tenant ID from Session");
+                    return null;
+                }
+            } catch(e) {
+                log.error(e);
+                return null;
+            }
+        },
+
+
         /*end of other user manager functions*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
