@@ -57,6 +57,17 @@ var user = (function () {
 			session.put("user", null);
 			response.status=200;
 		});
+        router.get('users/devices/enrolled', function(ctx){
+            var hasDevices = user.hasDevicesenrolled(ctx);
+            if (hasDevices == null) {
+                response.status = 404;
+                response.content = "Error occurred!";
+            } else {
+                response.status = 200;
+                response.content = hasDevices;
+            }
+        });
+
 		router.get('users/{userid}/sendmail',function(ctx){
 			log.info('email sending to user');
 			var u = user.getUser(ctx)[0];
@@ -159,6 +170,7 @@ var user = (function () {
 		router.post('users/{userid}/operations/{operation}',function(ctx){
 			device.sendMsgToUserDevices(ctx);
 		});
+
     };
     // prototype
     module.prototype = {
