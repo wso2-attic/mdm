@@ -42,7 +42,10 @@ $(document).ready(function() {
 		"sAjaxSource" : "/mdm/api/webconsole/allUsers",
 		"fnServerParams": function ( aoData ) {
           	var roleid = getURLParameter('group');
-            aoData.push( { "name": "groupid", "value": roleid } );
+          	if(roleid != "null"){
+          		 aoData.push( { "name": "groupid", "value": roleid } );
+          	}
+           
            
         }
 		
