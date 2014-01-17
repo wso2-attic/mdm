@@ -494,6 +494,10 @@ var device = (function () {
         getFeaturesFromDevice: function(ctx){
             var role = ctx.role;
             var deviceId =  ctx.deviceid;
+            if(role=="user"){
+                role = group.getEffectiveRoleFromDeviceID(deviceId);
+                log.debug("Test Role :"+role);
+            }
             var tenantID = common.getTenantID();
             log.debug("Test Role :"+role);
 

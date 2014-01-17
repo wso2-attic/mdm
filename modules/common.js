@@ -3,6 +3,15 @@ var DB_SESSION = "db";
 var log = new Log();
 var sqlscripts = require('/sqlscripts/mysql.js');
 
+var getCurrentLoginUser = function(){
+    if(typeof session.get("mdmConsoleUser") != 'undefined' && session.get("mdmConsoleUser") != null){
+        var username = session.get("mdmConsoleUser").username;
+        return username;
+    }else{
+        return null;
+    }
+}
+
 var getRecordsFilteredByDate = function(startDate,endDate,tableName){
     var zeros = ' 00:00:00'
     var startDate = startDate+zeros;
