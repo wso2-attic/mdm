@@ -70,7 +70,7 @@ $("#btn-add").click(function() {
 		
 	jQuery.ajax({
 		url : getServiceURLs("usersCRUD", ""),
-		type : "PUT",		
+		type : "POST",		
 		data : JSON.stringify(jso),		
 		contentType : "application/json",
      	dataType : "json",

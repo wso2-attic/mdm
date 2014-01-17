@@ -53,18 +53,22 @@ add = function(appController) {
 
 
 edit = function(appController) {
+	var userid = request.getParameter('user');
 	try {
-		var groups = group.getGroups({});
+		var selectedUser = user.getUser({userid: userid});
 	} catch(e) {
-		var groups = [];
+		var selectedUser = {};
 	}
+	
+	//print(selectedUser);
+	
 	context = appController.context();
 	context.title = context.title + " | Add User";
 	context.page = "configuration";
-	context.jsFile = "users/add.js";
+	context.jsFile = "users/edit.js";
 	context.data = {
 		configOption : "users",
-		groups : groups
+		user : selectedUser
 	};
 	return context;
 
