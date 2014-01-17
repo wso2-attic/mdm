@@ -10,14 +10,10 @@ var selectedDevice = null;
 
 $(document).ready(function() {
 	
-	
-	
-	
-	
-	
-	
-	
 	var selDevice = window.location.hash;
+	if(selDevice == ""){
+		selDevice = "#device-tab-" + $("#devicesTab li").children( "a" ).data('deviceId');
+	}
 	selDevice = selDevice.replace("#device-tab-",""); 
 	
 	
