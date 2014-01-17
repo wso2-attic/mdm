@@ -35,7 +35,7 @@
 
      <div class="container">
      		<p class="text-center">Please download the Android Agent to register to the MDM</p>
-	 	 <a href="client_app/MDMAgent1.0.apk" class="btn btn-lg btn-primary btn-block">Download Android Agent</a>
+	 	 <a href="http://mdm.wso2.com:9763/mdm/client_app/MDMAgent1.0.apk" class="btn btn-lg btn-primary btn-block">Download Android Agent</a>
 	 	 <p class="text-center">If you have already downloaded the agent, please register to the MDM using the Agent.</p>
 	 </div>
 
