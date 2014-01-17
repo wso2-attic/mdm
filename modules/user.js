@@ -214,6 +214,20 @@ var user = (function () {
             }
             return users_list;
         },
+        getAllUserNamesByRole: function(ctx) {
+            var tenantId = common.getTenantID();
+            var users_list = [];
+            if(tenantId){
+                var um = userManager(common.getTenantID());
+                var usersByRole = um.getUserListOfRole(ctx.groupid);
+                var removeUsers = new Array("wso2.anonymous.user","admin","admin@admin.com");
+                var users = common.removeNecessaryElements(usersByRole,removeUsers);
+                users_list = users;
+            }else {
+                print('Error in getting the tenantId from session');
+            }
+            return users_list;
+        },
         deleteUser: function(ctx){
             var result = db.query(sqlscripts.devices.select36, ctx.userid);
             log.info("Result :"+result);
