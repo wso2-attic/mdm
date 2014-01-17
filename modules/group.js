@@ -155,7 +155,7 @@ var group = (function () {
                         if(type == 'admin'){
                             newRoles.push(obj);
                         }
-                    }else if(roles[i]== 'Internal/publisher'||roles[i]=='Internal/reviewer'||roles[i]=='Internal/store'){
+                    }else if(roles[i]== 'Internal/publisher'||roles[i]=='Internal/reviewer'||roles[i]=='Internal/store'||roles[i]=='Internal/mamadmin'){
                         obj.name = roles[i];
                         obj.type = 'mam';
                         newRoles.push(obj);
