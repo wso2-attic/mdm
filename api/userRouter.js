@@ -89,7 +89,7 @@ var user = (function () {
 		       response.status = 404;
 		   	}
 		});
-		router.put('users/', function(ctx){
+		router.post('users/', function(ctx){
             var returnMsg = user.addUser(ctx);
             log.info(returnMsg.status);
             if(returnMsg.status == 'ALLREADY_EXIST'){
