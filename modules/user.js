@@ -318,7 +318,7 @@ var user = (function () {
             try {
                 var tenantId = common.getTenantID();
                 if(tenantId){
-                    var devices = db.query("SELECT COUNT(*) as count FROM devices WHERE username = ? AND tenant_id = ?", ctx.username, tenantId);
+                    var devices = db.query("SELECT COUNT(*) as count FROM devices WHERE username = ? AND tenant_id = ?", ctx.userid, tenantId);
                     if (devices != null && devices != undefined) {
                         if (devices[0].count > 0) {
                             return true;

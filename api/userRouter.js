@@ -57,7 +57,7 @@ var user = (function () {
 			session.put("user", null);
 			response.status=200;
 		});
-        router.get('users/devices/enrolled', function(ctx){
+        router.get('users/devices/enrolled/{userid}', function(ctx){
             var hasDevices = user.hasDevicesenrolled(ctx);
             if (hasDevices == null) {
                 response.status = 404;
