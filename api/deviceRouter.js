@@ -1,11 +1,83 @@
 
 var device = (function () {
     var userModule = require('user.js').user;
+    var common = require("/modules/common.js");
 	    var user;
     var module = function (db,router) {
 		var deviceModule = require('modules/device.js').device;
 		var device = new deviceModule(db);
 		user = new userModule(db);
+        var validateDevice = function() {
+
+            //Allow Android version 4.0.3 and above
+            //Allow iOS (iPhone and iPad) version 5.0 and above
+
+            var userOS; //will either be iOS, Android or unknown
+            var userOSversion;  //will be a string, use Number(userOSversion) to convert
+
+            var useragent = arguments[0];
+            var uaindex;
+
+            //determine the OS
+            if(useragent.match(/iPad/i) || useragent.match(/iPhone/i)) {
+                userOS = 'iOS';
+                uaindex = useragent.indexOf('OS ');
+            } else if (useragent.match(/Android/i)) {
+                userOS = 'Android';
+                uaindex = useragent.indexOf('Android ');
+            } else {
+                userOS = 'unknown';
+            }
+
+            //determine version
+            if (userOS == 'iOS' && uaindex > -1) {
+                userOSversion = useragent.substr(uaindex + 3, 3).replace('_', '.');
+            } else if (userOS == 'Android' && uaindex > -1) {
+                userOSversion = useragent.substr(uaindex + 8, 3);
+            } else {
+                userOSversion = 'unknown';
+            }
+
+            if (userOS == 'Android' && userOSversion.substr(0, 4) == '4.0.') {
+                if(Number(userOSversion.charAt(4)) >= 3 ) {
+                    //Allow device
+                    return true;
+                }else {
+                    //Android version not allowed
+                    return false;
+                }
+            } else if (userOS == 'Android' && Number(userOSversion.substr(0,3)) >= 4.1) {
+                //Allow device
+                return true;
+            } else if(userOS == 'iOS' && Number(userOSversion.charAt(0)) >= 5) {
+                //Allow device
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        var isAdmin = function(userid){
+            var roleList = user.getUserRoles({username:userid});
+            for(var i=0; i<roleList.length;i++){
+                if(roleList[i]=='admin'||roleList[i]=='mdmadmin'){
+                    return true;
+                }
+            }
+	        return false;
+        }
+
+        var checkOwnership = function(deviceID,username){
+            log.info("Device ID :"+deviceID);
+            var result =  db.query("SELECT * from devices where id = ?",deviceID);
+            log.info("Result :"+stringify(result));
+            if(typeof result != 'undefined' && result!= null && typeof result[0] != 'undefined' && result[0]!= null && result[0].user_id == username ){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
 
 		router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);
@@ -53,6 +125,14 @@ var device = (function () {
                 	var content = device.registerIOS(ctx);
 		    }
 		});
+		
+		router.post('devices/pushtoken', function(ctx){
+		    var result = device.saveiOSPushToken(ctx);
+		});
+		
+		router.post('devices/location', function(ctx){
+		    var result = device.updateLocation(ctx);
+		});
 
 		router.post('devices/unregister', function(ctx){
 		    var result = device.unRegisterAndroid(ctx);
@@ -81,18 +161,32 @@ var device = (function () {
 		});
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
-            if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
-                var state = device.getCurrentDeviceState();
-                if(state == "A"){
-                    device.sendToDevice(ctx);
-                    response.status = 200;
-                    response.content = "success";
-                }
-            }else{
-                device.sendToDevice(ctx);
-                response.status = 200;
-                response.content = "success";
-            }
+            		log.info("Device IDDDDD"+ctx.deviceid);
+            		var username = common.getCurrentLoginUser();
+            		log.info("Router 1 :"+username);
+            		if(username==null){
+                		response.status = 404;
+                		response.content = "Please Login Again";
+            		}
+            		log.info(isAdmin(username));
+            		log.info(checkOwnership(ctx.deviceid,username));
+            		if(isAdmin(username)||checkOwnership(ctx.deviceid,username)){
+                		if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
+                    			var state = device.getCurrentDeviceState();
+                    			if(state == "A"){
+                        			device.sendToDevice(ctx);
+                        			response.status = 200;
+                        			response.content = "success";
+                   			 }
+                		}else{
+                    			device.sendToDevice(ctx);
+                    			response.status = 200;
+                    			response.content = "success";
+                		}
+            		}else{
+                		print("You are not Authorized to Perform Operations for Others Devices");
+            		}
+
 		});
 
         router.post('devices/operations/{operation}', function(ctx){
@@ -136,7 +230,6 @@ var device = (function () {
             print(result);
             response.status = 200;
         });
-
 
 		router.get('pending/devices/{udid}/operations', function(ctx){
 		    var result = device.getPendingOperationsFromDevice(ctx);

@@ -3,6 +3,15 @@ var DB_SESSION = "db";
 var log = new Log();
 var sqlscripts = require('/sqlscripts/mysql.js');
 
+var getCurrentLoginUser = function(){
+    if(typeof session.get("mdmConsoleUser") != 'undefined' && session.get("mdmConsoleUser") != null){
+        var username = session.get("mdmConsoleUser").username;
+        return username;
+    }else{
+        return null;
+    }
+}
+
 var getRecordsFilteredByDate = function(startDate,endDate,tableName){
     var zeros = ' 00:00:00'
     var startDate = startDate+zeros;
@@ -100,7 +109,7 @@ var initAPNS = function(deviceToken, magicToken) {
     log.debug("Magic Token: >>>>>> " + magicToken);
 
 	try {
-		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender();
+		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.MDMPushNotificationSender();
 
 		var userData = new Packages.java.util.ArrayList();
 		var params = new Packages.java.util.HashMap();
@@ -109,6 +118,28 @@ var initAPNS = function(deviceToken, magicToken) {
 		userData.add(params);
 
 		apnsInitiator.pushToAPNS(userData);
+
+	} catch (e) {
+		log.error(e);
+	}
+}
+
+var sendIOSPushNotifications = function(token, message) {
+    log.debug("sendIOSPushNotifications >>>>>>>>");
+    log.debug("token: >>>>>> " + token);
+    log.debug("message: >>>>>> " + message);
+	if(token == null || token == null || 
+			message == undefined || message == undefined) {
+		return;
+	}
+
+    log.debug("sendIOSPushNotifications >>>>>>>>");
+    log.debug("token: >>>>>> " + token);
+    log.debug("message: >>>>>> " + message);
+
+	try {
+		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender();
+		apnsInitiator.pushToAPNS(token, message);
 
 	} catch (e) {
 		log.error(e);
