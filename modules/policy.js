@@ -108,22 +108,6 @@ var policy = (function () {
                 }else{
                     result = this.addPolicy(ctx);
                 }
-            }else if(ctx.category==2){
-                var currentPolicy = policy[0];
-                if(currentPolicy){
-                    currentPolicy.content = parse(currentPolicy.content).concat(ctx.policyData);
-                    result = db.query(sqlscripts.policies.update1, currentPolicy.content, currentPolicy.type, currentPolicy.name, common.getTenantID());
-                    this.enforcePolicy({"policyid":currentPolicy.id});
-                }else{
-                    var defaultPolicy =  db.query(sqlscripts.policies.select14, 'default', common.getTenantID());
-                    if(defaultPolicy.length>0){
-                        defaultPolicy.content = parse(defaultPolicy.content).concat(ctx.policyData);
-                        result = db.query(sqlscripts.policies.update1, defaultPolicy.content, defaultPolicy.type, defaultPolicy.name, common.getTenantID());
-                        this.enforcePolicy({"policyid" : defaultPolicy.id});
-                    }else{
-                        throw "Default Policy not found";
-                    }
-                }
             }
             return result;
         },
@@ -136,23 +120,6 @@ var policy = (function () {
                 }
                 var result = db.query(sqlscripts.policies.insert1, ctx.policyName,ctx.policyData,ctx.policyType, ctx.category, common.getTenantID());
                 log.info("Result >>>>>>>"+result);
-            }else if(ctx.category==2){
-                var currentPolicy = existingPolicies[0];
-                if(currentPolicy){
-                    currentPolicy.content = parse(currentPolicy.content).concat(ctx.policyData);
-                    result = db.query(sqlscripts.policies.update1, currentPolicy.content, currentPolicy.type, currentPolicy.name, common.getTenantID());
-                    this.enforcePolicy({"policyid":currentPolicy.id});
-                }else{
-                    var defaultPolicy =  db.query(sqlscripts.policies.select14, 'default', common.getTenantID());
-                    if(defaultPolicy.length>0){
-                        defaultPolicy.content = [];
-                        defaultPolicy.content = parse(defaultPolicy.content).concat(ctx.policyData);
-                        result = db.query(sqlscripts.policies.update1, defaultPolicy.content, defaultPolicy.type, defaultPolicy.name, common.getTenantID());
-                        this.enforcePolicy({"policyid" : defaultPolicy.id});
-                    }else{
-                        throw "Default Policy not found";
-                    }
-                }
             }
             return 201;
         },

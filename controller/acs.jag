@@ -109,19 +109,15 @@
                                 session.put("entitlement",entitlement);
                                  //  session.put("epas_stub",entitlementPolicyAdminService);
 
+                                var db = common.getDatabase();
+
                                 var groupModule = require('/modules/group.js').group;
                                 var group = new groupModule(db);
                                 if(!group.roleExists("Internal/mdmadmin")){
                                     var userList = new Array();
                                     group.addGroup({'name':'Internal/mdmadmin','users':userList});
                                 }
-                                var db = common.getDatabase();
-                                //Making default policy
-                                var policyModule = require('/modules/policy.js').policy;
-                                var policy = new policyModule(db);
-
-                                policy.addDefaultPolicy();
-
+                                
 								var appController =require('/controller/app.js');
 								if(isAdmin){
 									response.sendRedirect('console/dashboard');
