@@ -155,7 +155,7 @@ var group = (function () {
                         if(type == 'admin'){
                             newRoles.push(obj);
                         }
-                    }else if(roles[i]== 'Internal/publisher'||roles[i]=='Internal/reviewer'||roles[i]=='Internal/store'){
+                    }else if(roles[i]== 'Internal/publisher'||roles[i]=='Internal/reviewer'||roles[i]=='Internal/store'||roles[i]=='Internal/mamadmin'){
                         obj.name = roles[i];
                         obj.type = 'mam';
                         newRoles.push(obj);
@@ -244,6 +244,16 @@ var group = (function () {
             }
             var um = userManager(common.getTenantID());
             um.updateUserListOfRole(ctx.groupid , deletedUsers, newUsers);
+        },
+	    getEffectiveRoleFromDeviceID:function(deviceID){
+            var devices = db.query(sqlscripts.devices.select1,deviceID);
+            var username = devices[0].user_id;//username for pull policy payLoad
+            var tenantID = devices[0].tenant_id;
+            var roleList = user.getUserRoles({'username':username});
+            var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "Internal/reviewer","Internal/mdmadmin","Internal/publisher","Internal/store");
+            var roles = common.removeNecessaryElements(roleList,removeRoles);
+            log.info("Roles :"+stringify(roles));
+            return roles[0];
         }
     };
 
