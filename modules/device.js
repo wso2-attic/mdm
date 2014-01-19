@@ -82,6 +82,11 @@ var device = (function () {
     function getPolicyPayLoad(deviceId,category){
 
         var devices = db.query(sqlscripts.devices.select1, deviceId);
+        if (devices == null) {
+            return null;
+        } else if (devices[0].user_id == null) {
+            return null;
+        }
 
         var username = devices[0].user_id;// username for pull policy payLoad
 		var tenantID = devices[0].tenant_id;
@@ -144,25 +149,25 @@ var device = (function () {
         return xmlRequest;
     }
     function checkPermission(role, deviceId, operationName, that){
+        log.info("checkPermission");
         log.info(role);
         log.info(operationName);
         var entitlement = session.get("entitlement");
-        try{
-            var stub = entitlement.setEntitlementServiceParameters();
-            var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
-
-            log.info("d :"+decision.toString().substring(28,34));
-            decision = decision.toString().substring(28,34);
-            if(decision=="Permit"){
+        var stub = entitlement.setEntitlementServiceParameters();
+        log.info("Stub :"+stub);
+        if(stub==null){
+             if(session.get("mdmConsoleUserLogin") == null){
+                    response.sendRedirect(appInfo().server_url + "login");
+                    throw require('/modules/absolute.js').appRedirect;
+             }
+        }
+        var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
+        log.info("d :"+decision.toString().substring(28,34));
+        decision = decision.toString().substring(28,34);
+        if(decision=="Permit"){
                 return true;
-            }else{
+        }else{
                 return false;
-            }
-        }catch(e){
-            if(session.get("mdmConsoleUserLogin") == null){
-                response.sendRedirect(appInfo().server_url + "login");
-                throw require('/modules/absolute.js').appRedirect;
-            }
         }
     }
 
@@ -915,6 +920,7 @@ var device = (function () {
 
             return false;
         },
+        sendMessageToIOSDevice: sendMessageToIOSDevice,
         unRegisterIOS:function(ctx){
 
             sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});

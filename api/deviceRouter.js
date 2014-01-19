@@ -1,5 +1,6 @@
 
 var device = (function () {
+    var sqlscripts = require('/sqlscripts/mysql.js');
     var userModule = require('user.js').user;
     var common = require("/modules/common.js");
 	    var user;
@@ -69,7 +70,7 @@ var device = (function () {
 
         var checkOwnership = function(deviceID,username){
             log.info("Device ID :"+deviceID);
-            var result =  db.query("SELECT * from devices where id = ?",deviceID);
+            var result =  db.query(sqlscripts.devices.select1,deviceID);
             log.info("Result :"+stringify(result));
             if(typeof result != 'undefined' && result!= null && typeof result[0] != 'undefined' && result[0]!= null && result[0].user_id == username ){
                 return true;
@@ -139,7 +140,12 @@ var device = (function () {
 		});
 		
 		router.post('devices/unregisterios', function(ctx){
-		    var result = device.unRegisterIOS(ctx);
+            var devices = db.query(sqlscripts.devices.select20, ctx.udid);
+            if (devices != null || devices != undefined) {
+                if (devices[0].id != null) {
+                    var result = device.sendMessageToIOSDevice({"data" : null, "operation" : "ENTERPRISEWIPE", "deviceid" : devices[0].id});
+                }
+            }
 		});
 
 		router.post('devices/AppInstall', function(ctx){
