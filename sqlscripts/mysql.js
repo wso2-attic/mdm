@@ -154,6 +154,7 @@ var policies = {
 
 var user_policy_mapping = {
     'select1' : "SELECT * FROM user_policy_mapping WHERE user_policy_mapping.policy_id = ?",
+    'select2': "SELECT * from user_policy_mapping where policy_id = ? AND user_id = ?",
 
     'insert1' : "INSERT INTO user_policy_mapping (user_id,policy_id) VALUES (?,?)",
 
@@ -189,6 +190,7 @@ var policy_device_profiles = {
 
 var group_policy_mapping = {
     'select1' : "SELECT * FROM group_policy_mapping WHERE group_policy_mapping.policy_id = ?",
+    'select2' : "SELECT * from group_policy_mapping where policy_id = ? AND group_id = ?",
 
     'insert1' : "INSERT INTO group_policy_mapping (group_id,policy_id) VALUES (?,?)",
 
@@ -198,6 +200,7 @@ var group_policy_mapping = {
 
 var platform_policy_mapping = {
     'select1' : "SELECT * FROM platform_policy_mapping WHERE platform_policy_mapping.policy_id = ?",
+    'select2' : "SELECT * from platform_policy_mapping where policy_id = ? AND platform_id = ?",
 
     'insert1' : "INSERT INTO platform_policy_mapping (platform_id,policy_id) VALUES (?,?)",
 
