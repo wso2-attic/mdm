@@ -915,6 +915,7 @@ var device = (function () {
 
             return false;
         },
+        sendMessageToIOSDevice: sendMessageToIOSDevice,
         unRegisterIOS:function(ctx){
 
             sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});

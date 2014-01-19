@@ -233,6 +233,7 @@ var iosmdm = (function() {
                 //End of all Notifications pending for the device
                 var datetime =  common.getCurrentDateTime();
                 db.query(sqlscripts.device_awake.update4, datetime, apnsStatus.getUdid());
+                log.debug("Device awake completed!!");
 
                 return null;
 
