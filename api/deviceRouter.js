@@ -1,5 +1,6 @@
 
 var device = (function () {
+    var sqlscripts = require('/modules/sqlscripts/mysql.js');
     var userModule = require('user.js').user;
     var common = require("/modules/common.js");
 	    var user;
@@ -69,7 +70,7 @@ var device = (function () {
 
         var checkOwnership = function(deviceID,username){
             log.info("Device ID :"+deviceID);
-            var result =  db.query("SELECT * from devices where id = ?",deviceID);
+            var result =  db.query(sqlscripts.devices.select1,deviceID);
             log.info("Result :"+stringify(result));
             if(typeof result != 'undefined' && result!= null && typeof result[0] != 'undefined' && result[0]!= null && result[0].user_id == username ){
                 return true;

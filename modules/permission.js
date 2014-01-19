@@ -149,11 +149,12 @@ var permission = (function () {
             var entitlement = session.get("entitlement");
             var entitlementPolicyAdminService = entitlement.setEntitlementPolicyAdminServiceParameters();
             try{
-                log.info(entitlement.removePolicy(group,entitlementPolicyAdminService));
+                entitlement.removePolicy(group,entitlementPolicyAdminService);
             }catch(e){
                 var samlResponse = session.get("samlresponse");
                 var entitlement = session.get("entitlement");
-                var backEndCookie = getBackendCookie(samlResponse);
+                var saml = require("saml.js").saml;
+                var backEndCookie = saml.getBackendCookie(samlResponse);
                 entitlement.setAuthCookie(backEndCookie);
 
             }
