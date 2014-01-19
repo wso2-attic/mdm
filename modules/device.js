@@ -1,6 +1,8 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
 var common = require("/modules/common.js");
+var configFile = require('/config/mdm.js').config();
+
 
 var device = (function () {
 
@@ -9,7 +11,6 @@ var device = (function () {
     var groupModule = require('group.js').group;
     var group = '';
     var sqlscripts = require('/sqlscripts/mysql.js');
-
     var tenantID = common.getTenantID();
 
 
@@ -82,6 +83,11 @@ var device = (function () {
     function getPolicyPayLoad(deviceId,category){
 
         var devices = db.query(sqlscripts.devices.select1, deviceId);
+        if (devices == null) {
+            return null;
+        } else if (devices[0].user_id == null) {
+            return null;
+        }
 
         var username = devices[0].user_id;// username for pull policy payLoad
 		var tenantID = devices[0].tenant_id;
@@ -144,25 +150,25 @@ var device = (function () {
         return xmlRequest;
     }
     function checkPermission(role, deviceId, operationName, that){
+        log.info("checkPermission");
         log.info(role);
         log.info(operationName);
         var entitlement = session.get("entitlement");
-        try{
-            var stub = entitlement.setEntitlementServiceParameters();
-            var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
-
-            log.info("d :"+decision.toString().substring(28,34));
-            decision = decision.toString().substring(28,34);
-            if(decision=="Permit"){
+        var stub = entitlement.setEntitlementServiceParameters();
+        log.info("Stub :"+stub);
+        if(stub==null){
+             if(session.get("mdmConsoleUserLogin") == null){
+                    response.sendRedirect(appInfo().server_url + "login");
+                    throw require('/modules/absolute.js').appRedirect;
+             }
+        }
+        var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
+        log.info("d :"+decision.toString().substring(28,34));
+        decision = decision.toString().substring(28,34);
+        if(decision=="Permit"){
                 return true;
-            }else{
+        }else{
                 return false;
-            }
-        }catch(e){
-            if(session.get("mdmConsoleUserLogin") == null){
-                response.sendRedirect(appInfo().server_url + "login");
-                throw require('/modules/absolute.js').appRedirect;
-            }
         }
     }
 
@@ -254,6 +260,7 @@ var device = (function () {
         log.info(gcmMSG);
         return true;
     }
+
 
     <!-- iOs specific functions-->
     function invokeInitialFunctions(ctx) {
@@ -479,7 +486,20 @@ var device = (function () {
     module.prototype = {
         constructor: module,
         <!-- common functions -->
+        getAppForDevice: function() {
 
+            var userAgent= request.getHeader("User-Agent");
+
+            if (userAgent.indexOf("Android") > 0) {
+                return (configFile.device.android_location);
+            } else if (userAgent.indexOf("iPhone") > 0) {
+                return("itms-services://?action=download-manifest&url=itms-services://?action=download-manifest&url=" + configFile.HTTP_URL + "/mdm/api/devices/ios/download");
+            } else if (userAgent.indexOf("iPad") > 0){
+                return("itms-services://?action=download-manifest&url=itms-services://?action=download-manifest&url=" + configFile.HTTP_URL + "/mdm/api/devices/ios/download");
+            } else if (userAgent.indexOf("iPod") > 0){
+                return("itms-services://?action=download-manifest&url=itms-services://?action=download-manifest&url=" + configFile.HTTP_URL + "/mdm/api/devices/ios/download");
+            }
+        },
 
         validateDevice: function() {
 
@@ -915,6 +935,7 @@ var device = (function () {
 
             return false;
         },
+        sendMessageToIOSDevice: sendMessageToIOSDevice,
         unRegisterIOS:function(ctx){
 
             sendMessageToIOSDevice({'deviceid':ctx.udid, 'operation': "ENTERPRISEWIPE", 'data': ""});

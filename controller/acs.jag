@@ -107,6 +107,7 @@
                                 entitlement.setAuthCookie(backEndCookie);
 
                                 session.put("entitlement",entitlement);
+                                session.put("samlresponse",samlResponse);
                                  //  session.put("epas_stub",entitlementPolicyAdminService);
 
                                 var db = common.getDatabase();

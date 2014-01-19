@@ -2,7 +2,7 @@
     var deviceModule = require('modules/device.js').device;
     var device = new deviceModule();
     if (device.validateDevice(request.getHeader("User-Agent")) != true) {
-        response.sendRedirect("/mdm/invaliddevice.jag");
+        include("/invaliddevice.jag");
     } else {
         switch(request.getRequestURI()) {
             case "/mdm/devicelogin":
@@ -26,8 +26,11 @@
             case "/mdm/devicestatusmonitor":
                 include("/ios_utils/devicestatusmonitor.jag");
                 break;
+            case "/mdm/downloadapp":
+                include("/downloadapp.jag");
+                break;
             default:
-                include("/ios_utils/mdmerror.jagmonit");
+                include("/ios_utils/mdmerror.jag");
                 break;
         }
 

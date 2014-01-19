@@ -47,16 +47,22 @@ $(document).ready(function() {
           	}
            
            
-        }
+       },
+       
+       "fnDrawCallback": function( oSettings ) {
+       		$(".tabel-filter-group").html("Type: " + fnCreateSelect( this.fnGetColumnData(3)));
+	
+			$('.tabel-filter-group select').change( function () {
+		            oTable.fnFilter( $(this).val(), 3 );
+		     } );
+       	
+      		
+    	}
 		
 	});
 	
 	
-	$(".tabel-filter-group").html("Type: " + fnCreateSelect( oTable.fnGetColumnData(3)));
 	
-	$('.tabel-filter-group select').change( function () {
-            oTable.fnFilter( $(this).val(), 3 );
-     } );
 	
 	
 
@@ -65,11 +71,12 @@ $(document).ready(function() {
 
 
 function fnCreateSelect( aData ){
-    var r='<select><option value="">--All--</option>', i, iLen=aData.length;
-    for ( i=0 ; i<iLen ; i++ )
-    {
-        r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
-    }
+
+    var r='<select><option value="">--All--</option><option value="user">User</option><option value="administrator">Administrator</option><option value="mam">MAM</option>', i, iLen=aData.length;
+   // for ( i=0 ; i<iLen ; i++ )
+   // {
+   //     r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
+   // }
     return r+'</select>';
 }
  
