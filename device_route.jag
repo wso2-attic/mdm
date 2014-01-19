@@ -27,7 +27,7 @@
                 include("/ios_utils/devicestatusmonitor.jag");
                 break;
             default:
-                include("/ios_utils/mdmerror.jagmonit");
+                include("/ios_utils/mdmerror.jag");
                 break;
         }
 
