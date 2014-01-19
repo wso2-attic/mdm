@@ -1,6 +1,8 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
 var common = require("/modules/common.js");
+var configFile = require('/config/mdm.js').config();
+
 
 var device = (function () {
 
@@ -9,7 +11,6 @@ var device = (function () {
     var groupModule = require('group.js').group;
     var group = '';
     var sqlscripts = require('/sqlscripts/mysql.js');
-
     var tenantID = common.getTenantID();
 
 
@@ -260,6 +261,7 @@ var device = (function () {
         return true;
     }
 
+
     <!-- iOs specific functions-->
     function invokeInitialFunctions(ctx) {
         var db = application.get('db');
@@ -484,7 +486,20 @@ var device = (function () {
     module.prototype = {
         constructor: module,
         <!-- common functions -->
+        getAppForDevice: function() {
 
+            var userAgent= request.getHeader("User-Agent");
+
+            if (userAgent.indexOf("Android") > 0) {
+                return (configFile.device.android_location);
+            } else if (userAgent.indexOf("iPhone") > 0) {
+                return("itms-services://?action=download-manifest&url=itms-services://?action=download-manifest&url=" + configFile.HTTP_URL + "/mdm/api/devices/ios/download");
+            } else if (userAgent.indexOf("iPad") > 0){
+                return("itms-services://?action=download-manifest&url=itms-services://?action=download-manifest&url=" + configFile.HTTP_URL + "/mdm/api/devices/ios/download");
+            } else if (userAgent.indexOf("iPod") > 0){
+                return("itms-services://?action=download-manifest&url=itms-services://?action=download-manifest&url=" + configFile.HTTP_URL + "/mdm/api/devices/ios/download");
+            }
+        },
 
         validateDevice: function() {
 

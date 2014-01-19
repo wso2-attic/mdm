@@ -33,12 +33,11 @@
     },
     "device": {
         "android_location": "%http.ip%/mdm/client_app/MDMAgent1.0.apk",
-        "ios_location": "%https.ip%/mdm/certificate",
         "ios": {
-            "location": "",
-            "bundleid": "",
-            "version": "",
-            "Name": ""
+            "location": "%http.ip%/mdm/client_app/iOS-MDM-Agent.ipa",
+            "bundleid": "com.wso2.mobile",
+            "version": "1.0",
+            "appname": "MDM Agent"
         }
     },
     "mam": {
