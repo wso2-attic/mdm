@@ -140,7 +140,12 @@ var device = (function () {
 		});
 		
 		router.post('devices/unregisterios', function(ctx){
-		    var result = device.unRegisterIOS(ctx);
+            var devices = db.query(sqlscripts.devices.select20, ctx.udid);
+            if (devices != null || devices != undefined) {
+                if (devices[0].id != null) {
+                    var result = device.sendMessageToIOSDevice({"data" : null, "operation" : "ENTERPRISEWIPE", "deviceid" : devices[0].id});
+                }
+            }
 		});
 
 		router.post('devices/AppInstall', function(ctx){
