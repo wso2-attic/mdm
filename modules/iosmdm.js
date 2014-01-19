@@ -232,27 +232,9 @@ var iosmdm = (function() {
 
                 //End of all Notifications pending for the device
                 var datetime =  common.getCurrentDateTime();
-                log.debug("Device wakeup complete!")
                 db.query(sqlscripts.device_awake.update4, datetime, apnsStatus.getUdid());
 
                 return null;
-
-			} catch (e) {
-				log.error(e);
-			}
-		},
-		initAPNS : function(deviceToken, magicToken) {
-
-			try {
-				var apnsInitiator = new Packages.com.wso2mobile.ios.apns.PushNotificationSender();
-
-				var userData = new Packages.java.util.ArrayList();
-				var params = new Packages.java.util.HashMap();
-				params.put("devicetoken", deviceToken);
-				params.put("magictoken", magicToken);
-				userData.add(params);
-
-				apnsInitiator.pushToAPNS(userData);
 
 			} catch (e) {
 				log.error(e);
