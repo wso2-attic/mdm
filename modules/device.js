@@ -82,6 +82,11 @@ var device = (function () {
     function getPolicyPayLoad(deviceId,category){
 
         var devices = db.query(sqlscripts.devices.select1, deviceId);
+        if (devices == null) {
+            return null;
+        } else if (devices[0].user_id == null) {
+            return null;
+        }
 
         var username = devices[0].user_id;// username for pull policy payLoad
 		var tenantID = devices[0].tenant_id;
