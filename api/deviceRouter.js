@@ -1,6 +1,6 @@
 
 var device = (function () {
-    var sqlscripts = require('/modules/sqlscripts/mysql.js');
+    var sqlscripts = require('/sqlscripts/mysql.js');
     var userModule = require('user.js').user;
     var common = require("/modules/common.js");
 	    var user;
