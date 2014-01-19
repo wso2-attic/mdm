@@ -144,25 +144,25 @@ var device = (function () {
         return xmlRequest;
     }
     function checkPermission(role, deviceId, operationName, that){
+        log.info("checkPermission");
         log.info(role);
         log.info(operationName);
         var entitlement = session.get("entitlement");
-        try{
-            var stub = entitlement.setEntitlementServiceParameters();
-            var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
-
-            log.info("d :"+decision.toString().substring(28,34));
-            decision = decision.toString().substring(28,34);
-            if(decision=="Permit"){
+        var stub = entitlement.setEntitlementServiceParameters();
+        log.info("Stub :"+stub);
+        if(stub==null){
+             if(session.get("mdmConsoleUserLogin") == null){
+                    response.sendRedirect(appInfo().server_url + "login");
+                    throw require('/modules/absolute.js').appRedirect;
+             }
+        }
+        var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
+        log.info("d :"+decision.toString().substring(28,34));
+        decision = decision.toString().substring(28,34);
+        if(decision=="Permit"){
                 return true;
-            }else{
+        }else{
                 return false;
-            }
-        }catch(e){
-            if(session.get("mdmConsoleUserLogin") == null){
-                response.sendRedirect(appInfo().server_url + "login");
-                throw require('/modules/absolute.js').appRedirect;
-            }
         }
     }
 
