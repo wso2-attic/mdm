@@ -51,21 +51,19 @@ var policy = (function () {
 
     function isResourceExist(policyID,resource,type){
         if(type == 'user'){
-            var result = db.query("SELECT * from user_policy_mapping where policy_id = ? AND user_id = ?",policyID,resource);
+            var result = db.query(sqlscripts.user_policy_mapping.select2,policyID,resource);
             if(typeof result != 'undefined' && result != null &&  typeof result[0] != 'undefined' && result[0] != null){
                 return true;
             }
             return false;
         }else if(type == 'platform'){
-            var result = db.query("SELECT * from platform_policy_mapping where policy_id = ? AND platform_id = ?",policyID,resource);
+            var result = db.query(sqlscripts.platform_policy_mapping.select2,policyID,resource);
             if(typeof result != 'undefined' && result != null &&  typeof result[0] != 'undefined' && result[0] != null){
                 return true;
             }
             return false;
         }else{
-            var result = db.query("SELECT * from group_policy_mapping where policy_id = ? AND group_id = ?",policyID,resource);
-            log.info("Test6");
-            log.info("Group Result :"+stringify(result));
+            var result = db.query(sqlscripts.group_policy_mapping.select2,policyID,resource);
             if(typeof result != 'undefined' && result != null &&  typeof result[0] != 'undefined' && result[0] != null){
                 return true;
             }
