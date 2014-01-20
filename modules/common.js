@@ -183,7 +183,8 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else {
 		data = parse(data);
 	}
-	
+
+    var profilePayLoadIdentifier;
 	var log = new Log();
 	var operation = "";
 	var paramMap = new Packages.java.util.HashMap();
@@ -204,7 +205,8 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else if(operationCode == "500A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_INFORMATION; 
 	} else if(operationCode == "508A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS; 
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS;
+        profilePayLoadIdentifier = payloadIdentifier["CAMERA"];
 		paramMap.put("PayloadIdentifier", payloadIdentifier["CAMERA"]);
 		if(data.function == "Disable") {
 			paramMap.put("AllowCamera", false);
@@ -213,7 +215,8 @@ var loadPayload = function(identifier , operationCode, data) {
 		}
 		isProfile = true;
 	} else if(operationCode == "507A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS; 
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS;
+        profilePayLoadIdentifier = payloadIdentifier["WIFI"];
 		paramMap.put("PayloadIdentifier", payloadIdentifier["WIFI"]);
 		paramMap.put("PayloadDisplayName", "WIFI Configurations");
 		paramMap.put("Password", data.password);
