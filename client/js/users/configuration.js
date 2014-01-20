@@ -5,11 +5,11 @@ var selectedUser = null;
 $(document).ready(function() {
 	oTable = $('#main-table').dataTable({
 		"sDom" : "<'row-fluid'<'tabel-filter-group span8'T><'span4'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+
 		"iDisplayLength" : 10,		
 		"bProcessing" : true,
 		"bServerSide" : true,
-		
-		
+
 		  aoColumns: [
                       
                       null,
