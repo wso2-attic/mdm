@@ -8,6 +8,8 @@ var device = (function () {
 		var deviceModule = require('modules/device.js').device;
 		var device = new deviceModule(db);
 		user = new userModule(db);
+        var Handle = require("/modules/handlebars.js").Handlebars;
+
         var validateDevice = function() {
 
             //Allow Android version 4.0.3 and above
@@ -68,6 +70,19 @@ var device = (function () {
 	        return false;
         }
 
+       function getResource(name){
+            var f = new File(name);
+            f.open("r");
+            var cont = f.readAll();
+            f.close();
+            return cont;
+        }
+
+        var compileTemplate = function(templatePath, context){
+            var template = Handle.compile(getResource(templatePath));
+            return template(context);
+        }
+
         var checkOwnership = function(deviceID,username){
             log.info("Device ID :"+deviceID);
             var result =  db.query(sqlscripts.devices.select1,deviceID);
@@ -79,6 +94,14 @@ var device = (function () {
             }
         }
 
+        router.get('devices/ios/download', function(ctx) {
+            log.debug(">>>>>>>>>");
+            config = require('/config/config.json');
+            var iosManifest = compileTemplate("/ios_utils/plisttemplate.hbs", {url:config.device.ios.location, bundleid: config.device.ios.bundleid, bundleversion: config.device.ios.version,  appname: config.device.ios.appname});
+            //log.info(iosManifest);
+            response.contentType = "application/xml";
+            print(iosManifest);
+        });
 
 		router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);
@@ -96,22 +119,7 @@ var device = (function () {
 
 
 		router.get('device_enroll', function(ctx){
-            var userAgent= request.getHeader("User-Agent");
-
-            if (device.validateDevice(userAgent) == false) {
-                response.sendRedirect("../invaliddevice");
-            } else if (userAgent.indexOf("Android") > 0) {
-                response.sendRedirect("/mdm/androidapk");
-            } else if (userAgent.indexOf("iPhone") > 0) {
-                response.sendRedirect(configs.device.ios_location);
-            } else if (userAgent.indexOf("iPad") > 0){
-                response.sendRedirect(configs.device.ios_location);
-            } else if (userAgent.indexOf("iPod") > 0){
-                response.sendRedirect(configs.device.ios_location);
-            } else {
-                response.sendRedirect("../invaliddevice");
-            }
-
+            response.sendRedirect("/mdm/downloadapp");
 		});
 
 		router.post('devices/register', function(ctx){

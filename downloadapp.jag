@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    
+
 
     <title>Device Enrollment</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/mdm/assets/boostrap3/css/bootstrap.css" rel="stylesheet">
    <link href="/mdm/assets/boostrap3/css/main.css" rel="stylesheet">
-   
+
 
        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -25,18 +25,19 @@
 
 
     <div class="navbar navbar-inverse navbar-fixed-top">
-      
-        <div class="navbar-header">         
+
+        <div class="navbar-header">
           <a class="navbar-brand" href="#">WSO2Mobile MDM Registration</a>
-        </div>   
-     
+        </div>
+
     </div>
 
 
      <div class="container">
+     <br />
 
-     <p class="text-center">If you are not registered with WSO2Mobile MDM please download the Android Agent. If you have already download the Android Agent please register yourself.</p>
-  <a href=<%var configs = require('config/mdm.js').config(); print (configs.device.android_location); %> class="btn btn-lg btn-primary btn-block">Download Android Agent</a>
+     <p class="text-center">If you are not registered with WSO2Mobile MDM please download and install the Agent.</p>
+  <a href=<% var deviceModule = require('/modules/device.js').device;  var device = new deviceModule();  print(device.getAppForDevice());%> class="btn btn-lg btn-primary btn-block">Download Agent</a>
 </div>
 
 
