@@ -114,6 +114,63 @@ var policy = (function () {
         var gpresult = db.query(sqlscripts.policies.select6, role);
         return gpresult[0].id;
     }
+
+    function revokePolicy(policyId){
+
+        var policyPayload = require("/config/config.json").emptyPolicy;
+
+        var users1 = db.query(sqlscripts.user_policy_mapping.select1, String(policyId));
+        for(var i = 0;i<users1.length;i++){
+            var devices1 = db.query(sqlscripts.devices.select26, users1[i].user_id, common.getTenantID());
+            for(var j = 0;j<devices1.length;j++){
+                device.sendToDevice({'deviceid':devices1[j].id,'operation':'POLICY','data':null});
+            }
+        }
+
+        var platforms =  db.query(sqlscripts.platform_policy_mapping.select1,String(policyId));
+
+        for(var i = 0;i<platforms.length;i++){
+            if(platforms[i].platform_id == 'android'){
+
+                var devices2 = db.query(sqlscripts.devices.select36, common.getTenantID());
+
+                for(var j=0;j<devices2.length;j++){
+                    var tempId = getPolicyIdFromDevice(devices2[j].id);
+                    if(tempId == policyId){
+                        device.sendToDevice({'deviceid':devices2[j].id,'operation':'POLICY','data':null});
+                    }
+                }
+
+            }else{
+
+                var devices3 = db.query(sqlscripts.devices.select37);
+
+                for(var j=0;j<devices3.length;j++){
+                    var tempId = getPolicyIdFromDevice(devices3[j].id);
+                    if(tempId == policyId){
+                        device.sendToDevice({'deviceid':devices3[i].id,'operation':'POLICY','data':null});
+                    }
+                }
+            }
+
+        }
+
+        var groups =  db.query(sqlscripts.group_policy_mapping.select1, String(policyId));
+
+        for(var i = 0;i<groups.length;i++){
+            var users2 = group.getUsersOfGroup({'groupid':groups[i].group_id});
+            for(var j=0;j<users2.length;j++){
+                var devices4 = db.query(sqlscripts.devices.select26, users2[j].username, common.getTenantID());
+                for(var k = 0;k<devices4.length;k++){
+                    var tempId = getPolicyIdFromDevice(devices4[k].id);
+                    if(tempId == policyId){
+                        device.sendToDevice({'deviceid':devices4[k].id,'operation':'POLICY','data':null});
+                    }
+                }
+            }
+        }
+
+    }
     module.prototype = {
         constructor: module,
         updatePolicy:function(ctx){
@@ -193,6 +250,7 @@ var policy = (function () {
             return result[0];
         },
         deletePolicy:function(ctx){
+            revokePolicy(ctx.policyid);
             var result = db.query(sqlscripts.policies.delete1, ctx.policyid, common.getTenantID());
             db.query(sqlscripts.group_policy_mapping.delete1, ctx.policyid);
             return result;
@@ -404,64 +462,6 @@ var policy = (function () {
                         var tempId = getPolicyIdFromDevice(devices4[k].id);
                         if(tempId == policyId){
                             device.sendToDevice({'deviceid':devices4[k].id,'operation':'POLICY','data':payLoad});
-                        }
-                    }
-                }
-            }
-
-        },
-        revokePolicy:function(ctx){
-            var policyId =  ctx.policyid;
-
-            var policies = db.query(sqlscripts.policies.select10, String(policyId), common.getTenantID());
-            var payLoad = parse(policies[0].content);
-
-            var users1 = db.query(sqlscripts.user_policy_mapping.select1, String(policyId));
-            for(var i = 0;i<users1.length;i++){
-                var devices1 = db.query(sqlscripts.devices.select26, users1[i].user_id, common.getTenantID());
-                for(var j = 0;j<devices1.length;j++){
-                    device.sendToDevice({'deviceid':devices1[j].id,'operation':'REVOKEPOLICY','data':null});
-                }
-            }
-
-            var platforms =  db.query(sqlscripts.platform_policy_mapping.select1,String(policyId));
-
-            for(var i = 0;i<platforms.length;i++){
-                if(platforms[i].platform_id == 'android'){
-
-                    var devices2 = db.query(sqlscripts.devices.select36, common.getTenantID());
-
-                    for(var j=0;j<devices2.length;j++){
-                        var tempId = getPolicyIdFromDevice(devices2[j].id);
-                        if(tempId == policyId){
-                            device.sendToDevice({'deviceid':devices2[j].id,'operation':'REVOKEPOLICY','data':null});
-                        }
-                    }
-
-                }else{
-
-                    var devices3 = db.query(sqlscripts.devices.select37);
-
-                    for(var j=0;j<devices3.length;j++){
-                        var tempId = getPolicyIdFromDevice(devices3[j].id);
-                        if(tempId == policyId){
-                            device.sendToDevice({'deviceid':devices3[i].id,'operation':'REVOKEPOLICY','data':null});
-                        }
-                    }
-                }
-
-            }
-
-            var groups =  db.query(sqlscripts.group_policy_mapping.select1, String(policyId));
-
-            for(var i = 0;i<groups.length;i++){
-                var users2 = group.getUsersOfGroup({'groupid':groups[i].group_id});
-                for(var j=0;j<users2.length;j++){
-                    var devices4 = db.query(sqlscripts.devices.select26, users2[j].username, common.getTenantID());
-                    for(var k = 0;k<devices4.length;k++){
-                        var tempId = getPolicyIdFromDevice(devices4[k].id);
-                        if(tempId == policyId){
-                            device.sendToDevice({'deviceid':devices4[k].id,'operation':'REVOKEPOLICY','data':payLoad});
                         }
                     }
                 }
