@@ -832,6 +832,10 @@ var device = (function () {
                                 objResponse.feature_code = received_data[i].message.code + "";
                                 objResponse.message = stringify(received_data[i].message.data);
                                 objResponse.id = id + "-" + i;
+                                objResponse.policy_enforce = true;
+                                objResponse.notification_id = id;
+                                objResponse.device_id = pendingFeatureCodeList[0].device_id;
+                                objResponse.tenant_id = pendingFeatureCodeList[0].tenant_id;
 
                                 received_data[i].counter = ++counter + "";
 
