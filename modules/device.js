@@ -158,7 +158,7 @@ var device = (function () {
         stub = entitlement.setEntitlementPolicyAdminServiceParameters();
     }
     function checkPermission(role, deviceId, operationName, that){
-        /*log.info("checkPermission");
+        log.info("checkPermission");
         log.info(role);
         log.info(operationName);
         var entitlement = session.get("entitlement");
@@ -169,7 +169,7 @@ var device = (function () {
                     response.sendRedirect(appInfo().server_url + "login");
                     throw require('/modules/absolute.js').appRedirect;
              }
-        } */
+        }
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
         log.info("d :"+decision.toString().substring(28,34));
         decision = decision.toString().substring(28,34);
@@ -587,7 +587,7 @@ var device = (function () {
             }
         },
         getFeaturesFromDevice: function(ctx){
-            init();
+           // init();
             var role = ctx.role;
             var deviceId =  ctx.deviceid;
             if(role=="user"){
