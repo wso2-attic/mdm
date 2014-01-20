@@ -715,23 +715,8 @@ var device = (function () {
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;
             log.info("tenant idddddddd"+tenantId);
-            var platforms = db.query(sqlscripts.platforms.select1, ctx.platform);// from
-																					// device
-																					// platform
-																					// comes
-																					// as
-																					// iOS
-																					// and
-																					// Android
-																					// then
-																					// convert
-																					// into
-																					// platform
-																					// id
-																					// to
-																					// save
-																					// in
-																					// device
+            var platforms = db.query(sqlscripts.platforms.select1, ctx.platform);// from device platform comes as iOS and Android then convert into platform id
+																				 // to save in device
 																					// table
             var platformId = platforms[0].id;
 

@@ -360,13 +360,18 @@ var loadPayload = function(identifier , operationCode, data) {
 
 	paramMap.put("PayloadUUID", identifier);
 	paramMap.put("CommandUUID", identifier);
-	
-	try {
-		var payloadLoader = new Packages.com.wso2mobile.ios.mdm.payload.PayloadLoader();
-		var responseData = payloadLoader.loadPayload(operation, paramMap, isProfile);	
-	} catch (e) {
-		log.error(e);
-	}
+    log.debug("CommandUUID >>>>>>>>>>> " + identifier);
+
+    var responseData;
+    try {
+        var payloadLoader = new Packages.com.wso2mobile.ios.mdm.payload.PayloadLoader();
+        responseData.data = payloadLoader.loadPayload(operation, paramMap, isProfile);
+        if (profilePayLoadIdentifier != null) {
+            responseData.payloadIdentifier = profilePayLoadIdentifier;
+        }
+    } catch (e) {
+        log.error(e);
+    }
 			
 	return responseData;
 }
