@@ -120,7 +120,6 @@ router.get('dashboard/all/info', function(ctx){
 });
 
 router.get('dashboard/devices/android/info', function(ctx){
-    log.info("Test /api/dashboard/devices/android/info");
     var result = dashboard.getAllAndroidDevices(ctx);
     if(result!= null && result != undefined){
         response.content = result;
