@@ -113,7 +113,7 @@ var webconsole = (function () {
                 var flag = 0;
                 for(var j=0 ;j<roles.length;j++){
                     log.info("Test iteration2"+roles[j]);
-                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'){
+                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'||roles[j]=='Internal/mamadmin'){
                         flag = 1;
                         break;
                     }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'||roles[j]=='Internal/mamadmin'){
