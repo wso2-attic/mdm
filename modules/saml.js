@@ -4,7 +4,7 @@ var saml = saml || {};
     var SAML_ASSERTION_TOKEN_SESSION_KEY = "SAML_ASSERTION_TOKEN";
     var SSO_NAME = "SSORelyingParty.Name";
 
-    saml.getToken = function (){
+    var getToken = function (){
         if(session.get(SAML_RESPONSE_TOKEN_SESSION_KEY)){
             return session.get(SAML_RESPONSE_TOKEN_SESSION_KEY);
         } else if(session.get(SAML_ASSERTION_TOKEN_SESSION_KEY)){
