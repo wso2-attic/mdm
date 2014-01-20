@@ -290,7 +290,7 @@ var notification = (function() {
 			var deviceResult = db.query(sqlscripts.devices.select40,
 					ctx.deviceid);
 
-			if (deviceResult != null && deviceResult != undefined) {
+			if (deviceResult != null && deviceResult != undefined && ctx.operation == "INFO") {
 				var properties = deviceResult[0].properties;
 				var platformId = deviceResult[0].platform_id;
 
