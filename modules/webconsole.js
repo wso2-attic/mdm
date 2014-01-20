@@ -190,15 +190,15 @@ var webconsole = (function () {
                 }
                 var finalObj = {};
                 finalObj.sEcho = ctx.sEcho;
-                finalObj.iTotalRecords = totalRecords
-                finalObj.iTotalDisplayRecords = totalDisplayRecords;
+                finalObj.iTotalRecords = totalRecords;
+                finalObj.iTotalDisplayRecords = totalRecords;
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else if(byod!= undefined && byod != null && byod != '' ){
                 result = db.query(sqlscripts.devices.select33, "%"+userId+"%", common.getTenantID(), byod);
                 var totalRecords = result.length;
-                var upperBound = (ctx.iDisplayStart+1) *totalDisplayRecords;
-                var lowerBound =  upperBound - totalDisplayRecords;
+                var upperBound = parseInt(ctx.iDisplayStart)+parseInt(iDisplayLength);
+                var lowerBound = parseInt(ctx.iDisplayStart);
 
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
@@ -217,19 +217,15 @@ var webconsole = (function () {
                 }
                 var finalObj = {};
                 finalObj.sEcho = ctx.sEcho;
-                finalObj.iTotalRecords = totalRecords
-                finalObj.iTotalDisplayRecords = totalDisplayRecords;
+                finalObj.iTotalRecords = totalRecords;
+                finalObj.iTotalDisplayRecords = totalRecords;
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else if(platformId!= undefined && platformId != null && platformId != ''){
                 result = db.query(sqlscripts.devices.select34, "%"+userId+"%", common.getTenantID(), platformId);
                 var totalRecords = result.length;
-                log.info("totalDisplayRecords"+totalDisplayRecords);
-                log.info("iDisplayStart  :"+ctx.iDisplayStart);
-                var upperBound = (ctx.iDisplayStart+1) *totalDisplayRecords;
-                log.info("upperBound"+upperBound);
-                var lowerBound =  upperBound - totalDisplayRecords;
-                log.info("lowerBound"+lowerBound);
+                var upperBound = parseInt(ctx.iDisplayStart)+parseInt(iDisplayLength);
+                var lowerBound = parseInt(ctx.iDisplayStart);
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
                     log.info(stringify(result[i]));
@@ -249,7 +245,7 @@ var webconsole = (function () {
                 var finalObj = {};
                 finalObj.sEcho = ctx.sEcho;
                 finalObj.iTotalRecords = totalRecords
-                finalObj.iTotalDisplayRecords = totalDisplayRecords;
+                finalObj.iTotalDisplayRecords = totalRecords;
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else{
