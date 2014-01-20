@@ -164,13 +164,12 @@ var webconsole = (function () {
             var result = '';
 
             var iDisplayLength = ctx.iDisplayLength;
-            var totalDisplayRecords = 10;
 
             if(byod!= undefined && byod != null && byod != '' && platformId!= undefined && platformId != null && platformId != ''){
                 result = db.query(sqlscripts.devices.select32, "%"+userId+"%", common.getTenantID(), byod, platformId);
                 var totalRecords = result.length;
-                var upperBound = (ctx.iDisplayStart+1)*totalDisplayRecords;
-                var lowerBound =  upperBound - totalDisplayRecords;
+                var upperBound = parseInt(ctx.iDisplayStart)+parseInt(iDisplayLength);
+                var lowerBound = parseInt(ctx.iDisplayStart);
 
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
