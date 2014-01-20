@@ -29,11 +29,22 @@ var feature = (function () {
         return obj1;
     }
 
+    var entitlement = null;
+    var stub = null;
+
+    function init(){
+        entitlement = session.get("entitlement");
+        var samlResponse = session.get("samlresponse");
+        var saml = require("/modules/saml.js").saml;
+        var backEndCookie = saml.getBackendCookie(samlResponse);
+        entitlement.setAuthCookie(backEndCookie);
+        stub = entitlement.setEntitlementPolicyAdminServiceParameters();
+    }
     function setFlag(list,groupId){
         log.info("Test Group >>>>>>>>>>"+groupId);
         try{
-            var entitlement = session.get("entitlement");
-            var stub = entitlement.setEntitlementPolicyAdminServiceParameters();
+        /*    var entitlement = session.get("entitlement");
+            var stub = entitlement.setEntitlementPolicyAdminServiceParameters();*/
             var result = entitlement.readExistingPolicy(stub,groupId);
             var languages = new XML('<xml>'+result+'</xml>');
             var svgns = new Namespace('urn:oasis:names:tc:xacml:3.0:core:schema:wd-17');
@@ -98,7 +109,7 @@ var feature = (function () {
         },
 
         getAllFeaturesForRoles: function(ctx){
-
+            init();
             log.info("getAllFeaturesForRoles");
             var array = new Array();
             var featureGroupList = db.query(sqlscripts.featuregroup.select1);

@@ -123,7 +123,7 @@ var policy = (function () {
         for(var i = 0;i<users1.length;i++){
             var devices1 = db.query(sqlscripts.devices.select26, users1[i].user_id, common.getTenantID());
             for(var j = 0;j<devices1.length;j++){
-                device.sendToDevice({'deviceid':devices1[j].id,'operation':'POLICY','data':null});
+                device.sendToDevice({'deviceid':devices1[j].id,'operation':'REVOKEPOLICY','data':policyPayload});
             }
         }
 
@@ -137,7 +137,7 @@ var policy = (function () {
                 for(var j=0;j<devices2.length;j++){
                     var tempId = getPolicyIdFromDevice(devices2[j].id);
                     if(tempId == policyId){
-                        device.sendToDevice({'deviceid':devices2[j].id,'operation':'POLICY','data':null});
+                        device.sendToDevice({'deviceid':devices2[j].id,'operation':'REVOKEPOLICY','data':policyPayload});
                     }
                 }
 
@@ -148,7 +148,7 @@ var policy = (function () {
                 for(var j=0;j<devices3.length;j++){
                     var tempId = getPolicyIdFromDevice(devices3[j].id);
                     if(tempId == policyId){
-                        device.sendToDevice({'deviceid':devices3[i].id,'operation':'POLICY','data':null});
+                        device.sendToDevice({'deviceid':devices3[i].id,'operation':'REVOKEPOLICY','data':policyPayload});
                     }
                 }
             }
@@ -164,7 +164,7 @@ var policy = (function () {
                 for(var k = 0;k<devices4.length;k++){
                     var tempId = getPolicyIdFromDevice(devices4[k].id);
                     if(tempId == policyId){
-                        device.sendToDevice({'deviceid':devices4[k].id,'operation':'POLICY','data':null});
+                        device.sendToDevice({'deviceid':devices4[k].id,'operation':'REVOKEPOLICY','data':policyPayload});
                     }
                 }
             }
