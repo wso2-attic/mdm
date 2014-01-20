@@ -190,9 +190,17 @@ $(document).ready( function () {
 				var data = policyContent[i].data;				
 				$.each( data, function( key, value ) {
 					if($("#" + code + "-function").attr('type') == "checkbox"){
-						//alert("#" + code + "-function");						
 						if($("#" + code + "-function").data("trueVal") == value){							
 							$("#" + code + "-function").prop('checked', true);
+							$("#" + code + "-policy .icon-ok-sign").css("display", "inline");
+						}
+						
+					}
+					
+					if($("#" + code + "-" + key).attr('type') == "checkbox"){
+						//alert(code + " " + key + " " + $("#" + code + "-" + key).attr('type'));						
+						if($("#" + code + "-" + key).data("trueVal") == value){							
+							$("#" + code + "-" + key).prop('checked', true);
 							$("#" + code + "-policy .icon-ok-sign").css("display", "inline");
 						}
 						
