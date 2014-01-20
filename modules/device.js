@@ -369,6 +369,19 @@ var device = (function () {
             }catch (e){
                 log.info(e);
             }
+        } else if(ctx.operation == "NOTIFICATION") { 
+        	
+            var deviceResults = db.query(sqlscripts.devices.select39, ctx.deviceid);
+            
+            if(deviceResults != null &&  deviceResults[0] != null) {
+            	
+            	var pushToken = deviceResults[0].push_token;
+            	var messageObj = parse(message);
+            	common.sendIOSPushNotifications(pushToken, messageObj.notification);
+            }
+            
+            return;
+            
         } else if(ctx.operation == "MUTE") { 
         	
             var deviceResults = db.query(sqlscripts.devices.select39, ctx.deviceid);
