@@ -149,16 +149,16 @@ var permission = (function () {
             var entitlement = session.get("entitlement");
             var entitlementPolicyAdminService = entitlement.setEntitlementPolicyAdminServiceParameters();
             try{
-                entitlement.removePolicy(group,entitlementPolicyAdminService);
-            }catch(e){
                 var samlResponse = session.get("samlresponse");
                 var entitlement = session.get("entitlement");
-                var saml = require("saml.js").saml;
+                var saml = require("/modules/saml.js").saml;
                 var backEndCookie = saml.getBackendCookie(samlResponse);
                 entitlement.setAuthCookie(backEndCookie);
-
+                entitlement.removePolicy(group,entitlementPolicyAdminService);
+                entitlement.addPolicy(xacmlFile,entitlementPolicyAdminService,group);
+            }catch(e){
+                log.info("ERROR :"+e);
             }
-            entitlement.addPolicy(xacmlFile,entitlementPolicyAdminService,group);
             return "success";
         },
         deletePolicy:function(ctx){

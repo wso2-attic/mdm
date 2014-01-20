@@ -43,6 +43,7 @@ var devices = {
     'select37':"SELECT * from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type = 'iOS'",
     'select38':"SELECT properties, user_id FROM devices WHERE udid = ?",
     'select39':"SELECT push_token FROM devices WHERE id = ?",
+    'select40':"SELECT properties, platform_id FROM devices WHERE id = ?",
     
     'insert1' : "INSERT INTO devices (tenant_id, os_version, created_date, properties, reg_id, status, deleted, user_id, platform_id, vendor, udid, wifi_mac) VALUES(?, ?, ?, ?, ?,'A','0', ?, ?, ?,'0', ?)",
     'insert2' : "INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
@@ -173,7 +174,8 @@ var featuretype = {
 
 var platforms = {
     'select1' : "SELECT id FROM platforms WHERE name = ?",
-    'select2' : "select * from platforms where type_name = ?"
+    'select2' : "SELECT * FROM platforms WHERE type_name = ?",
+    'select3' : "SELECT type FROM platforms WHERE id = ?",
 };
 
 var featuregroup = {
