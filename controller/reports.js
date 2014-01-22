@@ -58,7 +58,7 @@ devices_complience = function(appController){
 	var results = null; 
 	
 	var dashboard = request.getParameter('dashboard');
-	var status = request.getParameter('status');
+	
 	
 	
 	if(request.getMethod() == 'POST' || dashboard == 'true'){
