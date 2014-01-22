@@ -29,6 +29,7 @@ function renderView(){
 		var title = $(this).data("title");
 		
 		
+		var currentDate = moment().format('YYYY-MM-DD');
 		
 		
 		$.get('../client/templates/dashboard_widgets/' + templateWidget + '.hbs').done(function(templateData) {	
@@ -46,13 +47,13 @@ function renderView(){
 						//alert(JSON.stringify(data));
 						chartData = data; 
 						 var template = Handlebars.compile(templateData);
-						  $('#' + templateArea).html(template({index:index, title: title, height:height, width: width}));	
+						  $('#' + templateArea).html(template({index:index, title: title, currentDate:currentDate, height:height, width: width}));	
 				    }
 
 				});					
 			}else{				
 				var template = Handlebars.compile(templateData);
-				$('#' + templateArea).html(template({index:index, title:title}));				
+				$('#' + templateArea).html(template({index:index, title:title, currentDate:currentDate}));				
 			}
 			
 			
