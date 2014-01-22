@@ -67,25 +67,25 @@ var user_group = (function () {
          * This function return all roles belong to particular user. Also return other roles as well with a flag. Consume by role assignment for user.
          *
          * */
-         getUserRoles:function(ctx){
-           return  user.getUserRoles(ctx);
-         },
-         getRolesOfUserByAssignment:function(ctx){
-             var totalGroups = group.getAllGroups({});
-             var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer","Internal/mdmadmin");
-             var allRoles = common.removeNecessaryElements(totalGroups,removeRoles);
-             log.info("getRolesOfUserByAssignment :"+stringify(allRoles));
-             var userRoles = user.getUserRoles(ctx);
-             log.info("User Roles"+stringify(userRoles));
-             var array = new Array();
-             if(userRoles.length == 0){
+        getUserRoles:function(ctx){
+            return  user.getUserRoles(ctx);
+        },
+        getRolesOfUserByAssignment:function(ctx){
+            var totalGroups = group.getAllGroups({});
+            var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer","Internal/mdmadmin");
+            var allRoles = common.removeNecessaryElements(totalGroups,removeRoles);
+            log.info("getRolesOfUserByAssignment :"+stringify(allRoles));
+            var userRoles = user.getUserRoles(ctx);
+            log.info("User Roles"+stringify(userRoles));
+            var array = new Array();
+            if(userRoles.length == 0){
                 for(var i=0;i < allRoles.length;i++){
                     var obj = {};
                     obj.name = allRoles[i];
                     obj.available = false;
                     array.push(obj);
                 }
-             }else{
+            }else{
                 for(var i=0;i < allRoles.length;i++){
                     var obj = {};
                     for(var j=0;j< userRoles.length;j++){
@@ -100,33 +100,35 @@ var user_group = (function () {
                     }
                     array.push(obj);
                 }
-             }
-             return array;
-        },/*
-        getUsersOfRoleByAssignment :function(ctx){
-            var usersOfGroup = group.getUsersOfGroup(ctx);
-            var allUsers = user.getAllUsers(ctx);
-            if(usersOfGroup.length==0){
-                for(var i=0;i<allUsers.length;i++){
-                    allUsers[i].available = false;
-                }
-            }else{
-                for(var i=0;i<allUsers.length;i++){
-                    for(var j=0;j<usersOfGroup.length;j++){
-                        if(allUsers[i].username==usersOfGroup[j].username){
-                            allUsers[i].available = true;
-                            break;
-                        }else{
-                            allUsers[i].available = false;
-                        }
-                    }
-                }
             }
-            return allUsers;
-        },*/
+            return array;
+        },/*
+         getUsersOfRoleByAssignment :function(ctx){
+         var usersOfGroup = group.getUsersOfGroup(ctx);
+         var allUsers = user.getAllUsers(ctx);
+         if(usersOfGroup.length==0){
+         for(var i=0;i<allUsers.length;i++){
+         allUsers[i].available = false;
+         }
+         }else{
+         for(var i=0;i<allUsers.length;i++){
+         for(var j=0;j<usersOfGroup.length;j++){
+         if(allUsers[i].username==usersOfGroup[j].username){
+         allUsers[i].available = true;
+         break;
+         }else{
+         allUsers[i].available = false;
+         }
+         }
+         }
+         }
+         return allUsers;
+         },*/
         getUsersOfRoleByAssignment :function(ctx){
             var usersOfGroup = group.getUsersOfGroup(ctx);
+
             var allUsers = user.getAllUserNames(ctx);
+
             var userArray = new Array();
             if(usersOfGroup.length==0){
                 for(var i=0;i<allUsers.length;i++){
@@ -137,19 +139,26 @@ var user_group = (function () {
                 }
             }else{
                 for(var i=0;i<allUsers.length;i++){
+                    var flag = 0;
                     for(var j=0;j<usersOfGroup.length;j++){
+                        log.info("T"+allUsers[i]+"---"+usersOfGroup[j].username);
                         if(allUsers[i]==usersOfGroup[j].username){
-                            var obj = {};
-                            obj.available = true;
-                            obj.username = allUsers[i];
-                            userArray.push(obj);
+                            flag = 1;
                             break;
-                        }else{
-                            var obj = {};
-                            obj.available = false;
-                            obj.username = allUsers[i];
-                            userArray.push(obj);
                         }
+                        flag =0;
+                    }
+                    if(flag == 1){
+                        var obj = {};
+                        obj.available = true;
+                        obj.username = allUsers[i];
+                        userArray.push(obj);
+
+                    }else if(flag == 0){
+                        var obj = {};
+                        obj.available = false;
+                        obj.username = allUsers[i];
+                        userArray.push(obj);
                     }
                 }
             }
