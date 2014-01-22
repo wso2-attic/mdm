@@ -475,15 +475,22 @@ var user = (function () {
 
             return message;
         },
-        
         getTenantDomainFromID: function() {
-        	if (arguments[0] == "-1234") {
-        		return "carbon.super";
-        	}
-        	var carbon = require('carbon');
+            if (arguments[0] == "-1234") {
+                return "carbon.super";
+            }
+            var carbon = require('carbon');
             var ctx = {};
             ctx.tenantId = arguments[0];
-            var tenantDomain = carbon.server.tenantDomain(ctx);
+            try {
+                var tenantDomain = carbon.server.tenantDomain(ctx);
+                if (tenantDomain == null){
+                    tenantDomain = "default";
+                }
+            } catch (e) {
+                tenantDomain = "default";
+            }
+
             return tenantDomain;
         },
         getTouchDownConfig: function(ctx) {
