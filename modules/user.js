@@ -447,8 +447,14 @@ var user = (function () {
 
         getTenantName: function() {
             try {
-                var tenantConfig = require('/config/tenants/' + arguments[0] + '/config.json');
-                return tenantConfig.name;
+                var file = new File('/config/tenants/' + arguments[0] + '/config.json');
+                if (file.isExists()){
+                    var tenantConfig = require('/config/tenants/' + arguments[0] + '/config.json');
+                    return tenantConfig.name;
+                } else {
+                    var tenantConfig = require('/config/tenants/default/config.json');
+                    return tenantConfig.name;
+                }
             } catch(e) {
                 var tenantConfig = require('/config/tenants/default/config.json');
                 return tenantConfig.name;
