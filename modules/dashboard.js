@@ -75,6 +75,12 @@ var dashboard = (function () {
             var allDeviceCount = db.query(sqlscripts.devices.select3, tenantID);
 	        var allByodCount = db.query(sqlscripts.devices.select4, tenantID);
 	        var finalResult =  [{"label" : "Personal", "data" : allByodCount[0].count}, {"label" : "Corporate", "data" : allDeviceCount[0].count - allByodCount[0].count}];   
+            
+            if(allDeviceCount[0].count){
+            	finalResult =  [{"label" : "No Data", "data" : 100}];
+            }
+            
+            
             return finalResult;            
       
         }
