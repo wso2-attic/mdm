@@ -103,14 +103,18 @@ var group = (function () {
             var tenant_id = common.getTenantID();
             if(tenant_id){
                 var um = userManager(tenant_id);
-                if(um.roleExists(old_name)) {
-                    um.updateRole(old_name, new_name);
-                    proxy_role = new_name;
-
-                }else{
-					proxy_role.error = 'Role does not exist in the system.';
+                if(old_name==new_name){
+                    proxy_role.error = 'Role does not exist in the system.';
                     proxy_role.status = "NOT_EXIST";
-				} 
+                }else{
+                    if(um.roleExists(old_name)) {
+                        um.updateRole(old_name, new_name);
+                        proxy_role = new_name;
+                    }else{
+                        proxy_role.error = 'Role does not exist in the system.';
+                        proxy_role.status = "NOT_EXIST";
+                    } 
+                }
             }else{
                 proxy_role.status = "SERVER_ERROR";
                 print('Error in getting the tenantId from session');
