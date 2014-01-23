@@ -241,9 +241,11 @@ var device = (function () {
             //Check if device already has a policy if so then revoke it
             if (device_policy != null && device_policy[0] != null) {
                 if (devices[0].platform_type == "iOS") {
-                    sendMessageToIOSDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':parse(device_policy[0].payload_uids), 'policyid':policyid});
+                    sendMessageToIOSDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':parse(device_policy[0].payload_uids), 'policyid':revokepolicyid});
                 } else if (devices[0].platform_type == "Android"){
-                    sendMessageToAndroidDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':policyid});
+                    var revokepolicy = {};
+                    revokepolicy.policyid = revokepolicyid;
+                    sendMessageToAndroidDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':revokepolicy});
                 }
                 db.query(sqlscripts.device_policy.update1, device_policy[0].id);
             }
@@ -276,7 +278,10 @@ var device = (function () {
                     if (devices[0].platform_type == "iOS") {
                         sendMessageToIOSDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':parse(existDevicePolicy[0].payload_uids), 'policyid':policyid});
                     } else {
-                        sendMessageToAndroidDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':policyid});
+                        log.debug("Nirnajan >>>>>>>>>>>>> " + policyid);
+                        var revokepolicy = {};
+                        revokepolicy.policyid = policyid;
+                        sendMessageToAndroidDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':revokepolicy});
                     }
 
                     db.query(sqlscripts.device_policy.update1, existDevicePolicy[0].id);
