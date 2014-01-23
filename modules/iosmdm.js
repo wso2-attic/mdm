@@ -232,25 +232,7 @@ var iosmdm = (function() {
                         payload = common.loadPayload(new Packages.java.lang.String(operation.id), operation.feature_code, operation.message);
                     }
 
-                    if (operation.policy_enforce != null) {
-                        if (operation.policy_enforce == true) {
-                            //Save Policy Enforcement
-                            var payloadIdentifier = payload.payloadIdentifier;
-
-                            log.debug("Payload Identifier >>>>>>>> " + payloadIdentifier);
-
-//                            var objResponse = {};
-//                            objResponse.feature_code = received_data[i].message.code + "";
-//                            objResponse.message = stringify(received_data[i].message.data);
-//                            objResponse.id = id + "-" + i;
-//                            objResponse.policy_enforce = true;
-//                            objResponse.notification_id = id;
-//                            objResponse.device_id = pendingFeatureCodeList[0].device_id;
-//                            objResponse.tenant_id = pendingFeatureCodeList[0].tenant_id;
-
-                        }
-                    }
-                    return payload.data;
+                    return payload;
                 }
 
                 //End of all Notifications pending for the device

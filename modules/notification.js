@@ -63,31 +63,9 @@ var notification = (function () {
 
                 if(featureCode == "500P") {
 
-                	var deviceFeatureCodes = db.query(sqlscripts.policy_device_profiles.select1, device_id);
-                	
-                	if(deviceFeatureCodes != null && deviceFeatureCodes != undefined) {
-                		for(var i = 0; i < deviceFeatureCodes.length; i++) {
-                			
-                			var featureName = db.query(sqlscripts.features.select4, deviceFeatureCodes[i].feature_code);
-
-                			if(featureName != null && featureName != undefined && featureName[0] != null && featureName[0] != undefined) {
-                				
-                				var payloadIdentifiers = common.getPayloadIdentifierMap();
-                				var payloadId = payloadIdentifiers[featureName[0].name];
-                				
-                    			var data = {};
-                    			data.identifier = payloadId;
-                    			device.invokeMessageToIOSDevice({'deviceid':device_id, 'operation': "REMOVEPROFILE", 'data': data});
-                			}
-                			
-                			db.query(sqlscripts.policy_device_profiles.delete1, deviceFeatureCodes[i].id );
-                			
-                		}
-                	}
-                    	
-                    var notificationId = identifier.split("-")[0];
+                	var notificationId = identifier.split("-")[0];
                     var policySequence = identifier.split("-")[1];
-					
+
                     var pendingFeatureCodeList = db.query(sqlscripts.notifications.select7, notificationId);
 
                     var received_data = pendingFeatureCodeList[0].received_data;
@@ -121,15 +99,7 @@ var notification = (function () {
                         return true;
                     } else {
                     	
-	                	for(var i = 0; i < parsedReceivedData.length; i++) {
-	                        var receivedObject = parsedReceivedData[i];
-	                        db.query(sqlscripts.policy_device_profiles.insert1, device_id, receivedObject.message.code);
-	                    }
-                        db.query(sqlscripts.notifications.update5, notificationId);
-                        
-                        var ctx = {};
-                        ctx.id = notificationId;
-                        this.discardOldNotifications(ctx);
+	                	db.query(sqlscripts.notifications.update5, notificationId);
                     }
 
                 } else if(featureCode == "501P") {
