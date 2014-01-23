@@ -106,6 +106,16 @@ var device = (function () {
         var upresult = db.query(sqlscripts.policies.select15, category,String(username), tenantID);
 
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
+            var policyPayLoad
+            var mdmPolicy = parse(upresult[0].data);
+            var mamPolicy = parse(upresult[0].mam_data);
+            if (!mdmPolicy) {
+                policyPayLoad = mamPolicy;
+            } else if (!mamPolicy) {
+                policyPayLoad = mdmPolicy;
+            } else {
+                policyPayLoad = mdmPolicy.concat(mamPolicy);
+            }
             var policyPayLoad = parse(upresult[0].data);
             obj.payLoad = policyPayLoad;
             obj.type = upresult[0].type;
@@ -116,7 +126,16 @@ var device = (function () {
         var ppresult = db.query(sqlscripts.policies.select2, category,platformName, tenantID );
         log.info(ppresult);
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
-            var policyPayLoad = parse(ppresult[0].data);
+            var policyPayLoad
+            var mdmPolicy = parse(ppresult[0].data);
+            var mamPolicy = parse(ppresult[0].mam_data);
+            if (!mdmPolicy) {
+                policyPayLoad = mamPolicy;
+            } else if (!mamPolicy) {
+                policyPayLoad = mdmPolicy;
+            } else {
+                policyPayLoad = mdmPolicy.concat(mamPolicy);
+            }
             obj.payLoad = policyPayLoad;
             obj.type = ppresult[0].type;
             obj.policypriority = "PLATFORMS";
@@ -126,7 +145,16 @@ var device = (function () {
 
         var gpresult = db.query(sqlscripts.policies.select3, category,role, tenantID);
         if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
-            var policyPayLoad = parse(gpresult[0].data);
+            var policyPayLoad
+            var mdmPolicy = parse(gpresult[0].data);
+            var mamPolicy = parse(gpresult[0].mam_data);
+            if (!mdmPolicy) {
+                policyPayLoad = mamPolicy;
+            } else if (!mamPolicy) {
+                policyPayLoad = mdmPolicy;
+            } else {
+                policyPayLoad = mdmPolicy.concat(mamPolicy);
+            }
             obj.payLoad = policyPayLoad;
             obj.type = gpresult[0].type;
             obj.policypriority = "ROLES";
@@ -300,12 +328,14 @@ var device = (function () {
                         for(i=0; i<policyArray.length; ++i){
                             var features = db.query(sqlscripts.features.select4, policyArray[i].code);
                             var message = {};
-                            message.code = "502P";
-                            var payloadUid = {};
-                            payloadUid.fname = features[0].name;
-                            payloadUid.uuid = payloadIdentifiers[features[0].name];
-                            message.data=payloadUid;
-                            payloadUidArray.push(message);
+                            if (payloadIdentifiers[features[0].name]) {
+                                message.code = "502P";
+                                var payloadUid = {};
+                                payloadUid.fname = features[0].name;
+                                payloadUid.uuid = payloadIdentifiers[features[0].name];
+                                message.data=payloadUid;
+                                payloadUidArray.push(message);
+                            }
                         }
 
                         db.query(sqlscripts.device_policy.insert1, deviceid, tenantID, policyid, policypriority[0].id, stringify(payloadUidArray), datetime);

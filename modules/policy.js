@@ -416,19 +416,21 @@ var policy = (function () {
             var assignUsers = arguments[1];
             var tenantid = common.getTenantID();
 
-//            //Revoke policy to users
-//            for(var i=0; i<revokeUsers.array.length; ++i){
-//                var devices = db.query(sqlscripts.devices.select26, revokeUsers.array[i], tenantid);
-//                for (var j=0; j<devices.length; ++j){
-//                    device.removeDevicePolicy({'deviceid':devices[j].id, 'revokepolicyid':revokeUsers.policyid, 'policypriority': 'USERS'});
-//                }
-//            }
-
             this.revokeUsersToPolicy(revokeUsers);
 
             if (assignUsers.array.length > 0) {
                 var policies = db.query(sqlscripts.policies.select10, assignUsers.policyid, tenantid);
-                var payLoad = parse(policies[0].content);
+                //var payLoad = parse(policies[0].content);
+                var payLoad
+                var mdmPolicy = parse(policies[0].content);
+                var mamPolicy = parse(policies[0].mam_content);
+                if (!mdmPolicy) {
+                    payLoad = mamPolicy;
+                } else if (!mamPolicy) {
+                    payLoad = mdmPolicy;
+                } else {
+                    payLoad = mdmPolicy.concat(mamPolicy);
+                }
 
                 //Revoke and Assign policy to users
                 for(var i=0; i<assignUsers.array.length; ++i){
@@ -448,22 +450,21 @@ var policy = (function () {
             var assignGroups = arguments[1];
             var tenantid = common.getTenantID();
 
-//            //Revoke policy to groups
-//            for(var i=0; i<revokeGroups.array.length; ++i){
-//                var users = group.getUsersOfGroup({'groupid':revokeGroups.array[i]});
-//                for(var j=0; j<users.length; ++j){
-//                    var devices = db.query(sqlscripts.devices.select26, users[j].username, tenantid);
-//                    for(var k=0; k<devices.length; ++k){
-//                        device.removeDevicePolicy({'deviceid':devices[k].id, 'revokepolicyid':revokeGroups.policyid, 'policypriority': 'ROLES'});
-//                    }
-//                }
-//            }
-
             this.revokeGroupsToPolicy(revokeGroups);
 
             if (assignGroups.array.length > 0) {
                 var policies = db.query(sqlscripts.policies.select10, assignGroups.policyid, tenantid);
-                var payLoad = parse(policies[0].content);
+                //var payLoad = parse(policies[0].content);
+                var payLoad
+                var mdmPolicy = parse(policies[0].content);
+                var mamPolicy = parse(policies[0].mam_content);
+                if (!mdmPolicy) {
+                    payLoad = mamPolicy;
+                } else if (!mamPolicy) {
+                    payLoad = mdmPolicy;
+                } else {
+                    payLoad = mdmPolicy.concat(mamPolicy);
+                }
 
                 //Revoke and Assign policy to group
                 for(var i=0; i<assignGroups.array.length; ++i){
@@ -490,7 +491,17 @@ var policy = (function () {
 
             if(assignPlatforms.array.length > 0) {
                 var policies = db.query(sqlscripts.policies.select10, assignPlatforms.policyid, tenantid);
-                var payLoad = parse(policies[0].content);
+                //var payLoad = parse(policies[0].content);
+                var payLoad
+                var mdmPolicy = parse(policies[0].content);
+                var mamPolicy = parse(policies[0].mam_content);
+                if (!mdmPolicy) {
+                    payLoad = mamPolicy;
+                } else if (!mamPolicy) {
+                    payLoad = mdmPolicy;
+                } else {
+                    payLoad = mdmPolicy.concat(mamPolicy);
+                }
 
                 //Revoke and Assign policy to platform
                 for(var i=0; i<assignPlatforms.array.length; ++i){
