@@ -11,11 +11,17 @@
 	var username = request.getParameter("username");
 	var password = request.getParameter("password");
     var byod = request.getParameter("byod");
-    var tenantDomain = request.getParameter("tenantDomain").toLowerCase();
+    var tenantDomain = request.getParameter("tenantDomain");
 	
+    if(tenantDomain != null && tenantDomain != undefined) {
+    	tenantDomain = tenantDomain.toLowerCase();
+    } else {
+    	tenantDomain = "";
+    }
+    
 	var ctx = {};
 
-    if (tenantDomain.trim() != ""){
+    if (tenantDomain != null && tenantDomain.trim() != ""){
         ctx.username = username + "@" + tenantDomain;
         ctx.userid = username + "@" + tenantDomain;
     } else {
@@ -30,7 +36,7 @@
 		response.status=401;
 	    print("Authentication Failed");
 	} else {
-
+	    
         var tenant = user.getUser(ctx);
 		var data = iosMdm.generateMobileConfigurations(ctx.userid);
 
