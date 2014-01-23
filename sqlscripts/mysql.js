@@ -132,8 +132,8 @@ var features = {
 
 var policies = {
     'select1' : "SELECT policies.content as data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",
-    'select2' : "SELECT policies.id as policyid, policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ?",
-    'select3' : "SELECT policies.id as policyid, policies.content as data, policies.type FROM policies,group_policy_mapping where policies.category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ?",
+    'select2' : "SELECT policies.id as policyid, policies.content as data, policies.type FROM policies,platform_policy_mapping where policies.category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ? && policies.tenant_id = ? ORDER BY policies.id DESC",
+    'select3' : "SELECT policies.id as policyid, policies.content as data, policies.type FROM policies,group_policy_mapping where policies.category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ? && policies.tenant_id = ? ORDER BY policies.id DESC",
     'select4' : "SELECT policies.id as id FROM policies, user_policy_mapping where policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ?",
     'select5' : "SELECT policies.id as id FROM policies,platform_policy_mapping where policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",
     'select6' : "SELECT policies.id as id FROM policies,group_policy_mapping where policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",
@@ -145,7 +145,7 @@ var policies = {
     'select12': "SELECT policies.content as data, policies.type FROM policies,platform_policy_mapping where category = ? && policies.id = platform_policy_mapping.policy_id && platform_policy_mapping.platform_id = ?",
     'select13': "SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",
     'select14': "SELECT * from  policies WHERE name = ? AND tenant_id = ?",
-    'select15': "SELECT policies.id as policyid, policies.content as data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ? && policies.tenant_id = ?",
+    'select15': "SELECT policies.id as policyid, policies.content as data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ? && policies.tenant_id = ? ORDER BY policies.id DESC",
 
     'insert1' : "insert into policies (name,content,type,category, tenant_id) values (?,?,?,?,?)",
     'insert2' : "insert into policies (name,content,type,category, tenant_id) values (?,'[]', 1, 1,?)",
