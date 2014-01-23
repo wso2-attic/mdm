@@ -94,10 +94,15 @@ var webconsole = (function () {
             }
             var pageSize = 10;
             var all_users;
+            var search = ctx.sSearch;
             if(ctx.groupid != null || ctx.groupid != undefined) {
                 all_users = user.getAllUserNamesByRole(ctx);
             } else {
-                all_users = user.getAllUserNames();
+                if(search){
+                    all_users = user.getAllUserNames(search+"*");
+                }else{
+                    all_users = user.getAllUserNames();
+                }
             }
 
             var totalRecords = all_users.length;
