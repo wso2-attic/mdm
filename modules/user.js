@@ -441,7 +441,7 @@ var user = (function () {
             ctx.tenantId = arguments[0];
             var tenantDomain = carbon.server.tenantDomain(ctx);
             log.debug("Domain >>>>>>> " + tenantDomain);
-
+            
             return this.getTenantName(tenantDomain);
         },
 
@@ -496,7 +496,12 @@ var user = (function () {
             } catch (e) {
                 tenantDomain = "default";
             }
-
+			
+			var file = new File('/config/tenants/' + tenantDomain + '/config.json');
+            if (!file.isExists()){
+            	tenantDomain = "default";
+            }
+			
             return tenantDomain;
         },
         getTouchDownConfig: function(ctx) {
