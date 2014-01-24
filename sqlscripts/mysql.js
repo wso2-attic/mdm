@@ -17,7 +17,7 @@ var devices = {
     'select12':"SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id",
     'select13':"SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ? AND tenant_id = ?",
     'select14':"SELECT id FROM devices WHERE user_id = ? AND tenant_id = ?",
-    'select15':"SELECT * from devices",
+    'select15':"SELECT * from devices where tenant_id = ?",
     'select16':"select status from devices where id = ?",
     'select17':"SELECT reg_id FROM devices WHERE reg_id = ? && deleted = 0",
     'select18':"SELECT udid FROM devices WHERE udid = ? && deleted = 0",
