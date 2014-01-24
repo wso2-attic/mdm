@@ -574,6 +574,11 @@ var device = (function () {
 
             var devices = db.query(sqlscripts.devices.select11, ctx.deviceid);
 
+            if(devices == null || devices == undefined || 
+            		devices[0] == null || devices[0] == undefined) {
+            	return;
+            }
+            
             var platformID = devices[0].platform_id;
             if(platformID==1){
                 return sendMessageToAndroidDevice(ctx);
