@@ -41,7 +41,7 @@ var dashboard = (function () {
             
             
             if(finalResult.length == 0){
-            	finalResult =  [{"label" : "No Data", "data" : 100}];
+            	finalResult =  [{"label" : "No Data", "devices": 0,  "data" : 100}];
             }
             
             return finalResult;
@@ -56,13 +56,14 @@ var dashboard = (function () {
             var tenantID = common.getTenantID();
             var allDeviceCount = db.query(sqlscripts.devices.select3, tenantID);
 	        var allByodCount = db.query(sqlscripts.devices.select4, tenantID);
-	        var finalResult =  [{"label" : "Personal", "data" : allByodCount[0].count}, {"label" : "Corporate", "data" : allDeviceCount[0].count - allByodCount[0].count}];   
+	        var finalResult =  [{"label" : "Personal", "devices": allByodCount[0].count,  "data" : allByodCount[0].count}, {"label" : "Corporate", "devices": allDeviceCount[0].count - allByodCount[0].count, "data" : allDeviceCount[0].count - allByodCount[0].count}];   
             
-                    
-            if(allDeviceCount[0].count){
-            	finalResult =  [{"label" : "No Data", "data" : 100}];
+                 
+            if(allDeviceCount[0].count == 0){
+            	finalResult =  [{"label" : "No Data", "devices": 0,  "data" : 100}];
             }
            
+           	
             return finalResult;            
       
         },
@@ -76,9 +77,10 @@ var dashboard = (function () {
 	        var allByodCount = db.query(sqlscripts.devices.select4, tenantID);
 	        var finalResult =  [{"label" : "Personal", "data" : allByodCount[0].count}, {"label" : "Corporate", "data" : allDeviceCount[0].count - allByodCount[0].count}];   
             
-            if(allDeviceCount[0].count){
-            	finalResult =  [{"label" : "No Data", "data" : 100}];
+            if(allDeviceCount[0].count == 0){
+            	finalResult =  [{"label" : "No Data", "devices": 0,  "data" : 100}];
             }
+            
             
             
             return finalResult;            

@@ -47,7 +47,7 @@ function renderView(){
 						//alert(JSON.stringify(data));
 						chartData = data; 
 						 var template = Handlebars.compile(templateData);
-						  $('#' + templateArea).html(template({index:index, title: title, currentDate:currentDate, height:height, width: width}));	
+						  $('#' + templateArea).html(template({index:index, title: title, chartData : data, currentDate:currentDate, height:height, width: width}));	
 				    }
 
 				});					
