@@ -224,3 +224,5 @@ pip-log.txt
 mdm.iml/
 /config/android.json
 /policy.txt
+config/tenants
+client_app

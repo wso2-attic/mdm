@@ -81,6 +81,7 @@
 								userFeed.firstName = objUser["firstName"];
 								userFeed.lastName = objUser["lastName"];
 								userFeed.mobile = objUser["mobile"];
+								log.debug(" >>>>>>>>> acs.jag");
 								userFeed.tenantDomain = user.getTenantDomainFromID(stringify(objUser["tenantId"]));
 								var parsedRoles = parse(objUser["roles"]);
 								userFeed.roles = parsedRoles;

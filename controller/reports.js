@@ -18,13 +18,23 @@ all_reg_devices = function(appController){
 	
 	var results = null; 
 	
-	if(request.getMethod() == 'POST'){
+	var dashboard = request.getParameter('dashboard');
+	
+	
+	if(request.getMethod() == 'POST' || dashboard == 'true'){
+		
+		//print(request.getParameter('dashboard') == 'true');
 		
 		var startdate = request.getParameter('startdate');
 		var enddate = request.getParameter('enddate');
 		var platform = request.getParameter('platform');
 		
-		var reportResults = report.getDevicesByRegisteredDate({startDate: startdate, endDate: enddate, platformType : platform});
+		try{
+			var reportResults = report.getDevicesByRegisteredDate({startDate: startdate, endDate: enddate, platformType : platform});	
+		}catch(e){
+			var reportResults = [];
+		}
+		
 		
 		results = reportResults;
 	}
@@ -47,12 +57,20 @@ devices_complience = function(appController){
 	
 	var results = null; 
 	
-	if(request.getMethod() == 'POST'){
+	var dashboard = request.getParameter('dashboard');
+	
+	
+	
+	if(request.getMethod() == 'POST' || dashboard == 'true'){
 		
 		var startdate = request.getParameter('startdate');
 		var enddate = request.getParameter('enddate');
 		var username = request.getParameter('username');
 		var status = request.getParameter('status');
+		
+		if(username == null){
+			username = "";
+		}
 		
 		//print(startdate + enddate + username + status);
 		

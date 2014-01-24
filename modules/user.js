@@ -200,12 +200,16 @@ var user = (function () {
             log.info("LLLLLLLLLLLLLLLLLLLL"+stringify(users_list));
             return users_list;
         },
-        getAllUserNames: function(){
+        getAllUserNames: function(filter){
             var tenantId = common.getTenantID();
             var users_list = [];
             if(tenantId){
                 var um = userManager(common.getTenantID());
-                var allUsers = um.listUsers();
+                if(filter){
+                    var allUsers = um.listUsers(filter);
+                }else{
+                    var allUsers = um.listUsers();
+                }
                 var removeUsers = new Array("wso2.anonymous.user","admin","admin@admin.com");
                 var users = common.removeNecessaryElements(allUsers,removeUsers);
                 users_list = users;
@@ -369,12 +373,10 @@ var user = (function () {
 			if(!authStatus) {
 				return null;
 			}
-			var user =  this.getUser({'userid': ctx.username});
-
+			var user =  this.getUser({'userid': ctx.username, login:true});
             var result = db.query(sqlscripts.tenantplatformfeatures.select1,  stringify(user.tenantId));
             if(result[0].record_count == 0) {
 				for(var i = 1; i < 13; i++) {
-
                     var result = db.query(sqlscripts.tenantplatformfeatures.select2, stringify(user.tenantId), i);
 				}
 			}
@@ -441,14 +443,20 @@ var user = (function () {
             ctx.tenantId = arguments[0];
             var tenantDomain = carbon.server.tenantDomain(ctx);
             log.debug("Domain >>>>>>> " + tenantDomain);
-
+            
             return this.getTenantName(tenantDomain);
         },
 
         getTenantName: function() {
             try {
-                var tenantConfig = require('/config/tenants/' + arguments[0] + '/config.json');
-                return tenantConfig.name;
+                var file = new File('/config/tenants/' + arguments[0] + '/config.json');
+                if (file.isExists()){
+                    var tenantConfig = require('/config/tenants/' + arguments[0] + '/config.json');
+                    return tenantConfig.name;
+                } else {
+                    var tenantConfig = require('/config/tenants/default/config.json');
+                    return tenantConfig.name;
+                }
             } catch(e) {
                 var tenantConfig = require('/config/tenants/default/config.json');
                 return tenantConfig.name;
@@ -470,20 +478,32 @@ var user = (function () {
                 message = file.readAll();
                 file.close();
             } else {
+                log.error("License is not configured for tenant.");
                 message = "400";
             }
-
             return message;
         },
-        
         getTenantDomainFromID: function() {
-        	if (arguments[0] == "-1234") {
-        		return "carbon.super";
-        	}
-        	var carbon = require('carbon');
+            if (arguments[0] == "-1234") {
+                return "carbon.super";
+            }
+            var carbon = require('carbon');
             var ctx = {};
             ctx.tenantId = arguments[0];
-            var tenantDomain = carbon.server.tenantDomain(ctx);
+            try {
+                var tenantDomain = carbon.server.tenantDomain(ctx);
+                if (tenantDomain == null){
+                    tenantDomain = "default";
+                }
+            } catch (e) {
+                tenantDomain = "default";
+            }
+			
+			var file = new File('/config/tenants/' + tenantDomain + '/config.json');
+            if (!file.isExists()){
+            	tenantDomain = "default";
+            }
+			
             return tenantDomain;
         },
         getTouchDownConfig: function(ctx) {

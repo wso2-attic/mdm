@@ -29,7 +29,7 @@ $(document).ready(function() {
                            }else{
                            	 return '<a href="/mdm/users/view?user='+ oObj.aData[0] +'" data-item="'+ oObj.aData[0] +'" title="View User"><i class="icon-user"> </i> Info</a>&nbsp;' +
                                 '<a href="/mdm/users/assign_groups?user='+ oObj.aData[0] +'" class="btn-assign-roles" data-item="'+ oObj.aData[0] +'" title="Assign Roles"><i class="icon-edit"> </i> Assign Roles</a>&nbsp;' +
-                                '<a href="/mdm/users/edit?user='+ oObj.aData[0] +'" class="btn-edit-roles" data-item="'+ oObj.aData[0] +'" title="Edit"><i class="icon-edit"> </i> Edit</a>&nbsp;' + 
+                                //'<a href="/mdm/users/edit?user='+ oObj.aData[0] +'" class="btn-edit-roles" data-item="'+ oObj.aData[0] +'" title="Edit"><i class="icon-edit"> </i> Edit</a>&nbsp;' + 
                                 '<a href="#" class="btn-invite" data-item="'+ oObj.aData[0] +'" title="Invite"><i class="icon-envelope"> </i> Invite</a>&nbsp;' +
                            		 '<a href="#" class="btn-item-remove" data-item="'+ oObj.aData[0] +'" title="Remove"><i class="icon-remove"> </i> Remove</a>&nbsp;';
                            }
@@ -43,10 +43,16 @@ $(document).ready(function() {
 		
 		"sAjaxSource" : "/mdm/api/webconsole/allUsers",
 		"fnServerParams": function ( aoData ) {
+			
+			var usertype= $('.block-body #userTypeSelect option:selected').val();
           	var roleid = getURLParameter('group');
           	if(roleid != "null"){
           		 aoData.push( { "name": "groupid", "value": roleid } );
-          	}
+            }
+            
+            if(usertype != ""){
+          		  aoData.push( { "name": "userType", "value": usertype } );
+            }
            
            
        },
@@ -74,7 +80,7 @@ $(document).ready(function() {
 
 function fnCreateSelect( aData ){
 
-    var r='<select><option value="">--All--</option><option value="user">User</option><option value="administrator">Administrator</option><option value="mam">MAM</option>', i, iLen=aData.length;
+    var r='<select id="userTypeSelect"><option value="">--All--</option><option value="user">User</option><option value="administrator">Administrator</option><option value="mam">MAM</option>', i, iLen=aData.length;
    // for ( i=0 ; i<iLen ; i++ )
    // {
    //     r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
