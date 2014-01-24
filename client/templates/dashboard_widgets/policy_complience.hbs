@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 	var colors = {
-		"Non Compliance" : "#38b5bb",
+		"Non Compliance" : "#B80000",
 		"Compliance" : "#086F76"
 	};
 
@@ -26,7 +26,8 @@
 	                radius: 2/4,
 	                
 	                formatter: function(label, series){
-                        return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+Math.round(series.percent)+'%</div>';
+                       
+                        return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">'+label+'<br/>'+ (label != "No Data (0 Devices)"? Math.round(series.percent) + "%" : "")+'</div>';
                     }
 	            }
 			}
@@ -34,6 +35,7 @@
 		legend : {
 			show : false
 		}
+		
 	});
 
 </script>
