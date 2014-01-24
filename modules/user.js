@@ -200,12 +200,16 @@ var user = (function () {
             log.info("LLLLLLLLLLLLLLLLLLLL"+stringify(users_list));
             return users_list;
         },
-        getAllUserNames: function(){
+        getAllUserNames: function(filter){
             var tenantId = common.getTenantID();
             var users_list = [];
             if(tenantId){
                 var um = userManager(common.getTenantID());
-                var allUsers = um.listUsers();
+                if(filter){
+                    var allUsers = um.listUsers(filter);
+                }else{
+                    var allUsers = um.listUsers();
+                }
                 var removeUsers = new Array("wso2.anonymous.user","admin","admin@admin.com");
                 var users = common.removeNecessaryElements(allUsers,removeUsers);
                 users_list = users;
@@ -370,7 +374,6 @@ var user = (function () {
 				return null;
 			}
 			var user =  this.getUser({'userid': ctx.username, login:true});
-
             var result = db.query(sqlscripts.tenantplatformfeatures.select1,  stringify(user.tenantId));
             if(result[0].record_count == 0) {
 				for(var i = 1; i < 13; i++) {
@@ -475,9 +478,9 @@ var user = (function () {
                 message = file.readAll();
                 file.close();
             } else {
+                log.error("License is not configured for tenant.");
                 message = "400";
             }
-
             return message;
         },
         getTenantDomainFromID: function() {

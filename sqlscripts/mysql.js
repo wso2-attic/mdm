@@ -4,7 +4,7 @@ var general = {
 
 var devices = {
     'select1' :"SELECT * FROM devices where id = ?",
-    'select2' :"SELECT platforms.type_name as label, ROUND((count(devices.id)/(select count(id) from devices))*100,0) as data from platforms, devices where devices.platform_id = platforms.id AND devices.tenant_id = ? group by type",
+    'select2' :"SELECT platforms.type_name as label, count(devices.id) as devices, ROUND((count(devices.id)/(select count(id) from devices))*100,0) as data from platforms, devices where devices.platform_id = platforms.id AND devices.tenant_id = ? group by type",
     'select3' :"select count(id) as count from devices where tenant_id = ?",
     'select4' :"select count(id) as count from devices where byod=1 AND tenant_id = ?",
     'select5' :"select platforms.type_name from devices,platforms where platforms.id = devices.platform_id AND devices.id = ?",
@@ -17,7 +17,7 @@ var devices = {
     'select12':"SELECT DISTINCT features.description, features.id, features.name, features.code, platformfeatures.template FROM devices, platformfeatures, features WHERE devices.platform_id = platformfeatures.platform_id AND devices.id = ? AND features.id = platformfeatures.feature_id",
     'select13':"SELECT id, reg_id, os_version, platform_id FROM devices WHERE user_id = ? AND tenant_id = ?",
     'select14':"SELECT id FROM devices WHERE user_id = ? AND tenant_id = ?",
-    'select15':"SELECT * from devices",
+    'select15':"SELECT * from devices where tenant_id = ?",
     'select16':"select status from devices where id = ?",
     'select17':"SELECT reg_id FROM devices WHERE reg_id = ? && deleted = 0",
     'select18':"SELECT udid FROM devices WHERE udid = ? && deleted = 0",

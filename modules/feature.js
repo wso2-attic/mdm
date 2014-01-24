@@ -33,7 +33,7 @@ var feature = (function () {
     var stub = null;
 
     function init(){
-        entitlement = session.get("entitlement");
+        entitlement = require('policy').entitlement;
         var samlResponse = session.get("samlresponse");
         var saml = require("/modules/saml.js").saml;
         var backEndCookie = saml.getBackendCookie(samlResponse);

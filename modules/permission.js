@@ -146,7 +146,7 @@ var permission = (function () {
 
             file.close();
 
-            var entitlement = session.get("entitlement");
+            var entitlement = require('policy').entitlement;
             var entitlementPolicyAdminService = entitlement.setEntitlementPolicyAdminServiceParameters();
             try{
                 var samlResponse = session.get("samlresponse");
