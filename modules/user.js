@@ -169,7 +169,7 @@ var user = (function () {
                 
                 if(proxy_user.roles.indexOf('admin') >= 0){
                 	 proxy_user.firstName = 'Admin';
-                	 proxy_user.lastName = 'User';
+                	 proxy_user.lastName = 'Admin';
                 }
                 
                 
