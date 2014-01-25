@@ -162,7 +162,6 @@ var device = (function () {
     }
     function checkPermission(role, deviceId, operationName, that){
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
-        log.info("d :"+decision.toString().substring(28,34));
         decision = decision.toString().substring(28,34);
         if(decision=="Permit"){
                 return true;
