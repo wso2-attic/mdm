@@ -164,6 +164,15 @@ var user = (function () {
                 proxy_user.roles = stringify(user_roles);
             //    proxy_user.roles = String(user_roles);
                 proxy_user.user_type = getUserType(user_roles);
+                
+               
+                
+                if(proxy_user.roles.indexOf('admin') >= 0){
+                	 proxy_user.firstName = 'Admin';
+                	 proxy_user.lastName = 'Admin';
+                }
+                
+                
                 return proxy_user;
             } catch(e) {
                 log.error(e);
@@ -305,10 +314,10 @@ var user = (function () {
                 var flag = 0;
                 for(var j=0 ;j<roles.length;j++){
                     log.info("Test iteration2"+roles[j]);
-                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'){
+                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'){                                                                                getUsersByType
                         flag = 1;
                         break;
-                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'|| roles[j]=='mamadmin'){
+                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'|| roles[j]=='Internal/mamadmin'){
                         flag = 2;
                         break;
                     }else{
