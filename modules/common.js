@@ -183,7 +183,7 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else {
 		data = parse(data);
 	}
-	
+
 	var log = new Log();
 	var operation = "";
 	var paramMap = new Packages.java.util.HashMap();
@@ -204,7 +204,7 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else if(operationCode == "500A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_INFORMATION; 
 	} else if(operationCode == "508A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS; 
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS;
 		paramMap.put("PayloadIdentifier", payloadIdentifier["CAMERA"]);
 		if(data.function == "Disable") {
 			paramMap.put("AllowCamera", false);
@@ -213,7 +213,7 @@ var loadPayload = function(identifier , operationCode, data) {
 		}
 		isProfile = true;
 	} else if(operationCode == "507A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS; 
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS;
 		paramMap.put("PayloadIdentifier", payloadIdentifier["WIFI"]);
 		paramMap.put("PayloadDisplayName", "WIFI Configurations");
 		paramMap.put("Password", data.password);
@@ -341,10 +341,11 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_APPLICATION;
 		paramMap.put("Identifier", data.identity);
 		
-	} else if(operationCode == "529A") {
+	} else if(operationCode == "502P") {
 		
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_PROFILE;
-		paramMap.put("Identifier", data.identifier);
+
+		paramMap.put("Identifier", data.uuid);
 		
 	} else if(operationCode == "528A") {
 		
@@ -360,13 +361,15 @@ var loadPayload = function(identifier , operationCode, data) {
 
 	paramMap.put("PayloadUUID", identifier);
 	paramMap.put("CommandUUID", identifier);
-	
-	try {
-		var payloadLoader = new Packages.com.wso2mobile.ios.mdm.payload.PayloadLoader();
-		var responseData = payloadLoader.loadPayload(operation, paramMap, isProfile);	
-	} catch (e) {
-		log.error(e);
-	}
+    log.debug("CommandUUID >>>>>>>>>>> " + identifier);
+
+    var responseData;
+    try {
+        var payloadLoader = new Packages.com.wso2mobile.ios.mdm.payload.PayloadLoader();
+        responseData = payloadLoader.loadPayload(operation, paramMap, isProfile);
+    } catch (e) {
+        log.error(e);
+    }
 			
 	return responseData;
 }

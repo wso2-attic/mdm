@@ -221,14 +221,19 @@ var iosmdm = (function() {
 				ctx.udid = stringify(apnsStatus.getUdid());
 				var operation = device.getPendingOperationsFromDevice(ctx);
 
-				if (operation != null && operation.feature_code.indexOf("-") > 0) {
-					var featureCode = operation.feature_code.split("-")[0];
-                    log.debug("sendPushNotifications >>> Feature Code >>>>>> " + featureCode);
+                if (operation != null) {
+                    if (operation.feature_code.indexOf("-") > 0) {
+                        var featureCode = operation.feature_code.split("-")[0];
+                        var payload;
+                        log.debug("sendPushNotifications >>> Feature Code >>>>>> " + featureCode);
 
-					return common.loadPayload(new Packages.java.lang.String(operation.id), featureCode, operation.message);
-				} else if (operation != null) {
-					return common.loadPayload(new Packages.java.lang.String(operation.id), operation.feature_code, operation.message);
-				}
+                        payload = common.loadPayload(new Packages.java.lang.String(operation.id), featureCode, operation.message);
+                    } else {
+                        payload = common.loadPayload(new Packages.java.lang.String(operation.id), operation.feature_code, operation.message);
+                    }
+
+                    return payload;
+                }
 
                 //End of all Notifications pending for the device
                 var datetime =  common.getCurrentDateTime();
