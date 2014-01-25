@@ -221,7 +221,6 @@ var device = (function () {
         var userID = devices[0].user_id;
         if(tenantID==null){
             tenantID = common.getTenantIDFromEmail(userID);
-            log.info(tenantID);
         }
         var osVersion = devices[0].os_version;
         var platformId = devices[0].platform_id;
@@ -250,10 +249,9 @@ var device = (function () {
 
         var lastRecordJson = lastRecord[0];
         var token = lastRecordJson["LAST_INSERT_ID()"];
-        log.info(regId);
-        log.info(featureCode);
-        log.info(token);
-        log.info(payLoad);
+        log.info("Android registration id "+regId);
+        log.info("Current feature code "+featureCode);
+        log.info("Message token "+token);
         if(featureCode=="500P" || featureCode=="502P"){
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3, "policy");
         }else{
@@ -735,7 +733,6 @@ var device = (function () {
             var tenantUser = carbon.server.tenantUser(ctx.email);
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;
-            log.info("tenant idddddddd"+tenantId);
             var platforms = db.query(sqlscripts.platforms.select1, ctx.platform);// from
 																					// device
 																					// platform
@@ -770,7 +767,7 @@ var device = (function () {
                     db.query(sqlscripts.devices.insert1, tenantId, ctx.osversion, createdDate, ctx.properties, ctx.regid, userId, platformId, ctx.vendor, ctx.mac);
                     var devices = db.query(sqlscripts.devices.select19, ctx.regid);
                     var deviceID = devices[0].id;
-
+                    log.info("Android Device has been registered "+ctx.regid);
                     sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
                     sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
 
