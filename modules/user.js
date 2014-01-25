@@ -164,6 +164,15 @@ var user = (function () {
                 proxy_user.roles = stringify(user_roles);
             //    proxy_user.roles = String(user_roles);
                 proxy_user.user_type = getUserType(user_roles);
+                
+               
+                
+                if(proxy_user.roles.indexOf('admin') >= 0){
+                	 proxy_user.firstName = 'Admin';
+                	 proxy_user.lastName = 'Admin';
+                }
+                
+                
                 return proxy_user;
             } catch(e) {
                 log.error(e);
