@@ -431,7 +431,7 @@ var device = (function () {
         log.info("Current feature code "+featureCode);
         log.info("Message token "+token);
         if(featureCode=="500P" || featureCode=="502P"){
-            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3, "policy");
+            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 30240, "POLICY");
         }else{
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
         }

@@ -151,8 +151,8 @@ var policies = {
     'select14': "SELECT * from  policies WHERE name = ? AND tenant_id = ?",
     'select15': "SELECT policies.id as policyid, policies.content as data, policies.mam_content as mam_data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ? && policies.tenant_id = ? ORDER BY policies.id DESC",
 
-    'insert1' : "insert into policies (name,content,type,category, tenant_id) values (?,?,?,?,?)",
-    'insert2' : "insert into policies (name,content,type,category, tenant_id) values (?,'[]', 1, 1,?)",
+    'insert1' : "insert into policies (name,content,type,category, tenant_id, mam_content) values (?,?,?,?,?, '[]')",
+    'insert2' : "insert into policies (name,content,type,category, tenant_id, mam_content) values (?,'[]', 1, 1,?, '[]')",
 
     'update1' : "UPDATE policies SET content= ?,type = ? WHERE name = ? AND tenant_id = ?",
 
