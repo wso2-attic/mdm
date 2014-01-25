@@ -176,15 +176,21 @@ var device = (function () {
     function separateMAMPolicy() {
         var policyArray = new Array();
         var mamPolicy = arguments[0];
-        if (mamPolicy[0].code == "509B") {
-            var mamData = mamPolicy[0].data;
+        for (var j = 0; j < mamPolicy.length; ++j) {
+            var mamData = mamPolicy[j].data;
             for (var i=0; i<mamData.length; ++i) {
                 var newPolicyFormat = {};
-                newPolicyFormat.code = "509A";
+                if (mamPolicy[j].code == "509B") {
+                    newPolicyFormat.code = "509A";
+                } else {
+                    newPolicyFormat.code = mamPolicy[j].code;
+                }
                 newPolicyFormat.data = mamData[i];
                 policyArray.push(newPolicyFormat);
             }
         }
+        log.info("___");
+        log.info(mamPolicy);
         return policyArray;
     }
 
@@ -658,7 +664,7 @@ var device = (function () {
         while (i < messageArray.length) {
             log.debug("Policy code: " + messageArray[i].code);
 
-            if(messageArray[i].code == "509A") {
+            if(messageArray[i].code == "509A" || messageArray[i].code == "528B") {
 
                 var appInstallInfo = messageArray[i].data;
                 log.debug("appInstallInfo >>>>>>> " + appInstallInfo);
@@ -886,7 +892,7 @@ var device = (function () {
         monitor:function(ctx){
             log.debug("monitor");
 
-            var result = db.query(sqlscripts.devices.select15);
+            var result = db.query(sqlscripts.devices.select44);
             for(var i=0; i<result.length; i++){
                 var deviceId = result[i].id;
                 var operation = 'MONITORING';
