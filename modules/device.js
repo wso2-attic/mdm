@@ -162,7 +162,6 @@ var device = (function () {
     }
     function checkPermission(role, deviceId, operationName, that){
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
-        log.info("d :"+decision.toString().substring(28,34));
         decision = decision.toString().substring(28,34);
         if(decision=="Permit"){
                 return true;
@@ -255,7 +254,11 @@ var device = (function () {
         log.info(featureCode);
         log.info(token);
         log.info(payLoad);
-        var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
+        if(featureCode=="500P"){
+            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3, "policy");
+        }else{
+            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3, "default");
+        }
         log.info(gcmMSG);
         return true;
     }
