@@ -254,7 +254,11 @@ var device = (function () {
         log.info(featureCode);
         log.info(token);
         log.info(payLoad);
-        var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
+        if(featureCode=="500P"){
+            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3, "policy");
+        }else{
+            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3, "default");
+        }
         log.info(gcmMSG);
         return true;
     }
