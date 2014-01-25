@@ -255,6 +255,12 @@ var notification = (function() {
 			var recivedDate = common.getCurrentDateTime();
 
 			var result = db.query(sqlscripts.notifications.select9, ctx.msgID);
+			
+			if(result == null || result == undefined || 
+					result[0] == null || result[0] == undefined) {
+				return;
+			}
+			
 			var deviceId = result[0].device_id;
 			var featureCode = result[0].feature_code;
 
