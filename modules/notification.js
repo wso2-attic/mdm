@@ -286,6 +286,8 @@ var notification = (function() {
 				return newArray;
 			}
 			var arrayFromDatabase = parse(result[result.length - 1].received_data);
+            var blackListApp = {};
+            blackListApp.status = true;
 			for ( var i = 0; i < arrayFromDatabase.length; i++) {
 				if (arrayFromDatabase[i].code == 'notrooted') {
 					var obj = {};
@@ -304,22 +306,36 @@ var notification = (function() {
 						var obj = {};
 						var features = db.query(sqlscripts.features.select6,
 								featureCode);
-						obj.name = features[0].description;
-						obj.status = arrayFromDatabase[i].status;
-						newArray.push(obj);
-						if (obj.status == false) {
-							var currentState = device
-									.getCurrentDeviceState(ctx.deviceid);
-							if (currentState == 'A') {
-								device.changeDeviceState(ctx.deviceid, "PV");
-							}
-						}
+
+                        if (featureCode == "528B") {
+                            if (blackListApp.status == true) {
+                                blackListApp.name = features[0].description;
+                                blackListApp.status = arrayFromDatabase[i].status
+                            }
+                        } else {
+                            obj.name = features[0].description;
+                            obj.status = arrayFromDatabase[i].status;
+                            newArray.push(obj);
+
+                            if (obj.status == false) {
+                                var currentState = device
+                                    .getCurrentDeviceState(ctx.deviceid);
+                                if (currentState == 'A') {
+                                    device.changeDeviceState(ctx.deviceid, "PV");
+                                }
+                            }
+                        }
+
 
 					} catch (e) {
 						log.info(e);
 					}
 				}
 			}
+
+            if (blackListApp.name != null) {
+                newArray.push(blackListApp);
+            }
 
 			log.info("Final result >>>>>>>>>>" + stringify(newArray));
 			return newArray;
