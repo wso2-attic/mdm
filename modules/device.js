@@ -109,12 +109,12 @@ var device = (function () {
             var policyPayLoad;
             var mdmPolicy = parse(upresult[0].data);
             var mamPolicy = parse(upresult[0].mam_data);
-            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = mdmPolicy.concat(newMamPolicy);
-            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                 policyPayLoad = mdmPolicy;
-            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = newMamPolicy;
             }
@@ -134,12 +134,12 @@ var device = (function () {
             var policyPayLoad;
             var mdmPolicy = parse(ppresult[0].data);
             var mamPolicy = parse(ppresult[0].mam_data);
-            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = mdmPolicy.concat(newMamPolicy);
-            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                 policyPayLoad = mdmPolicy;
-            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = newMamPolicy;
             }
@@ -155,12 +155,12 @@ var device = (function () {
             var policyPayLoad;
             var mdmPolicy = parse(gpresult[0].data);
             var mamPolicy = parse(gpresult[0].mam_data);
-            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = mdmPolicy.concat(newMamPolicy);
-            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                 policyPayLoad = mdmPolicy;
-            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = newMamPolicy;
             }
@@ -718,7 +718,6 @@ var device = (function () {
             //Allow iOS (iPhone and iPad) version 5.0 and above
             var userOS; //will either be iOS, Android or unknown
             var userOSversion;  //will be a string, use Number(userOSversion) to convert
-
             var useragent = arguments[0];
             var uaindex;
 
@@ -736,8 +735,6 @@ var device = (function () {
             } else {
                 userOS = 'unknown';
             }
-
-            log.debug(" >>>>>>> " + userOS);
 
             //determine version
             if (userOS == 'iOS' && uaindex > -1) {
