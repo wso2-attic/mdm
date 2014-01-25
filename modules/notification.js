@@ -191,7 +191,7 @@ var notification = (function() {
         addNotification: function(ctx){
 			log.debug("Android Notification all >>>>>"+stringify(ctx));
 			log.debug("CTX>>>>>>>>>>>>>>>>>> msg id " + ctx.msgID);
-			log.debug("Android Notification >>>>> data" + ctx.data);
+			// log.debug("Android Notification >>>>> data" + ctx.data);
 			var recivedDate = common.getCurrentDateTime();
 
 			var result = db.query(sqlscripts.notifications.select9, ctx.msgID);
