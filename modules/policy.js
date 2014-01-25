@@ -421,15 +421,17 @@ var policy = (function () {
             if (assignUsers.array.length > 0) {
                 var policies = db.query(sqlscripts.policies.select10, assignUsers.policyid, tenantid);
                 //var payLoad = parse(policies[0].content);
-                var payLoad
+                var payLoad;
                 var mdmPolicy = parse(policies[0].content);
                 var mamPolicy = parse(policies[0].mam_content);
-                if (!mdmPolicy) {
-                    payLoad = mamPolicy;
-                } else if (!mamPolicy) {
+                if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                    var newMamPolicy = device.separateMAMPolicy(mamPolicy);
+                    payLoad = mdmPolicy.concat(newMamPolicy);
+                } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
                     payLoad = mdmPolicy;
-                } else {
-                    payLoad = mdmPolicy.concat(mamPolicy);
+                } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                    var newMamPolicy = device.separateMAMPolicy(mamPolicy);
+                    payLoad = newMamPolicy;
                 }
 
                 //Revoke and Assign policy to users
@@ -454,16 +456,17 @@ var policy = (function () {
 
             if (assignGroups.array.length > 0) {
                 var policies = db.query(sqlscripts.policies.select10, assignGroups.policyid, tenantid);
-                //var payLoad = parse(policies[0].content);
-                var payLoad
+                var payLoad;
                 var mdmPolicy = parse(policies[0].content);
                 var mamPolicy = parse(policies[0].mam_content);
-                if (!mdmPolicy) {
-                    payLoad = mamPolicy;
-                } else if (!mamPolicy) {
+                if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                    var newMamPolicy = device.separateMAMPolicy(mamPolicy);
+                    payLoad = mdmPolicy.concat(newMamPolicy);
+                } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
                     payLoad = mdmPolicy;
-                } else {
-                    payLoad = mdmPolicy.concat(mamPolicy);
+                } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                    var newMamPolicy = device.separateMAMPolicy(mamPolicy);
+                    payLoad = newMamPolicy;
                 }
 
                 //Revoke and Assign policy to group
@@ -491,16 +494,17 @@ var policy = (function () {
 
             if(assignPlatforms.array.length > 0) {
                 var policies = db.query(sqlscripts.policies.select10, assignPlatforms.policyid, tenantid);
-                //var payLoad = parse(policies[0].content);
-                var payLoad
+                var payLoad;
                 var mdmPolicy = parse(policies[0].content);
                 var mamPolicy = parse(policies[0].mam_content);
-                if (!mdmPolicy) {
-                    payLoad = mamPolicy;
-                } else if (!mamPolicy) {
+                if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                    var newMamPolicy = device.separateMAMPolicy(mamPolicy);
+                    payLoad = mdmPolicy.concat(newMamPolicy);
+                } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
                     payLoad = mdmPolicy;
-                } else {
-                    payLoad = mdmPolicy.concat(mamPolicy);
+                } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                    var newMamPolicy = device.separateMAMPolicy(mamPolicy);
+                    payLoad = newMamPolicy;
                 }
 
                 //Revoke and Assign policy to platform
@@ -559,15 +563,25 @@ var policy = (function () {
             }
         },
 
-
-
-
-
         enforcePolicy:function(ctx){
             var policyId =  ctx.policyid;
 
             var policies = db.query(sqlscripts.policies.select10, String(policyId), common.getTenantID());
-            var payLoad = parse(policies[0].content);
+
+            var payLoad;
+            var mdmPolicy = parse(policies[0].content);
+            var mamPolicy = parse(policies[0].mam_content);
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                var newMamPolicy = device.separateMAMPolicy(mamPolicy);
+                payLoad = mdmPolicy.concat(newMamPolicy);
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+                payLoad = mdmPolicy;
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                var newMamPolicy = device.separateMAMPolicy(mamPolicy);
+                payLoad = newMamPolicy;
+            }
+
+            log.debug("PayLoad >>>>>> " + stringify(payLoad));
 
             var users1 = db.query(sqlscripts.user_policy_mapping.select1, String(policyId));
             for(var i = 0;i<users1.length;i++){

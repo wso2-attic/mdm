@@ -106,16 +106,19 @@ var device = (function () {
         var upresult = db.query(sqlscripts.policies.select15, category,String(username), tenantID);
 
         if(upresult!=undefined && upresult != null && upresult[0] != undefined && upresult[0] != null ){
-            var policyPayLoad
+            var policyPayLoad;
             var mdmPolicy = parse(upresult[0].data);
             var mamPolicy = parse(upresult[0].mam_data);
-            if (!mdmPolicy) {
-                policyPayLoad = mamPolicy;
-            } else if (!mamPolicy) {
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                var newMamPolicy = separateMAMPolicy(mamPolicy);
+                policyPayLoad = mdmPolicy.concat(newMamPolicy);
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
                 policyPayLoad = mdmPolicy;
-            } else {
-                policyPayLoad = mdmPolicy.concat(mamPolicy);
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                var newMamPolicy = separateMAMPolicy(mamPolicy);
+                policyPayLoad = newMamPolicy;
             }
+
             var policyPayLoad = parse(upresult[0].data);
             obj.payLoad = policyPayLoad;
             obj.type = upresult[0].type;
@@ -123,18 +126,22 @@ var device = (function () {
             obj.policyid = upresult[0].policyid;
             return obj;
         }
+
         var ppresult = db.query(sqlscripts.policies.select2, category,platformName, tenantID );
         log.info(ppresult);
         if(ppresult!=undefined && ppresult != null && ppresult[0] != undefined && ppresult[0] != null ){
-            var policyPayLoad
+
+            var policyPayLoad;
             var mdmPolicy = parse(ppresult[0].data);
             var mamPolicy = parse(ppresult[0].mam_data);
-            if (!mdmPolicy) {
-                policyPayLoad = mamPolicy;
-            } else if (!mamPolicy) {
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                var newMamPolicy = separateMAMPolicy(mamPolicy);
+                policyPayLoad = mdmPolicy.concat(newMamPolicy);
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
                 policyPayLoad = mdmPolicy;
-            } else {
-                policyPayLoad = mdmPolicy.concat(mamPolicy);
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                var newMamPolicy = separateMAMPolicy(mamPolicy);
+                policyPayLoad = newMamPolicy;
             }
             obj.payLoad = policyPayLoad;
             obj.type = ppresult[0].type;
@@ -145,15 +152,17 @@ var device = (function () {
 
         var gpresult = db.query(sqlscripts.policies.select3, category,role, tenantID);
         if(gpresult != undefined && gpresult != null && gpresult[0] != undefined && gpresult[0] != null){
-            var policyPayLoad
+            var policyPayLoad;
             var mdmPolicy = parse(gpresult[0].data);
             var mamPolicy = parse(gpresult[0].mam_data);
-            if (!mdmPolicy) {
-                policyPayLoad = mamPolicy;
-            } else if (!mamPolicy) {
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                var newMamPolicy = separateMAMPolicy(mamPolicy);
+                policyPayLoad = mdmPolicy.concat(newMamPolicy);
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
                 policyPayLoad = mdmPolicy;
-            } else {
-                policyPayLoad = mdmPolicy.concat(mamPolicy);
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                var newMamPolicy = separateMAMPolicy(mamPolicy);
+                policyPayLoad = newMamPolicy;
             }
             obj.payLoad = policyPayLoad;
             obj.type = gpresult[0].type;
@@ -163,6 +172,22 @@ var device = (function () {
         }
         return null;
     }
+
+    function separateMAMPolicy() {
+        var policyArray = new Array();
+        var mamPolicy = arguments[0];
+        if (mamPolicy[0].code == "509B") {
+            var mamData = mamPolicy[0].data;
+            for (var i=0; i<mamData.length; ++i) {
+                var newPolicyFormat = {};
+                newPolicyFormat.code = "509A";
+                newPolicyFormat.data = mamData[i];
+                policyArray.push(newPolicyFormat);
+            }
+        }
+        return policyArray;
+    }
+
     function getXMLRequestString(role,action,operationName){
         var xmlRequest = <Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" CombinedDecision="false" ReturnPolicyIdList="false">
             <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
@@ -289,12 +314,11 @@ var device = (function () {
         var tenantID = common.getTenantID();
         var policytype = ctx.policypriority;
         var device_policy;
-        var datetime;
+        var datetime = common.getCurrentDateTime();
 
         var devices = db.query(sqlscripts.devices.select40, deviceid, tenantID);
 
         if (devices != null && devices[0] != null) {
-            datetime = common.getCurrentDateTime();
 
             var policypriority = db.query(sqlscripts.policy_priority.select1, policytype);
             var existDevicePolicy = db.query(sqlscripts.device_policy.select3, deviceid, tenantID);
@@ -306,7 +330,6 @@ var device = (function () {
                     if (devices[0].platform_type == "iOS") {
                         sendMessageToIOSDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':parse(existDevicePolicy[0].payload_uids), 'policyid':policyid});
                     } else {
-                        log.debug("Nirnajan >>>>>>>>>>>>> " + policyid);
                         var revokepolicy = {};
                         revokepolicy.policyid = policyid;
                         sendMessageToAndroidDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':revokepolicy});
@@ -327,14 +350,16 @@ var device = (function () {
                         var policyArray = parse(stringify(ctx.data));
                         for(i=0; i<policyArray.length; ++i){
                             var features = db.query(sqlscripts.features.select4, policyArray[i].code);
-                            var message = {};
-                            if (payloadIdentifiers[features[0].name]) {
-                                message.code = "502P";
-                                var payloadUid = {};
-                                payloadUid.fname = features[0].name;
-                                payloadUid.uuid = payloadIdentifiers[features[0].name];
-                                message.data=payloadUid;
-                                payloadUidArray.push(message);
+                            if (features != null && features[0] != null) {
+                                var message = {};
+                                if (payloadIdentifiers[features[0].name]) {
+                                    message.code = "502P";
+                                    var payloadUid = {};
+                                    payloadUid.fname = features[0].name;
+                                    payloadUid.uuid = payloadIdentifiers[features[0].name];
+                                    message.data=payloadUid;
+                                    payloadUidArray.push(message);
+                                }
                             }
                         }
 
@@ -423,6 +448,10 @@ var device = (function () {
         var mdmPolicy = getPolicyPayLoad(deviceID,1);
         if(mdmPolicy != undefined && mdmPolicy != null){
             if(mdmPolicy.payLoad != undefined && mdmPolicy.payLoad != null){
+
+                log.debug("Policy Payload >>>>>>>>> " + stringify(mdmPolicy.payLoad));
+
+
                 sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': mdmPolicy.payLoad, 'policyid':mdmPolicy.policyid, 'policypriority': mdmPolicy.policypriority});
             }
         }
@@ -616,14 +645,27 @@ var device = (function () {
         while (i < messageArray.length) {
             log.debug("Policy code: " + messageArray[i].code);
 
-            deviceFeature = db.query(sqlscripts.platformfeatures.select2, device_id, messageArray[i].code);
+            if(messageArray[i].code == "509A") {
 
-            log.debug("Device Feature: " + deviceFeature[0].count);
-            if (deviceFeature[0].count == 0) {
-                // feature not available for the platform
-                messageArray.splice(i,1);
+                var appInstallInfo = messageArray[i].data;
+                log.debug("appInstallInfo >>>>>>> " + appInstallInfo);
+                var platforms = db.query(sqlscripts.platforms.select3, device_id, appInstallInfo.os);
+                if(platforms[0].count == 0) {
+                    //This app is not compatible with this device
+                    messageArray.splice(i,1);
+                } else {
+                    ++i;
+                }
             } else {
-                ++i;
+                deviceFeature = db.query(sqlscripts.platformfeatures.select2, device_id, messageArray[i].code);
+
+                log.debug("Device Feature: " + deviceFeature[0].count);
+                if (deviceFeature[0].count == 0) {
+                    // feature not available for the platform
+                    messageArray.splice(i,1);
+                } else {
+                    ++i;
+                }
             }
         }
         log.debug("Policy codes: " + messageArray.length);
@@ -849,6 +891,7 @@ var device = (function () {
         },
         saveDevicePolicy: saveDevicePolicy,
         removeDevicePolicy: removeDevicePolicy,
+        separateMAMPolicy: separateMAMPolicy,
 
         <!-- android specific functions -->
         getSenderId: function(ctx){

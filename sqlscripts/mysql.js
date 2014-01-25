@@ -178,7 +178,8 @@ var featuretype = {
 
 var platforms = {
     'select1' : "SELECT id FROM platforms WHERE name = ?",
-    'select2' : "select * from platforms where type_name = ?"
+    'select2' : "select * from platforms where type_name = ?",
+    'select3' : "SELECT COUNT(*) as count FROM platforms JOIN devices ON platforms.id = devices.platform_id WHERE devices.id = ? AND LOWER(platforms.type_name) = ?"
 };
 
 var featuregroup = {
