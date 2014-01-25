@@ -24,7 +24,7 @@ var notification = (function () {
 		router.get('refresh/devices/{deviceid}/{operation}', function(ctx){
 		    var result = notification.getLastRecord(ctx);
 		    if(result!= null && result != undefined){
-                log.debug("Refresh:- "+stringify(result));
+                log.debug("Refresh:- occured");
 		        print(result);
 		        response.status = 200;
 		    }else{

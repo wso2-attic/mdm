@@ -189,8 +189,8 @@ var notification = (function() {
             }
         },
         addNotification: function(ctx){
-			log.debug("Android Notification all >>>>>"+stringify(ctx));
-			log.debug("CTX>>>>>>>>>>>>>>>>>> msg id " + ctx.msgID);
+			log.debug("Android - Monitoring occured");
+			log.debug("Current Message ID " + ctx.msgID);
 			// log.debug("Android Notification >>>>> data" + ctx.data);
 			var recivedDate = common.getCurrentDateTime();
 
