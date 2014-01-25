@@ -164,6 +164,15 @@ var user = (function () {
                 proxy_user.roles = stringify(user_roles);
             //    proxy_user.roles = String(user_roles);
                 proxy_user.user_type = getUserType(user_roles);
+                
+               
+                
+                if(proxy_user.roles.indexOf('admin') >= 0){
+                	 proxy_user.firstName = 'Admin';
+                	 proxy_user.lastName = 'Admin';
+                }
+                
+                
                 return proxy_user;
             } catch(e) {
                 log.error(e);
@@ -200,12 +209,16 @@ var user = (function () {
             log.info("LLLLLLLLLLLLLLLLLLLL"+stringify(users_list));
             return users_list;
         },
-        getAllUserNames: function(){
+        getAllUserNames: function(filter){
             var tenantId = common.getTenantID();
             var users_list = [];
             if(tenantId){
                 var um = userManager(common.getTenantID());
-                var allUsers = um.listUsers();
+                if(filter){
+                    var allUsers = um.listUsers(filter);
+                }else{
+                    var allUsers = um.listUsers();
+                }
                 var removeUsers = new Array("wso2.anonymous.user","admin","admin@admin.com");
                 var users = common.removeNecessaryElements(allUsers,removeUsers);
                 users_list = users;
@@ -301,10 +314,10 @@ var user = (function () {
                 var flag = 0;
                 for(var j=0 ;j<roles.length;j++){
                     log.info("Test iteration2"+roles[j]);
-                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'){
+                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'){                                                                                getUsersByType
                         flag = 1;
                         break;
-                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'|| roles[j]=='mamadmin'){
+                    }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'|| roles[j]=='Internal/mamadmin'){
                         flag = 2;
                         break;
                     }else{
@@ -369,12 +382,10 @@ var user = (function () {
 			if(!authStatus) {
 				return null;
 			}
-			var user =  this.getUser({'userid': ctx.username});
-
+			var user =  this.getUser({'userid': ctx.username, login:true});
             var result = db.query(sqlscripts.tenantplatformfeatures.select1,  stringify(user.tenantId));
             if(result[0].record_count == 0) {
 				for(var i = 1; i < 13; i++) {
-
                     var result = db.query(sqlscripts.tenantplatformfeatures.select2, stringify(user.tenantId), i);
 				}
 			}
@@ -476,9 +487,9 @@ var user = (function () {
                 message = file.readAll();
                 file.close();
             } else {
+                log.error("License is not configured for tenant.");
                 message = "400";
             }
-
             return message;
         },
         getTenantDomainFromID: function() {

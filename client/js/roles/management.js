@@ -67,6 +67,8 @@ $('#featureModal').on('click', '.feature-command', function(e) {
 	var params = {};
 
 	var value = $(this).data('value');
+	
+	
 	if (value != "") {
 		params['function'] = value;
 	}
@@ -76,6 +78,7 @@ $('#featureModal').on('click', '.feature-command', function(e) {
 			params[$(this).attr("id")] = $(this).is(':checked');
 		}else{
 			params[$(this).attr("id")] = $(this).val();
+			//alert( $(this).val());
 		}
 	});
 

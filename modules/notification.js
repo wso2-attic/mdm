@@ -195,6 +195,12 @@ var notification = (function() {
 			var recivedDate = common.getCurrentDateTime();
 
 			var result = db.query(sqlscripts.notifications.select9, ctx.msgID);
+			
+			if(result == null || result == undefined || 
+					result[0] == null || result[0] == undefined) {
+				return;
+			}
+			
 			var deviceId = result[0].device_id;
 			var featureCode = result[0].feature_code;
 
@@ -323,7 +329,7 @@ var notification = (function() {
 
 			var complianceDevices = new Array();
 			var violatedDevices = new Array();
-			var devices = db.query(sqlscripts.devices.select15);
+			var devices = db.query(sqlscripts.devices.select15,common.getTenantID());
 			for ( var i = 0; i < devices.length; i++) {
 				var compliances = this.getPolicyState({
 					'deviceid' : devices[i].id
@@ -372,14 +378,21 @@ var notification = (function() {
 			var obj1 = {};
 			obj1.label = 'Compliance';
 			obj1.data = complianceDeviceCountAsPercentage;
+			obj1.devices = complianceDeviceCount;
 
 			array.push(obj1);
 
 			var obj2 = {};
 			obj2.label = 'Non Compliance';
 			obj2.data = violatedDevicesCountAsPercentage;
+			obj2.devices = violatedDevicesCount;
 
 			array.push(obj2);
+			
+			if(totalDevicesCount == 0){
+            	finalResult =  [{"label" : "No Data", "devices": 0,  "data" : 100}];
+            }
+			
 			return array;
 		},
 		discardOldNotifications : function(ctx) {

@@ -26,7 +26,7 @@ var device = (function () {
     var log = new Log();
     var gcm = require('gcm').gcm;
 
-    <!-- comman functions -->
+    /** common functions **/
     var configs = function (tenantId) {
         var config = application.get(TENANT_CONFIGS);
         if (!tenantId) {
@@ -212,7 +212,7 @@ var device = (function () {
     var stub = null;
 
     function init(){
-         entitlement = session.get("entitlement");
+        entitlement = require('policy').entitlement;
         var samlResponse = session.get("samlresponse");
         var saml = require("/modules/saml.js").saml;
         var backEndCookie = saml.getBackendCookie(samlResponse);
@@ -221,7 +221,6 @@ var device = (function () {
     }
     function checkPermission(role, deviceId, operationName, that){
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
-        log.info("d :"+decision.toString().substring(28,34));
         decision = decision.toString().substring(28,34);
         if(decision=="Permit"){
                 return true;
@@ -390,7 +389,6 @@ var device = (function () {
         var userID = devices[0].user_id;
         if(tenantID==null){
             tenantID = common.getTenantIDFromEmail(userID);
-            log.info(tenantID);
         }
         var osVersion = devices[0].os_version;
         var platformId = devices[0].platform_id;
@@ -423,11 +421,14 @@ var device = (function () {
 
         var lastRecordJson = lastRecord[0];
         var token = lastRecordJson["LAST_INSERT_ID()"];
-        log.info(regId);
-        log.info(featureCode);
-        log.info(token);
-        log.info(payLoad);
-        var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
+        log.info("Android registration id "+regId);
+        log.info("Current feature code "+featureCode);
+        log.info("Message token "+token);
+        if(featureCode=="500P" || featureCode=="502P"){
+            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3, "policy");
+        }else{
+            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
+        }
         log.info(gcmMSG);
         return true;
     }
@@ -772,6 +773,11 @@ var device = (function () {
 
             var devices = db.query(sqlscripts.devices.select11, ctx.deviceid);
 
+            if(devices == null || devices == undefined || 
+            		devices[0] == null || devices[0] == undefined) {
+            	return;
+            }
+            
             var platformID = devices[0].platform_id;
             if(platformID==1){
                 return sendMessageToAndroidDevice(ctx);
@@ -929,10 +935,7 @@ var device = (function () {
             var tenantUser = carbon.server.tenantUser(ctx.email);
             var userId = tenantUser.username;
             var tenantId = tenantUser.tenantId;
-            log.info("tenant idddddddd"+tenantId);
-            var platforms = db.query(sqlscripts.platforms.select1, ctx.platform);// from device platform comes as iOS and Android then convert into platform id
-																				 // to save in device
-																					// table
+            var platforms = db.query(sqlscripts.platforms.select1, ctx.platform);
             var platformId = platforms[0].id;
 
             var createdDate =  common.getCurrentDateTime();
@@ -949,7 +952,7 @@ var device = (function () {
                     db.query(sqlscripts.devices.insert1, tenantId, ctx.osversion, createdDate, ctx.properties, ctx.regid, userId, platformId, ctx.vendor, ctx.mac);
                     var devices = db.query(sqlscripts.devices.select19, ctx.regid);
                     var deviceID = devices[0].id;
-
+                    log.info("Android Device has been registered "+ctx.regid);
                     sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
                     sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
 

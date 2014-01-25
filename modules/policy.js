@@ -177,13 +177,20 @@ var policy = (function () {
             var policyId = '';
             var result;
             var policy = db.query(sqlscripts.policies.select7, ctx.policyName);
-            policyId = policy[0].id;
-            if(ctx.category==1){
-                if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
-                result = db.query(sqlscripts.policies.update1, ctx.policyData, ctx.policyType, ctx.policyName, common.getTenantID());
-                this.enforcePolicy({"policyid":policyId});
-                }else{
-                    result = this.addPolicy(ctx);
+            if(typeof policy!= 'undefined' && policy != null && typeof policy[0]!= 'undefined' && policy[0] != null){
+                policyId = policy[0].id;
+                if(ctx.category==1){
+                    if(policy!= undefined && policy != null && policy[0] != undefined && policy[0] != null){
+                        result = db.query(sqlscripts.policies.update1, ctx.policyData, ctx.policyType, ctx.policyName, common.getTenantID());
+                        this.enforcePolicy({"policyid":policyId});
+                    }else{
+                        result = this.addPolicy(ctx);
+                    }
+                }
+
+            }else{
+                if(this.addPolicy(ctx) == 201){
+                    result = 1;
                 }
             }
             return result;

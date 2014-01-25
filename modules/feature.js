@@ -33,7 +33,7 @@ var feature = (function () {
     var stub = null;
 
     function init(){
-        entitlement = session.get("entitlement");
+        entitlement = require('policy').entitlement;
         var samlResponse = session.get("samlresponse");
         var saml = require("/modules/saml.js").saml;
         var backEndCookie = saml.getBackendCookie(samlResponse);
@@ -41,10 +41,7 @@ var feature = (function () {
         stub = entitlement.setEntitlementPolicyAdminServiceParameters();
     }
     function setFlag(list,groupId){
-        log.info("Test Group >>>>>>>>>>"+groupId);
         try{
-        /*    var entitlement = session.get("entitlement");
-            var stub = entitlement.setEntitlementPolicyAdminServiceParameters();*/
             var result = entitlement.readExistingPolicy(stub,groupId);
             var languages = new XML('<xml>'+result+'</xml>');
             var svgns = new Namespace('urn:oasis:names:tc:xacml:3.0:core:schema:wd-17');
@@ -53,16 +50,13 @@ var feature = (function () {
             var array = ops.split('|');
             array[0] = array[0].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
             array[array.length-1] = array[array.length-1].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
-            log.info(stringify(array));
         }catch(e){
             array = null;
             log.info("EntitlementPolicy admin service cannot be invoked");
         }
         if(array != undefined && array != null && array.length != undefined && array.length != null){
             for(var i = 0; i<list.length;i++){
-                log.info("i value :"+list[i].value)
                 for(var j=0;j <  array.length;j++){
-                    log.info("j value :"+array[j])
                     if(list[i].value ==  array[j] ){
                         list[i].select = true;
                         break;
@@ -110,7 +104,6 @@ var feature = (function () {
 
         getAllFeaturesForRoles: function(ctx){
             init();
-            log.info("getAllFeaturesForRoles");
             var array = new Array();
             var featureGroupList = db.query(sqlscripts.featuregroup.select1);
 
@@ -125,7 +118,6 @@ var feature = (function () {
 
                 array[i] = obj;
             }
-            log.debug(array);
             return array;
         }
     };

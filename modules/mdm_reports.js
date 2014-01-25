@@ -102,10 +102,24 @@ var mdm_reports = (function () {
     module.prototype = {
         constructor: module,
         getDevicesByRegisteredDate:function(ctx){
-            log.info("Platform IDDDDDDDD :"+ctx.platformType);
+            log.info("Start date :"+ctx.startDate);
+            log.info("End date :"+ctx.endDate);
             var zeros = ' 00:00:00';
+            var ends = ' 23:59:59';
+            if(typeof ctx.startDate == 'undefined' || ctx.startDate == null || ctx.startDate == ""){
+
+                ctx.startDate = "2013-01-01";
+
+            }
             var startDate = ctx.startDate+zeros;
-            var endDate = ctx.endDate+zeros;
+            var endDate = '';
+            if(typeof ctx.endDate == 'undefined' || ctx.endDate == null || ctx.endDate == ""){
+                endDate = common.getCurrentDateTime();
+            }else{
+                var endDate = ctx.endDate+ends;
+            }
+            log.info("Test1 :"+startDate);
+            log.info("Test2 :"+endDate);
             var result = [];
             if(typeof ctx.platformType !== 'undefined' && parse(ctx.platformType) !== 0){
                // result = db.query("SELECT devices.user_id, devices.properties, platforms.name as platform_name, devices.os_version, devices.created_date, devices.status  FROM devices,platforms where platforms.type ="+ctx.platformType+" && platforms.id = devices.platform_id  &&  devices.created_date between '"+startDate+"' and '"+endDate+"' and  devices.tenant_id = "+common.getTenantID());
@@ -125,8 +139,18 @@ var mdm_reports = (function () {
         },
         getDevicesByComplianceState:function(ctx){
              var zeros = ' 00:00:00';
+             var ends = ' 23:59:59';
+
+             if(typeof ctx.startDate == 'undefined' || ctx.startDate == null || ctx.startDate == ""){
+                ctx.startDate = "2013-01-01";
+             }
              var startDate = ctx.startDate+zeros;
-             var endDate = ctx.endDate+zeros;
+            var endDate = '';
+            if(typeof ctx.endDate == 'undefined' || ctx.endDate == null || ctx.endDate == ""){
+                endDate = common.getCurrentDateTime();
+            }else{
+                endDate = ctx.endDate+ends;
+            }
              //var result = db.query("SELECT devices.id, devices.properties, devices.user_id, devices.os_version, platforms.type_name as platform_name, devices.status from devices, platforms WHERE devices.created_date between '"+ctx.startDate+"' AND '"+ctx.endDate+"'AND devices.user_id like '%"+ctx.username+"%' AND status like '%"+ctx.status+"%' AND devices.tenant_id ="+common.getTenantID()+" AND devices.platform_id = platforms.id");
              var result = db.query("SELECT devices.id, devices.properties, devices.user_id, devices.os_version, platforms.type_name as platform_name, devices.status from devices, platforms WHERE devices.created_date between ? AND ? AND devices.user_id like ? AND status like ? AND devices.tenant_id = ? AND devices.platform_id = platforms.id",ctx.startDate,ctx.endDate,"%"+ctx.username+"%","%"+ctx.status+"%",common.getTenantID());
              if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null ){
@@ -147,8 +171,17 @@ var mdm_reports = (function () {
         },
         getComplianceStatus:function(ctx){
             var zeros = ' 00:00:00';
+            var ends = ' 23:59:59';
+            if(typeof ctx.startDate == 'undefined' || ctx.startDate == null || ctx.startDate == ""){
+                ctx.startDate = "2013-01-01";
+            }
             var startDate = ctx.startDate+zeros;
-            var endDate = ctx.endDate+zeros;
+            var endDate = '';
+            if(typeof ctx.endDate == 'undefined' || ctx.endDate == null || ctx.endDate == ""){
+                endDate = common.getCurrentDateTime();
+            }else{
+                endDate = ctx.endDate+ends;
+            }
             //var result = db.query("select * from notifications where feature_code = '501P' && device_id ="+ctx.deviceID+"&& received_date between '"+startDate+"' and '"+endDate+"' and tenant_id = "+common.getTenantID());
             var result = db.query("select * from notifications where feature_code = '501P' && device_id = ? && received_date between ? and ? and tenant_id = ?",ctx.deviceID,startDate,endDate,common.getTenantID());
             if(typeof result !== 'undefined' && result !== null && typeof result[0] !== 'undefined' && result[0] !== null){

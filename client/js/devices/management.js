@@ -231,14 +231,35 @@ $('#featureModal').on('click', '.feature-command', function(e) {
 	if (value != "") {
 		params['function'] = value;
 	}
+	
+	var validationFailed = false;
 
 	$(".feature-input").each(function(index) {
 		if($(this).attr('type') == 'checkbox'){			
 			params[$(this).attr("id")] = $(this).is(':checked');
 		}else{
 			params[$(this).attr("id")] = $(this).val();
+			
+			if($(this).data("required") == true && $(this).val() == ""){
+				validationFailed = true;
+				
+				
+				
+			}
 		}
 	});
+	
+	if(validationFailed){
+			noty({
+					text : 'Please fill required fileds',
+					'layout' : 'center',
+					'modal': false,
+					'type': 'error'
+				});
+			return;	
+	}else{
+		$('#featureModal').modal('hide');
+	}
 
 	performOperation(selectedDevices, selectedFeature, {
 		data : params

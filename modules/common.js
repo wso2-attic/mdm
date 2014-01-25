@@ -379,6 +379,14 @@ var loadPayload = function(identifier , operationCode, data) {
 */
 var getDatabase = function(){
     var db = application.get(DB_SESSION);
+  	if(db){
+  		try{
+  			db.query("SELECT 1 FROM dual");
+  		}catch(e){
+  			log.info("New connection was taken");
+  			db = null;
+  		}
+  	}
     if(!db){
         try{
             db = new Database("EMM_DB");

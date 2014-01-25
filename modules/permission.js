@@ -112,48 +112,30 @@ var permission = (function () {
                 group = group.substring(9);
             }
             var featureList = ctx.featureList;
-
             var xacml = null;
-
             xacml = init(group);
-
             var featureConcat = "("+featureList[0];
-
             for(var i = 1; i < featureList.length ; i++){
                 featureConcat = featureConcat+"|"+featureList[i];
-
             }
             featureConcat = featureConcat+")";
-
             var action = 'POST';
-
             var subject = group;
-
             var resource =featureConcat;
-
             xacml.add = getRule(resource, action, subject,'rule1');
 
-
-            log.info("Test XACML"+xacml);
-
             var file = new File("policy.txt");
-
             file.open("w+");
-
             file.write(xacml);
-
             var xacmlFile = file.readAll();
-
             file.close();
-
-            var entitlement = session.get("entitlement");
-            var entitlementPolicyAdminService = entitlement.setEntitlementPolicyAdminServiceParameters();
+            var entitlement = require('policy').entitlement;
             try{
                 var samlResponse = session.get("samlresponse");
-                var entitlement = session.get("entitlement");
                 var saml = require("/modules/saml.js").saml;
                 var backEndCookie = saml.getBackendCookie(samlResponse);
                 entitlement.setAuthCookie(backEndCookie);
+                var entitlementPolicyAdminService = entitlement.setEntitlementPolicyAdminServiceParameters();
                 entitlement.removePolicy(group,entitlementPolicyAdminService);
                 entitlement.addPolicy(xacmlFile,entitlementPolicyAdminService,group);
             }catch(e){
