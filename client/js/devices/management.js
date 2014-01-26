@@ -21,7 +21,7 @@ oTable = $('#main-table').dataTable({
 		aoColumns: [
                       
                       {"bVisible":    false },
-                      null,
+                      {"sWidth": "20%"},
 
                       {                         
                         "fnRender": function (oObj)                              
