@@ -274,65 +274,67 @@ var notification = (function() {
 			return result;
 		},
 		getPolicyState : function(ctx) {
-
-			var result = db.query(sqlscripts.notifications.select10,
+			var result = db.query(sqlscripts.device_policy.select4, ctx.deviceid, common.getTenantID());
+			if(result[0]){
+				result = db.query(sqlscripts.notifications.select10,
 					ctx.deviceid, '501P');
-			var newArray = new Array();
-			if (result == null || result == undefined || result.length == 0) {
-				return newArray;
-			}
-			var arrayFromDatabase = parse(result[result.length - 1].received_data);
-            var blackListApp = {};
-            blackListApp.status = true;
-			for ( var i = 0; i < arrayFromDatabase.length; i++) {
-				if (arrayFromDatabase[i].code == 'notrooted') {
-					var obj = {};
-					obj.name = 'Not Rooted';
-					obj.status = arrayFromDatabase[i].status;
-					newArray.push(obj);
-					if (obj.status == false) {
-						device.changeDeviceState(ctx.deviceid, "C");
-					}
-
-				} else {
-					var featureCode = arrayFromDatabase[i].code;
-					try {
+				var newArray = new Array();
+				if (result == null || result == undefined || result.length == 0) {
+					return newArray;
+				}
+				var arrayFromDatabase = parse(result[result.length - 1].received_data);
+		        var blackListApp = {};
+		        blackListApp.status = true;
+				for ( var i = 0; i < arrayFromDatabase.length; i++) {
+					if (arrayFromDatabase[i].code == 'notrooted') {
 						var obj = {};
-						var features = db.query(sqlscripts.features.select6,
-								featureCode);
+						obj.name = 'Not Rooted';
+						obj.status = arrayFromDatabase[i].status;
+						newArray.push(obj);
+						if (obj.status == false) {
+							device.changeDeviceState(ctx.deviceid, "C");
+						}
 
-                        if (featureCode == "528B") {
-                            if (blackListApp.status == true) {
-                                blackListApp.name = features[0].description;
-                                blackListApp.status = arrayFromDatabase[i].status
-                            }
-                        } else {
-                            obj.name = features[0].description;
-                            obj.status = arrayFromDatabase[i].status;
-                            newArray.push(obj);
+					} else {
+						var featureCode = arrayFromDatabase[i].code;
+						try {
+							var obj = {};
+							var features = db.query(sqlscripts.features.select6,
+									featureCode);
 
-                            if (obj.status == false) {
-                                var currentState = device
-                                    .getCurrentDeviceState(ctx.deviceid);
-                                if (currentState == 'A') {
-                                    device.changeDeviceState(ctx.deviceid, "PV");
-                                }
-                            }
-                        }
+		                    if (featureCode == "528B") {
+		                        if (blackListApp.status == true) {
+		                            blackListApp.name = features[0].description;
+		                            blackListApp.status = arrayFromDatabase[i].status
+		                        }
+		                    } else {
+		                        obj.name = features[0].description;
+		                        obj.status = arrayFromDatabase[i].status;
+		                        newArray.push(obj);
+
+		                        if (obj.status == false) {
+		                            var currentState = device
+		                                .getCurrentDeviceState(ctx.deviceid);
+		                            if (currentState == 'A') {
+		                                device.changeDeviceState(ctx.deviceid, "PV");
+		                            }
+		                        }
+		                    }
 
 
-					} catch (e) {
-						log.info(e);
+						} catch (e) {
+							log.info(e);
+						}
 					}
 				}
+
+		        if (blackListApp.name != null) {
+		            newArray.push(blackListApp);
+		        }
+				return newArray;
+			}else{
+				return [];
 			}
-
-            if (blackListApp.name != null) {
-                newArray.push(blackListApp);
-            }
-
-			log.info("Final result >>>>>>>>>>" + stringify(newArray));
-			return newArray;
 		},
 		getPolicyComplianceDevices : function(ctx) {
 			var compliance = ctx.compliance;
