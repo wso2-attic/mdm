@@ -69,18 +69,14 @@ var iosmdm = (function() {
 		handleProfileRequest : function(inputStream) {
 
 			try {
+                log.debug("Handle Profile Request!");
 
                 var commonUtil =  new Packages.com.wso2mobile.ios.mdm.util.CommonUtil();
                 var profileResponse = commonUtil.copyInputStream(inputStream);
-                log.debug("profileResponse.udid >>>>>>>>>> " + profileResponse.udid);
-                log.debug("profileResponse.challengeToken >>>>>>>>>> " + profileResponse.challengeToken);
-
                 if (profileResponse.challengeToken != null) {
                     db.query(sqlscripts.device_pending.update4, profileResponse.udid, profileResponse.challengeToken);
                 }
                 var devices = db.query(sqlscripts.device_pending.select4, profileResponse.udid);
-                log.debug("device.tenant_id >>>>>>>>>> " + devices[0].tenant_id);
-
                 var tenantName = user.getTenantNameFromID(devices[0].tenant_id);
 
 				var requestHandler = new Packages.com.wso2mobile.ios.mdm.impl.RequestHandler();
@@ -164,8 +160,6 @@ var iosmdm = (function() {
 			Packages.org.apache.commons.io.IOUtils.copy(inputStream, writer, "UTF-8");
 			var contentString = writer.toString();
 
-			//log.error(contentString);
-
 			try {
 				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();
 				var apnsStatus = plistExtractor.extractAPNSResponse(contentString);
@@ -173,7 +167,7 @@ var iosmdm = (function() {
 				var commandUUID = apnsStatus.getCommandUUID();
 
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
-					log.error("Acknowledged >>>>>>>>>>>>>>>>" + apnsStatus.getOperation());
+					log.debug("Acknowledged >> " + apnsStatus.getOperation());
 
 					var responseData = "";
 
@@ -184,8 +178,7 @@ var iosmdm = (function() {
 					} else if ("ProfileList" == apnsStatus.getOperation()) {
 						responseData = apnsStatus.getResponseData();
 					} else if ("NeedsRedemption" == apnsStatus.getState()) {
-						log.error("NeedsRedemption >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
-						
+
 						var notifications = db.query(sqlscripts.notifications.select4, commandUUID);
 						var device_id = notifications[0].device_id;
 						var message = notifications[0].message;
@@ -225,8 +218,6 @@ var iosmdm = (function() {
                     if (operation.feature_code.indexOf("-") > 0) {
                         var featureCode = operation.feature_code.split("-")[0];
                         var payload;
-                        log.debug("sendPushNotifications >>> Feature Code >>>>>> " + featureCode);
-
                         payload = common.loadPayload(new Packages.java.lang.String(operation.id), featureCode, operation.message);
                     } else {
                         payload = common.loadPayload(new Packages.java.lang.String(operation.id), operation.feature_code, operation.message);
