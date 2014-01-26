@@ -285,6 +285,7 @@ var notification = (function() {
 			var arrayFromDatabase = parse(result[result.length - 1].received_data);
             var blackListApp = {};
             blackListApp.status = true;
+            var checkState = true;
 			for ( var i = 0; i < arrayFromDatabase.length; i++) {
 				if (arrayFromDatabase[i].code == 'notrooted') {
 					var obj = {};
@@ -293,6 +294,7 @@ var notification = (function() {
 					newArray.push(obj);
 					if (obj.status == false) {
 						device.changeDeviceState(ctx.deviceid, "C");
+                        checkState = false;
 					}
 
 				} else {
@@ -316,18 +318,19 @@ var notification = (function() {
                                 var currentState = device
                                     .getCurrentDeviceState(ctx.deviceid);
                                 if (currentState == 'A') {
+                                    checkState = false;
                                     device.changeDeviceState(ctx.deviceid, "PV");
                                 }
                             }
                         }
-
-
 					} catch (e) {
 						log.info(e);
 					}
 				}
 			}
-
+            if(checkState == true){
+                device.changeDeviceState(ctx.deviceid, "A");
+            }
             if (blackListApp.name != null) {
                 newArray.push(blackListApp);
             }
