@@ -8,6 +8,9 @@ var policy = (function () {
         router.get('policies/{policyid}/enforce', function(ctx){
             policy.enforcePolicy(ctx);
         });
+        router.get('external/policies/{policyid}/enforce', function(ctx){
+            policy.enforcePolicy(ctx);
+        });
         router.post('policies/', function(ctx){
 
             log.info("check policy router POST");
