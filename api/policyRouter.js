@@ -1,16 +1,18 @@
 var policy = (function () {
 
-
+    var common = require("/modules/common.js");
     var module = function (db,router) {
         var policyModule = require('modules/policy.js').policy;
         var policy = new policyModule(db);
-
+        router.post('policies/external/{policyid}/enforce', function(ctx){
+            if(common.checkAuth(ctx)){
+                policy.enforcePolicy(ctx);    
+            }
+        });
         router.get('policies/{policyid}/enforce', function(ctx){
             policy.enforcePolicy(ctx);
         });
-        router.get('external/policies/{policyid}/enforce', function(ctx){
-            policy.enforcePolicy(ctx);
-        });
+        
         router.post('policies/', function(ctx){
 
             log.info("check policy router POST");

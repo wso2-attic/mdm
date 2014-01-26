@@ -629,7 +629,6 @@ var policy = (function () {
 
         enforcePolicy:function(ctx){
             var policyId =  ctx.policyid;
-
             var policies = db.query(sqlscripts.policies.select10, String(policyId), common.getTenantID());
 
             var payLoad;

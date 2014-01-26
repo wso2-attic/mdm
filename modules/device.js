@@ -227,8 +227,6 @@ var device = (function () {
                 policyArray.push(newPolicyFormat);
             }
         }
-        log.info("___");
-        log.info(mamPolicy);
         return policyArray;
     }
 
@@ -478,6 +476,7 @@ var device = (function () {
         if(featureCode=="500P" || featureCode=="502P"){
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 30240, "POLICY");
         }else{
+            log.info("Sending");
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
         }
         log.info(gcmMSG);
