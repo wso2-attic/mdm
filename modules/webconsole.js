@@ -64,7 +64,6 @@ var webconsole = (function () {
     module.prototype = {
         constructor: module,
         getDevicesCountAndUserCountForAllGroups: function(ctx) {
-            log.info("Test function getDevicesCountAndUserCountForAllGroups");
         	var um = userManager(common.getTenantID());
             var arrRole = new Array();
             var allGroups = group.getAllGroups({});
@@ -120,7 +119,6 @@ var webconsole = (function () {
                 roles = parse(roles);
                 var flag = 0;
                 for(var j=0 ;j<roles.length;j++){
-                    log.info("Test iteration2"+roles[j]);
                     if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'||roles[j]=='Internal/mamadmin'){
                         flag = 1;
                         break;
@@ -155,10 +153,8 @@ var webconsole = (function () {
             finalObj.aaData = dataArray;
             return finalObj;
         },
-        getDevices:function(ctx){//return device information
-            log.info("User name :"+ctx.username);
-            log.info("platform :"+ctx.platform_id);
-            log.info("byod :"+ctx.byod);
+        getDevices:function(ctx){
+            //return device information
             var userId = '';
             if(ctx.username != undefined && ctx.username != null){
                 userId = ctx.username;
@@ -182,7 +178,6 @@ var webconsole = (function () {
                         break;
                     }
                     var device = [];
-                    log.info(result[i].id);
                     device.push( result[i].id);
                     device.push( parse(result[i].properties).imei);
                     device.push( result[i].user_id);
@@ -232,7 +227,6 @@ var webconsole = (function () {
                 var lowerBound = parseInt(ctx.iDisplayStart);
                 var dataArray = new Array();
                 for(var i = lowerBound; i < upperBound; i++){
-                    log.info(stringify(result[i]));
                     if(totalRecords - 1 < i){
                         break;
                     }
@@ -253,15 +247,11 @@ var webconsole = (function () {
                 finalObj.aaData = dataArray;
                 return finalObj;
             }else{
-                log.info("test block");
                 result = db.query(sqlscripts.devices.select35, "%"+userId+"%", common.getTenantID());
                 var totalRecords = result.length;
                 var upperBound = parseInt(ctx.iDisplayStart)+parseInt(iDisplayLength);
                 var lowerBound = parseInt(ctx.iDisplayStart);
                 var dataArray = new Array();
-                log.info("upperBound"+upperBound);
-                log.info("lowerBound"+lowerBound);
-                log.info("totalRecords"+totalRecords);
                 for(var i = lowerBound ;i < upperBound; i++){
                     if(totalRecords - 1 < i){
                         break;
@@ -276,7 +266,6 @@ var webconsole = (function () {
                     device.push( result[i].created_date);
                     dataArray.push(device);
                 }
-                log.info("Data Array :"+dataArray);
                 var finalObj = {};
                 finalObj.sEcho = ctx.sEcho;
                 finalObj.iTotalRecords = totalRecords
