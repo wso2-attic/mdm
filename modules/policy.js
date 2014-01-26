@@ -132,7 +132,7 @@ var policy = (function () {
         for(var i = 0;i<platforms.length;i++){
             if(platforms[i].platform_id == 'android'){
 
-                var devices2 = db.query(sqlscripts.devices.select36, common.getTenantID());
+                var devices2 = db.query(sqlscripts.devices.select41, common.getTenantID());
 
                 for(var j=0;j<devices2.length;j++){
                     var tempId = getPolicyIdFromDevice(devices2[j].id);
@@ -635,6 +635,8 @@ var policy = (function () {
                 payLoad = newMamPolicy;
             }
 
+            log.debug("Payload >>> " + stringify(payLoad));
+
             var users1 = db.query(sqlscripts.user_policy_mapping.select1, String(policyId));
             for(var i = 0;i<users1.length;i++){
                 var devices1 = db.query(sqlscripts.devices.select26, users1[i].user_id, common.getTenantID());
@@ -648,7 +650,7 @@ var policy = (function () {
             for(var i = 0;i<platforms.length;i++){
                 if(platforms[i].platform_id == 'android'){
 
-                    var devices2 = db.query(sqlscripts.devices.select36, common.getTenantID());
+                    var devices2 = db.query(sqlscripts.devices.select41, common.getTenantID());
 
                     for(var j=0;j<devices2.length;j++){
                         //var tempId = getPolicyIdFromDevice(devices2[j].id);
@@ -662,9 +664,10 @@ var policy = (function () {
                     var devices3 = db.query(sqlscripts.devices.select37);
 
                     for(var j=0;j<devices3.length;j++){
+                        log.debug("niajsndjandj");
                         //var tempId = getPolicyIdFromDevice(devices3[j].id);
                         //if(tempId == policyId){
-                            device.sendToDevice({'deviceid':devices3[i].id,'operation':'POLICY','data':payLoad, 'policyid':ctx.policyid, 'policypriority': 'PLATFORMS'});
+                            device.sendToDevice({'deviceid':devices3[j].id,'operation':'POLICY','data':payLoad, 'policyid':ctx.policyid, 'policypriority': 'PLATFORMS'});
                         //}
                     }
                 }
