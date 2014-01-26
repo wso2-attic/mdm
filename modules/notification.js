@@ -54,6 +54,10 @@ var notification = (function() {
             
             var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
             var notifications = db.query(sqlscripts.notifications.select6, identifier);
+
+            //log.debug("identifier >>>>>> " + identifier);
+            //log.debug("notifications >>>> " + stringify(notifications));
+
             var recivedDate =  common.getCurrentDateTime();
             
             if(notifications != null &&  notifications[0] != null) {
@@ -61,44 +65,83 @@ var notification = (function() {
                 var device_id = notifications[0].device_id;
                 var message = notifications[0].message;
 
-                if(featureCode == "500P") {
+                 if(featureCode == "500P" || featureCode == "502P") {
 
                 	var notificationId = identifier.split("-")[0];
                     var policySequence = identifier.split("-")[1];
 
                     var pendingFeatureCodeList = db.query(sqlscripts.notifications.select7, notificationId);
 
+                    //log.debug("PendingFeature >>>> " + stringify(pendingFeatureCodeList));
+
                     var received_data = pendingFeatureCodeList[0].received_data;
                     var device_id = pendingFeatureCodeList[0].device_id;
                     var targetOperationData = (parse(received_data))[parseInt(policySequence)];
                     var targetOperationId = targetOperationData.message.code;
                     var pendingExist = false;
+                    var isRevokePolicy = false;
                     var parsedReceivedData = (parse(received_data));
 
-                    for(var i = 0; i < parsedReceivedData.length; i++) {
-                        var receivedObject = parsedReceivedData[i];
 
-                        if(receivedObject.message.code == targetOperationId) {
-                            if(ctx.error == "Error") {
-                                receivedObject.status = "error";
-                            } else {
-                                receivedObject.status = "received";
+                    //log.debug("Received data >>>>> " + stringify(stringify(parsedReceivedData)));
+
+                    if (featureCode == "502P") {
+                        isRevokePolicy = true;
+
+                        var revokeCount = parse(message).length;
+                        var revokedPolicy = 0;
+
+                        //log.debug("Revoke COunt >>>> " + revokeCount);
+
+                        for (var i =0; i< parsedReceivedData.length; i++) {
+
+                            var receivedObject = parsedReceivedData[i];
+                            if (receivedObject.status == "received" || receivedObject.status == "error") {
+                                revokedPolicy++;
                             }
                         }
 
-                        if(receivedObject.status == "pending") {
+                        //log.debug("revoked Policy   >>>>>> " + revokedPolicy);
+
+                        if (revokeCount > revokedPolicy + 1) {
                             pendingExist = true;
                         }
+                        parsedReceivedData[revokedPolicy].status = "received";
 
-                        parsedReceivedData[i] = receivedObject;
+
+                        //log.debug("parsedReceivedData >>>>>> " + stringify(parsedReceivedData));
+
+                    } else {
+                        for(var i = 0; i < parsedReceivedData.length; i++) {
+                            var receivedObject = parsedReceivedData[i];
+
+                            if(receivedObject.message.code == targetOperationId) {
+                                if(ctx.error == "Error") {
+                                    receivedObject.status = "error";
+                                } else {
+                                    receivedObject.status = "received";
+                                }
+                            }
+
+                            if(receivedObject.status == "pending") {
+                                pendingExist = true;
+                            }
+
+                            parsedReceivedData[i] = receivedObject;
+                        }
                     }
+
 
                     db.query(sqlscripts.notifications.update4, stringify(parsedReceivedData), recivedDate, notificationId);
 
                     if(pendingExist) {
-                        return true;
+                        if (isRevokePolicy == true) {
+                            return "RevokePolicy";
+                        } else {
+                            return true;
+                        }
                     } else {
-                    	
+                    	log.debug("Update notifications!!!!");
 	                	db.query(sqlscripts.notifications.update5, notificationId);
                     }
 

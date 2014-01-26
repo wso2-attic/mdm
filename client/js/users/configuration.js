@@ -9,6 +9,7 @@ $(document).ready(function() {
 		"iDisplayLength" : 10,		
 		"bProcessing" : false,
 		"bServerSide" : true,
+		"bSort" : false,
 
 		  aoColumns: [
                       
