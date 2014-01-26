@@ -88,6 +88,15 @@ var getCurrentDateTime = function(){
     return fdate;
 }
 
+var getCurrentDateTimeAdjusted = function() {
+    var seconds = arguments[0];
+    var date = new Date();
+    date.setTime(date.getTime() + (seconds*1000));
+
+    var fdate = date.getFullYear() + '-' +('00' + (date.getMonth()+1)).slice(-2) + '-' +('00' + date.getDate()).slice(-2) + ' ' + ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2) + ':' + ('00' + date.getSeconds()).slice(-2);
+    return fdate;
+}
+
 var getFormattedDate = function(value){
     if(value==null && value == undefined){
         return "";
@@ -104,9 +113,9 @@ var initAPNS = function(deviceToken, magicToken) {
 		return;
 	}
 
-    log.debug("initAPNS >>>>>>>>");
-    log.debug("Device Token: >>>>>> " + deviceToken);
-    log.debug("Magic Token: >>>>>> " + magicToken);
+    log.debug("initAPNS >> ");
+    log.debug("Device Token: >> " + deviceToken);
+    log.debug("Magic Token: >> " + magicToken);
 
 	try {
 		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.MDMPushNotificationSender();
@@ -125,7 +134,7 @@ var initAPNS = function(deviceToken, magicToken) {
 }
 
 var sendIOSPushNotifications = function(token, message) {
-    log.debug("sendIOSPushNotifications >>>>>>>>");
+    log.debug("Send IOS Push Notifications");
     log.debug("token: >>>>>> " + token);
     log.debug("message: >>>>>> " + message);
 	if(token == null || token == null || 
@@ -183,7 +192,7 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else {
 		data = parse(data);
 	}
-	
+
 	var log = new Log();
 	var operation = "";
 	var paramMap = new Packages.java.util.HashMap();
@@ -191,8 +200,6 @@ var loadPayload = function(identifier , operationCode, data) {
 	paramMap.put("PayloadOrganization", "WSO2");
 		
 	var isProfile = false;
-	
-	log.error("operationCode >>>>>>>>>>>>>>>>>> " + operationCode);	
 	
 	if(operationCode == "503A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_LOCK;  
@@ -204,7 +211,7 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else if(operationCode == "500A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_INFORMATION; 
 	} else if(operationCode == "508A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS; 
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CAMERA_SETTINGS;
 		paramMap.put("PayloadIdentifier", payloadIdentifier["CAMERA"]);
 		if(data.function == "Disable") {
 			paramMap.put("AllowCamera", false);
@@ -213,7 +220,7 @@ var loadPayload = function(identifier , operationCode, data) {
 		}
 		isProfile = true;
 	} else if(operationCode == "507A") {
-		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS; 
+		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WIFI_SETTINGS;
 		paramMap.put("PayloadIdentifier", payloadIdentifier["WIFI"]);
 		paramMap.put("PayloadDisplayName", "WIFI Configurations");
 		paramMap.put("Password", data.password);
@@ -341,10 +348,11 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_APPLICATION;
 		paramMap.put("Identifier", data.identity);
 		
-	} else if(operationCode == "529A") {
+	} else if(operationCode == "502P") {
 		
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.REMOVE_PROFILE;
-		paramMap.put("Identifier", data.identifier);
+
+		paramMap.put("Identifier", data.uuid);
 		
 	} else if(operationCode == "528A") {
 		
@@ -360,13 +368,14 @@ var loadPayload = function(identifier , operationCode, data) {
 
 	paramMap.put("PayloadUUID", identifier);
 	paramMap.put("CommandUUID", identifier);
-	
-	try {
-		var payloadLoader = new Packages.com.wso2mobile.ios.mdm.payload.PayloadLoader();
-		var responseData = payloadLoader.loadPayload(operation, paramMap, isProfile);	
-	} catch (e) {
-		log.error(e);
-	}
+
+    var responseData;
+    try {
+        var payloadLoader = new Packages.com.wso2mobile.ios.mdm.payload.PayloadLoader();
+        responseData = payloadLoader.loadPayload(operation, paramMap, isProfile);
+    } catch (e) {
+        log.error(e);
+    }
 			
 	return responseData;
 }
@@ -376,6 +385,14 @@ var loadPayload = function(identifier , operationCode, data) {
 */
 var getDatabase = function(){
     var db = application.get(DB_SESSION);
+  	if(db){
+  		try{
+  			db.query("SELECT 1 FROM dual");
+  		}catch(e){
+  			log.info("New connection was taken");
+  			db = null;
+  		}
+  	}
     if(!db){
         try{
             db = new Database("EMM_DB");

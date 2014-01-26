@@ -93,7 +93,12 @@ var mvc = (function () {
 				    print(f.getStream());
 					f.close();
 				}catch(e){
-					response.sendError(404);
+					try{
+						response.sendError(404);
+					}catch(e){
+						//Catch an exceptional situation where Android and iOS doesn't return the 
+						//error code
+					}
 				}
 			}else{
 				print(getResource(resourceURL));
@@ -272,7 +277,7 @@ var mvc = (function () {
 					try{
 						response.sendError(404);
 					}catch (e) {
-						new Log().debug(e);
+						// new Log().debug(e);
 					}
 				}else{
 					if(template!=undefined){
@@ -288,13 +293,7 @@ var mvc = (function () {
 				}
 			}
 			catch(e){
-				log.info(e);
-				// log.info(e);
-				if(e==appRedirect){
-					log.error("User redirected");
-				}else{
-					//log.error(e);
-				}
+				//Error is printed in debug. 
 			}
         },
 		registerHelper: function(helperName, helperFunction){

@@ -5,8 +5,6 @@ var notification = (function () {
 		var notification = new notificationModule(db);
 		router.get('notifications/devices/{deviceid}', function(ctx){
 		    var result = notification.getNotifications(ctx);
-            log.info("Test Notification Result"+result);
-
 		    if(result!= null && result != undefined && result[0] != null && result[0] != undefined){
 		        print(result);
 		        response.status = 200;
@@ -20,14 +18,13 @@ var notification = (function () {
 		});
 
 		router.post('notifications', function(ctx){
-            log.info("Android notification router");
 		    var result = notification.addNotification(ctx);
 		});
 
 		router.get('refresh/devices/{deviceid}/{operation}', function(ctx){
 		    var result = notification.getLastRecord(ctx);
 		    if(result!= null && result != undefined){
-                log.info("Test Refresh Result"+stringify(result));
+                log.debug("Refresh:- occured");
 		        print(result);
 		        response.status = 200;
 		    }else{

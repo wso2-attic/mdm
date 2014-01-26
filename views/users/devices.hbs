@@ -9,7 +9,7 @@
 				<div class="block-header">
 					<div class="block-header-title pull-left">
 						{{#data.user}}
-						{{firstName}} {{lastName}}'s Devices
+						{{firstName}} {{lastName}}'s Devices <span style="font-size: x-small"> ({{username}})</span>
 						{{/data.user}}
 					</div>
 
@@ -233,7 +233,14 @@
 													<i class="icon-remove-sign" style="color:#B94A48"></i>
 													{{/if}}
 												</div>
+												
+												{{else}}
+													<div style="font-size: x-small; padding-left: 15px; padding-top: 5px ">No policies to display</div>
+												
 												{{/policies.policies}}
+												
+												
+												
 											</div>
 
 										</div>
@@ -313,7 +320,7 @@
 											<div class="block-body container-fluid raw-fluid well-small">
 											
 											<div id="app-list-{{@index}}" class="block-body container-fluid raw-fluid well-small">
-													<span style="font-size: small;">No apps to display</span>
+													<span style="font-size: small; padding-left: 10px; padding-top: 10px ">No apps to display</span>
 											</div>
 												
 												
