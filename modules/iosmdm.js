@@ -164,7 +164,8 @@ var iosmdm = (function() {
 				var plistExtractor = new Packages.com.wso2mobile.ios.mdm.plist.PlistExtractor();
 				var apnsStatus = plistExtractor.extractAPNSResponse(contentString);
 
-				var commandUUID = apnsStatus.getCommandUUID();
+
+         		var commandUUID = apnsStatus.getCommandUUID();
 
 				if (("Acknowledged").equals(apnsStatus.getStatus())) {
 					log.debug("Acknowledged >> " + apnsStatus.getOperation());
@@ -195,11 +196,20 @@ var iosmdm = (function() {
 					ctx.data = responseData;
 					ctx.msgID = commandUUID;
 
+                    log.debug(" Command >>>>> " + stringify(ctx) );
+
 					var pendingExist = notification.addIosNotification(ctx);
+
+                    //log.debug("pendingExist >>>>>>>>>>>>>>>>>>>>>>> " + stringify(pendingExist));
+                    //log.debug("pendingExist >>>>>>>>>>>>>>>>>>>>>>> " + pendingExist);
+
+                    if (pendingExist != true) {
+                        ctx = {};
+                        ctx.id = commandUUID;
+                        notification.discardOldNotifications(ctx);
+                    }
 					
-					ctx = {};
-					ctx.id = commandUUID;
-					notification.discardOldNotifications(ctx);
+
 
 				} else if (("Error").equals(apnsStatus.getStatus())) {
 					log.error("Error " + apnsStatus.getError());
@@ -212,6 +222,10 @@ var iosmdm = (function() {
 
 				var ctx = {};
 				ctx.udid = stringify(apnsStatus.getUdid());
+
+                log.debug("ctx.udid >>>>> " + stringify(ctx));
+
+                log.debug("Nirnjn >>>> " + stringify(ctx));
 				var operation = device.getPendingOperationsFromDevice(ctx);
 
                 if (operation != null) {

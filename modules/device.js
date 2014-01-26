@@ -1011,7 +1011,13 @@ var device = (function () {
             var deviceList = db.query(sqlscripts.devices.select20, parse(ctx.udid));
             if(deviceList[0]!=null) {
                 var deviceID = String(deviceList[0].id);
+
+                log.debug("deviceID >>>>> " + deviceID);
+                log.debug("Device List >>>> " + stringify(deviceList));
+
                 var pendingFeatureCodeList=db.query(sqlscripts.notifications.select3, deviceID);
+
+                log.debug("Pending >>>> " + stringify(pendingFeatureCodeList));
 
                 if(pendingFeatureCodeList!=undefined && pendingFeatureCodeList != null && pendingFeatureCodeList[0]!= undefined && pendingFeatureCodeList[0]!= null){
                     var id = pendingFeatureCodeList[0].id;
@@ -1020,6 +1026,9 @@ var device = (function () {
                     if(feature_code == "500P" || feature_code == "502P") {
 
                         var message = parse(pendingFeatureCodeList[0].message);
+
+                            log.debug("message >>>>> " + stringify(message));
+
                         var received_data = pendingFeatureCodeList[0].received_data;
 
                         if(received_data == null || received_data == '') {
@@ -1036,6 +1045,8 @@ var device = (function () {
 
                             db.query(sqlscripts.notifications.update2, stringify(arrEmptyReceivedData), id);
                             received_data = parse(stringify(arrEmptyReceivedData));
+
+                            log.debug("received message >>>>> " +stringify(received_data));
                         } else {
                             received_data = parse(received_data);
                         }
