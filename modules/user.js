@@ -171,7 +171,7 @@ var user = (function () {
                 	 proxy_user.firstName = 'Admin';
                 	 proxy_user.lastName = 'Admin';
                 }
-                
+
                 
                 return proxy_user;
             } catch(e) {

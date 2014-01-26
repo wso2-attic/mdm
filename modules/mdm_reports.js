@@ -153,7 +153,7 @@ var mdm_reports = (function () {
                  for(var i=0; i< result.length;i++){
                      result[i].imei = parse(result[i].properties).imei;
                      if(result[i].status == 'A'){
-                        result[i].status = 'Active';
+                        result[i].status = 'Policy Compliance';
                      }else if(result[i].status == 'PV'){
                         result[i].status = 'Policy Violated';
                      }else{
