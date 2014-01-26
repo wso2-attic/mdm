@@ -132,6 +132,9 @@ var permission = (function () {
             var entitlement = require('policy').entitlement;
             try{
                 var samlResponse = session.get("samlresponse");
+                /*if(typeof samlResponse == 'undefined' || samlResponse == null || samlResponse ==""){
+                    return "error";
+                }*/
                 var saml = require("/modules/saml.js").saml;
                 var backEndCookie = saml.getBackendCookie(samlResponse);
                 entitlement.setAuthCookie(backEndCookie);
