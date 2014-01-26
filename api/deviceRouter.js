@@ -3,7 +3,7 @@ var device = (function () {
     var sqlscripts = require('/sqlscripts/mysql.js');
     var userModule = require('user.js').user;
     var common = require("/modules/common.js");
-	    var user;
+    var user;
     var module = function (db,router) {
 		var deviceModule = require('modules/device.js').device;
 		var device = new deviceModule(db);
@@ -155,51 +155,52 @@ var device = (function () {
                 }
             }
 		});
-
 		router.post('devices/AppInstall', function(ctx){
-            ctx.operation = "INSTALLAPP";
-			for (var i = ctx['data'].length - 1; i >= 0; i--){
-				var operation =  ctx['data'][i];
-				log.info('>>>>>>>>>');
-				log.info(operation);
-				var result = device.sendToDevice({data:operation, operation: ctx.operation, platform_id: operation.platform_id, deviceid: String(operation.deviceid)});
-			};
+            if(common.checkAuth(ctx)){
+                 ctx.operation = "INSTALLAPP";
+                for (var i = ctx['data'].length - 1; i >= 0; i--){
+                    var operation =  ctx['data'][i];
+                    var result = device.sendToDevice({data:operation, operation: ctx.operation, platform_id: operation.platform_id, deviceid: String(operation.deviceid)});
+                };
+            }
 		});
 
 		router.post('devices/AppUNInstall', function(ctx){
-            ctx.operation = "UNINSTALLAPP";
-		    for (var i = ctx['data'].length - 1; i >= 0; i--){
-				var operation =  ctx['data'][i];
-				var result = device.sendToDevice({data:operation, operation: ctx.operation, platform_id: operation.platform_id, deviceid: String(operation.deviceid)});
-			};
+            if(common.checkAuth(ctx)){
+                ctx.operation = "UNINSTALLAPP";
+                for (var i = ctx['data'].length - 1; i >= 0; i--){
+                    var operation =  ctx['data'][i];
+                    var result = device.sendToDevice({data:operation, operation: ctx.operation, platform_id: operation.platform_id, deviceid: String(operation.deviceid)});
+                };
+            }
 		});
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
-            		log.info("Device IDDDDD"+ctx.deviceid);
-            		var username = common.getCurrentLoginUser();
-            		log.info("Router 1 :"+username);
-            		if(username==null){
-                		response.status = 404;
-                		response.content = "Please Login Again";
-            		}
-            		log.info(isAdmin(username));
-            		log.info(checkOwnership(ctx.deviceid,username));
-            		if(isAdmin(username)||checkOwnership(ctx.deviceid,username)){
-                		if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
-                    			var state = device.getCurrentDeviceState();
-                    			if(state == "A"){
-                        			device.sendToDevice(ctx);
-                        			response.status = 200;
-                        			response.content = "success";
-                   			 }
-                		}else{
-                    			device.sendToDevice(ctx);
-                    			response.status = 200;
-                    			response.content = "success";
-                		}
-            		}else{
-                		print("You are not Authorized to Perform Operations for Others Devices");
-            		}
+    		log.info("Device IDDDDD"+ctx.deviceid);
+    		var username = common.getCurrentLoginUser();
+    		log.info("Router 1 :"+username);
+    		if(username==null){
+        		response.status = 404;
+        		response.content = "Please Login Again";
+    		}
+    		log.info(isAdmin(username));
+    		log.info(checkOwnership(ctx.deviceid,username));
+    		if(isAdmin(username)||checkOwnership(ctx.deviceid,username)){
+        		if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
+            			var state = device.getCurrentDeviceState();
+            			if(state == "A"){
+                			device.sendToDevice(ctx);
+                			response.status = 200;
+                			response.content = "success";
+           			 }
+        		}else{
+            			device.sendToDevice(ctx);
+            			response.status = 200;
+            			response.content = "success";
+        		}
+    		}else{
+        		print("You are not Authorized to Perform Operations for Others Devices");
+    		}
 
 		});
 
@@ -257,13 +258,17 @@ var device = (function () {
 		});
 		
 		router.post('devices/{deviceid}/AppInstall', function(ctx){
-            ctx.operation = "INSTALLAPP";
-		    var result = device.sendToDevice(ctx);
+            if(common.checkAuth(ctx)){
+                ctx.operation = "INSTALLAPP";
+                var result = device.sendToDevice(ctx);
+            }
 		});
 
 		router.post('devices/{deviceid}/AppUNInstall', function(ctx){
-            ctx.operation = "UNINSTALLAPP";
-		    var result = device.sendToDevice(ctx);
+            if(common.checkAuth(ctx)){
+                ctx.operation = "UNINSTALLAPP";
+                var result = device.sendToDevice(ctx);
+            }
 		});
     };
     // prototype
