@@ -257,6 +257,12 @@ var device = (function () {
 		    }
 		});
 		
+        router.post('devices/{deviceid}/WEBCLIP', function(ctx){
+            if(common.checkAuth(ctx)){
+                ctx.operation = "WEBCLIP";
+                var result = device.sendToDevice(ctx);
+            }
+        });
 		router.post('devices/{deviceid}/AppInstall', function(ctx){
             if(common.checkAuth(ctx)){
                 ctx.operation = "INSTALLAPP";
