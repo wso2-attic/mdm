@@ -88,6 +88,15 @@ var getCurrentDateTime = function(){
     return fdate;
 }
 
+var getCurrentDateTimeAdjusted = function() {
+    var seconds = arguments[0];
+    var date = new Date();
+    date.setTime(date.getTime() + (seconds*1000));
+
+    var fdate = date.getFullYear() + '-' +('00' + (date.getMonth()+1)).slice(-2) + '-' +('00' + date.getDate()).slice(-2) + ' ' + ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2) + ':' + ('00' + date.getSeconds()).slice(-2);
+    return fdate;
+}
+
 var getFormattedDate = function(value){
     if(value==null && value == undefined){
         return "";

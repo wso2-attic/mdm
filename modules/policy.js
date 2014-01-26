@@ -732,11 +732,16 @@ var policy = (function () {
             return null;
         },
         monitoring:function(ctx){
+            var monitor_interval = require("/config/config.json").monitor_interval;
+            monitor_interval = monitor_interval * 60 * 1000;
+            log.debug("Monitor Interval >>>>>> " + monitor_interval);
+
             setInterval(
            	 function(ctx){
 	                device.monitor(ctx);
 	            }
-            ,100000);
+            ,monitor_interval);
+            //,
         }
     };
     return module;
