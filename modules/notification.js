@@ -189,8 +189,6 @@ var notification = (function() {
             }
         },
         addNotification: function(ctx){
-			log.debug("Android - Monitoring occured");
-			log.debug("Current Message ID " + ctx.msgID);
 			// log.debug("Android Notification >>>>> data" + ctx.data);
 			var recivedDate = common.getCurrentDateTime();
 
@@ -200,7 +198,8 @@ var notification = (function() {
 					result[0] == null || result[0] == undefined) {
 				return;
 			}
-			
+			log.debug("[Android] - Device contacted :"+result[0].device_id);
+			log.debug("Current Message ID " + ctx.msgID);
 			var deviceId = result[0].device_id;
 			var featureCode = result[0].feature_code;
 

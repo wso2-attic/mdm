@@ -662,10 +662,10 @@ var policy = (function () {
                     var devices2 = db.query(sqlscripts.devices.select36, common.getTenantID());
 
                     for(var j=0;j<devices2.length;j++){
-                        var tempId = getPolicyIdFromDevice(devices2[j].id);
-                        if(tempId == policyId){
+                        //var tempId = getPolicyIdFromDevice(devices2[j].id);
+                        //if(tempId == policyId){
                             device.sendToDevice({'deviceid':devices2[j].id,'operation':'POLICY','data':payLoad, 'policyid':ctx.policyid, 'policypriority': 'PLATFORMS'});
-                        }
+                        //}
                     }
 
                 }else{
@@ -673,10 +673,10 @@ var policy = (function () {
                     var devices3 = db.query(sqlscripts.devices.select37);
 
                     for(var j=0;j<devices3.length;j++){
-                        var tempId = getPolicyIdFromDevice(devices3[j].id);
-                        if(tempId == policyId){
+                        //var tempId = getPolicyIdFromDevice(devices3[j].id);
+                        //if(tempId == policyId){
                             device.sendToDevice({'deviceid':devices3[i].id,'operation':'POLICY','data':payLoad, 'policyid':ctx.policyid, 'policypriority': 'PLATFORMS'});
-                        }
+                        //}
                     }
                 }
 
@@ -689,10 +689,10 @@ var policy = (function () {
                 for(var j=0;j<users2.length;j++){
                     var devices4 = db.query(sqlscripts.devices.select26, users2[j].username, common.getTenantID());
                     for(var k = 0;k<devices4.length;k++){
-                        var tempId = getPolicyIdFromDevice(devices4[k].id);
-                        if(tempId == policyId){
+                        //var tempId = getPolicyIdFromDevice(devices4[k].id);
+                        //if(tempId == policyId){
                             device.sendToDevice({'deviceid':devices4[k].id,'operation':'POLICY','data':payLoad, 'policyid':ctx.policyid, 'policypriority': 'ROLES'});
-                        }
+                        //}
                     }
                 }
             }
