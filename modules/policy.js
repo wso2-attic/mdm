@@ -506,9 +506,6 @@ var policy = (function () {
                     }
                 }
             }
-
-            log.debug("Revoke Users >>>>>>>>>>>>>>>>> " + stringify(revokeUsers));
-            log.debug("Assign Users >>>>>>>>>>>> " + stringify(assignUsers));
         },
         enforceGroupsToPolicy:function(){
 
@@ -544,9 +541,6 @@ var policy = (function () {
                     }
                 }
             }
-
-            log.debug("Revoke Groups >>>>>>>>>>>>>>>>> " + stringify(revokeGroups));
-            log.debug("Assign Groups >>>>>>>>>>>> " + stringify(assignGroups));
         },
         enforcePlatformsToPolicy:function(){
 
@@ -579,9 +573,6 @@ var policy = (function () {
                     }
                 }
             }
-
-            log.debug("Revoke Platforms >>>>>>>>>>>>>>>>> " + stringify(revokePlatforms));
-            log.debug("Assign Platforms >>>>>>>>>>>> " + stringify(assignPlatforms));
         },
 
 
@@ -643,8 +634,6 @@ var policy = (function () {
                 var newMamPolicy = device.separateMAMPolicy(mamPolicy);
                 payLoad = newMamPolicy;
             }
-
-            log.debug("PayLoad >>>>>> " + stringify(payLoad));
 
             var users1 = db.query(sqlscripts.user_policy_mapping.select1, String(policyId));
             for(var i = 0;i<users1.length;i++){
@@ -733,7 +722,6 @@ var policy = (function () {
         monitoring:function(ctx){
             var monitor_interval = require("/config/config.json").monitor_interval;
             monitor_interval = monitor_interval * 60 * 1000;
-            log.debug("Monitor Interval >>>>>> " + monitor_interval);
 
             setInterval(
            	 function(ctx){

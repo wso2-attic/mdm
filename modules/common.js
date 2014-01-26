@@ -113,9 +113,9 @@ var initAPNS = function(deviceToken, magicToken) {
 		return;
 	}
 
-    log.debug("initAPNS >>>>>>>>");
-    log.debug("Device Token: >>>>>> " + deviceToken);
-    log.debug("Magic Token: >>>>>> " + magicToken);
+    log.debug("initAPNS >> ");
+    log.debug("Device Token: >> " + deviceToken);
+    log.debug("Magic Token: >> " + magicToken);
 
 	try {
 		var apnsInitiator = new Packages.com.wso2mobile.ios.apns.MDMPushNotificationSender();
@@ -134,7 +134,7 @@ var initAPNS = function(deviceToken, magicToken) {
 }
 
 var sendIOSPushNotifications = function(token, message) {
-    log.debug("sendIOSPushNotifications >>>>>>>>");
+    log.debug("Send IOS Push Notifications");
     log.debug("token: >>>>>> " + token);
     log.debug("message: >>>>>> " + message);
 	if(token == null || token == null || 
@@ -200,8 +200,6 @@ var loadPayload = function(identifier , operationCode, data) {
 	paramMap.put("PayloadOrganization", "WSO2");
 		
 	var isProfile = false;
-	
-	log.error("operationCode >>>>>>>>>>>>>>>>>> " + operationCode);	
 	
 	if(operationCode == "503A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_LOCK;  
@@ -370,7 +368,6 @@ var loadPayload = function(identifier , operationCode, data) {
 
 	paramMap.put("PayloadUUID", identifier);
 	paramMap.put("CommandUUID", identifier);
-    log.debug("CommandUUID >>>>>>>>>>> " + identifier);
 
     var responseData;
     try {

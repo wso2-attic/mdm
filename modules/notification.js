@@ -158,8 +158,6 @@ var notification = (function() {
                 		}
                 	}
                     try{
-                        log.info("dddddddddddddd :"+device_id);
-                        log.info("ffffffffffff :"+featureCode);
                         db.query(sqlscripts.notifications.delete2, device_id,"501P");
                     }catch(e){
                         log.info(e);
@@ -189,7 +187,6 @@ var notification = (function() {
             }
         },
         addNotification: function(ctx){
-			// log.debug("Android Notification >>>>> data" + ctx.data);
 			var recivedDate = common.getCurrentDateTime();
 
 			var result = db.query(sqlscripts.notifications.select9, ctx.msgID);
@@ -294,8 +291,6 @@ var notification = (function() {
 					obj.status = arrayFromDatabase[i].status;
 					newArray.push(obj);
 					if (obj.status == false) {
-						log.info(obj.status);
-						log.info(ctx.deviceid);
 						device.changeDeviceState(ctx.deviceid, "C");
 					}
 

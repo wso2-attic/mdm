@@ -6,6 +6,10 @@ treeData = null;
 $(document).ready( function () {
 	
 	var role = getURLParameter("group");
+	
+	if(role == null){
+		return;
+	}
 		
 	jQuery.ajax({
 		url : getServiceURLs("permissionFeatures", role),

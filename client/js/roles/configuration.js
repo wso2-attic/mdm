@@ -189,52 +189,7 @@ $(".btn-invite").click(function() {
 
 $(document).ready( function () {
         
-        jQuery.ajax({
-                url : getServiceURLs("permissionFeatures"),
-                type : "GET",                        
-                contentType : "application/json",
-                dataType : "json",
-
-                success : function(datas){
-                 treeData = datas;
-                
-                
-                $("#tree3").dynatree({
-      checkbox: true,
-      selectMode: 3,
-      children: treeData,
-      minExpandLevel: 2,
-      onSelect: function(select, node) {
-        // Get a list of all selected nodes, and convert to a key array:
-        var selKeys = $.map(node.tree.getSelectedNodes(), function(node){
-          return node.data.key;
-        });
-        $("#echoSelection3").text(selKeys.join(", "));
-
-        // Get a list of all selected TOP nodes
-        var selRootNodes = node.tree.getSelectedNodes(true);
-        // ... and convert to a key array:
-        var selRootKeys = $.map(selRootNodes, function(node){
-          return node.data.key;
-        });
-        $("#echoSelectionRootKeys3").text(selRootKeys.join(", "));
-        $("#echoSelectionRoots3").text(selRootNodes.join(", "));
-      },
-      onDblClick: function(node, event) {
-        node.toggleSelect();
-      },
-      onKeydown: function(node, event) {
-        if( event.which == 32 ) {
-          node.toggleSelect();
-          return false;
-        }
-      }
-    });
-                
-                
-                
-                }
-        });
+       
         
                 
         
