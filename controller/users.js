@@ -112,9 +112,6 @@ view = function(appController) {
 };
 
 devices = function(appController) {
-	
-		
-	log.info("Test devices >>>>>>>>");
 	context = appController.context();
 	var userId = request.getParameter('user');
 	if (!userId) {
@@ -185,7 +182,6 @@ devices = function(appController) {
 			featureList = device.getFeaturesFromDevice({
 				"deviceid" : devices[i].id, role:context.contextData.user.role
 			});
-			log.info("Feature List >>>>>>>>>>" + featureList);
 		} catch(e) {
 			featureList = [];
 		}

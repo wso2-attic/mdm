@@ -277,7 +277,7 @@ var mvc = (function () {
 					try{
 						response.sendError(404);
 					}catch (e) {
-						new Log().debug(e);
+						// new Log().debug(e);
 					}
 				}else{
 					if(template!=undefined){

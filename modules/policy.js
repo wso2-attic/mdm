@@ -368,9 +368,8 @@ var policy = (function () {
             return array;
         },
         getUsersByPolicy:function(ctx){
-            var allUsers = user.getAllUserNames(ctx);
+            var allUsers = user.getAllUserNames();
             var result = db.query(sqlscripts.user_policy_mapping.select1, ctx.policyid);
-
             var array = new Array();
             if(result == undefined || result == null || result[0] == undefined || result[0] == null){
                 for(var i =0; i < allUsers.length;i++){
@@ -488,12 +487,12 @@ var policy = (function () {
                 var payLoad;
                 var mdmPolicy = parse(policies[0].content);
                 var mamPolicy = parse(policies[0].mam_content);
-                if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0 ){
                     var newMamPolicy = device.separateMAMPolicy(mamPolicy);
                     payLoad = mdmPolicy.concat(newMamPolicy);
-                } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+                } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                     payLoad = mdmPolicy;
-                } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                     var newMamPolicy = device.separateMAMPolicy(mamPolicy);
                     payLoad = newMamPolicy;
                 }
@@ -502,6 +501,7 @@ var policy = (function () {
                 for(var i=0; i<assignUsers.array.length; ++i){
                     var devices = db.query(sqlscripts.devices.select26, assignUsers.array[i], tenantid);
                     for (var j=0; j<devices.length; ++j){
+                        log.debug(" >>>>>>>>>> " + stringify(payLoad));
                         device.sendToDevice({'deviceid':devices[j].id,'operation':'POLICY','data':payLoad, 'policyid':assignUsers.policyid, 'policypriority': 'USERS'});
                     }
                 }
@@ -523,12 +523,12 @@ var policy = (function () {
                 var payLoad;
                 var mdmPolicy = parse(policies[0].content);
                 var mamPolicy = parse(policies[0].mam_content);
-                if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
                     var newMamPolicy = device.separateMAMPolicy(mamPolicy);
                     payLoad = mdmPolicy.concat(newMamPolicy);
-                } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+                } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                     payLoad = mdmPolicy;
-                } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                     var newMamPolicy = device.separateMAMPolicy(mamPolicy);
                     payLoad = newMamPolicy;
                 }
@@ -561,12 +561,12 @@ var policy = (function () {
                 var payLoad;
                 var mdmPolicy = parse(policies[0].content);
                 var mamPolicy = parse(policies[0].mam_content);
-                if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+                if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
                     var newMamPolicy = device.separateMAMPolicy(mamPolicy);
                     payLoad = mdmPolicy.concat(newMamPolicy);
-                } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+                } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                     payLoad = mdmPolicy;
-                } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+                } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                     var newMamPolicy = device.separateMAMPolicy(mamPolicy);
                     payLoad = newMamPolicy;
                 }
@@ -635,12 +635,12 @@ var policy = (function () {
             var payLoad;
             var mdmPolicy = parse(policies[0].content);
             var mamPolicy = parse(policies[0].mam_content);
-            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
                 var newMamPolicy = device.separateMAMPolicy(mamPolicy);
                 payLoad = mdmPolicy.concat(newMamPolicy);
-            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                 payLoad = mdmPolicy;
-            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                 var newMamPolicy = device.separateMAMPolicy(mamPolicy);
                 payLoad = newMamPolicy;
             }
@@ -732,11 +732,16 @@ var policy = (function () {
             return null;
         },
         monitoring:function(ctx){
+            var monitor_interval = require("/config/config.json").monitor_interval;
+            monitor_interval = monitor_interval * 60 * 1000;
+            log.debug("Monitor Interval >>>>>> " + monitor_interval);
+
             setInterval(
            	 function(ctx){
 	                device.monitor(ctx);
 	            }
-            ,100000);
+            ,monitor_interval);
+            //,
         }
     };
     return module;

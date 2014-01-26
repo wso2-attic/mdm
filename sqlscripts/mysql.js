@@ -47,10 +47,12 @@ var devices = {
     'select40':"SELECT devices.tenant_id as tenant_id, platforms.type_name as platform_type FROM devices JOIN platforms ON platforms.id = devices.platform_id WHERE devices.id = ? AND devices.tenant_id = ?",
     'select41':"SELECT id FROM devices WHERE reg_id = ?",
     'select42':"SELECT devices.id FROM devices JOIN platforms ON platforms.id = devices.platform_id WHERE LOWER(platforms.type_name) = LOWER(?) AND tenant_id = ?",
-   
+    'select43':"SELECT properties, platform_id FROM devices WHERE id = ?",
+    'select44':"SELECT * from devices",
+
     'insert1' : "INSERT INTO devices (tenant_id, os_version, created_date, properties, reg_id, status, deleted, user_id, platform_id, vendor, udid, wifi_mac) VALUES(?, ?, ?, ?, ?,'A','0', ?, ?, ?,'0', ?)",
     'insert2' : "INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
-    'select43':"SELECT properties, platform_id FROM devices WHERE id = ?",
+    
 
     'update1' : "UPDATE devices SET status = ? WHERE id = ?",
     'update2' : "UPDATE devices SET deleted = 0 WHERE reg_id = ? AND tenant_id = ?",
@@ -149,8 +151,8 @@ var policies = {
     'select14': "SELECT * from  policies WHERE name = ? AND tenant_id = ?",
     'select15': "SELECT policies.id as policyid, policies.content as data, policies.mam_content as mam_data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ? && policies.tenant_id = ? ORDER BY policies.id DESC",
 
-    'insert1' : "insert into policies (name,content,type,category, tenant_id) values (?,?,?,?,?)",
-    'insert2' : "insert into policies (name,content,type,category, tenant_id) values (?,'[]', 1, 1,?)",
+    'insert1' : "insert into policies (name,content,type,category, tenant_id, mam_content) values (?,?,?,?,?, '[]')",
+    'insert2' : "insert into policies (name,content,type,category, tenant_id, mam_content) values (?,'[]', 1, 1,?, '[]')",
 
     'update1' : "UPDATE policies SET content= ?,type = ? WHERE name = ? AND tenant_id = ?",
 

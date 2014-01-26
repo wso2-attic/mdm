@@ -109,12 +109,12 @@ var device = (function () {
             var policyPayLoad;
             var mdmPolicy = parse(upresult[0].data);
             var mamPolicy = parse(upresult[0].mam_data);
-            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = mdmPolicy.concat(newMamPolicy);
-            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                 policyPayLoad = mdmPolicy;
-            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = newMamPolicy;
             }
@@ -134,12 +134,12 @@ var device = (function () {
             var policyPayLoad;
             var mdmPolicy = parse(ppresult[0].data);
             var mamPolicy = parse(ppresult[0].mam_data);
-            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = mdmPolicy.concat(newMamPolicy);
-            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                 policyPayLoad = mdmPolicy;
-            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = newMamPolicy;
             }
@@ -155,12 +155,12 @@ var device = (function () {
             var policyPayLoad;
             var mdmPolicy = parse(gpresult[0].data);
             var mamPolicy = parse(gpresult[0].mam_data);
-            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy != null && mamPolicy[0] != null){
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = mdmPolicy.concat(newMamPolicy);
-            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy == null && mamPolicy[0] == null){
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
                 policyPayLoad = mdmPolicy;
-            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy != null && mamPolicy[0] != null){
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
                 var newMamPolicy = separateMAMPolicy(mamPolicy);
                 policyPayLoad = newMamPolicy;
             }
@@ -173,18 +173,62 @@ var device = (function () {
         return null;
     }
 
+    function getPolicyMonitoringPayLoad() {
+        var deviceId = arguments[0];
+        var category = arguments[1];
+
+        var devices = db.query(sqlscripts.devices.select1, deviceId);
+        if (devices == null) {
+            return null;
+        } else if (devices[0].user_id == null) {
+            return null;
+        }
+
+        var devicePolicy = db.query("SELECT policies.id as policyid, policies.content as data, policies.mam_content as mam_data, policies.type as type, policy_priority.type as policytype FROM policies JOIN device_policy ON device_policy.policy_id = policies.id JOIN policy_priority ON policy_priority.id = device_policy.policy_priority_id WHERE device_policy.device_id = ? AND device_policy.tenant_id = ? AND device_policy.status = 'A' ORDER BY datetime DESC", deviceId, devices[0].tenant_id);
+
+        if (devicePolicy != null && devicePolicy != undefined && devicePolicy[0] != null && devicePolicy[0] != undefined) {
+            log.debug("Policy Monitor Payload >>>>> " + stringify(devicePolicy));
+            var policyPayLoad;
+            var mdmPolicy = parse(devicePolicy[0].data);
+            var mamPolicy = parse(devicePolicy[0].mam_data);
+            if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length != 0){
+                var newMamPolicy = separateMAMPolicy(mamPolicy);
+                policyPayLoad = mdmPolicy.concat(newMamPolicy);
+            } else if (mdmPolicy != null && mdmPolicy[0] != null && mamPolicy.length == 0){
+                policyPayLoad = mdmPolicy;
+            } else if (mdmPolicy == null && mdmPolicy[0] == null && mamPolicy.length != 0){
+                var newMamPolicy = separateMAMPolicy(mamPolicy);
+                policyPayLoad = newMamPolicy;
+            }
+            var obj = {};
+            obj.payLoad = policyPayLoad;
+            obj.type = devicePolicy[0].type;
+            obj.policypriority = devicePolicy[0].policytype;
+            obj.policyid = devicePolicy[0].policyid;
+            return obj;
+        }
+
+        return null;
+    }
+
     function separateMAMPolicy() {
         var policyArray = new Array();
         var mamPolicy = arguments[0];
-        if (mamPolicy[0].code == "509B") {
-            var mamData = mamPolicy[0].data;
+        for (var j = 0; j < mamPolicy.length; ++j) {
+            var mamData = mamPolicy[j].data;
             for (var i=0; i<mamData.length; ++i) {
                 var newPolicyFormat = {};
-                newPolicyFormat.code = "509A";
+                if (mamPolicy[j].code == "509B") {
+                    newPolicyFormat.code = "509A";
+                } else {
+                    newPolicyFormat.code = mamPolicy[j].code;
+                }
                 newPolicyFormat.data = mamData[i];
                 policyArray.push(newPolicyFormat);
             }
         }
+        log.info("___");
+        log.info(mamPolicy);
         return policyArray;
     }
 
@@ -312,7 +356,7 @@ var device = (function () {
         var tenantID = common.getTenantID();
         var policytype = ctx.policypriority;
         var device_policy;
-        var datetime = common.getCurrentDateTime();
+        var datetime = common.getCurrentDateTimeAdjusted("-1");
 
         var devices = db.query(sqlscripts.devices.select40, deviceid, tenantID);
 
@@ -322,15 +366,16 @@ var device = (function () {
             var existDevicePolicy = db.query(sqlscripts.device_policy.select3, deviceid, tenantID);
 
             if (existDevicePolicy != null && existDevicePolicy[0] != null){
+
                 //Check if the new priority has higher precedence then remove old and apply new
                 if (policypriority[0].priority <= existDevicePolicy[0].priority){
                     //Remove and apply new policy
                     if (devices[0].platform_type == "iOS") {
-                        sendMessageToIOSDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':parse(existDevicePolicy[0].payload_uids), 'policyid':policyid});
+                        sendMessageToIOSDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':parse(existDevicePolicy[0].payload_uids), 'policyid':existDevicePolicy[0].policy_id, 'newdatetime': datetime});
                     } else {
                         var revokepolicy = {};
-                        revokepolicy.policyid = policyid;
-                        sendMessageToAndroidDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':revokepolicy});
+                        revokepolicy.policyid = existDevicePolicy[0].policy_id;
+                        sendMessageToAndroidDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':revokepolicy, 'newdatetime': datetime});
                     }
 
                     db.query(sqlscripts.device_policy.update1, existDevicePolicy[0].id);
@@ -340,6 +385,7 @@ var device = (function () {
             if (policyid != null) {
                 device_policy = db.query(sqlscripts.device_policy.select4, deviceid, tenantID);
                 datetime = common.getCurrentDateTime();
+                log.debug("DateTime after >>>>>>> " + datetime);
                 if (device_policy[0] == null) {
                     //Check platform and accordingly insert to device_policy table
                     if (devices[0].platform_type == "iOS") {
@@ -413,7 +459,12 @@ var device = (function () {
                 log.info(e);
             }
         }
-        var currentDate = common.getCurrentDateTime();
+        var currentDate;
+        if (ctx.newdatetime != null) {
+            currentDate = ctx.newdatetime;
+        } else {
+            currentDate = common.getCurrentDateTime();
+        }
         db.query(sqlscripts.notifications.insert1, deviceId, -1, payLoad, currentDate, featureCode, userID,featureDescription, tenantID);
 
         // SQL Check
@@ -425,7 +476,7 @@ var device = (function () {
         log.info("Current feature code "+featureCode);
         log.info("Message token "+token);
         if(featureCode=="500P" || featureCode=="502P"){
-            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3, "policy");
+            var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 30240, "POLICY");
         }else{
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
         }
@@ -522,7 +573,12 @@ var device = (function () {
 
         var users = db.query(sqlscripts.devices.select9, ctx.deviceid);
         var userId = users[0].user_id;
-        var datetime =  common.getCurrentDateTime();
+        var datetime;
+        if (ctx.newdatetime != null){
+            datetime = ctx.newdatetime;
+        } else {
+            datetime =  common.getCurrentDateTime();
+        }
 
         log.error("Test operation "+ctx.operation);
 
@@ -658,7 +714,7 @@ var device = (function () {
         while (i < messageArray.length) {
             log.debug("Policy code: " + messageArray[i].code);
 
-            if(messageArray[i].code == "509A") {
+            if(messageArray[i].code == "509A" || messageArray[i].code == "528B") {
 
                 var appInstallInfo = messageArray[i].data;
                 log.debug("appInstallInfo >>>>>>> " + appInstallInfo);
@@ -712,7 +768,6 @@ var device = (function () {
             //Allow iOS (iPhone and iPad) version 5.0 and above
             var userOS; //will either be iOS, Android or unknown
             var userOSversion;  //will be a string, use Number(userOSversion) to convert
-
             var useragent = arguments[0];
             var uaindex;
 
@@ -730,8 +785,6 @@ var device = (function () {
             } else {
                 userOS = 'unknown';
             }
-
-            log.debug(" >>>>>>> " + userOS);
 
             //determine version
             if (userOS == 'iOS' && uaindex > -1) {
@@ -817,10 +870,8 @@ var device = (function () {
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
                 featureArr["description"] = featureList[i].description;
-                log.info("Test1");
                 // log.info(checkPermission(role,deviceId, featureList[i].name,
 				// this));
-                log.info("Test2");
                 featureArr["enable"] = checkPermission(role,deviceId, featureList[i].name, this);
                 // featureArr["enable"] = true;
                 if(featureList[i].template === null || featureList[i].template === ""){
@@ -886,13 +937,13 @@ var device = (function () {
         monitor:function(ctx){
             log.debug("monitor");
 
-            var result = db.query(sqlscripts.devices.select15);
+            var result = db.query(sqlscripts.devices.select44);
             for(var i=0; i<result.length; i++){
                 var deviceId = result[i].id;
                 var operation = 'MONITORING';
                 this.sendToDevice({'deviceid':deviceId,'operation':'INFO','data':{}});
                 this.sendToDevice({'deviceid':deviceId,'operation':'APPLIST','data':{}});
-                var mdmPolicy = getPolicyPayLoad(deviceId,1);
+                var mdmPolicy = getPolicyMonitoringPayLoad(deviceId,1);
                 log.info("Policy Payload :"+mdmPolicy);
                 if(mdmPolicy != undefined && mdmPolicy != null){
                     if(mdmPolicy.payLoad != undefined && mdmPolicy.payLoad != null && mdmPolicy.type != undefined && mdmPolicy.type != null){
@@ -1181,13 +1232,6 @@ var device = (function () {
             }else{
                 return null;
             }
-        },
-        invokePendingOperations:function(){
-            setInterval(
-           		function(){
-	                checkPendingOperations();
-	            }
-            , 10000);
         },
         saveiOSPushToken:function(ctx){log.debug("saveiOSPushToken >>>>>> " + ctx.udid + " >>>>>>>>> " + ctx.pushToken);
 	        // Save the Push Token to the respective device using UDID
