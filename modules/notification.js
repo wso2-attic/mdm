@@ -79,12 +79,14 @@ var notification = (function() {
                     var targetOperationData = (parse(received_data))[parseInt(policySequence)];
                     var targetOperationId = targetOperationData.message.code;
                     var pendingExist = false;
+                    var isRevokePolicy = false;
                     var parsedReceivedData = (parse(received_data));
 
 
                     //log.debug("Received data >>>>> " + stringify(stringify(parsedReceivedData)));
 
                     if (featureCode == "502P") {
+                        isRevokePolicy = true;
 
                         var revokeCount = parse(message).length;
                         var revokedPolicy = 0;
@@ -133,7 +135,11 @@ var notification = (function() {
                     db.query(sqlscripts.notifications.update4, stringify(parsedReceivedData), recivedDate, notificationId);
 
                     if(pendingExist) {
-                        return true;
+                        if (isRevokePolicy == true) {
+                            return "RevokePolicy";
+                        } else {
+                            return true;
+                        }
                     } else {
                     	log.debug("Update notifications!!!!");
 	                	db.query(sqlscripts.notifications.update5, notificationId);

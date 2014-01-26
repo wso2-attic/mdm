@@ -203,7 +203,7 @@ var iosmdm = (function() {
                     //log.debug("pendingExist >>>>>>>>>>>>>>>>>>>>>>> " + stringify(pendingExist));
                     //log.debug("pendingExist >>>>>>>>>>>>>>>>>>>>>>> " + pendingExist);
 
-                    if (pendingExist != true) {
+                    if (pendingExist != "RevokePolicy") {
                         ctx = {};
                         ctx.id = commandUUID;
                         notification.discardOldNotifications(ctx);
