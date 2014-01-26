@@ -22,6 +22,6 @@ var device = new deviceModule(db);
 
 var policyModule = require('../modules/policy.js').policy;
 var policy = new policyModule(db);
-//policy.monitoring({});
+policy.monitoring({});
 
 
