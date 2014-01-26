@@ -63,7 +63,7 @@ var devices = {
     'update7' : "UPDATE devices SET properties = ? WHERE udid = ?",
     
     'delete1' :"Delete from devices where reg_id = ?",
-    'delete2' :"DELETE FROM devices WHERE udid = ?",
+    'delete2' :"DELETE FROM devices WHERE udid = ?"
 };
 
 var device_pending = {
