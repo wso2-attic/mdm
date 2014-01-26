@@ -183,10 +183,9 @@ var device = (function () {
             return null;
         }
 
-        var devicePolicy = db.query("SELECT policies.id as policyid, policies.content as data, policies.mam_content as mam_data, policies.type as type, policy_priority.type as policytype FROM policies JOIN device_policy ON device_policy.policy_id = policies.id JOIN policy_priority ON policy_priority.id = device_policy.policy_priority_id WHERE device_policy.device_id = ? AND device_policy.tenant_id = ? AND device_policy.status = 'A' ORDER BY datetime DESC", deviceId, devices[0].tenant_id);
+        var devicePolicy = db.query(sqlscripts.policies.select16, deviceId, devices[0].tenant_id);
 
         if (devicePolicy != null && devicePolicy != undefined && devicePolicy[0] != null && devicePolicy[0] != undefined) {
-            log.debug("Policy Monitor Payload >>>>> " + stringify(devicePolicy));
             var policyPayLoad;
             var mdmPolicy = parse(devicePolicy[0].data);
             var mamPolicy = parse(devicePolicy[0].mam_data);

@@ -43,6 +43,7 @@ var devices = {
     'select37':"SELECT * from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type = 'iOS'",
     'select38':"SELECT properties, user_id FROM devices WHERE udid = ?",
     'select39':"SELECT push_token FROM devices WHERE id = ?",
+    'select40':"SELECT COUNT(*) as count FROM devices WHERE user_id = ? AND tenant_id = ?",
     
     'select40':"SELECT devices.tenant_id as tenant_id, platforms.type_name as platform_type FROM devices JOIN platforms ON platforms.id = devices.platform_id WHERE devices.id = ? AND devices.tenant_id = ?",
     'select41':"SELECT id FROM devices WHERE reg_id = ?",
@@ -150,6 +151,7 @@ var policies = {
     'select13': "SELECT policies.content as data, policies.type FROM policies,group_policy_mapping where category = ? && policies.id = group_policy_mapping.policy_id && group_policy_mapping.group_id = ?",
     'select14': "SELECT * from  policies WHERE name = ? AND tenant_id = ?",
     'select15': "SELECT policies.id as policyid, policies.content as data, policies.mam_content as mam_data, policies.type FROM policies, user_policy_mapping where policies.category = ? && policies.id = user_policy_mapping.policy_id && user_policy_mapping.user_id = ? && policies.tenant_id = ? ORDER BY policies.id DESC",
+    'select16': "SELECT policies.id as policyid, policies.content as data, policies.mam_content as mam_data, policies.type as type, policy_priority.type as policytype FROM policies JOIN device_policy ON device_policy.policy_id = policies.id JOIN policy_priority ON policy_priority.id = device_policy.policy_priority_id WHERE device_policy.device_id = ? AND device_policy.tenant_id = ? AND device_policy.status = 'A' ORDER BY datetime DESC",
 
     'insert1' : "insert into policies (name,content,type,category, tenant_id, mam_content) values (?,?,?,?,?, '[]')",
     'insert2' : "insert into policies (name,content,type,category, tenant_id, mam_content) values (?,'[]', 1, 1,?, '[]')",
