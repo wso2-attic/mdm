@@ -240,8 +240,8 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WEBCLIP;
 		paramMap.put("PayloadIdentifier", payloadIdentifier["WEBCLIP"]);
 		paramMap.put("PayloadDisplayName", "Web Clip");
-		paramMap.put("URL", data.url);
-		paramMap.put("Label", data.label);
+		paramMap.put("URL", data.identity);
+		paramMap.put("Label", data.title);
 		isProfile = true;
 	} else if(operationCode == "519A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.PASSCODE_POLICY; 
