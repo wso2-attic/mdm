@@ -224,7 +224,13 @@ var iosmdm = (function() {
 
 				var operation = device.getPendingOperationsFromDevice(ctx);
 
+
                 if (operation != null) {
+					var deviceInfo = db.query(sqlscripts.devices.select7, parse(ctx.udid));
+					if(operation.message=="null"){
+						operation.message = deviceInfo[0].reg_id;
+					}
+
                     if (operation.feature_code.indexOf("-") > 0) {
                         var featureCode = operation.feature_code.split("-")[0];
                         var payload;

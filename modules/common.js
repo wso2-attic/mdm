@@ -200,12 +200,13 @@ var loadPayload = function(identifier , operationCode, data) {
 	paramMap.put("PayloadOrganization", "WSO2");
 		
 	var isProfile = false;
-	
+	log.info("EEEEE");
+	log.info(data);
 	if(operationCode == "503A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_LOCK;  
 	} else if(operationCode == "505A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CLEAR_PASSCODE;
-		paramMap.put("UnlockToken", data.unlock_token);
+		paramMap.put("UnlockToken", data.unlockToken);
 	} else if(operationCode == "502A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APPLICATION_LIST;
 	} else if(operationCode == "500A") {

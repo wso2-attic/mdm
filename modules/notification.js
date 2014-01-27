@@ -321,7 +321,7 @@ var notification = (function() {
                                 blackListApp.name = features[0].description;
                                 blackListApp.status = arrayFromDatabase[i].status
                             }
-                        } else {
+                        } else if(featureCode!= "509A"){
                             obj.name = features[0].description;
                             obj.status = arrayFromDatabase[i].status;
                             newArray.push(obj);
