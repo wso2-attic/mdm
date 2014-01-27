@@ -883,7 +883,7 @@ var device = (function () {
         },
         monitor:function(ctx){
             log.debug("Monitor");
-
+            db = common.getDatabase();
             var result = db.query(sqlscripts.devices.select44);
             for(var i=0; i<result.length; i++){
                 var deviceId = result[i].id;
