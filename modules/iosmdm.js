@@ -195,21 +195,19 @@ var iosmdm = (function() {
 					var ctx = {};
 					ctx.data = responseData;
 					ctx.msgID = commandUUID;
-
-                    log.debug(" Command >>>>> " + stringify(ctx) );
+                    //log.debug(" Command >>>>> " + stringify(ctx) );
 
 					var pendingExist = notification.addIosNotification(ctx);
 
                     //log.debug("pendingExist >>>>>>>>>>>>>>>>>>>>>>> " + stringify(pendingExist));
                     //log.debug("pendingExist >>>>>>>>>>>>>>>>>>>>>>> " + pendingExist);
 
-                    if (pendingExist != "RevokePolicy") {
-                        ctx = {};
-                        ctx.id = commandUUID;
+                    ctx = {};
+                    ctx.id = commandUUID;
+
+                    if (pendingExist != true) {
                         notification.discardOldNotifications(ctx);
                     }
-					
-
 
 				} else if (("Error").equals(apnsStatus.getStatus())) {
 					log.error("Error " + apnsStatus.getError());
@@ -222,10 +220,8 @@ var iosmdm = (function() {
 
 				var ctx = {};
 				ctx.udid = stringify(apnsStatus.getUdid());
+                //log.debug("ctx.udid >>>>> " + stringify(ctx));
 
-                log.debug("ctx.udid >>>>> " + stringify(ctx));
-
-                log.debug("Nirnjn >>>> " + stringify(ctx));
 				var operation = device.getPendingOperationsFromDevice(ctx);
 
                 if (operation != null) {
