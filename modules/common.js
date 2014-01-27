@@ -230,7 +230,7 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else if(operationCode == "512A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APN_SETTINGS; 
 		paramMap.put("PayloadIdentifier", payloadIdentifier["APN"]);
-		paramMap.put("PayloadDisplayName", "VPN Configurations");
+		paramMap.put("PayloadDisplayName", "APN Configurations");
 		paramMap.put("APN", data.carrier);
 		paramMap.put("Username", data.user_name);
 		paramMap.put("Password", data.password);
