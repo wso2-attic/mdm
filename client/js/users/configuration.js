@@ -10,7 +10,7 @@ $(document).ready(function() {
 		"bProcessing" : false,
 		"bServerSide" : true,
 		"bSort" : false,
-		"bStateSave": true,
+		
 
 		  aoColumns: [
                       
