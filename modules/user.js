@@ -341,7 +341,7 @@ var user = (function () {
                 var tenantId = common.getTenantID();
                 if(tenantId){
                     var devices = db.query(sqlscripts.devices.select40, ctx.userid, tenantId);
-                    if (devices != null && devices != undefined) {
+                    if (devices != null && devices != undefined && devices[0] != null && devices[0] != undefined) {
                         if (devices[0].count > 0) {
                             return true;
                         }
