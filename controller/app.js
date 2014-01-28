@@ -41,8 +41,7 @@ if(session.get("mdmConsoleUserLogin") == null && session.get("mdmConsoleUserLogi
 	response.sendRedirect(appInfo().server_url + "login");
     throw require('/modules/absolute.js').appRedirect;
 }else{
-	
-	if(session.get("mdmConsoleUser")['isMDMAdmin'] == false | session.get("mdmConsoleUser")['isAdmin'] == false){
+	if(!(session.get("mdmConsoleUser")['isMDMAdmin'] == true | session.get("mdmConsoleUser")['isAdmin'] == true)){
 	 var user = request.getParameter('user');
 	 if(request.getParameter('user') != null && request.getParameter('user') != session.get("mdmConsoleUser")['username']){
 		 response.sendError(403); 
