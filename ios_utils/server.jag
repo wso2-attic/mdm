@@ -4,6 +4,8 @@
 	var iosMdm = new iosMdmModule();
 	var log = new Log();
 
+    //log.debug("Server.jag received!!!!");
+
 	var payload = iosMdm.sendPushNotifications(request.getInputStream());
 	
 	if(payload != null) {

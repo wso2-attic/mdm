@@ -142,7 +142,6 @@ var user = (function () {
             return proxy_user;
         },
         getUser: function(ctx){
-            log.info("Get User :"+stringify(ctx));
             try {
                 var proxy_user = {};
                 var tenantUser = carbon.server.tenantUser(ctx.userid);
@@ -162,20 +161,16 @@ var user = (function () {
                 proxy_user.username = tenantUser.username;
                 proxy_user.tenantId = tenantUser.tenantId;
                 proxy_user.roles = stringify(user_roles);
-            //    proxy_user.roles = String(user_roles);
+            //  proxy_user.roles = String(user_roles);
                 proxy_user.user_type = getUserType(user_roles);
-                
                 if(proxy_user.roles.indexOf('admin') >= 0){
                     if(proxy_user.firstName ==null){
                         proxy_user.firstName = 'Admin';
                         proxy_user.lastName = 'Admin';
                     }
                 }
-
-                
                 return proxy_user;
             } catch(e) {
-                log.error(e);
                 var error = 'Error occurred while retrieving user.';
                 return error;
             }
@@ -314,7 +309,7 @@ var user = (function () {
                 var flag = 0;
                 for(var j=0 ;j<roles.length;j++){
                     log.info("Test iteration2"+roles[j]);
-                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'){                                                                                getUsersByType
+                    if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'){                                                                                
                         flag = 1;
                         break;
                     }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'|| roles[j]=='Internal/mamadmin'){
@@ -346,7 +341,7 @@ var user = (function () {
                 var tenantId = common.getTenantID();
                 if(tenantId){
                     var devices = db.query(sqlscripts.devices.select40, ctx.userid, tenantId);
-                    if (devices != null && devices != undefined) {
+                    if (devices != null && devices != undefined && devices[0] != null && devices[0] != undefined) {
                         if (devices[0].count > 0) {
                             return true;
                         }

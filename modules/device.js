@@ -97,9 +97,12 @@ var device = (function () {
         var platformName = platforms[0].type_name;// platform name for pull
 													// policy payLoad
         var roleList = user.getUserRoles({'username':username});
-        var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "reviewer","private_kasun:wso2mobile.com");
+        var removeRoles = new Array("Internal/everyone", "wso2.anonymous.role", "Internal/reviewer","Internal/store","Internal/publisher");
         var roles = common.removeNecessaryElements(roleList,removeRoles);
         var role = roles[0];// role name for pull policy payLoad
+
+        log.debug("Rooles >>> " + role);
+        
 
         var obj = {};
 
@@ -371,6 +374,7 @@ var device = (function () {
                     } else {
                         var revokepolicy = {};
                         revokepolicy.policyid = existDevicePolicy[0].policy_id;
+
                         sendMessageToAndroidDevice({'deviceid':deviceid, 'operation':'REVOKEPOLICY', 'data':revokepolicy, 'newdatetime': datetime});
                     }
 
@@ -473,6 +477,7 @@ var device = (function () {
         if(featureCode=="500P" || featureCode=="502P"){
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 30240, "POLICY");
         }else{
+            log.info("Sending");
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
         }
         log.info(gcmMSG);
@@ -878,7 +883,7 @@ var device = (function () {
         },
         monitor:function(ctx){
             log.debug("Monitor");
-
+            db = common.getDatabase();
             var result = db.query(sqlscripts.devices.select44);
             for(var i=0; i<result.length; i++){
                 var deviceId = result[i].id;
@@ -949,6 +954,7 @@ var device = (function () {
                     sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "APPLIST", 'data': "hi"});
 
                     var mdmPolicy = getPolicyPayLoad(deviceID,1);
+                    log.debug("PayLoad >>> " + mdmPolicy);
                     if(mdmPolicy != undefined && mdmPolicy != null){
                         if(mdmPolicy.payLoad != undefined && mdmPolicy.payLoad != null){
                             sendMessageToAndroidDevice({'deviceid':deviceID, 'operation': "POLICY", 'data': mdmPolicy.payLoad, 'policyid':mdmPolicy.policyid, 'policypriority': mdmPolicy.policypriority});

@@ -200,12 +200,13 @@ var loadPayload = function(identifier , operationCode, data) {
 	paramMap.put("PayloadOrganization", "WSO2");
 		
 	var isProfile = false;
-	
+	log.info("EEEEE");
+	log.info(data);
 	if(operationCode == "503A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_LOCK;  
 	} else if(operationCode == "505A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.CLEAR_PASSCODE;
-		paramMap.put("UnlockToken", data.unlock_token);
+		paramMap.put("UnlockToken", data.unlockToken);
 	} else if(operationCode == "502A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APPLICATION_LIST;
 	} else if(operationCode == "500A") {
@@ -229,7 +230,7 @@ var loadPayload = function(identifier , operationCode, data) {
 	} else if(operationCode == "512A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.APN_SETTINGS; 
 		paramMap.put("PayloadIdentifier", payloadIdentifier["APN"]);
-		paramMap.put("PayloadDisplayName", "VPN Configurations");
+		paramMap.put("PayloadDisplayName", "APN Configurations");
 		paramMap.put("APN", data.carrier);
 		paramMap.put("Username", data.user_name);
 		paramMap.put("Password", data.password);
@@ -240,8 +241,8 @@ var loadPayload = function(identifier , operationCode, data) {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.WEBCLIP;
 		paramMap.put("PayloadIdentifier", payloadIdentifier["WEBCLIP"]);
 		paramMap.put("PayloadDisplayName", "Web Clip");
-		paramMap.put("URL", data.url);
-		paramMap.put("Label", data.label);
+		paramMap.put("URL", data.identity);
+		paramMap.put("Label", data.title);
 		isProfile = true;
 	} else if(operationCode == "519A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.PASSCODE_POLICY; 
@@ -417,5 +418,48 @@ var handleError = function(that, ctx, block){
         print("Unexpected Error happened");
         response.status = 500;
         log.error(e);
+    }
+}
+
+var SAML_RESPONSE_TOKEN_SESSION_KEY = "SAML_TOKEN";
+var SAML_ASSERTION_TOKEN_SESSION_KEY = "SAML_ASSERTION_TOKEN";
+var SSO_NAME = "SSORelyingParty.Name";
+var getToken = function (){
+    if(session.get(SAML_RESPONSE_TOKEN_SESSION_KEY)){
+        return session.get(SAML_RESPONSE_TOKEN_SESSION_KEY);
+    } else if(session.get(SAML_ASSERTION_TOKEN_SESSION_KEY)){
+        return session.get(SAML_ASSERTION_TOKEN_SESSION_KEY);
+    } else {
+        return null;
+    }
+};
+var getBackendCookie = function (samlToken) {
+    var token = getToken();
+    var token = null;
+    var encodedToken = token && token.replace(/>/g, '&gt;').replace(/</g,'&lt;');
+    var xhr = new XMLHttpRequest();
+    xhr.setRequestHeader('SOAPAction', 'urn:login');
+    xhr.setRequestHeader('Content-Type', 'application/soap+xml');
+    var endPoint = "https://localhost:9443/admin/services/"+"SAML2SSOAuthenticationService";
+    xhr.open("POST", endPoint);
+    var payload = '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:sso="http://sso.saml2.authenticator.identity.carbon.wso2.org" xmlns:xsd="http://dto.sso.saml2.authenticator.identity.carbon.wso2.org/xsd"><soap:Header/><soap:Body><sso:login><sso:authDto><xsd:response>'+samlToken+'</xsd:response></sso:authDto></sso:login></soap:Body></soap:Envelope>';
+    xhr.send(payload);
+    var cookieString = xhr.getResponseHeader("Set-Cookie");
+    // log.info(xhr.responseText);
+    var xml_response =  xhr.responseText;
+    // var fullNodeList = xml_response.getElementsByTagName("loginResponse");
+    // log.info(fullNodeList[1].childNodes[0].nodeValue);
+    if(xml_response.search("false")==-1){
+        return true;
+    }
+    return false;
+};
+var checkAuth = function(ctx){
+    var SAML_TOKEN = ctx.SAML_TOKEN;
+    var authState =  getBackendCookie(SAML_TOKEN);
+    if(authState){
+       return authState;
+    }else{
+        response.sendError(403);
     }
 }

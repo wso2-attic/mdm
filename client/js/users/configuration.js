@@ -10,6 +10,7 @@ $(document).ready(function() {
 		"bProcessing" : false,
 		"bServerSide" : true,
 		"bSort" : false,
+		
 
 		  aoColumns: [
                       
@@ -45,7 +46,7 @@ $(document).ready(function() {
 		"sAjaxSource" : "/mdm/api/webconsole/allUsers",
 		"fnServerParams": function ( aoData ) {
 			
-			var usertype= $('.block-body #userTypeSelect option:selected').val();
+			usertype= $('.block-body #userTypeSelect option:selected').val();
           	var roleid = getURLParameter('group');
           	if(roleid != "null"){
           		 aoData.push( { "name": "groupid", "value": roleid } );
@@ -65,7 +66,7 @@ $(document).ready(function() {
 		            oTable.fnFilter( $(this).val(), 3 );
 		     } );
        	
-      		
+      		$('.block-body #userTypeSelect').val(usertype);
     	}
 		
 	});
