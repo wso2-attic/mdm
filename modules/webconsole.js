@@ -94,6 +94,7 @@ var webconsole = (function () {
             var pageSize = 10;
             var all_users;
             var search = ctx.sSearch;
+            var userType = ctx.userType;
             if(ctx.groupid != null || ctx.groupid != undefined) {
                 all_users = user.getAllUserNamesByRole(ctx);
             } else {
@@ -109,6 +110,7 @@ var webconsole = (function () {
             var lowerBound =  parseInt(ctx.iDisplayStart);
             
             var dataArray = new Array();
+            main:
             for(var i = lowerBound; i < upperBound; i++){
                 if(totalRecords - 1 < i){
                     break;
@@ -121,12 +123,27 @@ var webconsole = (function () {
                 for(var j=0 ;j<roles.length;j++){
                     if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'||roles[j]=='Internal/mamadmin'){
                         flag = 1;
+                        if(userType){
+                            if(userType=="mam" || userType=="user"){
+                                break main;
+                            }
+                        }
                         break;
                     }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'||roles[j]=='Internal/mamadmin'){
                         flag = 2;
+                        if(userType){
+                            if(userType=="admin" || userType=="user"){
+                                break main;
+                            }
+                        }
                         break;
                     }else{
                         flag = 0;
+                        if(userType){
+                            if(userType=="admin" || userType=="mam"){
+                                break main;
+                            }
+                        }
                     }
                 }
                 if(flag == 1){
