@@ -130,6 +130,11 @@ var user = (function () {
 		       	response.content = groups;
 		    }*/
 		});
+		router.put('users/groups',function(ctx){
+            var groups = user.updateRoleListOfUser(ctx);
+             response.status = 200;
+             response.content = groups;
+        });
         router.put('users/{+username}/groups/',function(ctx){
             var groups = user.updateRoleListOfUser(ctx);
              response.status = 200;

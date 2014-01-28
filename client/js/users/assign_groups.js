@@ -32,7 +32,7 @@ $("#btn-add").click(function() {
 
 	
 	jQuery.ajax({
-		url : getServiceURLs("usersCRUD", id + "/groups"),
+		url : getServiceURLs("usersEDIT", id),
 		type : "PUT",
 		async : "false",
 		data : JSON.stringify(jso),
