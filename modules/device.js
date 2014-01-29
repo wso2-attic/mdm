@@ -263,8 +263,13 @@ var device = (function () {
         stub = entitlement.setEntitlementServiceParameters();
     }
     function checkPermission(role, deviceId, operationName, that){
+        log.info("checkPermission");
+        log.info(role);
+        log.info(operationName);
+
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
         decision = decision.toString().substring(28,34);
+        log.info("decision :"+decision);
         if(decision=="Permit"){
                 return true;
         }else{
@@ -805,10 +810,11 @@ var device = (function () {
             if(role=="user"){
                 role = group.getEffectiveRoleFromDeviceID(deviceId);
             }
+            if(role.indexOf("Internal")!==-1){
+                role = role.substring(9);
+            }
             var tenantID = common.getTenantID();
-
             var featureList = db.query(sqlscripts.devices.select12, stringify(deviceId));
-
             var obj = new Array();
             for(var i=0; i<featureList.length; i++){
                 var featureArr = {};
