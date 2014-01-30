@@ -619,10 +619,13 @@ var device = (function () {
 
         // Check if the feature code is a monitoring and status is "A" or "P"
         var notifyExists = db.query(sqlscripts.notifications.select1, ctx.deviceid, featureCode);
+
+        var tenantID = common.getTenantIDFromDevice(ctx.deviceid);
+
         log.debug("notifyExists >>>>> " + stringify(notifyExists[0]));
         if (notifyExists[0].count == 0) {
             log.debug("Notification inserted!");
-            db.query(sqlscripts.notifications.insert2, ctx.deviceid, message, datetime, featureCode, userId, featureDescription, common.getTenantIDFromEmail(userId));
+            db.query(sqlscripts.notifications.insert2, ctx.deviceid, message, datetime, featureCode, userId, featureDescription, tenantID);
         }
 
         var sendToAPNS = null;

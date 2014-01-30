@@ -36,7 +36,7 @@
 		response.status=401;
 	    print("Authentication Failed");
 	} else {
-	    
+	    ctx.login = true;
         var tenant = user.getUser(ctx);
 		var data = iosMdm.generateMobileConfigurations(ctx.userid);
 

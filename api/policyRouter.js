@@ -6,6 +6,7 @@ var policy = (function () {
         var policy = new policyModule(db);
         router.post('policies/external/{policyid}/enforce', function(ctx){
             if(common.checkAuth(ctx)){
+                session.put("mdmConsoleUser", {tenantId : ctx.data.tenantId});
                 policy.enforcePolicy(ctx);    
             }
         });
