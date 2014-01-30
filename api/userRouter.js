@@ -164,9 +164,8 @@ var user = (function () {
             log.info('email sending to user');
 			var u = user.getUser(ctx);
 			if(u!=null){
-				log.info(u)
-				user.sendEmail({'username':String(u.username), 'first_name': String(u.firstName)});
-				log.info('Email sent to user with id '+u.username);
+				user.sendEmail({'username':String(u.username), 'firstName': String(u.firstName)});
+				log.debug('Email sent to user with id '+u.username);
 				return;
 			}
 			response.status = 404;

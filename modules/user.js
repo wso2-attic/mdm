@@ -393,7 +393,7 @@ var user = (function () {
 			if(ctx.generatedPassword){
 				password_text = "Your password to your login : "+ctx.generatedPassword;
 			}
-            content = "Dear "+ ctx.first_name+", "+config.email.emailTemplate+config.HTTPS_URL+"/mdm/api/device_enroll \n "+password_text+" \n"+config.email.companyName;
+            content = "Dear "+ ctx.firstName+", "+config.email.emailTemplate+config.HTTPS_URL+"/mdm/api/device_enroll \n "+password_text+" \n"+config.email.companyName;
             subject = "MDM Enrollment";
 
             var email = require('email');
@@ -413,10 +413,10 @@ var user = (function () {
 
         /*Get all devices belongs to particular user*/
 		getDevices: function(obj){
-            log.info("begin");
-            log.info(String(obj.userid));
-            log.info(common.getTenantID());
-            log.info("end");
+            log.debug("begin");
+            log.debug(String(obj.userid));
+            log.debug(common.getTenantID());
+            log.debug("end");
 
             var devices = db.query(sqlscripts.devices.select26, String(obj.userid), common.getTenantID());
 
