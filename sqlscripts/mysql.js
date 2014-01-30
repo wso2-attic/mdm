@@ -103,7 +103,7 @@ var notifications = {
     'select1' : "SELECT count(*) as count FROM notifications JOIN features ON notifications.feature_code = features.code WHERE notifications.device_id = ? AND notifications.feature_code = ? AND features.monitor = 1 AND (notifications.status = 'A' OR notifications.status = 'P')",
     'select2' : "SELECT id, device_id FROM notifications WHERE status = 'P' AND device_id IN (SELECT id FROM devices WHERE platform_id IN (SELECT id FROM platforms WHERE type_name = 'iOS')) ORDER BY sent_date ASC",
     'select3' : "SELECT feature_code ,message, id, received_data FROM notifications WHERE (notifications.status='P' OR notifications.status = 'A') AND notifications.device_id = ? ORDER BY sent_date ASC",
-    'select4' : "SELECT device_id, message FROM notifications WHERE id = ? OORDER BY sent_date ASC",
+    'select4' : "SELECT device_id, message FROM notifications WHERE id = ? ORDER BY sent_date ASC",
     'select5' : "SELECT * FROM notifications WHERE device_id = ? ORDER BY id DESC LIMIT 10",
     'select6' : "SELECT message, feature_code, device_id FROM notifications WHERE id = ? ORDER BY sent_date ASC",
     'select7' : "SELECT received_data, device_id FROM notifications WHERE id = ? ORDER BY sent_date ASC",
