@@ -95,6 +95,9 @@ var webconsole = (function () {
             var all_users;
             var search = ctx.sSearch;
             var userType = ctx.userType;
+            if(userType){
+                userType = userType.toLowerCase();
+            }
             if(ctx.groupid != null || ctx.groupid != undefined) {
                 all_users = user.getAllUserNamesByRole(ctx);
             } else {
@@ -121,27 +124,30 @@ var webconsole = (function () {
                 roles = parse(roles);
                 var flag = 0;
                 for(var j=0 ;j<roles.length;j++){
+
                     if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'||roles[j]=='Internal/mamadmin'){
+
                         flag = 1;
                         if(userType){
                             if(userType=="mam" || userType=="user"){
-                                break main;
+                                continue main;
                             }
                         }
                         break;
                     }else if(roles[j]==' Internal/publisher'||roles[j]=='Internal/reviewer'||roles[j]=='Internal/store'||roles[j]=='Internal/mamadmin'){
                         flag = 2;
                         if(userType){
-                            if(userType=="admin" || userType=="user"){
-                                break main;
+                            if(userType=="administrator" || userType=="user"){
+
+                                continue main;
                             }
                         }
                         break;
                     }else{
                         flag = 0;
                         if(userType){
-                            if(userType=="admin" || userType=="mam"){
-                                break main;
+                            if(userType=="administrator" || userType=="mam"){
+                                continue main;
                             }
                         }
                     }
