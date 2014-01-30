@@ -72,7 +72,6 @@ var mvc = (function () {
 		return allowFlag;
 	}
 	function routeAsset(resourceURL){
-		//log.info("Resource URL"+resourceURL);
 		if(!isExists(resourceURL)){
 			response.sendError(404);
 			return;

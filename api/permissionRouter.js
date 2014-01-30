@@ -7,8 +7,8 @@ var permission = (function () {
 
         router.post('permissions/', function(ctx){
 
-            log.info("check policy router POST");
-            log.info(ctx);
+            log.debug("check policy router POST");
+            log.debug(ctx);
             var result = policy.addPolicy(ctx);
             if(result == 'success'){
                 response.status = 200;
@@ -19,8 +19,8 @@ var permission = (function () {
         });
 
         router.put('permissions/', function(ctx){
-            log.info("check policy router add permission group PUT");
-            log.info(ctx);
+            log.debug("check policy router add permission group PUT");
+            log.debug(ctx);
             var result = permission.assignPermissionToGroup(ctx);
             if(result != 'undefined' && result != null){
                 response.status = 200;
@@ -32,10 +32,10 @@ var permission = (function () {
         });
 
         router.get('permissions/', function(ctx){
-            log.info("check policy router GET");
-            log.info(ctx);
+            log.debug("check policy router GET");
+            log.debug(ctx);
             var result = policy.getAllPermissionGroups(ctx);
-            log.info(result);
+            log.debug(result);
             if(result != 'undefined' && result != null && result[0] != null){
                 response.status = 200;
                 response.content = result;

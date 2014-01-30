@@ -23,7 +23,7 @@ var group = (function () {
             response.status = 200;
         });
 		router.delete('groups/{groupid}', function(ctx){
-            log.info("Test Delete Router");
+            log.debug("Test Delete Router");
 			group.deleteGroup(ctx);
 		    response.status = 201;
 		});
@@ -33,19 +33,19 @@ var group = (function () {
 		    response.status = 200;
 		});
         router.get('groups/{groupid}/users', function(ctx){
-            log.info("Test Router");
+            log.debug("Test Router");
             var allUsers = group.getUsersOfGroup(ctx);
             response.content =  allUsers;
             response.status = 200;
         });
         router.put('groups/{groupid}/users', function(ctx){
-            log.info("Test Request "+stringify(ctx));
+            log.debug("Test Request "+stringify(ctx));
              var result = group.updateUserListOfRole(ctx);
              response.content = result;
              response.status = 200;
         });
 		router.post('groups', function(ctx){
-            log.info("Test Groups >>>>>>>>>>");
+            log.debug("Test Groups >>>>>>>>>>");
 			var returnMsg = group.addGroup(ctx);
             if(returnMsg.status == 'ALLREADY_EXIST'){
                 response.status = 409;

@@ -16,14 +16,14 @@ var policy = (function () {
         
         router.post('policies/', function(ctx){
 
-            log.info("check policy router POST");
+            log.debug("check policy router POST");
             var result = policy.addPolicy(ctx);
             response.status = result;
 
         });
         router.put('policies/', function(ctx){
 
-            log.info("check policy router PUT");
+            log.debug("check policy router PUT");
             var result = policy.updatePolicy(ctx);
             if(result == 1){
                 response.status = 200;
@@ -33,7 +33,7 @@ var policy = (function () {
 
         });
         router.delete('policies/{policyid}', function(ctx){
-            log.info("Check Delete Router");
+            log.debug("Check Delete Router");
             var result = policy.deletePolicy(ctx);
             if(result==1){
                 response.status = 200;
@@ -43,7 +43,7 @@ var policy = (function () {
         });
         router.get('policies/', function(ctx){
 
-            log.info("check policy router GET");
+            log.debug("check policy router GET");
             var result = policy.getAllPolicies(ctx);
             if(result != undefined && result != null && result[0] != undefined && result[0]!= null){
                 print(result);
@@ -58,7 +58,7 @@ var policy = (function () {
             var result = policy.getPolicy(ctx);
 
             if(result != undefined && result != null){
-                log.info("Content "+stringify(result));
+                log.debug("Content "+stringify(result));
                 print(result);
                 response.status = 200;
             }else{
@@ -67,19 +67,19 @@ var policy = (function () {
 
         });
         router.put('policies/{policyid}/groups', function(ctx){
-            log.info("check policy router PUT");
+            log.debug("check policy router PUT");
             policy.assignGroupsToPolicy(ctx);
 
 
         });
         router.put('policies/{policyid}/users', function(ctx){
-            log.info("check policy router PUT");
+            log.debug("check policy router PUT");
             policy.assignUsersToPolicy(ctx);
 
 
         });
         router.put('policies/{policyid}/platforms', function(ctx){
-            log.info("check policy router PUT");
+            log.debug("check policy router PUT");
             policy.assignPlatformsToPolicy(ctx);
 
 

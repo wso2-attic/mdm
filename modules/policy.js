@@ -260,7 +260,7 @@ var policy = (function () {
                         assignGroupsArray.push(newGroups[i]);
                     }
                 }catch(e){
-                    log.info(e);
+                    log.debug(e);
                 }
             }
             assignGroups.array = assignGroupsArray;
@@ -294,7 +294,7 @@ var policy = (function () {
                         assignUsersArray.push(newUsers[i]);
                     }
                 }catch(e){
-                    log.info(e);
+                    log.debug(e);
                 }
             }
             assignUsers.array = assignUsersArray;
@@ -328,7 +328,7 @@ var policy = (function () {
                         assignPlatformsArray.push(newPlatforms[i]);
                     }
                 }catch(e){
-                    log.info(e);
+                    log.debug(e);
                 }
             }
             assignPlatforms.array = assignPlatformsArray;

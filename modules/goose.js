@@ -22,7 +22,7 @@ var goose = (function () {
 		if(configs.CACHE){
 			if(routes[routeOverload(route+"|"+verb)]==undefined){
 				routes[routeOverload(route+"|"+verb)] = {route:routeOverload(route), verb:verb, action:action, roles:roles};
-				log.info("--------Goose CACHE enabled --------" + verb);
+				log.debug("--------Goose CACHE enabled --------" + verb);
 			}
 			return;
 		}

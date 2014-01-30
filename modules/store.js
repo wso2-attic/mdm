@@ -35,7 +35,7 @@ var store = (function() {
   module.prototype = {
     constructor: module,
     getAllDevicesFromEmail: function(ctx) {
-      log.info("Test platform :" + ctx.data.platform);
+      log.debug("Test platform :" + ctx.data.platform);
       var devicesArray;
       if (ctx.data.platform == 'webapp') {
         user.getUser(ctx.user)

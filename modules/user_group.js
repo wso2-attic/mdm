@@ -74,9 +74,9 @@ var user_group = (function () {
             var totalGroups = group.getAllGroups({});
             var removeRoles = new Array("Internal/store", "Internal/publisher", "Internal/reviewer","Internal/mdmadmin");
             var allRoles = common.removeNecessaryElements(totalGroups,removeRoles);
-            log.info("getRolesOfUserByAssignment :"+stringify(allRoles));
+            log.debug("getRolesOfUserByAssignment :"+stringify(allRoles));
             var userRoles = user.getUserRoles(ctx);
-            log.info("User Roles"+stringify(userRoles));
+            log.debug("User Roles"+stringify(userRoles));
             var array = new Array();
             if(userRoles.length == 0){
                 for(var i=0;i < allRoles.length;i++){

@@ -101,7 +101,7 @@ var user = (function () {
         constructor: module,
         /*User CRUD Operations (Create, Retrieve, Update, Delete)*/
         addUser: function(ctx){
-            log.info("Check Params"+stringify(ctx));
+            log.debug("Check Params"+stringify(ctx));
             var claimMap = new java.util.HashMap();
 
             claimMap.put(claimEmail, ctx.username);
@@ -201,7 +201,7 @@ var user = (function () {
             }else{
                 print('Error in getting the tenantId from session');
             }
-            log.info("LLLLLLLLLLLLLLLLLLLL"+stringify(users_list));
+            log.debug("LLLLLLLLLLLLLLLLLLLL"+stringify(users_list));
             return users_list;
         },
         getAllUserNames: function(filter){
@@ -238,7 +238,7 @@ var user = (function () {
         },
         deleteUser: function(ctx){
             var result = db.query(sqlscripts.devices.select36, ctx.userid);
-            log.info("Result :"+result);
+            log.debug("Result :"+result);
             if(result != undefined && result != null && result != '' && result[0].length != undefined && result[0].length != null && result[0].length > 0){
                 return 404;
             }else{
@@ -256,7 +256,7 @@ var user = (function () {
 
         /*Get list of roles belongs to particular user*/
         getUserRoles: function(ctx){
-            log.info("User Name >>>>>>>>>"+ctx.username);
+            log.debug("User Name >>>>>>>>>"+ctx.username);
             var tenantUser = carbon.server.tenantUser(ctx.username);
             var um = userManager(common.getTenantID());
             var roles = um.getRoleListOfUser(tenantUser.username);
@@ -308,7 +308,7 @@ var user = (function () {
                 var roles = this.getUserRoles({'username':users[i].username});
                 var flag = 0;
                 for(var j=0 ;j<roles.length;j++){
-                    log.info("Test iteration2"+roles[j]);
+                    log.debug("Test iteration2"+roles[j]);
                     if(roles[j]=='admin'||roles[j]=='Internal/mdmadmin'){                                                                                
                         flag = 1;
                         break;

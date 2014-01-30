@@ -54,7 +54,6 @@ var removePrivateRole = function(roleList){
         try{
             prefix = roleList[i].substring(0,17);
         }catch(e){
-        //   log.info('error occured while removing private role');
         }
         if(prefix == 'Internal/private_'){
             continue;
@@ -200,8 +199,6 @@ var loadPayload = function(identifier , operationCode, data) {
 	paramMap.put("PayloadOrganization", "WSO2");
 		
 	var isProfile = false;
-	log.info("EEEEE");
-	log.info(data);
 	if(operationCode == "503A") {
 		operation = Packages.com.wso2mobile.ios.mdm.payload.PayloadType.DEVICE_LOCK;  
 	} else if(operationCode == "505A") {

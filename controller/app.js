@@ -66,10 +66,10 @@ getServiceURLs = function(item){
     if(session.get("mdmConsoleUser") != null) {
         var log = new Log();
         returnURL = serverURL + String.format.apply(this, arguments) + "?tenantId=" + session.get("mdmConsoleUser").tenantId;
-        log.info("Calling URL From server: " + returnURL);
+        log.debug("Calling URL From server: " + returnURL);
     } else {
         returnURL = serverURL + String.format.apply(this, arguments);
-        log.info("Calling URL From server: " + returnURL);
+        log.debug("Calling URL From server: " + returnURL);
     }
     return returnURL;
 };

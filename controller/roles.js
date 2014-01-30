@@ -43,12 +43,10 @@ configuration = function(appController){
 
 
 management = function(appController){
-    log.info("Test Function");
 	context = appController.context();
 	var groups;
 	try{
 		groups = webconsole.getDevicesCountAndUserCountForAllGroups({});
-        log.info("Groups >>>>>>"+groups);
 	}catch(e){
 		groups = [];
 	}
@@ -83,7 +81,6 @@ users = function(appController){
 	try{
 		var users = group.getUsersOfGroup({'groupid':role});
 	}catch(e){
-        log.info(group.getUsersOfGroup({'groupid':role}));
 		var users = [];
 	}
 	for (var i = 0; i < users.length; i++) {
@@ -127,8 +124,7 @@ add = function(appController){
 	}catch(e){
 		var users = [];
 	}
-	log.info("sdfsd");
-	log.info(session.get("mdmConsoleUser"));
+	log.debug(session.get("mdmConsoleUser"));
 	
 	context.title = context.title + " | Add Role";
 	context.page = "configuration";
@@ -144,9 +140,7 @@ add = function(appController){
 edit = function(appController){
 	context = appController.context();
 	var role = request.getParameter('group');
-	
-	log.info("sdfsd");
-	log.info(session.get("mdmConsoleUser"));
+	log.debug(session.get("mdmConsoleUser"));
 	
 	context.title = context.title + " | Edit Role";
 	context.page = "configuration";
@@ -170,9 +164,6 @@ assign_users = function(appController){
 	}catch(e){
 		var users = [];
 	}
-
-
-	log.info("sdfsd");
 	log.info(session.get("mdmConsoleUser"));
 	context = appController.context();
 	context.title = context.title + " | Assign Users to group";
@@ -214,9 +205,9 @@ view_users = function(appController){
 
 
 	try{
-        log.info("Test Group ID"+groupId);
+        log.debug("Test Group ID"+groupId);
 		var users = group.getUsersOfGroup({groupid: groupId});
-        log.info("Test Result"+users);
+        log.debug("Test Result"+users);
 	}catch(e){
 		var users = [];
 	}

@@ -263,13 +263,13 @@ var device = (function () {
         stub = entitlement.setEntitlementServiceParameters();
     }
     function checkPermission(role, deviceId, operationName, that){
-        log.info("checkPermission");
-        log.info(role);
-        log.info(operationName);
+        log.debug("checkPermission");
+        log.debug(role);
+        log.debug(operationName);
 
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
         decision = decision.toString().substring(28,34);
-        log.info("decision :"+decision);
+        log.debug("decision :"+decision);
         if(decision=="Permit"){
                 return true;
         }else{
@@ -460,7 +460,7 @@ var device = (function () {
             try{
                 db.query(sqlscripts.notifications.delete1, deviceId,featureCode);
             }catch (e){
-                log.info(e);
+                log.debug(e);
             }
         }
         var currentDate;
@@ -476,16 +476,16 @@ var device = (function () {
 
         var lastRecordJson = lastRecord[0];
         var token = lastRecordJson["LAST_INSERT_ID()"];
-        log.info("Android registration id "+regId);
-        log.info("Current feature code "+featureCode);
-        log.info("Message token "+token);
+        log.debug("Android registration id "+regId);
+        log.debug("Current feature code "+featureCode);
+        log.debug("Message token "+token);
         if(featureCode=="500P" || featureCode=="502P"){
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 30240, "POLICY");
         }else{
-            log.info("Sending");
+            log.debug("Sending");
             var gcmMSG = gcm.sendViaGCMtoMobile(regId, featureCode, token, payLoad, 3);
         }
-        log.info(gcmMSG);
+        log.debug(gcmMSG);
         return true;
     }
 
@@ -588,7 +588,7 @@ var device = (function () {
             try{
                 db.query(sqlscripts.notifications.delete1, ctx.deviceid,featureCode);
             }catch (e){
-                log.info(e);
+                log.debug(e);
             }
         } else if(ctx.operation == "NOTIFICATION") { 
         	

@@ -52,7 +52,7 @@ var feature = (function () {
             array[array.length-1] = array[array.length-1].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'');
         }catch(e){
             array = null;
-            log.info("EntitlementPolicy admin service cannot be invoked");
+            log.debug("EntitlementPolicy admin service cannot be invoked");
         }
         if(array != undefined && array != null && array.length != undefined && array.length != null){
             for(var i = 0; i<list.length;i++){
