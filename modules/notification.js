@@ -53,7 +53,8 @@ var notification = (function() {
         addIosNotification: function(ctx){
             
             var identifier = ctx.msgID.replace("\"", "").replace("\"","")+"";
-            var notifications = db.query(sqlscripts.notifications.select6, identifier);
+            var notificationId = identifier.split("-")[0];
+            var notifications = db.query(sqlscripts.notifications.select6, notificationId);
 
             //log.debug("identifier >>>>>> " + identifier);
             //log.debug("notifications >>>> " + stringify(notifications));
@@ -67,7 +68,6 @@ var notification = (function() {
 
                 if(featureCode == "500P" || featureCode == "502P") {
 
-                    var notificationId = identifier.split("-")[0];
                     var policySequence = identifier.split("-")[1];
 
                     var pendingFeatureCodeList = db.query(sqlscripts.notifications.select7, notificationId);

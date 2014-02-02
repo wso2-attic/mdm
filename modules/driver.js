@@ -1,51 +1,43 @@
 var common = require('/modules/common.js');
 var translate = function(results){
-
+    //log.debug("Data Before >>>>>> " + stringify(results));
     var result;
     var field;
     var models = [];
-    // var model;
-    // for (var index in results) {
-    //     result = results[index];
-    //     for (var prop in result) {
-    //        	prop = prop.toUpperCase();
-    //     }
-    //     models.push(model);
-    // }
-    // log.info(models);
-
-    for (var prop in results){
-    	if(results.hasOwnProperty(prop)){
-    		var result = results[prop];
-    		for(var propIn in result){
-    			var model = {}
-    			if(result.hasOwnProperty(propIn)){
-    				// log.info(propIn.toUpperCase());
-    				model[propIn.toUpperCase()] = result[propIn];
-    				models.push(model);
-    			}
-    		}
-    	}
+    for (var index in results) {
+        result = results[index];
+        var model = {};
+        for (var prop in result) {
+            if (result.hasOwnProperty(prop)) {
+                //log.debug(Object.prototype.toString.apply(result[prop]));
+                if (Object.prototype.toString.apply(result[prop]) == '[object Stream]') {
+                    model[prop.toLowerCase()] = stringify(result[prop]);
+                } else {
+                    model[prop.toLowerCase()] = result[prop];
+                }
+            }
+        }
+        models.push(model);
     }
-    log.info(models);
-
+    //log.debug("Data After >>>> " + stringify(models));
     return models;
 }
 var driver = {
-	execute : function(){
-		var query  = arguments[0];
-		var args = Array.prototype.slice.call(arguments, 0);
-		var argumentArray = args.slice(1, args.length);
+    execute : function(){
+        var query  = arguments[0];
+        var args = Array.prototype.slice.call(arguments, 0);
+        var argumentArray = args.slice(1, args.length);
         if (argumentArray.length>0) {
-        	var db = common.getDatabase();
+            var db = common.getDatabase();
             result = db.query.apply(db, arguments) || [];
         }
         else {
             result = common.getDatabase().query(query) || [];
         }
+
         var processed = translate(result);
         return processed;
-	}
+    }
 };
 
  
