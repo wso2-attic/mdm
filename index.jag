@@ -173,6 +173,11 @@ router.get('features', function(ctx){
     }
 });
 
+router.get('find', function(ctx){
+    var driver = require('/modules/driver.js').driver;
+    var query = driver.execute("SELECT * FROM PLATFORMS WHERE id=?", "1");
+    // log.info(query);
+});
 helpers.registerHelpers(mvc);
 mvc.route(request);
 %>

@@ -224,7 +224,7 @@ var notification = (function() {
 		},
 		getLastRecord : function(ctx) {
 
-			log.info("Operation >>>>>> " + ctx.operation);
+			log.debug("Operation >>>>>> " + ctx.operation);
 
 			var result = db.query(sqlscripts.notifications.select10,
 					ctx.deviceid, ctx.operation);
@@ -336,7 +336,7 @@ var notification = (function() {
                             }
                         }
                     } catch (e) {
-                        log.info(e);
+                        log.debug(e);
                     }
                 }
             }
@@ -347,7 +347,7 @@ var notification = (function() {
                 newArray.push(blackListApp);
             }
 
-            log.info("Final result >>>>>>>>>>" + stringify(newArray));
+            log.debug("Final result >>>>>>>>>>" + stringify(newArray));
             return newArray;
         },
 		getPolicyComplianceDevices : function(ctx) {

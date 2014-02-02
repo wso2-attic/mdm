@@ -60,7 +60,7 @@ var mdm_reports = (function () {
                     obj.status = receivedData[i].status;
                     newArray.push(obj);
                 }catch(e){
-                    log.info(e);
+                    log.debug(e);
                 }
             }
         }

@@ -54,7 +54,7 @@ assign_groups = function(appController){
 	try{
 		var groups = policy.getGroupsByPolicy({policyid: policyId});		
 	}catch(e){
-		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		log.debug("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var groups = [];
 	}
 	
@@ -84,7 +84,7 @@ assign_groups = function(appController){
 	try{
 		var platforms = policy.getPlatformsByPolicy({policyid: policyId});		
 	}catch(e){
-		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		log.debug("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var platforms = [];
 	}
 	
@@ -123,7 +123,7 @@ assign_resources = function(appController){
 	try{
 		var groups = group.getGroupsByType({type:context.contextData.user.role});		
 	}catch(e){
-		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		log.debug("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var groups = [];
 	}
 	
@@ -132,7 +132,7 @@ assign_resources = function(appController){
 	try{
 		var users = policy.getUsersByPolicy({policyid: policyId});		
 	}catch(e){
-		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		log.debug("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var users = [];
 	}
 	
@@ -140,7 +140,7 @@ assign_resources = function(appController){
 	try{
 		var platforms = policy.getPlatformsByPolicy({policyid: policyId});		
 	}catch(e){
-		log.info("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
+		log.debug("Error form the Backend to UI >>>>>>>>>>>>>>>>>>>>>>>>>> " + e);
 		var platforms = [];
 	}
 	

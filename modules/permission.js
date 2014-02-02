@@ -142,7 +142,7 @@ var permission = (function () {
                 entitlement.removePolicy(group,entitlementPolicyAdminService);
                 entitlement.addPolicy(xacmlFile,entitlementPolicyAdminService,group);
             }catch(e){
-                log.info("ERROR :"+e);
+                log.debug("ERROR :"+e);
             }
             return "success";
         },

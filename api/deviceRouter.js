@@ -84,9 +84,9 @@ var device = (function () {
         }
 
         var checkOwnership = function(deviceID,username){
-            log.info("Device ID :"+deviceID);
+            log.debug("Device ID :"+deviceID);
             var result =  db.query(sqlscripts.devices.select1,deviceID);
-            log.info("Result :"+stringify(result));
+            log.debug("Result :"+stringify(result));
             if(typeof result != 'undefined' && result!= null && typeof result[0] != 'undefined' && result[0]!= null && result[0].user_id == username ){
                 return true;
             }else{
@@ -98,20 +98,19 @@ var device = (function () {
             log.debug(">>>>>>>>>");
             config = require('/config/config.json');
             var iosManifest = compileTemplate("/ios_utils/plisttemplate.hbs", {url:config.device.ios.location, bundleid: config.device.ios.bundleid, bundleversion: config.device.ios.version,  appname: config.device.ios.appname});
-            //log.info(iosManifest);
             response.contentType = "application/xml";
             print(iosManifest);
         });
 
 		router.post('devices/isregistered', function(ctx){
 		    var result = device.isRegistered(ctx);
-            log.info(result);
+            log.debug(result);
 		    if(result){
-                log.info("Check isRegistered registered");
+                log.debug("Check isRegistered registered");
 		        print("registered");
 		        response.status = 200;
 		    }else{
-                log.info("Check isRegistered notregistered");
+                log.debug("Check isRegistered notregistered");
                 print("notregistered");
 		        response.status = 404;
 		    }
@@ -176,15 +175,14 @@ var device = (function () {
 		});
 
 		router.post('devices/{deviceid}/operations/{operation}', function(ctx){
-    		log.info("Device IDDDDD"+ctx.deviceid);
+    		log.debug("Device id = "+ctx.deviceid);
     		var username = common.getCurrentLoginUser();
-    		log.info("Router 1 :"+username);
     		if(username==null){
         		response.status = 404;
         		response.content = "Please Login Again";
     		}
-    		log.info(isAdmin(username));
-    		log.info(checkOwnership(ctx.deviceid,username));
+    		log.debug(isAdmin(username));
+    		log.debug(checkOwnership(ctx.deviceid,username));
     		if(isAdmin(username)||checkOwnership(ctx.deviceid,username)){
         		if(ctx.operation == "INSTALLAPP" || ctx.operation == "UNINSTALLAPP"){
             			var state = device.getCurrentDeviceState();
@@ -205,8 +203,6 @@ var device = (function () {
 		});
 
         router.post('devices/operations/{operation}', function(ctx){
-            log.info("test devie router");
-            log.info(stringify(ctx));
             device.sendToDevices(ctx);
             response.status = 200;
             response.content = "success";
@@ -214,9 +210,7 @@ var device = (function () {
         });
 
 		router.get('devices/{deviceid}/features', function(ctx){
-
 		    var result = device.getFeaturesFromDevice(ctx);
-            log.info("Test Result"+result);
 		    if(result!= null && result != undefined && result[0] != null && result[0] != undefined){
 		        response.content = result;
 		        response.status = 200;
@@ -249,7 +243,6 @@ var device = (function () {
 		router.get('pending/devices/{udid}/operations', function(ctx){
 		    var result = device.getPendingOperationsFromDevice(ctx);
 		    if(result!= null && result != undefined){
-               // log.info("Pending Result"+result);
 		        response.content = result;
 		        response.status = 200;
 		    }else{

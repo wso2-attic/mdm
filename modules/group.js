@@ -170,11 +170,11 @@ var group = (function () {
                     }
 
             }
-            log.info(stringify(newRoles));
+            log.debug(stringify(newRoles));
             return newRoles;
         },
         getUserRoles: function(ctx){
-            log.info("User Name >> "+ctx.username);
+            log.debug("User Name >> "+ctx.username);
             var um = userManager(common.getTenantID());
             var roles = um.getRoleListOfUser(ctx.username);
             var roleList = common.removePrivateRole(roles);
@@ -256,7 +256,7 @@ var group = (function () {
             var roleList = user.getUserRoles({'username':username});
             var removeRoles = new Array("Internal/everyone", "portal", "wso2.anonymous.role", "Internal/reviewer","Internal/mdmadmin","Internal/publisher","Internal/store");
             var roles = common.removeNecessaryElements(roleList,removeRoles);
-            log.info("Roles :"+stringify(roles));
+            log.debug("Roles :"+stringify(roles));
             return roles[0];
         }
     };
