@@ -1,4 +1,15 @@
 var common = require('/modules/common.js');
+try{
+	common.isDatabaseConfigured();
+}catch(e){
+	var fla = 0;
+	while(fla<50){
+		log.error("");
+		fla++;
+	}
+	log.error("Database is not configured or has not started up");
+	Packages.java.lang.System.exit(0);
+}
 var db = common.getDatabase();
 var log = new Log();
 
@@ -23,5 +34,3 @@ var device = new deviceModule(db);
 var policyModule = require('../modules/policy.js').policy;
 var policy = new policyModule(db);
 policy.monitoring({});
-
-

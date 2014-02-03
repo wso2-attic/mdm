@@ -377,6 +377,9 @@ var loadPayload = function(identifier , operationCode, data) {
 			
 	return responseData;
 }
+var isDatabaseConfigured = function(){
+    db = new Database("EMM_DB");
+}
 
 /* 
 	Function that returns a DB object for the caller
@@ -396,7 +399,7 @@ var getDatabase = function(){
             db = new Database("EMM_DB");
             application.put(DB_SESSION,db);
         }catch(e){
-            log.error(e);
+            // log.error(e);
         }
     }
     return db;
