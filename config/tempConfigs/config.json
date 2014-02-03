@@ -24,24 +24,24 @@
         "keyStoreName": "/repository/resources/security/wso2carbon.jks"
     },
     "email": {
-        "smtp":"smtp.gmail.com",
-        "port":"25",
-        "companyName": "WSO2",
+        "smtp":"$(email_smtp)",
+        "port":"$(email_port)",
+        "companyName": "$(email_companyname)",
         "senderAddress": "$(senderAddress)",
         "emailPassword": "$(senderPassword)",
-        "emailTemplate": "\nYou have been registered to the WSO2Mobile MDM. Below is the link to enroll.\n \n"
+        "emailTemplate": "$(email_bodytemplate)"
     },
     "device": {
-        "android_location": "%http.ip%/mdm/client_app/MDMAgent1.0.apk",
+        "android_location": "$(device_android_location)",
         "ios": {
-            "location": "%http.ip%/mdm/client_app/iOS-MDM-Agent.ipa",
-            "bundleid": "com.wso2.mobile",
-            "version": "1.0",
-            "appname": "MDM Agent"
+            "location": "$(device_ios_location)",
+            "bundleid": "$(device_ios_bundleid)",
+            "version": "$(device_ios_version)",
+            "appname": "$(device_ios_appname)"
         }
     },
     "mam": {
         "store_location": "%https.ip%/store/"
     },
-    "monitor_interval" : "2"
+    "monitor_interval" : "$(monitoring_frequency)"
 }
