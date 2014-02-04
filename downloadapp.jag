@@ -37,6 +37,7 @@
      <br />
 
      <p class="text-center">If you are not registered with WSO2 EMM,  please download and install the Agent.</p>
+
   <a href=<% var deviceModule = require('/modules/device.js').device;  var device = new deviceModule();  print(device.getAppForDevice());%> class="btn btn-lg btn-primary btn-block">Download Agent</a>
 </div>
 
