@@ -1,4 +1,4 @@
-WSO2Mobile Mobile Device Management
+WSO2 Mobile Device Management
 ==============
 Open-Source MDM solution to manage and monitor devices on multiple platforms.
 

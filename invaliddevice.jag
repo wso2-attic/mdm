@@ -27,7 +27,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
 
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">WSO2Mobile MDM Registration</a>
+          <a class="navbar-brand" href="#">WSO2 EMM Registration</a>
         </div>
 
     </div>
@@ -36,7 +36,7 @@
     <div class="container">
         <h3>
 	        <br /><br />
-	        <p align = "center">This device cannot access MDM</p>
+	        <p align = "center">This device cannot access EMM</p>
         </h3>
     </div>
 

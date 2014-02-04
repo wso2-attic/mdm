@@ -26,13 +26,13 @@
      <div class="navbar navbar-inverse navbar-fixed-top">
       
         <div class="navbar-header">         
-          <a class="navbar-brand" href="#">WSO2Mobile MDM Registration</a>
+          <a class="navbar-brand" href="#">WSO2 EMM Registration</a>
         </div>   
  
      </div>
 
      <div class="container" style="padding-top: 60px">
-			<h3 class="text-center">MDM Error Occured</h3>
+			<h3 class="text-center">EMM Error Occured</h3>
      </div>
   </body>
 </html>

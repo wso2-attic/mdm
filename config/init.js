@@ -1,4 +1,6 @@
 var common = require('/modules/common.js');
+var log = new Log();
+
 try{
 	common.isDatabaseConfigured();
 }catch(e){
@@ -11,7 +13,6 @@ try{
 	Packages.java.lang.System.exit(0);
 }
 var db = common.getDatabase();
-var log = new Log();
 
 var androidConfig = require('android.json');
 var gcm = require('gcm').gcm;
