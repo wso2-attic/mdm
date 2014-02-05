@@ -50,7 +50,7 @@
   	
     <script>
 		function openAgentApp() {
-			setTimeout(function(){ window.location.href = "wso2agent://" + $("#udid").val(); }, 2000);			    
+			setTimeout(function(){ window.location.href = "wso2agent://" + $("#udid").val(); }, 500);			    
 		}
 	</script>
 
