@@ -127,6 +127,7 @@ var user = (function () {
                         }
                         createPrivateRolePerUser(ctx.username);
                         proxy_user.status = "SUCCESSFULL";
+                        proxy_user.firstName = ctx.first_name;
 						proxy_user.generatedPassword = generated_password;
                     }
                 }
