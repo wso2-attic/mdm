@@ -127,6 +127,7 @@ var user = (function () {
                         }
                         createPrivateRolePerUser(ctx.username);
                         proxy_user.status = "SUCCESSFULL";
+                        proxy_user.firstName = ctx.first_name;
 						proxy_user.generatedPassword = generated_password;
                     }
                 }
@@ -340,7 +341,7 @@ var user = (function () {
             try {
                 var tenantId = common.getTenantID();
                 if(tenantId){
-                    var devices = db.query(sqlscripts.devices.select40, ctx.userid, tenantId);
+                    var devices = db.query(sqlscripts.devices.select46, ctx.userid, tenantId);
                     if (devices != null && devices != undefined && devices[0] != null && devices[0] != undefined) {
                         if (devices[0].count > 0) {
                             return true;

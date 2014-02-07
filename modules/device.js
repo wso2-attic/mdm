@@ -1236,7 +1236,7 @@ var device = (function () {
 	    },
 	    getWIFIMac: function(ctx){
 	    	
-	        var result = db.query(sqlscripts.devices.select46, ctx.udid);
+	        var result = db.query(sqlscripts.devices.select48, ctx.udid);
         	var resultObj = {};
         	resultObj.wifi_mac = null;
         	

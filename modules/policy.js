@@ -132,7 +132,7 @@ var policy = (function () {
         for(var i = 0;i<platforms.length;i++){
             if(platforms[i].platform_id == 'android'){
 
-                var devices2 = db.query(sqlscripts.devices.select41, common.getTenantID());
+                var devices2 = db.query(sqlscripts.devices.select47, common.getTenantID());
 
                 for(var j=0;j<devices2.length;j++){
                     var tempId = getPolicyIdFromDevice(devices2[j].id);
@@ -651,7 +651,7 @@ var policy = (function () {
                 for(var i = 0;i<platforms.length;i++){
                     if(platforms[i].platform_id == 'android'){
 
-                        var devices2 = db.query(sqlscripts.devices.select41, common.getTenantID());
+                        var devices2 = db.query(sqlscripts.devices.select47, common.getTenantID());
 
                         for(var j=0;j<devices2.length;j++){
                             //var tempId = getPolicyIdFromDevice(devices2[j].id);
