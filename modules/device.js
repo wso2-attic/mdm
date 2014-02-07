@@ -1161,6 +1161,24 @@ var device = (function () {
                 var updateDevice = db.query(sqlscripts.devices.select21, ctx.deviceid);
                 if(updateDevice != null && updateDevice != undefined && updateDevice[0] != null && updateDevice[0] != undefined) {
 
+                    var properties = parse(result[0].properties);
+
+                    var platform = "" + properties["product"];
+                    if (platform.toLowerCase().indexOf("ipad") != -1) {
+                        platform = "iPad";
+                    } else if (platform.toLowerCase().indexOf("ipod") != -1) {
+                        platform = "iPod";
+                    } else {
+                        platform = "iPhone";
+                    }
+
+                    properties["model"] = platform;
+
+                    var tokenProperties = {};
+                    tokenProperties["token"] = ctx.token;
+                    tokenProperties["unlockToken"] = ctx.unlockToken;
+                    tokenProperties["magicToken"] = ctx.magicToken;
+
                     updateResult = db.query(sqlscripts.devices.update8, stringify(properties), stringify(tokenProperties), ctx.deviceid);
 
                 }
