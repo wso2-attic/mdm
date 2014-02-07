@@ -32,7 +32,7 @@
      </div>
 
      <div class="container" style="padding-top: 60px">
-			<h3 class="text-center">User Autentication Failed</h3>
+			<h3 class="text-center">User Authentication Failed</h3>
 			<div class="text-center"><a class="btn btn-lg btn-primary btn-block" href="deviceloginsign">Try Again</a></div>
      </div>
   </body>

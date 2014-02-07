@@ -1233,6 +1233,19 @@ var device = (function () {
 	        }
 	
 	        return false;
+	    },
+	    getWIFIMac: function(ctx){
+	    	
+	        var result = db.query(sqlscripts.devices.select46, ctx.udid);
+        	var resultObj = {};
+        	resultObj.wifi_mac = null;
+        	
+	        if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
+	        	resultObj.wifi_mac = result[0].wifi_mac;
+	        	return resultObj;
+	        }
+	        
+	        return resultObj;
 	    }
     };
 
