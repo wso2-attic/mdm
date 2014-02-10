@@ -12,7 +12,7 @@
 		if (scepResponse.getResultCriteria() == "CA_CERT_FAILED") {
 			response.sendRedirect("mdmerror.jag");
 		} else if (scepResponse.getResultCriteria() == "CA_CERT_RECEIVED") {
-			response.contentType = "application/application/x-x509-ca-cert";
+			response.contentType = "application/x-x509-ca-cert";
 		} else if (scepResponse.getResultCriteria() == "CA_RA_CERT_RECEIVED") {
 			response.contentType = "application/x-x509-ca-ra-cert";
 		} else {
