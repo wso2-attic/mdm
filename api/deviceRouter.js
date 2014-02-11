@@ -141,6 +141,11 @@ var device = (function () {
 		router.post('devices/location', function(ctx){
 		    var result = device.updateLocation(ctx);
 		});
+		
+		router.post('devices/wifimac', function(ctx){
+		    var result = device.getWIFIMac(ctx);
+		    print(result);
+		});
 
 		router.post('devices/unregister', function(ctx){
 		    var result = device.unRegisterAndroid(ctx);
