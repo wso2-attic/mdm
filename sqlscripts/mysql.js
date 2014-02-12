@@ -39,22 +39,21 @@ var devices = {
     'select34':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date from devices,platforms where platforms.id = devices.platform_id AND devices.user_id like ? AND devices.tenant_id = ? AND platform_id = ?",
     'select35':"select devices.id as id, devices.properties as properties, devices.user_id as user_id, platforms.name as name, devices.os_version as os_version, devices.created_date as created_date   from devices,platforms where platforms.id = devices.platform_id AND devices.user_id like ? AND devices.tenant_id = ?",
     'select36':"select * from devices where user_id = ?",
-    'select41':"SELECT devices.id as id from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type_name = 'Android' AND devices.tenant_id = ?",
     'select37':"SELECT devices.id as id from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type_name = 'iOS'",
     'select38':"SELECT properties, user_id FROM devices WHERE udid = ?",
     'select39':"SELECT push_token FROM devices WHERE id = ?",
-    'select40':"SELECT COUNT(*) as count FROM devices WHERE user_id = ? AND tenant_id = ?",
-    
     'select40':"SELECT devices.tenant_id as tenant_id, platforms.type_name as platform_type FROM devices JOIN platforms ON platforms.id = devices.platform_id WHERE devices.id = ? AND devices.tenant_id = ?",
     'select41':"SELECT id FROM devices WHERE reg_id = ?",
     'select42':"SELECT devices.id FROM devices JOIN platforms ON platforms.id = devices.platform_id WHERE LOWER(platforms.type_name) = LOWER(?) AND tenant_id = ?",
     'select43':"SELECT properties, platform_id FROM devices WHERE id = ?",
     'select44':"SELECT * from devices",
     'select45':"SELECT devices.user_id, devices.properties, platforms.name as platform_name, devices.os_version, devices.created_date, devices.status  FROM devices,platforms where platforms.type =? AND platforms.id = devices.platform_id  AND  devices.created_date between ? and ? and  devices.tenant_id = ?",
+    'select46':"SELECT COUNT(*) as count FROM devices WHERE user_id = ? AND tenant_id = ?",
+    'select47':"SELECT devices.id as id from devices JOIN platforms ON platforms.id = devices.platform_id WHERE type_name = 'Android' AND devices.tenant_id = ?",
+	'select48':"SELECT wifi_mac FROM devices WHERE udid = ?",
 
     'insert1' : "INSERT INTO devices (tenant_id, os_version, created_date, properties, reg_id, status, deleted, user_id, platform_id, vendor, udid, wifi_mac) VALUES(?, ?, ?, ?, ?,'A','0', ?, ?, ?,'0', ?)",
     'insert2' : "INSERT INTO devices (tenant_id, user_id, platform_id, reg_id, properties, created_date, status, byod, deleted, vendor, udid) SELECT tenant_id, user_id, platform_id, ?, ?, created_date, status, byod, 0, vendor, udid FROM device_pending WHERE udid = ?",
-    
 
     'update1' : "UPDATE devices SET status = ? WHERE id = ?",
     'update2' : "UPDATE devices SET deleted = 0 WHERE reg_id = ? AND tenant_id = ?",
@@ -63,6 +62,7 @@ var devices = {
     'update5' : "UPDATE devices SET push_token = ? WHERE udid = ?",
     'update6' : "UPDATE devices SET os_version = ?, properties = ? WHERE id = ?",
     'update7' : "UPDATE devices SET properties = ? WHERE udid = ?",
+    'update8' : "UPDATE devices SET properties = ?, reg_id = ? WHERE udid = ?",
     
     'delete1' :"Delete from devices where reg_id = ?",
     'delete2' :"DELETE FROM devices WHERE udid = ?"
@@ -96,7 +96,8 @@ var device_awake = {
     'update1' : "UPDATE device_awake SET status = 'E', processed_date = ? WHERE device_id = ? AND status = 'S'",
     'update2' : "UPDATE device_awake SET sent_date = ?, call_count = call_count + 1 WHERE device_id = ? AND status = 'S'",
     'update3' : "UPDATE device_awake JOIN devices ON devices.id = device_awake.device_id SET device_awake.status = 'D' WHERE devices.udid = ? AND device_awake.status = 'S'",
-    'update4' : "UPDATE device_awake JOIN devices ON devices.id = device_awake.device_id SET device_awake.status = 'P', device_awake.processed_date = ? WHERE devices.udid = ? AND device_awake.status = 'S'"
+    'update4' : "UPDATE device_awake JOIN devices ON devices.id = device_awake.device_id SET device_awake.status = 'P', device_awake.processed_date = ? WHERE devices.udid = ? AND device_awake.status = 'S'",
+    'update5' : "UPDATE device_awake SET device_awake.status = 'D' WHERE device_awake.device_id = ? AND device_awake.status = 'S'"
 };
 
 var notifications = {
@@ -122,6 +123,7 @@ var notifications = {
     'update4' : "UPDATE notifications SET received_data= ? , received_date = ? WHERE id = ?",
     'update5' : "UPDATE notifications SET status='R' WHERE id = ?",
     'update6' : "UPDATE notifications SET status='R', received_data = ? , received_date = ? WHERE id = ?",
+    'update7' : "UPDATE notifications SET status = 'D' WHERE device_id = ? AND status = 'P'",
 
     'delete1' : "DELETE FROM notifications WHERE device_id = ? AND status='P' AND feature_code = ?",
     'delete2' : "DELETE FROM notifications WHERE device_id = ? AND status='R' AND feature_code = ?"

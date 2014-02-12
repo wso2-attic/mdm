@@ -1104,11 +1104,16 @@ var device = (function () {
         updateiOSTokens: function(ctx){
 
             var result = db.query(sqlscripts.device_pending.select2, ctx.deviceid);
+            var updateResult;
+
+            var tokenProperties = {};
+            tokenProperties["token"] = ctx.token;
+            tokenProperties["unlockToken"] = ctx.unlockToken;
+            tokenProperties["magicToken"] = ctx.magicToken;
 
             if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
 
                 var properties = parse(result[0].properties);
-
                 var platform = "" + properties["product"];
                 if (platform.toLowerCase().indexOf("ipad") != -1) {
                     platform = "iPad";
@@ -1117,13 +1122,7 @@ var device = (function () {
                 } else {
                     platform = "iPhone";
                 }
-
                 properties["model"] = platform;
-
-                var tokenProperties = {};
-                tokenProperties["token"] = ctx.token;
-                tokenProperties["unlockToken"] = ctx.unlockToken;
-                tokenProperties["magicToken"] = ctx.magicToken;
 
                 var userResultExist = db.query(sqlscripts.devices.select21, ctx.deviceid);
                 if(userResultExist != null && userResultExist != undefined && userResultExist[0] != null && userResultExist[0] != undefined) {
@@ -1131,10 +1130,18 @@ var device = (function () {
                 	var devicePendingResult = db.query(sqlscripts.device_pending.select3, ctx.deviceid);
 	                   
 	                if(devicePendingResult != null && devicePendingResult != undefined && devicePendingResult[0] != null && devicePendingResult[0] != undefined) {
-	                	devicePendingResult = devicePendingResult[0]
+	                	devicePendingResult = devicePendingResult[0];
 
-                        var updateResult = db.query(sqlscripts.devices.update3, devicePendingResult.tenant_id, devicePendingResult.user_id, devicePendingResult.platform_id, stringify(tokenProperties), stringify(properties), devicePendingResult.status,
+                        updateResult = db.query(sqlscripts.devices.update3, devicePendingResult.tenant_id, devicePendingResult.user_id, devicePendingResult.platform_id, stringify(tokenProperties), stringify(properties), devicePendingResult.status,
                             devicePendingResult.byod, devicePendingResult.vendor, devicePendingResult.udid, ctx.deviceid);
+
+                        var getDevice = db.query(sqlscripts.devices.select20, ctx.deviceid);
+                        if (getDevice != null && getDevice != undefined && getDevice[0] != null && getDevice != undefined) {
+                            //Update from notifications, device_awake for this device id
+                            db.query(sqlscripts.device_awake.update5, getDevice[0].id);
+                            db.query(sqlscripts.notifications.update7, getDevice[0].id);
+
+                        }
 
 	                }
 	                
@@ -1143,16 +1150,46 @@ var device = (function () {
                 } else {
                 	// Copy record from temporary table into device table and
 					// delete the record from the temporary table
-                    var updateResult = db.query(sqlscripts.devices.insert2, stringify(tokenProperties), stringify(properties), ctx.deviceid);
-	                
+                    updateResult = db.query(sqlscripts.devices.insert2, stringify(tokenProperties), stringify(properties), ctx.deviceid);
 	                db.query(sqlscripts.device_pending.update3, ctx.deviceid);
                 }
-
                 if(updateResult != null && updateResult != undefined && updateResult == 1) {
-                    	
-					setTimeout(function(){invokeInitialFunctions(ctx)}, 2000);
-                    	
+
+                    setTimeout(function(){invokeInitialFunctions(ctx)}, 2000);
+//                    var devices = db.query(sqlscripts.devices.select7 ,ctx.deviceid);
+//                    var deviceID = devices[0].id;
+//                    sendMessageToIOSDevice({'deviceid':deviceID, 'operation': "INFO", 'data': "hi"});
+
                     return true;
+                }
+
+            } else {
+
+                result = db.query(sqlscripts.devices.select7, ctx.deviceid);
+                if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
+
+                    var properties = parse(result[0].properties);
+                    var platform = "" + properties["product"];
+                    if (platform.toLowerCase().indexOf("ipad") != -1) {
+                        platform = "iPad";
+                    } else if (platform.toLowerCase().indexOf("ipod") != -1) {
+                        platform = "iPod";
+                    } else {
+                        platform = "iPhone";
+                    }
+                    properties["model"] = platform;
+
+                    updateResult = db.query(sqlscripts.devices.update8, stringify(properties), stringify(tokenProperties), ctx.deviceid);
+
+                    if(updateResult != null && updateResult != undefined && updateResult == 1) {
+                        var getDevice = db.query(sqlscripts.devices.select20, ctx.deviceid);
+                        if (getDevice != null && getDevice != undefined && getDevice[0] != null && getDevice != undefined) {
+                            //Update from notifications, device_awake for this device id
+                            db.query(sqlscripts.device_awake.update5, getDevice[0].id);
+                        }
+                        setTimeout(function(){invokeInitialFunctions(ctx)}, 2000);
+                        return true;
+                    }
                 }
             }
 
@@ -1233,6 +1270,19 @@ var device = (function () {
 	        }
 	
 	        return false;
+	    },
+	    getWIFIMac: function(ctx){
+	    	
+	        var result = db.query(sqlscripts.devices.select48, ctx.udid);
+        	var resultObj = {};
+        	resultObj.wifi_mac = null;
+        	
+	        if(result != null && result != undefined && result[0] != null && result[0] != undefined) {
+	        	resultObj.wifi_mac = result[0].wifi_mac;
+	        	return resultObj;
+	        }
+	        
+	        return resultObj;
 	    }
     };
 

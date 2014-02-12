@@ -97,6 +97,7 @@ var user = (function () {
                 response.content = "Already Exist";
             }else if(returnMsg.status == 'SUCCESSFULL' ){
                 ctx.generatedPassword = returnMsg.generatedPassword;
+                ctx.firstName = returnMsg.firstName;
                 log.debug("Email :"+ctx.generatedPassword);
                 user.sendEmail(ctx);
                 response.status = 201;
