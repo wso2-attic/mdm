@@ -1,7 +1,8 @@
 var TENANT_CONFIGS = 'tenant.configs';
 var USER_MANAGER = 'user.manager';
 var USER_OPTIONS = 'server.user.options';
-var USER_SPACE = '/_system/governance/users';
+//Need to change this
+var USER_SPACE = '/_system/governance/';
 var user = (function () {
     var config = require('/config/mdm.js').config();
     var routes = new Array();
@@ -126,13 +127,12 @@ var user = (function () {
         addUser: function(ctx){
             log.debug("Check Params"+stringify(ctx));
             var claimMap = new java.util.HashMap();
-
+            var roleState = null;
             claimMap.put(claimEmail, ctx.username);
             claimMap.put(claimFirstName, ctx.first_name);
             claimMap.put(claimLastName, ctx.last_name);
             claimMap.put(claimMobile, ctx.mobile_no);
             var proxy_user = {};
-
             try {
                 var tenantId = common.getTenantID();
                 var users_list = Array();
