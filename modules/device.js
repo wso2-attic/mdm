@@ -266,7 +266,9 @@ var device = (function () {
         log.debug("checkPermission");
         log.debug(role);
         log.debug(operationName);
-
+        if(role == "user"){
+            return true;    
+        }
         var decision = entitlement.evaluatePolicy(getXMLRequestString(role,"POST",operationName),stub);
         decision = decision.toString().substring(28,34);
         log.debug("decision :"+decision);
@@ -811,7 +813,7 @@ var device = (function () {
             var role = ctx.role;
             var deviceId =  ctx.deviceid;
             if(role=="user"){
-                role = group.getEffectiveRoleFromDeviceID(deviceId);
+                //role = group.getEffectiveRoleFromDeviceID(deviceId);
             }
             if(role.indexOf("Internal")!==-1){
                 role = role.substring(9);

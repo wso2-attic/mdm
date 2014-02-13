@@ -63,7 +63,7 @@ var user = (function () {
 	    return configs(tenantId)[USER_MANAGER];
 	};
 	
-	var createPrivateRolePerUser = function(username){
+	var createPrivateRolePerUser = function(username, roleState){
 		var um = userManager(common.getTenantID());
 		var indexUser = username.replace("@", ":");
 		var arrPermission = {};
@@ -76,6 +76,9 @@ var user = (function () {
 	    ];
 	    arrPermission[space] = permission;
         arrPermission["/permission/admin/login"] = ["ui.execute"];
+        if(roleState=="mdmadmin"){
+            arrPermission["/permission/admin/manage"] = ["ui.execute"];
+        }
         log.info(arrPermission);
 		if(!um.roleExists("Internal/private_"+indexUser)){
             var private_role = "Internal/private_"+indexUser;
@@ -146,9 +149,10 @@ var user = (function () {
                         if(ctx.type == 'user'){
                             um.addUser(ctx.username, generated_password,ctx.groups, claimMap, null);
                         }else if(ctx.type == 'administrator'){
+                            roleState = "mdmadmin"
                             um.addUser(ctx.username, generated_password,new Array('Internal/mdmadmin'), claimMap, null);
                         }
-                        createPrivateRolePerUser(ctx.username);
+                        createPrivateRolePerUser(ctx.username, roleState);
                         proxy_user.status = "SUCCESSFULL";
                         proxy_user.firstName = ctx.first_name;
 						proxy_user.generatedPassword = generated_password;
