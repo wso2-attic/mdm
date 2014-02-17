@@ -209,7 +209,7 @@ var notification = (function() {
 			}
 			log.debug("[Android] - Device contacted :"+result[0].device_id);
 			log.debug("Current Message ID " + ctx.msgID);
-			log.info("APP DATA>>>>>>>>>>>>>>>>>>>>>>>>" + ctx.data);
+			//log.info("APP DATA>>>>>>>>>>>>>>>>>>>>>>>>" + ctx.data);
 			var deviceId = result[0].device_id;
 			var featureCode = result[0].feature_code;
 
