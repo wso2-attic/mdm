@@ -87,7 +87,7 @@ var feature = (function () {
                 var featureArr = {};
 
                 var ftype = db.query(sqlscripts.featuretype.select2, featureList[i].id);
-                log.error(featureList[i]);
+                //log.error(featureList[i]);
                 featureArr["name"] = featureList[i].name;
                 featureArr["feature_code"] = featureList[i].code;
                 featureArr["feature_type"] = ftype[0].name;
